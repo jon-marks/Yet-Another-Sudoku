@@ -1,0 +1,295 @@
+<html>
+<body><font face="helvetica, arial">
+    <h1><center>User Guide</center></h1>
+    <h2><center>Main Window Layout</center></h2>
+    The main window comprises three major areas:
+    <dl>
+        <dt><b>Menu Bar</b></dt>
+        <dd>Provides all the menu commands as documented in the section below <p></p></dd>
+        <dt><b>Puzzle Grid</b></dt>
+        <dd>This is where puzzles are displayed and solved<p></p></dd>
+        <dt><b>Status Bar</b></dt>
+        <dd>The status bar appears beneath the Grid and is divided into 5 fields
+            from left to right:
+            <ul>
+                <li>A multi-purpose field showing either a:
+                    <ul>
+                        <li>Brief menu item help for the menu item under the mouse</li>
+                        <li>Process message for tasks that could take a long
+                            time like creating, validating or grading puzzles</li>
+                        <li>Histogram of the number of remaining values to solve</li>
+                    </ul>
+                </li>
+                <li>The state of play:
+                    <ul>
+                        <li>Idle</li>
+                        <li>Enter: Manual entry of puzzles</li>
+                        <li>Load: Loading a puzzles from file</li>
+                        <li>Generate: Creating a puzzle</li>
+                        <li>Validate: Validating and grading an entered or loaded
+                            puzzle
+                        </li>
+                        <li>Solve: Solving a puzzle</li>
+                    </ul>
+                </li>
+                <li>The selected level of assistance (see Puzzle Menu below)</li>
+                <li>The graded difficulty of the puzzle at play</li>
+                <li>The solve duration timer</li>
+            </ul>
+            <p></p>
+        </dd>
+    </dl>
+
+    <h2><center>Menu Bar Commands</center></h2>
+    <h3><u>Puzzle Menu</u></h3>
+    <dl>
+        <dt><b>Generate</b></dt>
+        <dd>Creates a puzzle up to the expertise level and with the symmetry
+            selected under the Options menubar item<p></p></dd>
+        <dt><b>Enter</b></dt>
+        <dd>Enables/Disable (toggle) user entry of a puzzle<p></p></dd>
+        <dt><b>Load</b></dt>
+        <dd>Loads a puzzle from a file<p></p></dd>
+        <dt><b>Scramble</b></dt>
+        <dd>Scrambles an existing puzzle maintaining mathematical equivalence<p></p>
+        </dd>
+        <dt><b>Save</b></dt>
+        <dd>Saves a complete, partially entered or solved puzzle to disk<p></p></dd>
+        <dt><b>Show Possible Candidates</b></dt>
+        <dd>While solving show all possible candidates in empty cells<p></p></dd>
+        <dt><b>Clear Candidates</b></dt>
+        <dd>While solving, clear all candidate values<p></p></dd>
+        <!--    <dt><b>Save Setpoint</b></dt>
+            <dd>TBI: While solving saves the current puzzle state<p></p></dd>
+            <dt><b>Restore Setpoint</b></dt>
+            <dd>TBI: While solving restores a previously saved puzzle state<p></p></dd>
+        -->
+        <dt><b>Pause</b></dt>
+        <dd>Pause solving toggle - hide the grid and pause the timer<p></p></dd>
+        <dt><b>Hint</b></dt>
+        <dd>While Solving:
+            <ul>
+                <li>Vague: Logic technique to solve next value</li>
+                <li>Clear: Logic technique details</li>
+            </ul>
+            <p></p>
+        </dd>
+        <!--    <dt><b>Solve Puzzle</b></dt>
+            <dd>TBI: Solve rest of puzzle showing logic technique steps<p></p></dd>
+        -->
+        <dt><b>List Solution</b></dt>
+        <dd>TBI: List the logic technique steps to solve the rest of the puzzle<p></p></dd>
+        <dt><b>Start Over</b></dt>
+        <dd>Start solving the same puzzle over again<p></p></dd>
+        <dt><b>Start New</b></dt>
+        <dd>Discard the current puzzle and clears the grid<p></p></dd>
+        <dt><b>Exit</b></dt>
+        <dd>Exit the Sudoku puzzle app<p></p></dd>
+    </dl>
+    <h3><u>View Menu</u></h3>
+    <dl>
+        <dt><b>Zoom</b></dt>
+        <dd>
+            <ul>
+                <li>Tiny: Rediculously small grid</li>
+                <li>Small: Small grid</li>
+                <li>Normal: Normal grid</li>
+                <li>Large: Large grid</li>
+                <li>XLarge: Rediculously large grid</li>
+            </ul>
+            <p></p>
+        </dd>
+        <dt><b>Unselected Candidates visible</b></dt>
+        <dd>Toggle the visibility of unselected candidates<p></p></dd>
+    </dl>
+    <h3><u>Options Menu</u></h3>
+    <dl>
+        <dt><b>Generate Expertise level</b></dt>
+        <dd>The expertise level request to generate puzzle. Generated puzzle maybe
+            to less than requested level. Choice of Beginner, Novice, Intermediate,
+            Proficient, Accomplished, Expert, or Guru<p></p></dd>
+        <dt><b>Grid Symmetry</b></dt>
+        <dd>A choice of:
+            <ul>
+                <li>Random: No symmetry</li>
+                <li>TBI: Dihedral: 8 point symmetry</li>
+                <li>TBI: Square Quadrant 90Deg rotation: 4 point symmetry</li>
+                <li>TBI: Square Quadrant Mirrored: 4 point symmetry</li>
+                <li>TBI: Diagonal Quadrant 90Deg rotation: 4 point symmetry</li>
+                <li>TBI: Diagonal Quadrant Mirrored: 4 point symmetry</li>
+                <li>TBI: Vertical Fold 180Deg rotation: 2 point symmetry</li>
+                <li>TBI: Vertical Fold mirrord: 2 point symmetry/li>
+                <li>TBI: Horizontal Fold 180Deg rotation: 2 point symmetry</li>
+                <li>TBI: Horizontal Fold mirrored: 2 point symmetry</li>
+                <li>TBI: Diagonal top left fold 180Deg Rotation: 2 point symmetry</li>
+                <li>TBI: Diagonal top left fold mirrored: 2 point symmetry</li>
+                <li>TBI: Diagonal bottom left fold 180Deg Rotation: 2 point symmetry</li>
+                <li>TBI: Diagonal bottom left fold mirrored: 2 point symmetry</li>
+            </ul>
+            <p></p>
+        </dd>
+        <dt><b>Value Assistance</b></dt>
+        <dd>A choice of:
+            <ul>
+                <li>Check On Finish: Indicate if puzzles solution is correct or not</li>
+                <li>Show Conflicts On Finish: Not necessarily the cell error</li>
+                <li>Show Errors On Finish</li>
+                <li>Show Conflicts: Interactively show conflicts</li>
+                <li>Show Errors: Interactively show errors</li>
+            </ul>
+            <p></p>
+        </dd>
+        <dt><b>Candidate Assistance</b></dt>
+        <dd>Toggle. When enabled, hides shown peer candidate values of values
+            entered<p></p></dd>
+
+    </dl>
+    <h3><u>Help Menu</u></h3>
+    <dl>
+        <dt><b>About</b></dt>
+        <dd>Program boiler plate<p></p></dd>
+        <dt><b>User Guide</b></dt>
+        <dd>This window<p></p></dd>
+    </dl>
+    <h2><center>Keyboard and Mouse Input</center></h2>
+    <h3><u>Entry State</u></h3>
+    <dl>
+        <dt><b>Mouse Left Button</b></dt>
+        <dd>Selects only the cell under cursor<p></p></dd>
+        <dt><b>Shift + Mouse Left Button</b></dt>
+        <dd>Adds cell under cursor to selected cells<p></p></dd>
+        <dt><b>[1-9]</b></dt>
+        <dd>Enters typed digit in selected cells<p></p></dd>
+        <dt><b>Del or BS(Ctrl + H)</b></dt>
+        <dd>Clears selected cells<p></p></dd>
+        <dt><b>Ctrl + Z</b></dt>
+        <dd>Undoes last step<p></p></dd>
+    </dl>
+    <h3><u>Solve State</u></h3>
+    <dl>
+        <dt><b>Mouse Left Button</b></dt>
+        <dd>Selects only the cell under cursor<p></p></dd>
+        <dt><b>Shift + Mouse Left Button</b></dt>
+        <dd>Adds cell under cursor to selected cells<p></p></dd>
+        <dt><b>[1-9]</b></dt>
+        <dd>Enters typed digit in selected cells that are not givens<p></p></dd>
+        <dt><b>Del or BS(Ctrl + H)</b></dt>
+        <dd>Clears selected cells that are not givens<p></p></dd>
+        <dt><b>Ctrl + Z</b></dt>
+        <dd>Undoes last step<p></p></dd>
+        <dt><b>Alt + Mouse Left Button</b></dt>
+        <dd>Background colour picker for selected cells<p></p></dd>
+        <dt><b>Ctrl + Mouse Left Button</b></dt>
+        <dd>Transient highlight of same values as under cursor<p></p></dd>
+        <dt><b>Ctrl + Alt + Mouse Left Button</b></dt>
+        <dd>Transient highlight of group under cursor<p></p></dd>
+    </dl>
+    <h3><u>Solve State - Pencil Marks</u></h3>
+        <dt><b>Mouse Right Button</b></dt>
+        <dd>Toggle the visibility of the candidate value under cursor<p></p></dd>
+        <dt><b>Shift + Mouse Right Button</b></dt>
+        <dd>Selects the candidate under the cursor as the cell's value<p></p></dd>
+        <dt><b>Ctrl + Mouse Right Button</b></dt>
+        <dd>Transient highlight of all cells containing candidate value under
+            cursor<p></p></dd>
+        <dt><b>Alt + Mouse Right Button</b></dt>
+        <dd>Colour picker for candidate under cursor<p></p></dd>
+        <dt><b>Ctrl + Alt + Mouse Right Button</b></dt>
+        <dd>Clear all candidate background colour selections<p></p></dd>
+    </dl>
+    <h2><center>Cell Grammar</center></h2>
+    <h3><u>Location Specifiers</u></h3>
+    <dl>
+        <dt><b>r6c5</b></dt>
+        <dd>The cell in row six, column five<p></p></dd>
+        <dt><b>b21</b></dt>
+        <dd>The cells in box/block two across and one down<p></p></dd>
+        <dt><b>r2</b></dt>
+        <dd>The cells in row two<p></p></dd>
+        <dt><b>c6</b></dt>
+        <dd>The cells in column six<p></p></dd>
+        <dt><b>r34c245</b></dt>
+        <dd>A grid of cells, r3c2, r3c4, r3c5, r4c2, r4c4 and r4c5<p></p></dd>
+        <dt><b>r2r5,r3c6,r56c56</b></dt>
+        <dd>A collection of cells in a comma separated list<p></p></dd>
+    </dl>
+    <h3><u>Operators</u></h3>
+    <dl>
+        <dt><b>--</b></dt>
+        <dd>Presence of candidate or value in cell(s)<p></p></dd>
+        <dt><b>!-</b></dt>
+        <dd>Absence of candidate(s) in cell(c)<p></p></dd>
+        <dt><b>?=</b></dt>
+        <dd>Possibility of the presence of candidate(s) (phantom) in cells(s)<p></p></dd>
+        <dt><b>==</b></dt>
+        <dd>Presence of only specified candidate(s) or value in cell(s)<p></p></dd>
+        <dt><b>!=</b></dt>
+        <dd>Value or candidate not permitted in cell(s)<p></p></dd>
+        <dt><b>:=</b></dt>
+        <dd>Assignment of a value or candidates to cell(s)<p></p></dd>
+        <dt><b>+=</b></dt>
+        <dd>Add candidate(s) to cell(s)<p></p></dd>
+        <dt><b>-=</b></dt>
+        <dd>Eliminate candidate(s) from cell(s)<p></p></dd>
+        <dt><b>?</b></dt>
+        <dd>Query or test a condition<p></p></dd>
+        <dt><b>#</b></dt>
+        <dd>Number of occurrences or count of candidate(s) or value in cell(s)<p></p></dd>
+        <dt><b>=</b></dt>
+        <dd>Strong link symbol<p></p></dd>
+        <dt><b>-</b></dt>
+        <dd>Weak link symbol<p></p></dd>
+    </dl>
+    <h3><u>Examples</u></h3>
+    <dl>
+        <dt><b>r6-2</b></dt>
+        <dd>Refers to value or candidate 2 in row 6<p></p></dd>
+        <dt><b>r4,b23-7</b></dt>
+        <dd>Refers to value or candidate 7 in row 4 and box 2 down, 3 across.
+            <p></p></dd>
+        <dt><b>r6c2,r23c24-34</b></dt>
+        <dd>Refers to candidates 3 and 4 (amongst others) in the the collection
+            of cells.<p></p></dd>
+        <dt><b>r5c3,r3c2?-5</b></dt>
+        <dd>Refers to the possiblity that 5 may be or may have been a (phantom)
+            candidate in r5c3 and/or r3c2. <p></p></dd>
+        <dt><b>#2c3--5</b></dt>
+        <dd>There are two occurances in column three of candidate or value five.
+            <p></p></dd>
+        <dt><b>c2=4=r2c2-5-r2c6</b></dt>
+        <dd><i>Links and chains</i>
+            <ul>
+                <li><b>=&lt;n&gt;=</b>:  refers to n forming a strong link (slink)
+                    between two cells</li>
+                <li><b>-&lt;n&gt;-</b>:  refers to n forming a weak link (wink)
+                between two cells.</li>
+            </ul><p></p></dd>
+        <dt><b>r6c2,r23c24--34</b></dt>
+        <dd>The presence of both candidates 3 and 4 in the
+            specified collection of cells<p></p></dd>
+        <dt><b>r6c2,r23c24!-34</b></dt>
+        <dd>Absence of both candidates 3 and 4 in the specified
+            collection of cells<p></p></dd>
+        <dt><b>r6c2,r2c2==3</b></dt>
+        <dd>Three is the only value in that collection of cells<p></p></dd>
+        <dt><b>r6c2,r23c24!=3</b></dt>
+        <dd>Three is not (or cannot be) the value of that collection of cells
+            <p></p></dd>
+        <dt><b>r6c2,r23c24:=34</b></dt>
+        <dd>Assign candidate values 3 and 4 to the collection of cells (replaces
+            existing)<p></p></dd>
+        <dt><b>r6c2,r23c24!=34</b></dt>
+        <dd>Collection of cells do not contain candidates 3 and 4 exactly. This
+            will be false if any cell in the collection contains additional
+            values or is missing a 3 or 4.
+            <p></p></dd>
+        <dt><b>r6c2,r23c24-=34</b></dt>
+        <dd>Eliminate candidate values 3 and 4 from the collection of cells
+            <p></p></dd>
+        <dt><b>r6c2,r23c24+=34</b></dt>
+        <dd>Add candidate values 3 and 4 to the collection of cells
+            <p></p></dd>
+    </dl>
+</font>
+</body>
+</html>

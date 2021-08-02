@@ -1,0 +1,36 @@
+TODO
+****
+*  Fix menu - assign all menu, submenu and menuitems to self, to eliminate the
+   use tracking instance ids for checked / radio button items etc.
+*  Contextual enabling and disabbling of menu items.  Eg. In Enter mode (User
+   entering a puzzle almost all other menu items are disabled.  Needs to be
+   thought through for all menu items.
+*  Enter mode.  On entering Enter mode, clear the board, disable relevant menu
+   items, etc.  On Exiting Enter mode, revert back to the previous Play Mode,
+   Check the puzzle and grade its difficulty if it is correct.  If puzzle does
+   not check - advise error and offer option to remain in Enter mode or exit
+   Enter mode, reverting to the previous play mode and clear the board.
+
+*  Add Game/Assistance/[Unassisted|Conflicts|Errors] to the menu bar.
+   These create three types of play modes.
+     * Unassisted - (vague indication on completion) no checking taking place
+       when user is solving puzzles and
+       a check is performed when all cells filled, and if not correct user is
+       advised that there is at least one mistake - do not point it out, allow
+       user to find and correct mistakes.
+     * Unassisted (specific indication on completion) Indicate error on
+       completion.  On completion highlight the
+       incorrectly filled cells and give user an opportunity to correct.
+     * Conficts - Highlight conflicts while user is solving Indicates that there
+       is an error, but not where the error is.
+     * Errors - highlights an error when the cell is filled with an incorrect
+*  Generate and display a game.  Need to resolve how the logic techniques and
+*  structures will work.
+*  Manually solve a game without checking
+*  Manually solve a game with checking
+*  Add hinting.
+*  Add Logic techniques.
+*  Extend globals.py to include config file reader.
+*. Update Icon in Windows Taskbar.
+   a.  Use Pyinstaller to create exe.
+       https://stackoverflow.com/questions/15223952/wxpython-icon-for-task-bar
