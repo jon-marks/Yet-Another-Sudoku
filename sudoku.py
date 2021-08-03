@@ -13,9 +13,8 @@ Audit:
     2021-04-xx  jm  Initial Entry
 
 """
-#from os import getcwd
+import os
 from copy import copy, deepcopy
-# from time import perf_counter
 
 from collections import deque
 import wx
@@ -26,6 +25,8 @@ from globals import *
 from misc import open_puzzle, save_puzzle, ListSolnWindow, construct_str
 from generate import *
 from solve import *
+from timer import *
+from board import *
 
 # Grid Flags
 GF_UNSAVED_CHANGES = 0x00000001  # Unsaved edits in entry mode.
@@ -124,8 +125,14 @@ STT[EV_SC_FIN] = [CH, CH,  0, CH,  3, CH, CH,  0,  0,  8, CH, CH, CH, CH, CH, CH
 
 class Sudoku:
 
-    def __init__(self, parent):
-        self.Parent = parent
+    def __init__(self, MainWindow, MenuBar, StatusBar):
+        # self.Parent = MainWindow
+
+        self.MainWindow = MainWindow
+        self.MenuBar    = MenuBar
+        self.StatusBar  = StatusBar
+        self.GameTimer  = GameTimer(StatusBar)
+        self.Board      = Board(MainWindow, self)
 
         self.Grid = [[{C_VAL:  0,
                        C_ST:   CVS_EMPTY,
@@ -151,9 +158,13 @@ class Sudoku:
         self.ShowCands   = False
         self.ScState     = ST_IDLE
         self.VagueHints  = self.ClearerHints = self.ClearestHints = 0
-        self.LSW         = None
+        self.LSW         = None      # list solution window instance.
 
-        self.Parent.MenuBar.enable_menuitems(EMI_IDLE)
+        self.Dir    = os.getcwd()
+        self.PzlDir = os.path.join(self.Dir, PUZZLES_DIR)  # where the puzzles are stored
+        self.PzlFn  = ""
+
+        self.MenuBar.enable_menuitems(EMI_IDLE)
 
         # Sudoku Control State action table.
         self.SAT = [self.on_idle_state,
@@ -178,6 +189,9 @@ class Sudoku:
                     None,  # self.on_restore_savepoint_state,
                     self.on_candidates_state]
 
+    def on_close(self, e):
+        self.GameTimer.on_close(e)
+
     def gen_event(self, e, *args, **kwds):
         # Moore model state machines: An event arriving at a state machine
         # causes a state transition to same or new state (based on the state
@@ -195,35 +209,35 @@ class Sudoku:
         #   **kwds:   event/action specific kwd: value dict list.
 
         s = STT[e][self.ScState]
-        if s == CH:  # Can't happem
+        if s == CH:  # Can't happen
             raise RuntimeError(f"Event {e:d} can't happen in state {self.ScState:d}")  # this event cannot happen in this state
         elif s == IG:  # Ignore
             pass  # ignore this event in this state
         else:
             if GE[s][SB] != GE[self.ScState][SB]:
-                self.Parent.update_statusbar_state(GE[s][SB])
+                self.StatusBar.update_state(GE[s][SB])
             if GE[s][EMI] != GE[self.ScState][EMI]:
-                self.Parent.MenuBar.enable_menuitems(GE[s][EMI])
+                self.MenuBar.enable_menuitems(GE[s][EMI])
             self.ScState = s
             self.SAT[self.ScState](e, *args, **kwds)
 
     # Sudoku control state machine actions follow
     def on_idle_state(self, e, Cleanup = False):
         self.Flags &= ~GF_UNSAVED_CHANGES
-        self.Parent.update_statusbar0("")
+        self.StatusBar.update_0("")
         if Cleanup:
-            self.Parent.GameTimer.stop()
+            self.GameTimer.stop()
             self.clear_grid()
-            self.Parent.Board.clear_board()
-            self.Parent.PzlFn = ""
-            self.Parent.SetTitle(TITLE)
+            self.Board.clear_board()
+            self.PzlFn = ""
+            self.MainWindow.SetTitle(TITLE)
             if self.LSW is not None:
                 self.LSW.on_close(0)
                 self.LSW = None
         else:
-            self.Parent.GameTimer.pause()  # ensure game timer is stopped
+            self.GameTimer.pause()  # ensure game timer is stopped
         self.ShowCands = False
-        self.Parent.MenuBar.miPuzzleCandsShow.Check(False)
+        self.MenuBar.miPuzzleCandsShow.Check(False)
 
     def on_generate_state(self, e):
         # Creates a puzzle in self.Grid according to the difficulty level
@@ -231,13 +245,13 @@ class Sudoku:
         # to solve the puzzle in self.Steps.
 
         self.clear_grid()
-        self.Parent.Board.clear_board()
+        self.Board.clear_board()
         self.Flags &= ~GF_UNSAVED_CHANGES
         if self.LSW is not None:
             self.LSW.on_close(0)
             self.LSW = None
 
-        self.Parent.update_statusbar0("Generating Puzzle, may take some time. . .")
+        self.StatusBar.update_0("Generating Puzzle, may take some time. . .")
 
         g = [[0 for c in range(9)] for r in range(9)]
         gen_filled_grid(g)
@@ -248,7 +262,7 @@ class Sudoku:
         self.Props[PR_REQ_LVL] = self.Lvl
         CreatePuzzle[self.Sym](g, self.Props)
 
-        self.Parent.update_statusbar_level(LVLS[self.Props[PR_ACT_LVL]])
+        self.StatusBar.update_level(LVLS[self.Props[PR_ACT_LVL]])
         self.NrGivens = 0
         self.Props[PR_GIVENS] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         for r in range(9):
@@ -256,14 +270,14 @@ class Sudoku:
                 self.Grid[r][c][C_VAL] = g[r][c]
                 if g[r][c]:
                     self.Grid[r][c][C_ST] = CVS_GIVEN
-                    self.Parent.Board.write_cell_value(g[r][c], r, c, CVS_GIVEN)
+                    self.Board.write_cell_value(g[r][c], r, c, CVS_GIVEN)
                     self.NrGivens += 1
                     self.Props[PR_GIVENS][g[r][c] - 1] += 1
                 else:
                     self.Grid[r][c][C_ST] = CVS_CANDS
-                    self.Parent.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
+                    self.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
         self.NrEmpties = 81-self.NrGivens
-        self.Parent.GameTimer.start()
+        self.GameTimer.start()
         self.gen_event(EV_SC_SLV)
 
     def on_load_state(self, e):
@@ -275,7 +289,7 @@ class Sudoku:
                 self.gen_event(EV_SC_ENT, False)
                 return
         self.clear_grid()
-        self.Parent.Board.clear_board()
+        self.Board.clear_board()
         self.Flags &= ~GF_UNSAVED_CHANGES
         if self.LSW is not None:
             self.LSW.on_close(0)
@@ -283,7 +297,7 @@ class Sudoku:
 
         G = [[0 for c in range(9)] for r in range(9)]
         # Following uses tuple as a hack to pass PzlDir and PzlFn by ref.
-        Fp = open_puzzle((self.Parent.PzlDir, self.Parent.PzlFn), G)
+        Fp = open_puzzle((self.PzlDir, self.PzlFn), G)
         if Fp is None:
             self.gen_event(EV_SC_FIN)
             return
@@ -305,30 +319,30 @@ class Sudoku:
                 else:
                     self.Grid[r][c][C_ST] = CVS_EMPTY
                 self.Grid[r][c][C_VAL] = v
-                self.Parent.Board.write_cell_value(v, r, c,
+                self.Board.write_cell_value(v, r, c,
                                                    self.Grid[r][c][C_ST])
         if wx.MessageBox("Sudoku value file successfully loaded\n"
                          "Would you like to edit values before validating?",
                          "Question",
                          wx.ICON_QUESTION | wx.YES_NO) == wx.YES:
-            self.Parent.MenuBar.miPuzzleEnter.Check()
+            self.MenuBar.miPuzzleEnter.Check()
             self.gen_event(EV_SC_ENT, False)  # Cleanup is False
         else:
-            self.Parent.PzlDir, self.Parent.PzlFn = Fp
-            self.Parent.SetTitle(TITLE + " - " + Fp[1])
+            self.PzlDir, self.PzlFn = Fp
+            self.MainWindow.SetTitle(TITLE + " - " + Fp[1])
             self.gen_event(EV_SC_VLD)
 
     def on_entry_state(self, e, Cleanup = False):
         if Cleanup:
             self.clear_grid()
-            self.Parent.Board.clear_board()
+            self.Board.clear_board()
 
     def on_entry_save_state(self, e):
         G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
-        Fp = save_puzzle((self.Parent.PzlDir, self.Parent.PzlFn), G)
+        Fp = save_puzzle((self.PzlDir, self.PzlFn), G)
         if Fp is not None:
-            self.Parent.PzlDir, self.Parent.PzlFn = Fp
-            self.Parent.SetTitle(TITLE + " - " + self.Parent.PzlFn)
+            self.PzlDir, self.PzlFn = Fp
+            self.MainWindow.SetTitle(TITLE + " - " + self.PzlFn)
         self.gen_event(EV_SC_ENT, False)
 
     def on_entry_mouse_state(self, e, Type, r, c, KbdMods):
@@ -350,7 +364,7 @@ class Sudoku:
                 if self.Grid[r][c][C_VAL]:
                     self.Grid[r][c][C_VAL] = 0
                     self.Grid[r][c][C_ST] = CVS_EMPTY
-                    self.Parent.Board.write_cell_value(0, r, c, CVS_EMPTY)
+                    self.Board.write_cell_value(0, r, c, CVS_EMPTY)
 
             self.Flags |= GF_UNSAVED_CHANGES
             # check for conflicts (in an imaged grid) and update board.
@@ -368,7 +382,7 @@ class Sudoku:
                             self.NrConflicts += 1
                             self.Grid[r][c][C_ST] = CVS_CNFLT
                         grid[r][c] = v
-                        self.Parent.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
+                        self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
 
         elif Key == wx.WXK_CONTROL_Z:  # ^Z:  Undo
             if len(self.History):
@@ -376,7 +390,7 @@ class Sudoku:
                 self.Grid = deepcopy(g)
                 for r in range(9):
                     for c in range(9):
-                        self.Parent.Board.write_cell_value(g[r][c][C_VAL], r, c,
+                        self.Board.write_cell_value(g[r][c][C_VAL], r, c,
                                                            g[r][c][C_ST])
         elif Key in range(0x31, 0x3a):  # UTF-8 "1" through "9"
             # In Entry state, place the value in the selected cells and check
@@ -401,7 +415,7 @@ class Sudoku:
                             self.NrConflicts += 1
                             self.Grid[r][c][C_ST] = CVS_CNFLT
                         grid[r][c] = v
-                        self.Parent.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
+                        self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
         self.gen_event(EV_SC_ENT, False)
 
     def on_scramble_state(self, e):
@@ -419,8 +433,8 @@ class Sudoku:
                     self.Grid[r][c][C_ST] = CVS_EMPTY
                 self.Grid[r][c][C_VAL] = G[r][c]
                 self.Grid[r][c][C_SEL] = False
-                self.Parent.Board.select_cell(r, c, False)
-                self.Parent.Board.write_cell_value(G[r][c], r, c, self.Grid[r][c][C_ST])
+                self.Board.select_cell(r, c, False)
+                self.Board.write_cell_value(G[r][c], r, c, self.Grid[r][c][C_ST])
         self.SelList.clear()
         self.gen_event(EV_SC_ENT, False)
 
@@ -438,8 +452,8 @@ class Sudoku:
                     self.Grid[r][c][C_ST] = CVS_EMPTY
                 self.Grid[r][c][C_VAL] = G[r][c]
                 self.Grid[r][c][C_SEL] = False
-                self.Parent.Board.select_cell(r, c, False)
-                self.Parent.Board.write_cell_value(G[r][c], r, c, self.Grid[r][c][C_ST])
+                self.Board.select_cell(r, c, False)
+                self.Board.write_cell_value(G[r][c], r, c, self.Grid[r][c][C_ST])
         self.SelList.clear()
         self.gen_event(EV_SC_ENT, False)
 
@@ -448,11 +462,11 @@ class Sudoku:
             if wx.MessageBox(f"Puzzle has {self.NrConflicts:d} conflicts.\n"
                              "Do you want to go back and correct instead of starting over?",
                              "Warning", wx.YES_NO | wx.ICON_WARNING) == wx.YES:
-                self.Parent.MenuBar.miPuzzleEnter.Check()
+                self.MenuBar.miPuzzleEnter.Check()
                 self.gen_event(EV_SC_ENT, False)
             else:
                 self.clear_grid()
-                self.Parent.Board.clear_board()
+                self.Board.clear_board()
                 self.gen_event(EV_SC_FIN)
             return
         if self.NrGivens < 17:
@@ -460,19 +474,19 @@ class Sudoku:
                              "at least 17 givens.\n"
                              "Do you want to go back and correct instead of starting over?",
                              "Warning", wx.YES_NO | wx.ICON_WARNING) == wx.YES:
-                self.Parent.MenuBar.miPuzzleEnter.Check()
+                self.MenuBar.miPuzzleEnter.Check()
                 self.gen_event(EV_SC_ENT, False)
             else:
                 self.clear_grid()
-                self.Parent.Board.clear_board()
+                self.Board.clear_board()
                 self.gen_event(EV_SC_FIN)
             return
 
-        self.Parent.update_statusbar0("Validating Puzzle, may take some time. . .")
+        self.StatusBar.update_0("Validating Puzzle, may take some time. . .")
         #  Image the grid
-        g = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+        G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
         Soln = {S_FOUND: 0, S_GRID: None}
-        check_puzzle(g, Soln)
+        check_puzzle(G, Soln)
         if Soln[S_FOUND] == 1:  # The puzzle is valid
             # 0.  Copy the solved grid into self.Grid[][][C_SLVD], convert entered
             #     values to Givens and update board.
@@ -483,59 +497,56 @@ class Sudoku:
                     self.Grid[r][c][C_SLVD] = Soln[S_GRID][r][c]
                     if self.Grid[r][c][C_VAL]:
                         self.Grid[r][c][C_ST] = CVS_GIVEN
-                        self.Parent.Board.write_cell_value(g[r][c], r, c, CVS_GIVEN)
-                        self.Props[PR_GIVENS][g[r][c]-1] += 1
+                        self.Board.write_cell_value(G[r][c], r, c, CVS_GIVEN)
+                        self.Props[PR_GIVENS][G[r][c]-1] += 1
                         self.NrGivens += 1
                     else:
                         self.Grid[r][c][C_ST] = CVS_CANDS
-                        self.Parent.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
+                        self.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
             # 1.  Grade the puzzle
             # The grid g should still be good.
             self.Props[PR_REQ_LVL] = self.Lvl
             self.Props[PR_NR_HOLES] = 81-self.NrGivens
-            if grade_puzzle(g, self.Props):
-                self.Parent.update_statusbar_level(LVLS[self.Props[PR_ACT_LVL]])
+            if grade_puzzle(G, self.Props):
+                self.StatusBar.update_level(LVLS[self.Props[PR_ACT_LVL]])
                 # 2.  Clear any selected cells
                 while len(self.SelList):
                     r, c = self.SelList.popleft()
                     self.Grid[r][c][C_SEL] = False
-                    self.Parent.Board.select_cell(r, c, False)
+                    self.Board.select_cell(r, c, False)
                 # 3.  Ditch the history
                 self.History.clear()
                 # 4.  Ready to transition to solve state
-                self.Parent.GameTimer.start()
+                self.GameTimer.start()
                 self.NrEmpties = 81-self.NrGivens
                 self.gen_event(EV_SC_SLV)
                 return
             else:
-#                self.Parent.update_statusbar0("")
-#                self.clear_grid()
-#                self.Parent.Board.clear_board()
                 wx.MessageBox("Bug in program!\nPlease submit puzzle to developers",
                                  "Warning",
                                  wx.OK | wx.ICON_WARNING)
                 self.gen_event(EV_SC_SLV)
                 return
-        self.Parent.update_statusbar0("")
+        self.StatusBar.update_0("")
         St = "Invalid Puzzle!  "
         St += "No Solution.\n" if Soln[S_FOUND] == 0 else "Multiple Solutions.\n"
         St += "Do you want to correct instead of starting over"
         if wx.MessageBox(St,
                          "Warning",
                          wx.YES_NO | wx.ICON_WARNING) == wx.YES:
-            self.Parent.MenuBar.miPuzzleEnter.Check()
+            self.MenuBar.miPuzzleEnter.Check()
             self.gen_event(EV_SC_ENT, False)
         else:
             self.clear_grid()
-            self.Parent.Board.clear_board()
+            self.Board.clear_board()
             self.gen_event(EV_SC_FIN)
 
     def on_solve_state(self, e, tf = True):
         # Entering Pause state (can only occur from Solve state) will hide the
         # puzzle and pause the timer.  On re-entry ensure that the puzzle is
         # shown and the timer is resumed.
-        self.Parent.Board.hide_puzzle(False)
-        self.Parent.GameTimer.resume()
+        self.Board.hide_puzzle(False)
+        self.GameTimer.resume()
 
         # update value histogram in status bar.
         G = self.FilledVals = [0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -544,10 +555,9 @@ class Sudoku:
                 C = self.Grid[r][c]
                 if C[C_ST] == CVS_GIVEN or C[C_ST] == CVS_SOLVE:
                     G[C[C_VAL]-1] += 1
-        self.Parent.update_statusbar0(f"[1]={G[0]}, [2]={G[1]}, [3]={G[2]}, [4]={G[3]}, "
-                                      f"[5]={G[4]}, [6]={G[5]}, [7]={G[6]}, [8]={G[7]}, "
-                                      f"[9]={G[8]}")
-
+        self.StatusBar.update_0(f"[1]={G[0]}, [2]={G[1]}, [3]={G[2]}, [4]={G[3]}, "
+                                f"[5]={G[4]}, [6]={G[5]}, [7]={G[6]}, [8]={G[7]}, "
+                                f"[9]={G[8]}")
         if self.NrEmpties == 0 and not self.Flags & GF_CORR:  # Puzzle is complete.
             if self.Assist == AST_FIN_CHECK \
                     or self.Assist == AST_FIN_CNFLTS \
@@ -601,11 +611,11 @@ class Sudoku:
                                         "What would you like to do?",
                                         wx.ICON_INFORMATION | wx.YES_NO | wx.CANCEL)
             if not Ans:
-                self.Parent.GameTimer.pause()
+                self.GameTimer.pause()
                 while len(self.SelList):
                     r, c = self.SelList.pop()
                     self.Grid[r][c][C_SEL] = False
-                    self.Parent.Board.select_cell(r, c, False)
+                    self.Board.select_cell(r, c, False)
                 St = "Correct Solution!\n"
                 if self.VagueHints:
                     St += f"    {self.VagueHints} vague hints.\n"
@@ -626,10 +636,10 @@ class Sudoku:
 
     def on_solve_save_state(self, e):
         G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
-        Fp = save_puzzle((self.Parent.PzlDir, self.Parent.PzlFn), G)
+        Fp = save_puzzle((self.PzlDir, self.PzlFn), G)
         if Fp is not None:
-            self.Parent.PzlDir, self.Parent.PzlFn = Fp
-            self.Parent.SetTitle(TITLE + " - " + self.Parent.PzlFn)
+            self.PzlDir, self.PzlFn = Fp
+            self.MainWindow.SetTitle(TITLE + " - " + self.PzlFn)
         self.gen_event(EV_SC_SLV)
 
     def on_solve_mouse_state(self, e, Type, r, c, KbdMods):
@@ -657,11 +667,11 @@ class Sudoku:
                             if self.Grid[r][c][C_VAL] == self.Grid[r1][c1][C_VAL]:
                                 if self.Grid[r1][c1][C_ST] == CVS_GIVEN:
                                     self.Grid[r1][c1][C_ST] = CVS_SVGHL
-                                    self.Parent.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
+                                    self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                                        r1, c1, CVS_SVGHL)
                                 elif self.Grid[r1][c1][C_ST] == CVS_SOLVE:
                                     self.Grid[r1][c1][C_ST] = CVS_SVSHL
-                                    self.Parent.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
+                                    self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                                        r1, c1, CVS_SVSHL)
 
                             # If candidates are shown and candidate assistance enabled
@@ -670,16 +680,16 @@ class Sudoku:
                             elif self.ShowCands and self.AssistCands:
                                 rd = (v - 1) // 3
                                 cd = (v - 1) % 3
-                                self.Parent.Board.set_cand_value(r1, c1, rd, cd,
+                                self.Board.set_cand_value(r1, c1, rd, cd,
                                                                  self.Grid[r1][c1][C_CAND][rd][cd], True)
 
             elif KbdMods == wx.MOD_ALT:
                 # Popup the bg_clr selector to choose the cell's background
                 # colour
-                self.Parent.Board.popup_cell_bg_clr_selector(r, c)
+                self.Board.popup_cell_bg_clr_selector(r, c)
             elif KbdMods == (wx.MOD_ALT | wx.MOD_CONTROL):
                 self.Flags |= GF_GROUP_HL
-                self.Parent.Board.group_highlight(True, r, c)
+                self.Board.group_highlight(True, r, c)
 
         elif Type == wx.EVT_LEFT_UP:
             # Releases the same cells value highlight push button, if it was
@@ -690,20 +700,20 @@ class Sudoku:
                     for c1 in range(9):
                         if self.Grid[r1][c1][C_ST] == CVS_SVGHL:
                             self.Grid[r1][c1][C_ST] = CVS_GIVEN
-                            self.Parent.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
+                            self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                                r1, c1, CVS_GIVEN)
                         elif self.Grid[r1][c1][C_ST] == CVS_SVSHL:
                             self.Grid[r1][c1][C_ST] = CVS_SOLVE
-                            self.Parent.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
+                            self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                                r1, c1, CVS_SOLVE)
                         elif self.ShowCands and self.AssistCands:
                             for rd in [0, 1, 2]:
                                 for cd in [0, 1, 2]:
-                                    self.Parent.Board.set_cand_value(r1, c1, rd, cd,
+                                    self.Board.set_cand_value(r1, c1, rd, cd,
                                                                      self.Grid[r1][c1][C_CAND][rd][cd])
             elif self.Flags & GF_GROUP_HL:
                 self.Flags &= ~GF_GROUP_HL
-                self.Parent.Board.group_highlight(False, r, c)
+                self.Board.group_highlight(False, r, c)
 
         elif Type == wx.EVT_RIGHT_DOWN:
             # Note: r and c here are in the range 0 - 26 candidate cells,
@@ -717,7 +727,7 @@ class Sudoku:
                 if not KbdMods:
                     d = not(self.Grid[rc][cc][C_CAND][rd][cd])
                     self.Grid[rc][cc][C_CAND][rd][cd] = d
-                    self.Parent.Board.set_cand_value(rc, cc, rd, cd, d)
+                    self.Board.set_cand_value(rc, cc, rd, cd, d)
                     if self.AssistCands and not d:
                         v = (rd * 3) + cd + 1
                         # This is not a bug, we are purposefully silent about
@@ -733,7 +743,7 @@ class Sudoku:
                     # background colour.  Note that if white is selected, it is
                     # treated as transparent.  That is the same background colour
                     # as the underlying cell is used.
-                    self.Parent.Board.popup_cand_bg_clr_selector(r, c)
+                    self.Board.popup_cand_bg_clr_selector(r, c)
                 elif KbdMods == wx.MOD_SHIFT:
                     self.History.append(deepcopy(self.Grid))
                     self.Grid[rc][cc][C_VAL] = (rd * 3) + cd + 1
@@ -746,20 +756,20 @@ class Sudoku:
                     if self.ShowCands:
                         for r1 in range(9):
                             for c1 in range(9):
-                                self.Parent.Board.set_cand_value(r1, c1, rd, cd,
+                                self.Board.set_cand_value(r1, c1, rd, cd,
                                                                  self.Grid[r1][c1][C_CAND][rd][cd], True)
 
             if KbdMods == (wx.MOD_CONTROL | wx.MOD_ALT):
                 # Reset all candidate background colours
                 # Cursor can be over any cell to reset bg colours
-                self.Parent.Board.reset_cand_bg_clrs()
+                self.Board.reset_cand_bg_clrs()
         elif Type == wx.EVT_RIGHT_UP:
             if self.ShowCands:
                 rd = r%3
                 cd = c%3
                 for r1 in range(9):
                     for c1 in range(9):
-                        self.Parent.Board.set_cand_value(r1, c1, rd, cd,
+                        self.Board.set_cand_value(r1, c1, rd, cd,
                                                          self.Grid[r1][c1][C_CAND][rd][cd])
         self.gen_event(EV_SC_SLV)
 
@@ -799,8 +809,8 @@ class Sudoku:
 
     def on_paused_state(self, e, tf):
         if tf:
-            self.Parent.Board.hide_puzzle(tf)
-            self.Parent.GameTimer.pause()
+            self.Board.hide_puzzle(tf)
+            self.GameTimer.pause()
 
     def on_hints_state(self, e, h):
         if not self.NrEmpties:
@@ -886,7 +896,7 @@ class Sudoku:
 
     def on_restart_solve_state(self, e):
         if self.NrGivens:   # the grid is populated with a puzzle
-            self.Parent.Board.clear_board()
+            self.Board.clear_board()
             self.NrConflicts = 0  # A count of conflicted cells in the grid
             self.NrEmpties = 81-self.NrGivens  # All cells are empty
             self.FilledVals = copy(self.Props[PR_GIVENS])
@@ -895,7 +905,7 @@ class Sudoku:
             self.Flags = 0
             self.VagueHints = self.ClearerHints = self.ClearestHints = 0
             self.ShowCands = False
-            self.Parent.MenuBar.miPuzzleCandsShow.Check(False)
+            self.MenuBar.miPuzzleCandsShow.Check(False)
             if self.LSW is not None:
                 self.LSW.on_close(0)
                 self.LSW = None
@@ -908,7 +918,7 @@ class Sudoku:
                         C[C_VAL] = 0
                         C[C_CAND] = [[False for cc in range(3)] for cr in range(3)]
                         C[C_ELIM] = set()
-                    self.Parent.Board.write_cell_value(C[C_VAL], r, c, C[C_ST], C[C_CAND])
+                    self.Board.write_cell_value(C[C_VAL], r, c, C[C_ST], C[C_CAND])
             self.gen_event(EV_SC_SLV)
         else:
             self.gen_event(EV_SC_FIN)
@@ -935,10 +945,10 @@ class Sudoku:
                                 if cell_val_has_no_conflicts(i, g, r, c) \
                                         and i not in self.Grid[r][c][C_ELIM]:
                                     self.Grid[r][c][C_CAND][r1][c1] = True
-                                    self.Parent.Board.set_cand_value(r, c, r1, c1, True)
+                                    self.Board.set_cand_value(r, c, r1, c1, True)
                                 else:
                                     self.Grid[r][c][C_CAND][r1][c1] = False
-                                    self.Parent.Board.set_cand_value(r, c, r1, c1, False)
+                                    self.Board.set_cand_value(r, c, r1, c1, False)
         else:
             for r in range(9):
                 for c in range(9):
@@ -946,7 +956,7 @@ class Sudoku:
                         for r1 in range(3):
                             for c1 in range(3):
                                 self.Grid[r][c][C_CAND][r1][c1] = False
-                                self.Parent.Board.set_cand_value(r, c, r1, c1, False)
+                                self.Board.set_cand_value(r, c, r1, c1, False)
         self.gen_event(EV_SC_SLV)
 
     # Below are supporting functions for the Sudoku Control state machine actions
@@ -978,7 +988,7 @@ class Sudoku:
                     r1 = (v - 1) // 3
                     c1 = (v - 1) % 3
                     self.Grid[r][c][C_CAND][r1][c1] = False
-                    self.Parent.Board.set_cand_value(r, c, r1, c1, False)
+                    self.Board.set_cand_value(r, c, r1, c1, False)
                 # else: #  silently ignore other operations
 
     def clear_grid(self):
@@ -1033,7 +1043,7 @@ class Sudoku:
                                     self.NrErrors += 1
                     else:
                         self.Grid[r][c][C_ST] = CVS_CANDS
-                    self.Parent.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST],
+                    self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST],
                                                        self.Grid[r][c][C_CAND])
         else:
             for r in range(9):
@@ -1045,7 +1055,7 @@ class Sudoku:
                             self.NrEmpties -= 1
                     else:
                         self.Grid[r][c][C_ST] = CVS_CANDS
-                    self.Parent.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST],
+                    self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST],
                                                        self.Grid[r][c][C_CAND])
 
 
@@ -1060,12 +1070,12 @@ class Sudoku:
             for r1 in set(range(9))-{r}:
                 if self.Grid[r1][c][C_CAND][vr][vc]:
                     self.Grid[r1][c][C_CAND][vr][vc] = False
-                    self.Parent.Board.set_cand_value(r1, c, vr, vc, False)
+                    self.Board.set_cand_value(r1, c, vr, vc, False)
             # then the col.
             for c1 in set(range(9))-{c}:
                 if self.Grid[r][c1][C_CAND][vr][vc]:
                     self.Grid[r][c1][C_CAND][vr][vc] = False
-                    self.Parent.Board.set_cand_value(r, c1, vr, vc, False)
+                    self.Board.set_cand_value(r, c1, vr, vc, False)
             # then the block.
             br = (r//3)*3
             bc = (c//3)*3
@@ -1073,7 +1083,7 @@ class Sudoku:
                 for c1 in range(bc, bc+3):
                     if self.Grid[r1][c1][C_CAND][vr][vc]:
                         self.Grid[r1][c1][C_CAND][vr][vc] = False
-                        self.Parent.Board.set_cand_value(r1, c1, vr, vc, False)
+                        self.Board.set_cand_value(r1, c1, vr, vc, False)
 
     def process_cell_selection(self, r, c, KbdMods):
         # Cell selection on left mouse down is exactly the same irrespective of
@@ -1094,25 +1104,25 @@ class Sudoku:
                 # Simply select the cell
                 self.SelList.append((r, c))
                 self.Grid[r][c][C_SEL] = True
-                self.Parent.Board.select_cell(r, c, True)
+                self.Board.select_cell(r, c, True)
             elif dl == 1:  # Only one value in the list.
                 # Clear previously selection, and select this one if not same
                 r1, c1 = self.SelList.popleft()
                 self.Grid[r1][c1][C_SEL] = False
-                self.Parent.Board.select_cell(r1, c1, False)
+                self.Board.select_cell(r1, c1, False)
                 if r1 != r or c1 != c:
                     self.SelList.append((r, c))
                     self.Grid[r][c][C_SEL] = True
-                    self.Parent.Board.select_cell(r, c, True)
+                    self.Board.select_cell(r, c, True)
             else:  # deque length > 1
                 # Clear all selected cells and just select this one.
                 while len(self.SelList):
                     r1, c1 = self.SelList.popleft()
                     self.Grid[r1][c1][C_SEL] = False
-                    self.Parent.Board.select_cell(r1, c1, False)
+                    self.Board.select_cell(r1, c1, False)
                 self.SelList.append((r, c))
                 self.Grid[r][c][C_SEL] = True
-                self.Parent.Board.select_cell(r, c, True)
+                self.Board.select_cell(r, c, True)
 
         if KbdMods == wx.MOD_SHIFT:  # only Shift key is pressed.
             # Select multiple cells, if the cell is already  selected, just
@@ -1121,11 +1131,11 @@ class Sudoku:
                 if (r, c) in self.SelList:
                     self.SelList.remove((r, c))
                 self.Grid[r][c][C_SEL] = False
-                self.Parent.Board.select_cell(r, c, False)
+                self.Board.select_cell(r, c, False)
             else:
                 self.SelList.append((r, c))
                 self.Grid[r][c][C_SEL] = True
-                self.Parent.Board.select_cell(r, c, True)
+                self.Board.select_cell(r, c, True)
 
     def get_sel_list(self):
         # returns the selection list
@@ -1146,7 +1156,7 @@ class Sudoku:
         self.Sym = sym
 
     def set_assistance(self, ast):
-        self.Parent.update_statusbar_assist(AST_LVLS[ast])
+        self.StatusBar.update_assist(AST_LVLS[ast])
         self.Assist = ast
 
     def set_assist_cands(self, tf):

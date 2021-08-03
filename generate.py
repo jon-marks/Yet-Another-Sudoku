@@ -11,11 +11,11 @@ if DEBUG:
     seed(0)
 
 def check_puzzle(Grid, Soln, cell = 0):
-    #  Recursive backtracking function to check a Sudoku puzzle. Returns True
-    #  if only one solution is found, returns False if there is no solution or
-    #  more than one solution.
+    #  Recursive backtracking function to solve a Sudoku puzzle as a check.
+    #  Returns True if only one solution is found, returns False if there is no
+    #  solution or more than one solution.
     #  The information in Grid is not preserved.
-    #  Grid:  In:  A sudoku puzzle to test
+    #  Grid:  In:  A sudoku puzzle to check
     #         Recursive call:  Partially tested
     #         Out:  Preserved Grid as passed if puzzle has a valid solution
     #  cell:  In: Optional: - must be 0 if not called recursively

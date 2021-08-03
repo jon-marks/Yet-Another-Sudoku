@@ -56,8 +56,8 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
     # Statistics List Control
 
     def __init__(self, Parent):
-        if Parent.Parent.PzlFn != "":
-            T = "Yet Another Sudoku Solution" + " - " + Parent.Parent.PzlFn
+        if Parent.PzlFn != "":
+            T = "Yet Another Sudoku Solution" + " - " + Parent.PzlFn
         else:
             T = "Yet Another Sudoku Solution"
         wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = T,

@@ -3,7 +3,8 @@
  Name:  main.pyw
 
 Description:
-    Yet another Soduko program to create and solve puzzles.
+    Yet another Soduko program to create and solve puzzles as well as teach
+    logic techniques.
     Features include:
      *  Create puzzles
          - with specified type of symetry
@@ -29,7 +30,12 @@ Description:
      *  View, select or save-for-later puzzles from the cache.
 
 Notes on programming style used here:
-1.  An intent of the top level software design behind the code is to favour an
+1.  The three major single instance classes are: TODO:  This para requires work.
+    Sudoku:  This class manages the overall operation of the Sudoku program as
+    a state machine, coordinating the activities of the other two major objects
+    Board: This is the man machine Interface class responsible for drawing the
+    grid, receiving user input and displaying puzzle information
+    Puzzle: handles all the data associated with a puzzle and the the inputting / creation of puzzlesgeneration of An intent of the top level software design behind the code is to favour an
     egalitarian cluster of loosly coupled tightly contained objects rather than
     a hierachical structure of objects. Not to say that hierachy and inheritance
     are avoided when their use makes sense.
@@ -49,10 +55,10 @@ Notes on programming style used here:
     the equivalent deepcopy()'s.
 
 3.  By convention, use enumerated dicts to emulate the quivalaent of C-like
-    struct's rather rather than dataclasses.  Both afford similar readability
-    albeit dataclass syntax being more familiar.  I suspect that the enumerated
-    dicts are slightly more efficient in resources and speed, but this is yet to
-    be confirmed.
+    typedef struct's rather rather than dataclasses.  Both afford similar
+    readability albeit dataclass syntax being more familiar.  I suspect that the
+    enumerated dicts are slightly more efficient in resources and speed, but
+    this is yet to be confirmed.
     https://stackoverflow.com/questions/35988/c-like-structures-in-python
 
 4.  Note a programming style that favours processing info in tables, rather than
@@ -76,15 +82,12 @@ Notes on programming style used here:
 
 """
 
-import os
 import wx
 
 # Local Imports
 from globals import *
 from menus import *
-from board import *
 from sudoku import *
-from timer import *
 
 if DEBUG:
     import logging as log
@@ -93,6 +96,43 @@ if DEBUG:
                     filemode = 'w',
                     level = log.DEBUG,
                     format = '%(asctime)s: %(message)s')
+
+class MainStatusBar(wx.StatusBar):
+    def __init__(self, Parent):
+        wx.StatusBar.__init__(self, Parent, id = wx.ID_ANY,
+                              style = wx.BORDER_SUNKEN|wx.STB_DEFAULT_STYLE)
+        self.SetFieldsCount(5)
+        self.F1w = wx.Size.GetWidth(self.GetTextExtent(GE[ST_DEFAULT][SB]))
+        self.F2w = wx.Size.GetWidth(self.GetTextExtent(AST_LVLS[AST_DEFAULT]))
+        self.F3w = wx.Size.GetWidth(self.GetTextExtent(LVLS[LVL_NONE]))
+        self.F4w = wx.Size.GetWidth(self.GetTextExtent("00:00:00"))-19
+        self.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
+        self.SetStatusText(GE[ST_DEFAULT][SB], 1)
+        self.SetStatusText(AST_LVLS[AST_DEFAULT], 2)
+        self.SetStatusText(LVLS[LVL_NONE], 3)
+        self.SetStatusText("00:00:00", 4)
+
+    def update_0(self, Value):
+        self.SetStatusText(Value, 0)
+
+    def update_state(self, Value):
+        self.F1w = wx.Size.GetWidth(self.GetTextExtent(Value))
+        self.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
+        self.SetStatusText(Value, 1)
+
+    def update_assist(self, Value):
+        self.F2w = wx.Size.GetWidth(self.GetTextExtent(Value))
+        self.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
+        self.SetStatusText(Value, 2)
+
+    def update_level(self, Value):
+        self.F3w = wx.Size.GetWidth(self.GetTextExtent(Value))
+        self.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
+        self.SetStatusText(Value, 3)
+
+    def update_time(self, Value):
+        self.SetStatusText(Value, 4)
+
 
 class MainWindow(wx.Frame):
     def __init__(self):  # , parent):
@@ -107,58 +147,18 @@ class MainWindow(wx.Frame):
         Icon = wx.Icon()
         Icon.CopyFromBitmap(wx.Bitmap("sudoku.ico", wx.BITMAP_TYPE_ANY))
         self.SetIcon(Icon)
-
         self.SetMenuBar(MainMenubar(self))
-        self.SetStatusBar(self.CreateStatusBar(5, wx.BORDER_SUNKEN|wx.STB_DEFAULT_STYLE,
-                                               wx.ID_ANY))
-        self.F1w = wx.Size.GetWidth(self.StatusBar.GetTextExtent(GE[ST_DEFAULT][SB]))
-        self.F2w = wx.Size.GetWidth(self.StatusBar.GetTextExtent(AST_LVLS[AST_DEFAULT]))
-        self.F3w = wx.Size.GetWidth(self.StatusBar.GetTextExtent(LVLS[LVL_NONE]))
-        self.F4w = wx.Size.GetWidth(self.StatusBar.GetTextExtent("00:00:00"))-19
-        self.StatusBar.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
-        self.StatusBar.SetStatusText(GE[ST_DEFAULT][SB], 1)
-        self.StatusBar.SetStatusText(AST_LVLS[AST_DEFAULT], 2)
-        self.StatusBar.SetStatusText(LVLS[LVL_NONE], 3)
-        self.StatusBar.SetStatusText("00:00:00", 4)
+        self.SetStatusBar(MainStatusBar(self))
 
-        self.GameTimer = GameTimer(self)
-
-        self.Board = Board(self)  # Frontend man/machine interface
-        self.Sudoku = Sudoku(self)  # Backend functionality
+#        self.Board = Board(self)  # Frontend man/machine interface
+        self.Sudoku = Sudoku(self, self.MenuBar, self.StatusBar)  # Instantiate the single instance Sudoku class.
 
         self.Bind(wx.EVT_CLOSE, self.on_exit)
 
-        self.Dir = os.getcwd()
-        self.PzlDir = os.path.join(self.Dir, PUZZLES_DIR)  # where the puzzles are stored
-        self.PzlFn  = ""
 
-    #        self.Fit()
-    #        self.Centre(wx.BOTH)
-    #        self.Show()
-
-    def update_statusbar0(self, Value):
-        self.StatusBar.SetStatusText(Value, 0)
-
-    def update_statusbar_state(self, Value):
-        self.F1w = wx.Size.GetWidth(self.StatusBar.GetTextExtent(Value))
-        self.StatusBar.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
-        self.StatusBar.SetStatusText(Value, 1)
-
-    def update_statusbar_assist(self, Value):
-        self.F2w = wx.Size.GetWidth(self.StatusBar.GetTextExtent(Value))
-        self.StatusBar.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
-        self.StatusBar.SetStatusText(Value, 2)
-
-    def update_statusbar_level(self, Value):
-        self.F3w = wx.Size.GetWidth(self.StatusBar.GetTextExtent(Value))
-        self.StatusBar.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
-        self.StatusBar.SetStatusText(Value, 3)
-
-    def update_statusbar_time(self, Value):
-        self.StatusBar.SetStatusText(Value, 4)
 
     def on_exit(self, e):
-        self.GameTimer.on_close(e)
+        self.Sudoku.on_close(e)
         e.Skip()
         del e
         self.Hide()

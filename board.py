@@ -22,19 +22,20 @@ from copy import copy, deepcopy
 from globals import *
 
 # GC_FLAG bits
-GCF_SEL = 0x0001  # Cell selected
+GCF_SEL    = 0x0001  # Cell selected
 GCF_GRP_HL = 0x0002  # Part of transient group highlight
+
 # grid cell attributes
-GC_SHOW = 0  # What is being displayed - assumes CVS_* enums from
-# globals.py, which also is the index to the cell_fg_clr.
-# through CVS_CLRS[]
-GC_FRM_WIN = 1  # Cell frame window object where the selected frame is indicated
+GC_SHOW     = 0  # What is being displayed - assumes CVS_* enums from
+                 # globals.py, which also is the index to the cell_fg_clr.
+                 # through CVS_CLRS[]
+GC_FRM_WIN  = 1  # Cell frame window object where the selected frame is indicated
 GC_CELL_WIN = 2  # Cell window - the inside window of the selection frame
-GC_FLAGS = 3  # Cell is selected or not.
-GC_VAL = 4  # Cell value (0 = blank)
-GC_BGI = 5  # Index to the background colour in BG_CLRS[]
-GC_STC = 6  # Cell StaticText control
-GC_CAND = 7  # The 3x3 matrix of candidate attributes
+GC_FLAGS    = 3  # Cell is selected or not.
+GC_VAL      = 4  # Cell value (0 = blank)
+GC_BGI      = 5  # Index to the background colour in BG_CLRS[]
+GC_STC      = 6  # Cell StaticText control
+GC_CAND     = 7  # The 3x3 matrix of candidate attributes
 
 # Candidate attributes
 CD_SEL = 0  # Candidate selected when true
@@ -46,9 +47,14 @@ BG_CELL = 0
 BG_CAND = 1
 
 class BgClrPkrPopup(wx.PopupTransientWindow):
+    # Background colour picker popup.  Used to select the background colour for
+    # a selected cell or candidate.
 
-    def __init__(self, parent, creator, t, r, c):
-        wx.PopupTransientWindow.__init__(self, parent, wx.BORDER_NONE)
+    # def __init__(self, parent, creator, t, r, c):
+    #     wx.PopupTransientWindow.__init__(self, parent, wx.BORDER_NONE)
+    def __init__(self, FrmWin, Sudoku, t, r, c):
+        wx.PopupTransientWindow.__init__(self, FrmWin, wx.BORDER_NONE)
+
         Szr0 = wx.BoxSizer(wx.VERTICAL)
         Pnl = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition,
                        wx.Size(BG_CLR_PKR_WIDTH, -1), wx.BORDER_SIMPLE)
@@ -63,11 +69,11 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
         for i, Clr in enumerate(BG_CLRS):
             Szr.Add(Btn[i], 0, wx.ALL, 1)
             if t == BG_CELL:
-                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, cr = creator:
-                            self.on_pick_cell_bg_clr(e, ci, cr))
+                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, Sudoku = Sudoku:
+                            self.on_pick_cell_bg_clr(e, ci, Sudoku))
             else:
-                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, cr = creator:
-                            self.on_pick_cand_bg_clr(e, ci, cr, r, c))
+                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, Sudoku = Sudoku:
+                            self.on_pick_cand_bg_clr(e, ci, Sudoku, r, c))
 
             Btn[i].SetBackgroundColour(Clr)
             Pnl.SetSizer(Szr)
@@ -77,7 +83,7 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
         self.Layout()
 
     def on_pick_cell_bg_clr(self, e, ci, cr):
-        SelList = cr.Parent.Sudoku.get_sel_list()
+        SelList = Sudoku.get_sel_list()
         for r, c in SelList:
             C = cr.Cell[r][c]
             C[GC_BGI] = ci  # VAL][VL_BG] = BG_CLRS[ci]
@@ -134,8 +140,10 @@ class Board:
     #   a.  Left mouse button ==> cell selection and operations
     #   b.  Right mouse button ==> candidate selection and operations
 
-    def __init__(self, parent, CellSz = DEFAULT_CELL_SZ):
-        self.Parent = parent
+    def __init__(self, MainWindow, Sudoku, CellSz = DEFAULT_CELL_SZ):
+#        self.Parent = parent
+        self.MainWindow = MainWindow
+        self.Sudoku     = Sudoku
         # Setup the main cell array structure
         self.Cell = [[{GC_SHOW:     CVS_EMPTY,
                        GC_FRM_WIN:  None,
@@ -167,12 +175,12 @@ class Board:
         # Draw the sudoku board
         # Frame sizer in the main window frame,into which the grid is stacked.
         FrmSzr = wx.GridSizer(1, 1, 0, 0)
-        parent.SetSizer(FrmSzr)
+        MainWindow.SetSizer(FrmSzr)
 
         # The purpose of this lowest frame panel in the stack is to force
         # the frame to the grid size and provide the outermost frame border
         # of the grid.
-        self.FrmWin = wx.Window(parent,
+        self.FrmWin = wx.Window(MainWindow,
                                 wx.ID_ANY,
                                 wx.DefaultPosition,
                                 wx.Size(self.BrdSz, self.BrdSz),
@@ -334,9 +342,9 @@ class Board:
                                                lambda e, r = cr*3+r, c = cc*3+c:
                                                self.on_mse_right_up(e, r, c))
                                 D[CD_STC].Hide()
-        parent.Layout()
-        parent.SetClientSize(self.BrdSz, self.BrdSz)
-        parent.Centre(wx.BOTH)
+        MainWindow.Layout()
+        MainWindow.SetClientSize(self.BrdSz, self.BrdSz)
+        MainWindow.Centre(wx.BOTH)
         self.FrmWin.Show()
 
     def resize(self, CellSz):
@@ -363,8 +371,8 @@ class Board:
                         D[CD_STC].SetPosition(wx.Point(c*CandSz, r*CandSz), )
                         D[CD_STC].SetSize(CandSz, CandSz)
                         D[CD_STC].SetFont(self.CandFont)
-        self.Parent.Layout()
-        self.Parent.SetClientSize(self.BrdSz, self.BrdSz)
+        self.MainWindow.Layout()
+        self.MainWindow.SetClientSize(self.BrdSz, self.BrdSz)
         self.FrmWin.Show()
 
     def clear_board(self):
@@ -443,30 +451,6 @@ class Board:
                     D[CD_STC].Show()
         C[GC_SHOW] = st
 
-        # if C[GC_SHOW] == CVS_CANDS and st != CVS_CANDS:
-        #     # transition from showing cands to showing value
-        #     for r in range(3):
-        #         for c in range(3):
-        #             C[GC_CAND][r][c][CD_STC].Hide()
-        #     C[GC_STC].Show()
-        # elif C[GC_SHOW] != CVS_CANDS and st == CVS_CANDS:
-        #     # transition into cands from showing values.
-        #     C[GC_STC].Hide()
-        #     C[GC_STC].SetLabel("")
-        #     for r in range(3):
-        #         for c in range(3):
-        #             D = C[GC_CAND][r][c]
-        #             if not D[CD_SEL]:
-        #                 D[CD_STC].SetLabel("")
-        #                 if self.UnselCandVisible:
-        #                     D[CD_STC].SetForegroundColour(CAND_UNSEL_CLR)
-        #                 elif D[CD_BGI] == BG_CLR_DEFAULT:
-        #                     D[CD_STC].SetForegroundColour(BG_CLRS[C[GC_BGI]])
-        #                 else:
-        #                     D[CD_STC].SetForegroundColour(BG_CLRS[D[CD_BGI]])
-        #                 D[CD_STC].SetLabel(str(r*3+c+1))
-        #             C[GC_CAND][r][c][CD_STC].Show()
-        # C[GC_SHOW] = st
 
     def select_cell(self, r, c, tf):
         if tf:
@@ -614,31 +598,31 @@ class Board:
     def on_mse_left_down(self, e, r, c):
         self.FrmWin.SetFocus()  # Give keyboard focus back to FrmWin.
         KbdMods = e.GetModifiers() & (wx.MOD_ALT | wx.MOD_CONTROL  |wx.MOD_SHIFT)
-        self.Parent.Sudoku.gen_event(EV_SC_MSE, wx.EVT_LEFT_DOWN, r, c, KbdMods)
+        self.Sudoku.gen_event(EV_SC_MSE, wx.EVT_LEFT_DOWN, r, c, KbdMods)
 
     def on_mse_left_up(self, e, r, c):
         self.FrmWin.SetFocus()  # Give keyboard focus back to FrmWin.
         KbdMods = e.GetModifiers() & (wx.MOD_ALT | wx.MOD_CONTROL | wx.MOD_SHIFT)
-        self.Parent.Sudoku.gen_event(EV_SC_MSE, wx.EVT_LEFT_UP, r, c, KbdMods)
+        self.Sudoku.gen_event(EV_SC_MSE, wx.EVT_LEFT_UP, r, c, KbdMods)
 
     def on_mse_right_down(self, e, r, c):
         # note that r and c index a 27x27 matrix of candidates.
         self.FrmWin.SetFocus()  # Give keyboard focus back to FrmWin.
         KbdMods = e.GetModifiers() & (wx.MOD_ALT | wx.MOD_CONTROL | wx.MOD_SHIFT)
-        self.Parent.Sudoku.gen_event(EV_SC_MSE, wx.EVT_RIGHT_DOWN, r, c, KbdMods)
+        self.Sudoku.gen_event(EV_SC_MSE, wx.EVT_RIGHT_DOWN, r, c, KbdMods)
 
     def on_mse_right_up(self, e, r, c):
         # note that r and c index a 27x27 matrix of candidates.
         self.FrmWin.SetFocus()  # Give keyboard focus back to FrmWin.
         KbdMods = e.GetModifiers() & (wx.MOD_ALT | wx.MOD_CONTROL | wx.MOD_SHIFT)
-        self.Parent.Sudoku.gen_event(EV_SC_MSE, wx.EVT_RIGHT_UP, r, c, KbdMods)
+        self.Sudoku.gen_event(EV_SC_MSE, wx.EVT_RIGHT_UP, r, c, KbdMods)
 
     def on_char_frm_win(self, e):
         #  Process the wx.EVT_CHAR keypress event.
         Key = e.GetUnicodeKey()
         if Key == wx.WXK_NONE:
             Key = e.GetKeyCode()
-        self.Parent.Sudoku.gen_event(EV_SC_KBD, Key)
+        self.Sudoku.gen_event(EV_SC_KBD, Key)
 
 def _highlight_cell(Tint, C, UnselCandVis):
     if C[GC_SHOW] != CVS_CANDS:
