@@ -92,7 +92,7 @@ from sudoku import *
 if DEBUG:
     import logging as log
 
-    log.basicConfig(filename = 'sudoku.log',
+    log.basicConfig(filename = '../sudoku.log',
                     filemode = 'w',
                     level = log.DEBUG,
                     format = '%(asctime)s: %(message)s')
@@ -149,13 +149,8 @@ class MainWindow(wx.Frame):
         self.SetIcon(Icon)
         self.SetMenuBar(MainMenubar(self))
         self.SetStatusBar(MainStatusBar(self))
-
-#        self.Board = Board(self)  # Frontend man/machine interface
         self.Sudoku = Sudoku(self, self.MenuBar, self.StatusBar)  # Instantiate the single instance Sudoku class.
-
         self.Bind(wx.EVT_CLOSE, self.on_exit)
-
-
 
     def on_exit(self, e):
         self.Sudoku.on_close(e)
@@ -165,7 +160,6 @@ class MainWindow(wx.Frame):
         wx.CallAfter(self.Destroy)
 
 def main():
-    #if __name__ == "__main__":
     App = wx.App(False)
     Frame = MainWindow()
     App.SetTopWindow(Frame)

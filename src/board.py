@@ -52,7 +52,9 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
 
     # def __init__(self, parent, creator, t, r, c):
     #     wx.PopupTransientWindow.__init__(self, parent, wx.BORDER_NONE)
-    def __init__(self, FrmWin, Sudoku, t, r, c):
+    def __init__(self, FrmWin, Board, t, r, c):
+        # t = type of popup, either for a cell or a cand. (BG_CELL or BG_CAND)
+
         wx.PopupTransientWindow.__init__(self, FrmWin, wx.BORDER_NONE)
 
         Szr0 = wx.BoxSizer(wx.VERTICAL)
@@ -69,11 +71,11 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
         for i, Clr in enumerate(BG_CLRS):
             Szr.Add(Btn[i], 0, wx.ALL, 1)
             if t == BG_CELL:
-                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, Sudoku = Sudoku:
-                            self.on_pick_cell_bg_clr(e, ci, Sudoku))
+                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, Board = Board:
+                            self.on_pick_cell_bg_clr(e, ci, Board))
             else:
-                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, Sudoku = Sudoku:
-                            self.on_pick_cand_bg_clr(e, ci, Sudoku, r, c))
+                Btn[i].Bind(wx.EVT_LEFT_DOWN, lambda e, ci = i, Board = Board:
+                            self.on_pick_cand_bg_clr(e, ci, Board, r, c))
 
             Btn[i].SetBackgroundColour(Clr)
             Pnl.SetSizer(Szr)
@@ -82,10 +84,9 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
         Szr0.Fit(self)
         self.Layout()
 
-    def on_pick_cell_bg_clr(self, e, ci, cr):
-        SelList = Sudoku.get_sel_list()
-        for r, c in SelList:
-            C = cr.Cell[r][c]
+    def on_pick_cell_bg_clr(self, e, ci, Board):
+        for r, c in Board.Sudoku.SelList:
+            C = Board.Cell[r][c]
             C[GC_BGI] = ci  # VAL][VL_BG] = BG_CLRS[ci]
             C[GC_STC].SetBackgroundColour(BG_CLRS[ci])
             C[GC_STC].ClearBackground()
@@ -98,7 +99,7 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
                     i += 1
                     D = C[GC_CAND][r1][c1]
                     if D[CD_BGI] == BG_CLR_DEFAULT:  # Cell BG colour shines through
-                        if not (D[CD_SEL] or cr.UnselCandVisible):
+                        if not (D[CD_SEL] or Board.UnselCandVisible):
                             D[CD_STC].SetForegroundColour(BG_CLRS[ci])
                         D[CD_STC].SetBackgroundColour(BG_CLRS[ci])
                         D[CD_STC].ClearBackground()
@@ -118,7 +119,7 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
         wx.CallAfter(self.Destroy)
 
     def on_pick_cand_bg_clr(self, e, ci, cr, r, c):
-        C = cr.Cell[r//3][c//3]
+        C = Board.Cell[r//3][c//3]
         D = C[GC_CAND][r%3][c%3]
         D[CD_BGI] = ci
         if ci == BG_CLR_DEFAULT:  # candidate inherits cell's bg clr.
@@ -126,7 +127,7 @@ class BgClrPkrPopup(wx.PopupTransientWindow):
         else:
             D[CD_STC].SetBackgroundColour(BG_CLRS[ci])
         D[CD_STC].ClearBackground()
-        if D[CD_SEL] or cr.UnselCandVisible:
+        if D[CD_SEL] or Board.UnselCandVisible:
             lbl = D[CD_STC].GetLabelText()
             D[CD_STC].SetLabel("")
             D[CD_STC].SetLabel(lbl)

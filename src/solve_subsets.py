@@ -71,7 +71,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
                                 ElimCands[r][c2].add(Cand)
                 if Step[P_OUTC]:  # Candidates were eliminated
                     Step[P_OUTC].append([P_END, ])
-                    Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                    Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                     [P_ROW, r], [P_COL, c, c1], [P_END, ]]
                     return 0
     # then scan the cols.
@@ -122,7 +122,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
                                     ElimCands[r2][c].add(Cand)
                 if Step[P_OUTC]:  # Candidates were eliminated
                     Step[P_OUTC].append([P_END, ])
-                    Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                    Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                     [P_ROW, r, r1], [P_COL, c], [P_END, ]]
                     return 0
     # and finally scan the blocks.
@@ -158,7 +158,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
                     if Step[P_OUTC]:
                         Step[P_TECH] = T_EXPOSED_PAIR
                         Step[P_OUTC].append([P_END, ])
-                        Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                        Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                         [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1],
                                         [P_END, ]]
                         return 0
@@ -353,11 +353,11 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
                                         ElimCands[r][c3].add(Cand)
                         if Step[P_OUTC]:  # Candidates were eliminated
                             Step[P_OUTC].append([P_END, ])
-                            Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                            Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c], [P_CON, ],
-                                            [P_VAL, Cands[r][c1]], [P_OP, OP_EQ],
+                                            [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c1], [P_CON, ],
-                                            [P_VAL, Cands[r][c2]], [P_OP, OP_EQ],
+                                            [P_VAL, sorted(Cands[r][c2])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c2], [P_END, ]]
                             return 0
     # then scan the cols
@@ -413,11 +413,11 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
                                         ElimCands[r3][c].add(Cand)
                         if Step[P_OUTC]:  # Candidates were eliminated
                             Step[P_OUTC].append([P_END, ])
-                            Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                            Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c], [P_CON, ],
-                                            [P_VAL, Cands[r1][c]], [P_OP, OP_EQ],
+                                            [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ],
                                             [P_ROW, r1], [P_COL, c], [P_CON, ],
-                                            [P_VAL, Cands[r2][c]], [P_OP, OP_EQ],
+                                            [P_VAL, sorted(Cands[r2][c])], [P_OP, OP_EQ],
                                             [P_ROW, r2], [P_COL, c], [P_END, ]]
                             return 0
     # the scan the blocks.
@@ -458,11 +458,11 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
                             if Step[P_OUTC]:
                                 Step[P_TECH] = T_EXPOSED_TRIPLE
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                                Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                [P_VAL, Cands[r1][c1]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
                                                 [P_ROW, r1], [P_COL, c1], [P_CON, ],
-                                                [P_VAL, Cands[r2][c2]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ],
                                                 [P_ROW, r2], [P_COL, c2], [P_END, ]]
                                 return 0
     return -1
@@ -679,13 +679,13 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
                             if Step[P_OUTC]:  # Candidates were eliminated
                                 Step[P_TECH] = T_EXPOSED_QUAD
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                                Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                [P_VAL, Cands[r][c1]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c1], [P_CON, ],
-                                                [P_VAL, Cands[r][c2]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r][c2])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c2], [P_CON, ],
-                                                [P_VAL, Cands[r][c3]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r][c3])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c3], [P_END, ]]
                                 return 0
     # then scan the cols
@@ -705,7 +705,6 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
                         D = Cands[r][c] | Cands[r1][c] | Cands[r2][c] | Cands[r3][c]
                         if len(D) == 4:
                             # An exposed quad is found
-                            # Step[P_TECH] = T_EXPOSED_QUAD
                             for r4 in set(range(9)) - {r, r1, r2, r3}:
                                 if len(Cands[r4][c]) == 0:
                                     continue
@@ -721,13 +720,13 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
                             if Step[P_OUTC]:  # Candidates were eliminated
                                 Step[P_TECH] = T_EXPOSED_QUAD
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                                Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                [P_VAL, Cands[r1][c]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r1], [P_COL, c], [P_CON, ],
-                                                [P_VAL, Cands[r2][c]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r2][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r2], [P_COL, c], [P_CON, ],
-                                                [P_VAL, Cands[r3][c]], [P_OP, OP_EQ],
+                                                [P_VAL, sorted(Cands[r3][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r3], [P_COL, c], [P_END, ]]
                                 return 0
     # the scan the blocks.
@@ -756,7 +755,6 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
                             D = Cands[r][c] | Cands[r1][c1] | Cands[r2][c2] | Cands[r3][c3]
                             if len(D) == 4:
                                 # An exposed quad is found
-                                # Step[P_TECH] = T_EXPOSED_QUAD
                                 for rc4 in set(range(9)) - {rc, rc1, rc2, rc3}:
                                     r4 = br+(rc4//3)
                                     c4 = bc+(rc4%3)
@@ -774,13 +772,13 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_EXPOSED_QUAD
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = [[P_VAL, Cands[r][c]], [P_OP, OP_EQ],
+                                    Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                     [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                    [P_VAL, Cands[r][c1]], [P_OP, OP_EQ],
+                                                    [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
                                                     [P_ROW, r1], [P_COL, c1], [P_CON, ],
-                                                    [P_VAL, Cands[r][c2]], [P_OP, OP_EQ],
+                                                    [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ],
                                                     [P_ROW, r2], [P_COL, c2], [P_CON, ],
-                                                    [P_VAL, Cands[r][c3]], [P_OP, OP_EQ],
+                                                    [P_VAL, sorted(Cands[r3][c3])], [P_OP, OP_EQ],
                                                     [P_ROW, r3], [P_COL, c3], [P_END, ]]
                                     return 0
     return -1

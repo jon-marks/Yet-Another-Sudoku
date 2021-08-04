@@ -270,7 +270,7 @@ class UserGuide(wx.Dialog):
         self.BtnClose.Bind(wx.EVT_BUTTON, self.on_close)
         szr.Add(self.BtnClose, 0, wx.ALIGN_CENTER | wx.TOP, 2)
         szr.Add((0, 7), 0, 0, 0)  #  Add a 7 pixel spacer.
-        self.htc.LoadFile(os.path.join(os.path.dirname(__file__), "user_guide.html"))
+        self.htc.LoadFile(os.path.join(os.path.dirname(__file__), "../doc/user_guide.html"))
         self.SetSizer(szr)
         self.Layout()
         self.Centre(wx.BOTH)
@@ -400,7 +400,7 @@ def construct_str(Tkns):
                     St += f"{Tkn[i]}"
                 else:
                     for v in sorted(Tkn[i]):
-                        St += f"{v + 1}"
+                        St += f"{v}"
         elif Tkn[0] == P_SEP:
             St += "; "
         elif Tkn[0] == P_CON:

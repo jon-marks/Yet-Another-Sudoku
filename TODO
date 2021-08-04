@@ -1,5 +1,21 @@
 TODO
 ****
+* Testing software:
+   a.  Regressive tests using hodoku's reglib.
+   b.  Batch solver to solve list of puzzles and document solutions.
+       i.  separate tool to browse or print out solutions.
+* Line drawing for making chains: (try to make them with variable opacity)
+   - User drawing lines.
+   - Solver showing lines.
+* Update the user guide.
+* Relook at cython to make an executable.
+* Update Icon in Windows Taskbar.
+   a.  Use Pyinstaller to create exe.
+       https://stackoverflow.com/questions/15223952/wxpython-icon-for-task-bar
+* Continue solving techniques.
+* Get to first release.  Mid Sept.
+
+DONE:
 *  Fix menu - assign all menu, submenu and menuitems to self, to eliminate the
    use tracking instance ids for checked / radio button items etc.
 *  Contextual enabling and disabbling of menu items.  Eg. In Enter mode (User
@@ -31,6 +47,3 @@ TODO
 *  Add hinting.
 *  Add Logic techniques.
 *  Extend globals.py to include config file reader.
-*. Update Icon in Windows Taskbar.
-   a.  Use Pyinstaller to create exe.
-       https://stackoverflow.com/questions/15223952/wxpython-icon-for-task-bar

@@ -13,7 +13,8 @@ Audit:
 
 import wx
 
-DEBUG   = True
+#DEBUG   = True
+DEBUG   = False
 
 TITLE   = 'Yet Another Sudoku App'
 BLURB   = '*  Feature rich\n' \
@@ -27,7 +28,7 @@ FILE_WILDCARDS    = "All files (*.*)|*.*|" \
 MAX_SVL_FILE_SIZE = 1024  # even this value is generous
 
 #  subdir's relative to cwd.
-PUZZLES_DIR = "puzzles"
+PUZZLES_DIR = "../puzzles"
 
 #  Board and cell size and various border widths in pixels
 #  Ensure cell sizes are integer multiples of 3.

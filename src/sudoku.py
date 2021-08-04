@@ -319,8 +319,7 @@ class Sudoku:
                 else:
                     self.Grid[r][c][C_ST] = CVS_EMPTY
                 self.Grid[r][c][C_VAL] = v
-                self.Board.write_cell_value(v, r, c,
-                                                   self.Grid[r][c][C_ST])
+                self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
         if wx.MessageBox("Sudoku value file successfully loaded\n"
                          "Would you like to edit values before validating?",
                          "Question",
@@ -390,8 +389,7 @@ class Sudoku:
                 self.Grid = deepcopy(g)
                 for r in range(9):
                     for c in range(9):
-                        self.Board.write_cell_value(g[r][c][C_VAL], r, c,
-                                                           g[r][c][C_ST])
+                        self.Board.write_cell_value(g[r][c][C_VAL], r, c, g[r][c][C_ST])
         elif Key in range(0x31, 0x3a):  # UTF-8 "1" through "9"
             # In Entry state, place the value in the selected cells and check
             # for conflicts
@@ -523,8 +521,8 @@ class Sudoku:
                 return
             else:
                 wx.MessageBox("Bug in program!\nPlease submit puzzle to developers",
-                                 "Warning",
-                                 wx.OK | wx.ICON_WARNING)
+                              "Warning",
+                              wx.OK | wx.ICON_WARNING)
                 self.gen_event(EV_SC_SLV)
                 return
         self.StatusBar.update_0("")
@@ -668,11 +666,11 @@ class Sudoku:
                                 if self.Grid[r1][c1][C_ST] == CVS_GIVEN:
                                     self.Grid[r1][c1][C_ST] = CVS_SVGHL
                                     self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
-                                                                       r1, c1, CVS_SVGHL)
+                                                                r1, c1, CVS_SVGHL)
                                 elif self.Grid[r1][c1][C_ST] == CVS_SOLVE:
                                     self.Grid[r1][c1][C_ST] = CVS_SVSHL
                                     self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
-                                                                       r1, c1, CVS_SVSHL)
+                                                                r1, c1, CVS_SVSHL)
 
                             # If candidates are shown and candidate assistance enabled
                             # then highlight that candidate value by changing candidate
@@ -681,7 +679,7 @@ class Sudoku:
                                 rd = (v - 1) // 3
                                 cd = (v - 1) % 3
                                 self.Board.set_cand_value(r1, c1, rd, cd,
-                                                                 self.Grid[r1][c1][C_CAND][rd][cd], True)
+                                                          self.Grid[r1][c1][C_CAND][rd][cd], True)
 
             elif KbdMods == wx.MOD_ALT:
                 # Popup the bg_clr selector to choose the cell's background
@@ -701,16 +699,16 @@ class Sudoku:
                         if self.Grid[r1][c1][C_ST] == CVS_SVGHL:
                             self.Grid[r1][c1][C_ST] = CVS_GIVEN
                             self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
-                                                               r1, c1, CVS_GIVEN)
+                                                        r1, c1, CVS_GIVEN)
                         elif self.Grid[r1][c1][C_ST] == CVS_SVSHL:
                             self.Grid[r1][c1][C_ST] = CVS_SOLVE
                             self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
-                                                               r1, c1, CVS_SOLVE)
+                                                        r1, c1, CVS_SOLVE)
                         elif self.ShowCands and self.AssistCands:
                             for rd in [0, 1, 2]:
                                 for cd in [0, 1, 2]:
                                     self.Board.set_cand_value(r1, c1, rd, cd,
-                                                                     self.Grid[r1][c1][C_CAND][rd][cd])
+                                                              self.Grid[r1][c1][C_CAND][rd][cd])
             elif self.Flags & GF_GROUP_HL:
                 self.Flags &= ~GF_GROUP_HL
                 self.Board.group_highlight(False, r, c)
@@ -757,7 +755,7 @@ class Sudoku:
                         for r1 in range(9):
                             for c1 in range(9):
                                 self.Board.set_cand_value(r1, c1, rd, cd,
-                                                                 self.Grid[r1][c1][C_CAND][rd][cd], True)
+                                                          self.Grid[r1][c1][C_CAND][rd][cd], True)
 
             if KbdMods == (wx.MOD_CONTROL | wx.MOD_ALT):
                 # Reset all candidate background colours
@@ -770,7 +768,7 @@ class Sudoku:
                 for r1 in range(9):
                     for c1 in range(9):
                         self.Board.set_cand_value(r1, c1, rd, cd,
-                                                         self.Grid[r1][c1][C_CAND][rd][cd])
+                                                  self.Grid[r1][c1][C_CAND][rd][cd])
         self.gen_event(EV_SC_SLV)
 
     def on_solve_keyboard_state(self, e, Key):
@@ -1044,7 +1042,7 @@ class Sudoku:
                     else:
                         self.Grid[r][c][C_ST] = CVS_CANDS
                     self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST],
-                                                       self.Grid[r][c][C_CAND])
+                                                self.Grid[r][c][C_CAND])
         else:
             for r in range(9):
                 for c in range(9):
@@ -1056,7 +1054,7 @@ class Sudoku:
                     else:
                         self.Grid[r][c][C_ST] = CVS_CANDS
                     self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST],
-                                                       self.Grid[r][c][C_CAND])
+                                                self.Grid[r][c][C_CAND])
 
 
     def update_peer_cands(self, r, c):
@@ -1136,10 +1134,6 @@ class Sudoku:
                 self.SelList.append((r, c))
                 self.Grid[r][c][C_SEL] = True
                 self.Board.select_cell(r, c, True)
-
-    def get_sel_list(self):
-        # returns the selection list
-        return self.SelList
 
     def set_expertise_req_lvl(self, lvl):
         # Setting the expertise level is a menu selection to request the puzzle
