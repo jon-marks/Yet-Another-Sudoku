@@ -4,16 +4,9 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
-# def flist(hl):
-#     fl = []  # list()
-#     for i in hl:
-#         if isinstance(i, list):
-#             fl.extend(flist(i))
-#         else:
-#             fl.append(i)
-#     return fl
+def tech_exposed_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
 
-def tech_exposed_singles(Grid, Step, Cands, ElimCands = None):
+    if Method != T_UNDEF and Method != T_EXPOSED_SINGLE: return -1
 
     for r in range(9):
         for c in range(9):
@@ -30,7 +23,7 @@ def tech_exposed_singles(Grid, Step, Cands, ElimCands = None):
     return -1
 
 
-def tech_hidden_singles(Grid, Step, Cands, ElimCands = None):
+def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # For each empty cell in the grid, subtracting all the candidates from its
     # group (either row, col, blk_peers will yield the single if one exists,
     # either hidden or exposed.
@@ -38,6 +31,8 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None):
     #  Returns >1:  Technique found a step, a locked single found.
     #           0:  Technique found a step, only candidates eliminated.
     #          <0:  Technique did not find a step
+
+    if Method != T_UNDEF and Method != T_HIDDEN_SINGLE: return -1
 
     for r in range(9):
         for c in range(9):
@@ -89,7 +84,7 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None):
                 return 1
     return -1
 
-def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
+def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # For pointing in a block if a candidate value is confined to a row or col
     # then none of of the cells in that row or col outside the block can have
     # the candidate value.
@@ -97,9 +92,11 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
     # For claiming in a row or column if a candidate value is confined to a block
     # then none of the cells in the block can have the candidate value.
 
-    #  Returns >1:  Technique found a step, a locked single found.
+    #  Returns >1:  Technique found a step, returns number of values placed/ccells solved.
     #           0:  Technique found a step, only candidates eliminated.
-    #          <0:  Technique did not find a step
+    #          -1:  Technique did not find a step
+
+    if Method != T_UNDEF and Method != T_POINTING_LOCKED_SINGLE and Method != T_CLAIMING_LOCKED_SINGLE: return -1
 
     for br in [0, 3, 6]:
         for bc in [0, 3, 6]:
@@ -132,7 +129,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
                                                          [P_OP, OP_ELIM], [P_VAL, Cand]])
                                     if ElimCands is not None:
                                         ElimCands[r0][c].add(Cand)
-                            if Step[P_OUTC]:
+                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_POINTING_LOCKED_SINGLE):
                                 Step[P_TECH] = T_POINTING_LOCKED_SINGLE
                                 Step[P_OUTC].append([P_END, ])
                                 Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
@@ -157,7 +154,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
                                         if ElimCands is not None:
                                             ElimCands[x][c].add(Cand)
-                            if Step[P_OUTC]:
+                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_CLAIMING_LOCKED_SINGLE):
                                 Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
                                 Step[P_OUTC].append([P_END, ])
                                 Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
@@ -191,7 +188,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
                                                          [P_OP, OP_ELIM], [P_VAL, Cand]])
                                     if ElimCands is not None:
                                         ElimCands[r][c0].add(Cand)
-                            if Step[P_OUTC]:
+                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_POINTING_LOCKED_SINGLE):
                                 Step[P_TECH] = T_POINTING_LOCKED_SINGLE
                                 Step[P_OUTC].append([P_END, ])
                                 Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
@@ -216,7 +213,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
                                         if ElimCands is not None:
                                             ElimCands[r][oc1].add(Cand)
-                            if Step[P_OUTC]:
+                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_CLAIMING_LOCKED_SINGLE):
                                 Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
                                 Step[P_OUTC].append([P_END, ])
                                 Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
@@ -225,7 +222,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None):
                                 return 0
     return -1
 
-def tech_empty_rects(Grid, Step, Cands, ElimCands = None):
+def tech_empty_rects(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # Covers the occurrence of 3 to 5 occurrences of the same candidate value
     # in a box that only describe a row and column in that box.  Occurrences of
     # less than three same candidate values are simply potential X-Chains and
@@ -239,6 +236,8 @@ def tech_empty_rects(Grid, Step, Cands, ElimCands = None):
     # and Cc, then the candidate can be eliminated from Cr.  Similarly if there
     # is/was a strong link between Cb and Cr, then Cc too can be eliminated.
     #
+
+    if Method != T_UNDEF and Method != T_EMPTY_RECT: return -1
 
     # Look for a box that only has cands that describe a single row and col in
     # that box.

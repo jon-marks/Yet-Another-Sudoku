@@ -5,10 +5,12 @@ from solve_utils import *
 
 
 
-def tech_y_wings(Grid, Step, Cands, ElimCands = None):
+def tech_y_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # Find a cell with 2 cands.  This is cell BC which cands Cb, Cc.
     # Then look, NS, then EW then in the box for AB.  If AB is found, then look
     # in the other "directions" for AC.
+
+    if Method != T_UNDEF and Method != T_Y_WING: return -1
     for r0 in range(9):
         for c0 in range(9):
             if len(Cands[r0][c0]) == 2:
@@ -97,10 +99,15 @@ def tech_y_wings(Grid, Step, Cands, ElimCands = None):
                                                     return 0
     return -1
 
-def tech_w_wings_aic(Grid, Step, Cands, ElimCands = None):
-    return tech_w_wings(Grid, Step, Cands, ElimCands, AIC = True)
+def tech_w_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_W_WING: return -1
+    return _tech_w_wings(Grid, Step, Cands, ElimCands, AIC = 1)
 
-def tech_w_wings(Grid, Step, Cands, ElimCands = None, AIC = False):
+def tech_kraken_w_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_W_WING: return -1
+    return _tech_w_wings(Grid, Step, Cands, ElimCands, AIC = 2)
+
+def _tech_w_wings(Grid, Step, Cands, ElimCands = None, AIC = 1):
     # Defined by two bi-value cells with the same candidates that cannot
     # directly "see each other, but are connected by a strong link on one of the
     # candidates.  Any other cells with the other candidate value that both
@@ -131,7 +138,7 @@ def tech_w_wings(Grid, Step, Cands, ElimCands = None, AIC = False):
                 # link form a strong link.
                 Cand1, Cand2 = BVCand1
                 for Cand, Candx in zip([Cand1, Cand2], [Cand2, Cand1]):
-                    Nodes = are_ccells_weakly_linked(r1, c1, Cand, r2, c2, Cand, Cands, AIC)
+                    Nodes = are_ccells_weakly_linked(r1, c1, Cand, r2, c2, Cand, Cands, AIC = AIC)
                     if not Nodes: continue
                     for r0, c0 in cells_seen_by_both(r1, c1, r2, c2):
                         if Candx in Cands[r0][c0]:
@@ -161,10 +168,16 @@ def tech_w_wings(Grid, Step, Cands, ElimCands = None, AIC = False):
                         return 0
     return -1
 
-def tech_xyz_wings(Grid, Step, Cands, ElimCands = None):
+def tech_xyz_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+
+    if Method != T_UNDEF and Method != T_XYZ_WING: return -1
+
     return -1
 
-def tech_wxyz_wings(Grid, Step, Cands, ElimCands = None):
+def tech_wxyz_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+
+    if Method != T_UNDEF and Method != T_XYZ_WING: return -1
+
     return -1
 
 

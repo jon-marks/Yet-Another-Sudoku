@@ -408,12 +408,15 @@ class Board:
 
     def write_cell_value(self, v, r, c, st, cands = None):
         # If cands == None:  that means that Sudoku.ShowCands == False and
-        # the cands STC's are shown but with no text..
+        # the cands STC's are shown but with no text.
 
         C = self.Cell[r][c]
         C[GC_VAL] = v  # Val will be 0 when st == CVS_EMPTY or CVS_CANDS
         if st != CVS_CANDS:
-            C[GC_STC].SetForegroundColour(CVS_CLRS[st])
+            if st & CVS_CNFLT:
+                C[GC_STC].SetForegroundColour(CVS_CLRS[CVS_CNFLT])
+            else:
+                C[GC_STC].SetForegroundColour(CVS_CLRS[st])
             C[GC_STC].SetLabel("")  # double write required with diff text as
                                     # wx widgets ignores same val writes.
             if v:

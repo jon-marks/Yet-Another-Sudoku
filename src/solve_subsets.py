@@ -3,25 +3,15 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
-# def flist(hl):
-#     fl = []  # list()
-#     for i in hl:
-#         if isinstance(i, list):
-#             fl.extend(flist(i))
-#         else:
-#             fl.append(i)
-#     return fl
-
-
-
-
-def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
+def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # In any group (row, col or box), if any two cells have only the same two
     # candidates then we have found an exposed pair.  These candidates can be
     # eliminated from the balance of cells in that group.  If these two cell are
     # in the intersection of a box and a row or column, the we have a locked
     # exposed pair and the these candidates can be eliminated from the balance
     # of cells in the box and row/col.
+
+    if Method != T_UNDEF and Method != T_EXPOSED_PAIR and Method != T_LOCKED_EXPOSED_PAIR: return -1
 
     # Scan the rows first.
     for r in range(9):
@@ -33,26 +23,26 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
                     continue
                 # Found an exposed pair in the row. Could it perhaps
                 # be a locked pair too?
-                if (c//3) == (c1//3):  # both cells in same blk
-                    # Yes, it is a locked pair too.
-                    br = (r//3)*3
-                    bc = (c//3)*3
-                    Step[P_TECH] = T_LOCKED_EXPOSED_PAIR
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0:
-                                continue
-                            if (r2 == r and c2 == c) or (r2 == r and c2 == c1):
-                                continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r2], [P_COL, c2],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    if ElimCands is not None:
-                                        ElimCands[r2][c2].add(Cand)
+                if Method == T_UNDEF or Method == T_LOCKED_EXPOSED_PAIR:
+                    if (c//3) == (c1//3):  # both cells in same blk
+                        # Yes, it is a locked pair too.
+                        br = (r//3)*3
+                        bc = (c//3)*3
+                        for r2 in [br, br+1, br+2]:
+                            for c2 in [bc, bc+1, bc+2]:
+                                if len(Cands[r2][c2]) == 0:
+                                    continue
+                                if (r2 == r and c2 == c) or (r2 == r and c2 == c1):
+                                    continue
+                                for Cand in Cands[r][c]:
+                                    if Cand in Cands[r2][c2]:
+                                        Cands[r2][c2].discard(Cand)
+                                        if Step[P_OUTC]:
+                                            Step[P_OUTC].append([P_SEP, ])
+                                        Step[P_OUTC].extend([[P_ROW, r2], [P_COL, c2],
+                                                             [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                        if ElimCands is not None:
+                                            ElimCands[r2][c2].add(Cand)
                 if Step[P_OUTC]:
                     Step[P_TECH] = T_LOCKED_EXPOSED_PAIR
                 else:
@@ -84,25 +74,26 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
                     continue
                 # Found an exposed pair in the col. Could it perhaps
                 # be a locked pair too?
-                if (r//3) == (r1//3):  # both cells in same blk
-                    # Yes, it is a locked pair too.
-                    br = (r//3)*3
-                    bc = (c//3)*3
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0:
-                                continue
-                            if (r2 == r and c2 == c) or (r2 == r1 and c2 == c):
-                                continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append((P_SEP,))
-                                    Step[P_OUTC].extend([[P_ROW, r2], [P_COL, c2],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    if ElimCands is not None:
-                                        ElimCands[r2][c2].add(Cand)
+                if Method == T_UNDEF or Method == T_LOCKED_EXPOSED_PAIR:
+                    if (r//3) == (r1//3):  # both cells in same blk
+                        # Yes, it is a locked pair too.
+                        br = (r//3)*3
+                        bc = (c//3)*3
+                        for r2 in [br, br+1, br+2]:
+                            for c2 in [bc, bc+1, bc+2]:
+                                if len(Cands[r2][c2]) == 0:
+                                    continue
+                                if (r2 == r and c2 == c) or (r2 == r1 and c2 == c):
+                                    continue
+                                for Cand in Cands[r][c]:
+                                    if Cand in Cands[r2][c2]:
+                                        Cands[r2][c2].discard(Cand)
+                                        if Step[P_OUTC]:
+                                            Step[P_OUTC].append((P_SEP,))
+                                        Step[P_OUTC].extend([[P_ROW, r2], [P_COL, c2],
+                                                             [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                        if ElimCands is not None:
+                                            ElimCands[r2][c2].add(Cand)
                 if Step[P_OUTC]:
                     Step[P_TECH] = T_LOCKED_EXPOSED_PAIR
                 else:
@@ -164,7 +155,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None):
                         return 0
     return -1
 
-def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None):
+def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A hidden pair is where two cells in a group share the same two candidates
     # (out of all their candidates), which are not found elsewhere in the group.
     # That is the candidates of those two cells are limited to the pair of
@@ -173,6 +164,8 @@ def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None):
     # in a group and subtract the union of the candidates from the remaining
     # cells from the two selected cells.  If there are the same two remaining
     # candidates in the selected cells, then a hidden pair has been found.
+
+    if Method != T_UNDEF and Method != T_HIDDEN_PAIR: return -1
 
     # scan the rows first.
     for r in range(9):
@@ -292,13 +285,15 @@ def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None):
                                 return 0
     return -1
 
-def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
+def tech_exposed_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # In any group (row, col or box) if any three empty cells have any
     # combination of only the same 3 candidates, then we have found an exposed
     # triple, and these three candidates can be eliminated from other cells.
     # Furthermore, if these three candidates are in the intersection of a box
     # and a row/col, this is a locked exposed triple and the candidates can be
     # eliminated from the other cells in that box too.
+
+    if Method != T_UNDEF and Method != T_EXPOSED_TRIPLE and Method != T_LOCKED_EXPOSED_TRIPLE: return -1
 
     # Scan the rows first
     for r in range(9):
@@ -314,27 +309,28 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
                     D = Cands[r][c] | Cands[r][c1] | Cands[r][c2]
                     if len(D) == 3:
                         # An exposed triple is found, is it a locked triple?
-                        bc = c//3
-                        if bc == c1//3 and bc == c2//3:
-                            # Yes we have a locked exposed triple
-                            br = (r//3)*3
-                            bc *= 3
-                            for r3 in [br, br+1, br+2]:
-                                for c3 in [bc, bc+1, bc+2]:
-                                    if len(Cands[r3][c3]) == 0:
-                                        continue
-                                    if (r3 != r or c3 != c) \
-                                            and (r3 != r or c3 != c1) \
-                                            and (r3 != r or c3 != c2):
-                                        for Cand in D:
-                                            if Cand in Cands[r3][c3]:
-                                                Cands[r3][c3].discard(Cand)
-                                                if Step[P_OUTC]:
-                                                    Step[P_OUTC].append((P_SEP,))
-                                                Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
-                                                                     [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                                if ElimCands is not None:
-                                                    ElimCands[r3][c3].add(Cand)
+                        if Method == T_UNDEF or Method == T_LOCKED_EXPOSED_TRIPLE:
+                            bc = c//3
+                            if bc == c1//3 and bc == c2//3:
+                                # Yes we have a locked exposed triple
+                                br = (r//3)*3
+                                bc *= 3
+                                for r3 in [br, br+1, br+2]:
+                                    for c3 in [bc, bc+1, bc+2]:
+                                        if len(Cands[r3][c3]) == 0:
+                                            continue
+                                        if (r3 != r or c3 != c) \
+                                                and (r3 != r or c3 != c1) \
+                                                and (r3 != r or c3 != c2):
+                                            for Cand in D:
+                                                if Cand in Cands[r3][c3]:
+                                                    Cands[r3][c3].discard(Cand)
+                                                    if Step[P_OUTC]:
+                                                        Step[P_OUTC].append((P_SEP,))
+                                                    Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
+                                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                                    if ElimCands is not None:
+                                                        ElimCands[r3][c3].add(Cand)
                         if Step[P_OUTC]:
                             Step[P_TECH] = T_LOCKED_EXPOSED_TRIPLE
                         else:
@@ -374,27 +370,28 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
                     D = Cands[r][c] | Cands[r1][c] | Cands[r2][c]
                     if len(D) == 3:
                         # An exposed triple is found, is it a locked triple?
-                        br = r//3
-                        if br == r1//3 and br == r2//3:
-                            # Yes we have a locked exposed triple
-                            br *= 3
-                            bc = (c//3)*3
-                            for r3 in [br, br+1, br+2]:
-                                for c3 in [bc, bc+1, bc+2]:
-                                    if len(Cands[r3][c3]) == 0:
-                                        continue
-                                    if (r3 != r or c3 != c) \
-                                            and (r3 != r1 or c3 != c) \
-                                            and (r3 != r2 or c3 != c):
-                                        for Cand in D:
-                                            if Cand in Cands[r3][c3]:
-                                                Cands[r3][c3].discard(Cand)
-                                                if Step[P_OUTC]:
-                                                    Step[P_OUTC].append((P_SEP,))
-                                                Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
-                                                                     [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                                if ElimCands is not None:
-                                                    ElimCands[r3][c3].add(Cand)
+                        if Method == T_UNDEF or Method == T_LOCKED_EXPOSED_TRIPLE:
+                            br = r//3
+                            if br == r1//3 and br == r2//3:
+                                # Yes we have a locked exposed triple
+                                br *= 3
+                                bc = (c//3)*3
+                                for r3 in [br, br+1, br+2]:
+                                    for c3 in [bc, bc+1, bc+2]:
+                                        if len(Cands[r3][c3]) == 0:
+                                            continue
+                                        if (r3 != r or c3 != c) \
+                                                and (r3 != r1 or c3 != c) \
+                                                and (r3 != r2 or c3 != c):
+                                            for Cand in D:
+                                                if Cand in Cands[r3][c3]:
+                                                    Cands[r3][c3].discard(Cand)
+                                                    if Step[P_OUTC]:
+                                                        Step[P_OUTC].append((P_SEP,))
+                                                    Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
+                                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                                    if ElimCands is not None:
+                                                        ElimCands[r3][c3].add(Cand)
                         if Step[P_OUTC]:
                             Step[P_TECH] = T_LOCKED_EXPOSED_TRIPLE
                         else:
@@ -467,11 +464,13 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None):
                                 return 0
     return -1
 
-def tech_hidden_triples(Grid, Step, Cands, ElimCands = None):
+def tech_hidden_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A hidden triple is where the union of three cells in a group contains the
     # same three candidates that are not found in any other cell in that group.
     # Here we can eliminate candidates from those three cells that are not the
     # same three candidates, thereby exposing the hidden triple.
+
+    if Method != T_UNDEF and Method != T_HIDDEN_TRIPLE: return -1
 
     # scan the rows first
     for r in range(9):
@@ -642,13 +641,14 @@ def tech_hidden_triples(Grid, Step, Cands, ElimCands = None):
                                     return 0
     return -1
 
-def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
+def tech_exposed_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # In any group (row, col or box) if any four empty cells have any
     # combination of only the same 4 candidates, then we have found an exposed
     # quad, and these four candidates can be eliminated from other cells in that
     # group.  It is not possible to have a locked exposed quad as four cells
     # is too large to fit in a col or row span.
 
+    if Method != T_UNDEF and Method != T_EXPOSED_QUAD: return -1
     # Scan the rows first
     for r in range(9):
         for c in range(6):
@@ -783,12 +783,13 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None):
                                     return 0
     return -1
 
-def tech_hidden_quads(Grid, Step, Cands, ElimCands = None):
+def tech_hidden_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A hidden quad is where the union of four cells in a group contains the
     # same four candidates that are not found in any other cell in that group.
     # Here we can eliminate candidates from those four cells that are not the
     # same four candidates, thereby exposing the hidden quad.
 
+    if Method != T_UNDEF and Method != T_HIDDEN_QUAD: return -1
     # scan the rows first
     for r in range(9):
         for c in range(6):

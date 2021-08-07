@@ -286,8 +286,11 @@ def open_puzzle(Fp, G):
     #   Fp:  In:  a tuple containing the default directory and filename                  strings.
     #   G:   In:  Empty grid.
     #        Out: Populated grid if returns true, else undefined
+    #             Empty cell is 0
+    #             Given values are 1 to 9
+    #             Placed values are 11 thru 19.  (offset by 10)
     # Returns:  None:  Could not load file properly
-    #           (Dir, Fn) Tuple if file successfully loaded.
+    #           (Dir, Fn) Tuple of successfully loaded file.
 
     dlg = wx.FileDialog(None, message = "Open A Puzzle",
                         defaultDir = Fp[0],
@@ -307,24 +310,40 @@ def open_puzzle(Fp, G):
     except (OSError, IOError):
         return None
 
-    if len(vb):
-        r = c = 0
-        vb = vb.replace(".", "0")
-        vb = vb.replace("-", "0")
-        for v in vb:
-            if v in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-                G[r][c] = int(v)
-                if r == 8 and c == 8:
-                    return os.path.split(Fs)
-                c += 1
-                if c > 8:
-                    c = 0
-                    r += 1
+    if grid_str_to_grid(vb.strip('\n'), G): return os.path.split(Fs)
 
     wx.MessageBox("Invalid Sudoku value file format",
                   "Warning",
                   wx.ICON_WARNING | wx.OK)
     return None
+
+
+def grid_str_to_grid(sG, G, Placed = True, GivensOnly = False):
+    # Placed = True - differentiate between placed and givens, else all as givens
+    # GivensOnly = True - only fill givens and ignore placed (digits prefixed by '+'
+    i = rc = 0
+    while i < len(sG):
+        if rc >= 81:
+            return False
+        G[rc//9][rc%9] = 0; v = sG[i]
+        if v in ["0", ".", "-"]: i += 1; rc += 1; continue
+        if v == " ": i += 1; continue
+        if v == "+":
+            if GivensOnly: i += 2; rc += 2; continue
+            if Placed: G[rc//9][rc%9] = 10;
+            i += 1; v = sG[i]
+        if v.isdigit(): G[rc//9][rc%9] += int(v); i +=1; rc += 1; continue
+        return False  # error parsing the grid string.
+    return True if rc == 81 else False
+
+def grid_to_grid_str(G, sG):
+
+    for r in range(9):
+        for c in range(9):
+            if G[r][c] > 10: sG += "+"; G[r][c] %= 10
+            sG += chr(G[r][c])
+    return True
+
 
 def save_puzzle(Fp, G):
     # Selects a puzzle filename with the save FileDialog in Cwd, and returns
@@ -339,9 +358,7 @@ def save_puzzle(Fp, G):
     #           Tuple containing directory and filename of saved file.
 
     vb = ""
-    for r in range(9):
-        for c in range(9):
-            vb += f"{G[r][c]:d}"
+    grid_to_grid_str(G, vb)
     vb += "\n"
 
     dlg = wx.FileDialog(None, message = "Save A Puzzle",
@@ -407,9 +424,14 @@ def construct_str(Tkns):
             St += ","
         elif Tkn[0] == P_END:
             St += "."
-        # else:  # silently ignore unrecognised tokens.
-        # except TypeError:
-        #     pass
-        #     pass
-
     return St
+
+# def flist(hl):
+#     fl = []  # list()
+#     for i in hl:
+#         if isinstance(i, list):
+#             fl.extend(flist(i))
+#         else:
+#             fl.append(i)
+#     return fl
+

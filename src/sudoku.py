@@ -160,8 +160,7 @@ class Sudoku:
         self.VagueHints  = self.ClearerHints = self.ClearestHints = 0
         self.LSW         = None      # list solution window instance.
 
-        self.Dir    = os.getcwd()
-        self.PzlDir = os.path.join(self.Dir, PUZZLES_DIR)  # where the puzzles are stored
+        self.PzlDir = os.path.join(MainWindow.CWD, PUZZLES_DIR)  # where the puzzles are stored
         self.PzlFn  = ""
 
         self.MenuBar.enable_menuitems(EMI_IDLE)
@@ -299,7 +298,7 @@ class Sudoku:
         # Following uses tuple as a hack to pass PzlDir and PzlFn by ref.
         Fp = open_puzzle((self.PzlDir, self.PzlFn), G)
         if Fp is None:
-            self.gen_event(EV_SC_FIN)
+            self.gen_event(EV_SC_FIN, True)
             return
 
         # load the parsed grid into self.Grid and update the board.
@@ -308,22 +307,30 @@ class Sudoku:
             for c in range(9):
                 v = G[r][c]
                 if v:
-                    G[r][c] = 0
-                    if cell_val_has_no_conflicts(v, G, r, c):
-                        self.Grid[r][c][C_ST] = CVS_ENTER
-                    else:
+                    self.Grid[r][c][C_ST] = CVS_ENTER if v < 10 else CVS_PLACE
+                    G[r][c] = 0; v %= 10
+                    if not cell_val_has_no_conflicts(v, G, r, c):
                         self.NrConflicts += 1
-                        self.Grid[r][c][C_ST] = CVS_CNFLT
+                        self.Grid[r][c][C_ST] |= CVS_CNFLT
                     G[r][c] = v
                     self.NrGivens += 1
                 else:
                     self.Grid[r][c][C_ST] = CVS_EMPTY
                 self.Grid[r][c][C_VAL] = v
                 self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
-        if wx.MessageBox("Sudoku value file successfully loaded\n"
-                         "Would you like to edit values before validating?",
-                         "Question",
-                         wx.ICON_QUESTION | wx.YES_NO) == wx.YES:
+        if self.NrConflicts:
+            if wx.MessageBox("Conflicts found\n"
+                             "Would you like to edit values instead of starting over?",
+                             "Question",
+                             wx.ICON_QUESTION | wx.YES_NO):
+                self.MenuBar.miPuzzleEnter.Check()
+                self.gen_Eevent(EV_SC_ENT, False)
+            else:
+                self.gen_event(EV_SC_FIN, True)
+        elif wx.MessageBox("Sudoku value file successfully loaded\n"
+                           "Would you like to edit values before validating?",
+                           "Question",
+                           wx.ICON_QUESTION | wx.YES_NO) == wx.YES:
             self.MenuBar.miPuzzleEnter.Check()
             self.gen_event(EV_SC_ENT, False)  # Cleanup is False
         else:
@@ -337,7 +344,9 @@ class Sudoku:
             self.Board.clear_board()
 
     def on_entry_save_state(self, e):
-        G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+        #  off set the value by 10 if it is not a given value.
+        G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] == CVS_ENTER else self.Grid[r][c][C_VAL] + 10
+              for c in range(9)] for r in range(9)]
         Fp = save_puzzle((self.PzlDir, self.PzlFn), G)
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
@@ -376,10 +385,10 @@ class Sudoku:
                         self.NrGivens += 1
                         grid[r][c] = 0
                         if cell_val_has_no_conflicts(v, grid, r, c):
-                            self.Grid[r][c][C_ST] = CVS_ENTER
+                            self.Grid[r][c][C_ST] &= ~CVS_CNFLT
                         else:
                             self.NrConflicts += 1
-                            self.Grid[r][c][C_ST] = CVS_CNFLT
+                            self.Grid[r][c][C_ST] |= CVS_CNFLT
                         grid[r][c] = v
                         self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
 
@@ -390,35 +399,41 @@ class Sudoku:
                 for r in range(9):
                     for c in range(9):
                         self.Board.write_cell_value(g[r][c][C_VAL], r, c, g[r][c][C_ST])
-        elif Key in range(0x31, 0x3a):  # UTF-8 "1" through "9"
-            # In Entry state, place the value in the selected cells and check
-            # for conflicts
-            self.History.append(deepcopy(self.Grid))
-            for r, c in self.SelList:
-                self.Grid[r][c][C_VAL] = Key-0x30
+        # elif Key in range(0x31, 0x3a):  # UTF-8 "1" through "9"
+        else:
+            (val, cvs) = key_to_val_cvs(Key)
+            if val != 0:
+                # In Entry state, place the value in the selected cells and check
+                # for conflicts
+                self.History.append(deepcopy(self.Grid))
+                for r, c in self.SelList:
+                    self.Grid[r][c][C_VAL] = val
+                    self.Grid[r][c][C_ST]  = cvs
 
-            self.Flags |= GF_UNSAVED_CHANGES
-            # check for conflicts (in an imaged grid) and update board.
-            grid = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
-            self.NrConflicts = self.NrGivens = 0
-            for r in range(9):
-                for c in range(9):
-                    v = grid[r][c]
-                    if v:
-                        self.NrGivens += 1
-                        grid[r][c] = 0
-                        if cell_val_has_no_conflicts(v, grid, r, c):
-                            self.Grid[r][c][C_ST] = CVS_ENTER
-                        else:
-                            self.NrConflicts += 1
-                            self.Grid[r][c][C_ST] = CVS_CNFLT
-                        grid[r][c] = v
-                        self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
+                self.Flags |= GF_UNSAVED_CHANGES
+                # check for conflicts (in an imaged grid) and update board.
+                grid = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+                self.NrConflicts = self.NrGivens = 0
+                for r in range(9):
+                    for c in range(9):
+                        v = grid[r][c]
+                        if v:
+                            self.NrGivens += 1
+                            grid[r][c] = 0
+                            if cell_val_has_no_conflicts(v, grid, r, c):
+                                self.Grid[r][c][C_ST] &= ~CVS_CNFLT
+                            else:
+                                self.NrConflicts += 1
+                                self.Grid[r][c][C_ST] |= CVS_CNFLT
+                            grid[r][c] = v
+                            self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
         self.gen_event(EV_SC_ENT, False)
 
     def on_scramble_state(self, e):
+        #  Only given/entered values are scrambled, placed values will be lost.
         self.History.append(deepcopy(self.Grid))
-        G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+        G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] == CVS_ENTER else 0
+              for c in range(9)] for r in range(9)]
         G = scramble_puzzle(G)
         self.NrConflicts = self.NrGivens = 0
         for r in range(9):
@@ -437,8 +452,10 @@ class Sudoku:
         self.gen_event(EV_SC_ENT, False)
 
     def on_minimalise_state(self, e):
+        #  Only given/entered values are considered, placed values are lost.
         self.History.append(deepcopy(self.Grid))
-        G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+        G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] == CVS_ENTER else 0
+              for c in range(9)] for r in range(9)]
         minimalise_puzzle(G)
         self.NrConflicts = self.NrGivens = 0
         for r in range(9):
@@ -493,12 +510,12 @@ class Sudoku:
             for r in range(9):
                 for c in range(9):
                     self.Grid[r][c][C_SLVD] = Soln[S_GRID][r][c]
-                    if self.Grid[r][c][C_VAL]:
+                    if self.Grid[r][c][C_ST] == CVS_ENTER:
                         self.Grid[r][c][C_ST] = CVS_GIVEN
                         self.Board.write_cell_value(G[r][c], r, c, CVS_GIVEN)
                         self.Props[PR_GIVENS][G[r][c]-1] += 1
                         self.NrGivens += 1
-                    else:
+                    elif self.Grid[r][c][C_ST] != CVS_PLACE:
                         self.Grid[r][c][C_ST] = CVS_CANDS
                         self.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
             # 1.  Grade the puzzle
@@ -551,7 +568,7 @@ class Sudoku:
         for r in range(9):
             for c in range(9):
                 C = self.Grid[r][c]
-                if C[C_ST] == CVS_GIVEN or C[C_ST] == CVS_SOLVE:
+                if C[C_ST] == CVS_GIVEN or C[C_ST] == CVS_PLACE:
                     G[C[C_VAL]-1] += 1
         self.StatusBar.update_0(f"[1]={G[0]}, [2]={G[1]}, [3]={G[2]}, [4]={G[3]}, "
                                 f"[5]={G[4]}, [6]={G[5]}, [7]={G[6]}, [8]={G[7]}, "
@@ -633,7 +650,8 @@ class Sudoku:
                 self.Flags |= GF_CORR
 
     def on_solve_save_state(self, e):
-        G = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+        G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] == CVS_GIVEN else self.Grid[r][c][C_VAL] + 10
+              for c in range(9)] for r in range(9)]
         Fp = save_puzzle((self.PzlDir, self.PzlFn), G)
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
@@ -667,7 +685,7 @@ class Sudoku:
                                     self.Grid[r1][c1][C_ST] = CVS_SVGHL
                                     self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                                 r1, c1, CVS_SVGHL)
-                                elif self.Grid[r1][c1][C_ST] == CVS_SOLVE:
+                                elif self.Grid[r1][c1][C_ST] == CVS_PLACE:
                                     self.Grid[r1][c1][C_ST] = CVS_SVSHL
                                     self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                                 r1, c1, CVS_SVSHL)
@@ -701,9 +719,9 @@ class Sudoku:
                             self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
                                                         r1, c1, CVS_GIVEN)
                         elif self.Grid[r1][c1][C_ST] == CVS_SVSHL:
-                            self.Grid[r1][c1][C_ST] = CVS_SOLVE
+                            self.Grid[r1][c1][C_ST] = CVS_PLACE
                             self.Board.write_cell_value(self.Grid[r1][c1][C_VAL],
-                                                        r1, c1, CVS_SOLVE)
+                                                        r1, c1, CVS_PLACE)
                         elif self.ShowCands and self.AssistCands:
                             for rd in [0, 1, 2]:
                                 for cd in [0, 1, 2]:
@@ -726,16 +744,19 @@ class Sudoku:
                     d = not(self.Grid[rc][cc][C_CAND][rd][cd])
                     self.Grid[rc][cc][C_CAND][rd][cd] = d
                     self.Board.set_cand_value(rc, cc, rd, cd, d)
-                    if self.AssistCands and not d:
+                    if self.AssistCands:
                         v = (rd * 3) + cd + 1
-                        # This is not a bug, we are purposefully silent about
-                        # eliminating the candidate which is the solved value
-                        # for that cell - So as not to give the game away.
-                        # The candidate is not shown on the screen but is not
-                        # added to the eliminated values that the hinter uses.
-                        # The hinter needs to be true.
-                        if v != self.Grid[rc][cc][C_SLVD]:
-                            self.Grid[rc][cc][C_ELIM].add(v)
+                        if d:
+                            self.Grid[rc][cc][C_ELIM].discard(v)
+                        else:
+                            # This is not a bug, we are purposefully silent about
+                            # eliminating the candidate which is the solved value
+                            # for that cell - So as not to give the game away.
+                            # The candidate is not shown on the screen but is not
+                            # added to the eliminated values that the hinter uses.
+                            # The hinter needs to be true.
+                            if v != self.Grid[rc][cc][C_SLVD]:
+                               self.Grid[rc][cc][C_ELIM].add(v)
                 elif KbdMods == wx.MOD_ALT:
                     # Pop up the background selector to choose the candidate's
                     # background colour.  Note that if white is selected, it is
@@ -745,7 +766,7 @@ class Sudoku:
                 elif KbdMods == wx.MOD_SHIFT:
                     self.History.append(deepcopy(self.Grid))
                     self.Grid[rc][cc][C_VAL] = (rd * 3) + cd + 1
-                    self.Grid[rc][cc][C_ST] = CVS_SOLVE
+                    self.Grid[rc][cc][C_ST] = CVS_PLACE
                     self.Flags &= ~GF_CORR
                     self.process_grid()
                     if self.AssistCands:
@@ -797,7 +818,7 @@ class Sudoku:
             for r, c in self.SelList:
                 if self.Grid[r][c][C_ST] != CVS_GIVEN:
                     self.Grid[r][c][C_VAL] = Key-0x30
-                    self.Grid[r][c][C_ST] = CVS_SOLVE
+                    self.Grid[r][c][C_ST] = CVS_PLACE
                     self.Flags &= ~GF_CORR
         self.process_grid()
         if self.AssistCands:
@@ -921,14 +942,6 @@ class Sudoku:
         else:
             self.gen_event(EV_SC_FIN)
 
-    # def on_set_savepoint_state(self, e):
-    #     # TODO:  on_set_savepoint_state(self, e):
-    #     pass
-    #
-    # def on_restore_savepoint_state(self, e):
-    #     # TODO:  on_restore_savepoint_state(self, e):
-    #     pass
-
     def on_candidates_state(self, e, tf):
         self.ShowCands = tf
         g = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
@@ -976,7 +989,7 @@ class Sudoku:
                 if op == OP_ASNV:
                     self.History.append(deepcopy(self.Grid))
                     self.Grid[r][c][C_VAL] = v
-                    self.Grid[r][c][C_ST] = CVS_SOLVE
+                    self.Grid[r][c][C_ST] = CVS_PLACE
                     self.process_grid()
                     if self.AssistCands:
                         self.update_peer_cands(r, c)
@@ -1028,14 +1041,14 @@ class Sudoku:
                             if self.Assist == AST_CNFLTS:
                                 grid[r][c] = 0
                                 if cell_val_has_no_conflicts(v, grid, r, c):
-                                    self.Grid[r][c][C_ST] = CVS_SOLVE
+                                    self.Grid[r][c][C_ST] = CVS_PLACE
                                 else:
                                     self.Grid[r][c][C_ST] = CVS_CNFLT
                                     self.NrConflicts += 1
                                 grid[r][c] = v
                             elif self.Assist == AST_ERRORS:
                                 if v == self.Grid[r][c][C_SLVD]:
-                                    self.Grid[r][c][C_ST] = CVS_SOLVE
+                                    self.Grid[r][c][C_ST] = CVS_PLACE
                                 else:
                                     self.Grid[r][c][C_ST] = CVS_ERROR
                                     self.NrErrors += 1
@@ -1049,7 +1062,7 @@ class Sudoku:
                     v = grid[r][c]
                     if v:
                         if self.Grid[r][c][C_ST] != CVS_GIVEN:
-                            self.Grid[r][c][C_ST] = CVS_SOLVE
+                            self.Grid[r][c][C_ST] = CVS_PLACE
                             self.NrEmpties -= 1
                     else:
                         self.Grid[r][c][C_ST] = CVS_CANDS
@@ -1059,8 +1072,8 @@ class Sudoku:
 
     def update_peer_cands(self, r, c):
         # Hide shown candidates in peer cells of values placed in selected
-        # cells that are in CVS_SOLVE state.
-        if self.Grid[r][c][C_ST] == CVS_SOLVE:
+        # cells that are in CVS_PLACE state.
+        if self.Grid[r][c][C_ST] == CVS_PLACE:
             v = self.Grid[r][c][C_VAL]-1
             vr = v//3
             vc = v%3
@@ -1155,3 +1168,12 @@ class Sudoku:
 
     def set_assist_cands(self, tf):
         self.AssistCands = tf
+
+def key_to_val_cvs(Key):
+
+    if Key in range(0x31, 0x3a):  return (Key-0x30, CVS_ENTER)
+    ShK = [312, 317, 367, 314, 305, 316, 313, 315, 366]
+    if Key in ShK: return (ShK.index(Key)+1, CVS_PLACE)
+    ShK = ["!", "@", "#", "$", "%", "^", "&", "*", "("]
+    if chr(Key) in ShK: return (ShK.index(chr(Key))+1, CVS_PLACE)
+    return (0, 0)

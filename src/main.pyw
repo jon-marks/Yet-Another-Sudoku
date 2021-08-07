@@ -81,7 +81,7 @@ Notes on programming style used here:
         2021-04-xx  jm  Initial entry
 
 """
-
+import os
 import wx
 
 # Local Imports
@@ -144,8 +144,9 @@ class MainWindow(wx.Frame):
                           size = wx.DefaultSize,
                           style = wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MINIMIZE_BOX ^ wx.MAXIMIZE_BOX)
         self.Hide()
+        self.CWD = os.getcwd()
         Icon = wx.Icon()
-        Icon.CopyFromBitmap(wx.Bitmap("sudoku.ico", wx.BITMAP_TYPE_ANY))
+        Icon.CopyFromBitmap(wx.Bitmap(os.path.join(self.CWD, IMG_DIR, "sudoku.ico"), wx.BITMAP_TYPE_ANY))
         self.SetIcon(Icon)
         self.SetMenuBar(MainMenubar(self))
         self.SetStatusBar(MainStatusBar(self))

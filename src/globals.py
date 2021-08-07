@@ -28,7 +28,9 @@ FILE_WILDCARDS    = "All files (*.*)|*.*|" \
 MAX_SVL_FILE_SIZE = 1024  # even this value is generous
 
 #  subdir's relative to cwd.
-PUZZLES_DIR = "../puzzles"
+PUZZLES_DIR = "puzzles"
+IMG_DIR     = "img"
+DOC_DIR     = "doc"
 
 #  Board and cell size and various border widths in pixels
 #  Ensure cell sizes are integer multiples of 3.
@@ -111,8 +113,9 @@ GRP_HL_TINT      = 8   # Tint RGB by this value for group highlighting
 CVS_EMPTY = 0x0000  # Cell value is empty (value = 0)
 CVS_ENTER = 0x0001  # Cell has an un-conflicted value in Entry state
 CVS_GIVEN = 0x0002  # Cell contains a given value.
-CVS_SOLVE = 0x0003  # Cell contains a possibly solved value (depends on assistance)
-CVS_CNFLT = 0x0004  # Cell value is conflicted with another in Entry/Solve
+#CVS_SOLVE = 0x0003  # Cell contains a possibly solved value (depends on assistance)
+CVS_PLACE = 0x0003  # Cell contains a placed value (may or may not be correct)
+CVS_CNFLT = 0x0010  # Cell value is conflicted with another in Entry/Solve
 CVS_ERROR = 0x0005  # Cell contains an incorrectly solved value
 CVS_CANDS = 0x0006  # Candidate values are being displayed in the cell.
 CVS_SVGHL = 0x0007  # Same value given highlight (note val cor to CVS_GIVEN)
@@ -122,7 +125,7 @@ CVS_SVSHL = 0x0008  # Same value solve highlight (note val cor to CVS_SOLVE)
 CVS_CLRS = {CVS_EMPTY: BLACK,
             CVS_ENTER: DK_GREEN,
             CVS_GIVEN: BLACK,
-            CVS_SOLVE: DK_BLUE,
+            CVS_PLACE: DK_BLUE,
             CVS_CNFLT: DK_RED,
             CVS_ERROR: RED,
             CVS_CANDS: BLACK,
@@ -240,7 +243,7 @@ T_KRAKEN_SWORDFISH          = 22
 T_KRAKEN_JELLYFISH          = 23
 T_Y_WING                    = 24
 T_W_WING                    = 25
-T_W_WING_AIC                = 26
+T_KRAKEN_W_WING             = 26
 T_XYZ_WING                  = 27
 T_WXYZ_WING                 = 28
 T_EMPTY_RECT                = 29

@@ -47,7 +47,7 @@ T[T_KRAKEN_SWORDFISH]        = ["Kraken Swordfish",        LVL_ACCOMPLISHED,  10
 T[T_KRAKEN_JELLYFISH]        = ["Kraken Jellyfish",        LVL_ACCOMPLISHED,  100]
 T[T_Y_WING]                  = ["Y-Wing",                  LVL_INTERMEDIATE,   50]
 T[T_W_WING]                  = ["W-Wing",                  LVL_PROFICIENT,     55]
-T[T_W_WING_AIC]              = ["W-Wing, AIC",             LVL_PROFICIENT,     55]
+T[T_KRAKEN_W_WING]           = ["Kraken W-Wing",           LVL_PROFICIENT,     95]
 T[T_XYZ_WING]                = ["XYZ-Wing",                LVL_PROFICIENT,     60]
 T[T_WXYZ_WING]               = ["WXYZ-Wing",               LVL_PROFICIENT,     65]
 T[T_EMPTY_RECT]              = ["Empty Rectangle",         LVL_PROFICIENT,     45]
@@ -404,9 +404,9 @@ def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0):
     # if the ccells are directly connected by a weak link, or are AIC linked in
     # an odd length chain with weak end links, then return the list of
     # connected ccells.
-    # AIC == 0:  A weak link between the ccells.
-    # AIC == 1:  The Ccells see a strong link (A-X=Y-B)
-    # AIC == 2:  The ccells are weakly linked (A-P=Q-R=. . .=Z-B)
+    # AIC == 0:  Only look for a weak link between the ccells.
+    # AIC == 1:  Only look for a weak link or The Ccells see a strong link (A-X=Y-B)
+    # AIC == 2:  Look for weak link, see strong link or weak-ended AIC. The ccells are weakly linked (A-P=Q-R=. . .=Z-B)
 
     # First check to see if the ccells are directly linked.
     lk = ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands)
@@ -484,3 +484,13 @@ def are_cells_strongly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, OddLen = True
 #                 if cells_see_a_strong_link(ra, ca, rb, cb, Cand, Cands, Depth+1):
 #                     return True
 #     return False
+
+# def flist(hl):
+#     fl = []  # list()
+#     for i in hl:
+#         if isinstance(i, list):
+#             fl.extend(flist(i))
+#         else:
+#             fl.append(i)
+#     return fl
+

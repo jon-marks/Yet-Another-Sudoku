@@ -44,7 +44,7 @@ Techniques = [tech_exposed_singles,
               tech_finned_x_wings,
               tech_finned_swordfish,
               tech_finned_jellyfish,
-              tech_w_wings_aic,
+              tech_kraken_w_wings,
               tech_kraken_x_wings,
               tech_kraken_swordfish,
               tech_kraken_jellyfish,
@@ -236,16 +236,12 @@ def solve_next_step(Grid, Step, ElimCands):
 
 def _tech_brute_force(Grid, Step, Cands, ElimCands = None):
     # first randomly pick the empty to hint on.
-#    e = False
     r = c = 0
     for s in sample(range(81), k = 81):
         r = s//9
         c = s%9
         if not Grid[r][c]:
-#            e = True
             break
-#    if not e:
-#        return False  # should never happen, function always called with at
         # least one empty cell
     G = [[Grid[r1][c1] for c1 in range(9)] for r1 in range(9)]
     if _solve_puzzle_backtrack(G):

@@ -3,17 +3,7 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
-# def flist(hl):
-#     fl = []  # list()
-#     for i in hl:
-#         if isinstance(i, list):
-#             fl.extend(flist(i))
-#         else:
-#             fl.append(i)
-#     return fl
-
-
-def tech_x_wings(Grid, Step, Cands, ElimCands = None):
+def tech_x_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A X-Wing occurs when the same candidate occurs twice each in two separate
     # rows (base sets), and these candidates lie in the same two columns (cover
     # sets).  All occurrences of the candidates in the same 2 columns (cover
@@ -21,6 +11,8 @@ def tech_x_wings(Grid, Step, Cands, ElimCands = None):
 
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
+
+    if Method != T_UNDEF and Method != T_X_WING: return -1
 
     for Cand in range(1, 10):
         # look at rows
@@ -69,13 +61,15 @@ def tech_x_wings(Grid, Step, Cands, ElimCands = None):
                         return 0
     return -1
 
-def tech_finned_x_wings(Grid, Step, Cands, ElimCands = None):
-    return _finned_x_wings(Grid, Step, Cands, ElimCands, AIC = False)
+def tech_finned_x_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_FINNED_X_WING: return -1
+    return _finned_x_wings(Grid, Step, Cands, ElimCands, AIC = 0)
 
-def tech_kraken_x_wings(Grid, Step, Cands, ElimCands = None):
-    return _finned_x_wings(Grid, Step, Cands, ElimCands, AIC = True)
+def tech_kraken_x_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_X_WING: return -1
+    return _finned_x_wings(Grid, Step, Cands, ElimCands, AIC = 2)
 
-def _finned_x_wings(Grid, Step, Cands, ElimCands = None, AIC = False):
+def _finned_x_wings(Grid, Step, Cands, ElimCands = None, AIC = 0):
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
 
@@ -106,7 +100,7 @@ def _finned_x_wings(Grid, Step, Cands, ElimCands = None, AIC = False):
                     if ci > 1: CS.add(cvr)
                     else: CF.add(cvr)
                 if len(CS) == 2 and len(CF):
-                    if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, ElimCands, Step, AIC) == 0:
+                    if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, ElimCands, Step, AIC = AIC) == 0:
                         return 0
         # look at cols
         BC = [set() for i in range(9)]
@@ -128,11 +122,11 @@ def _finned_x_wings(Grid, Step, Cands, ElimCands = None, AIC = False):
                     if ci > 1: CS.add(cvr)
                     else: CF.add(cvr)
                 if len(CS) == 2 and len(CF):
-                    if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, ElimCands, Step, AIC) == 0:
+                    if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, ElimCands, Step, AIC = AIC) == 0:
                         return 0
     return -1
 
-def tech_almost_x_wings(Grid, Step, Cands, ElimCands = None):
+def tech_almost_x_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
 
@@ -143,6 +137,8 @@ def tech_almost_x_wings(Grid, Step, Cands, ElimCands = None):
     # or Hidden Finned X-Wing from which candidates can be eliminated. There may
     # be more than one possibility of placing a candidate in a cell to create a
     # hidden (finned) fish, all possibilities should be explored.
+
+    if Method != T_UNDEF and Method != T_ALMOST_X_WING: return -1
 
     for Cand in range(1, 10):
         # look at rows
@@ -180,14 +176,16 @@ def tech_almost_x_wings(Grid, Step, Cands, ElimCands = None):
                                                            [P_ROW, r4], [P_COL, c4],
                                                            [P_CON, ]] + SubStep[P_COND]
                                         Step[P_SUBS].append(SubStep)
+                                        Step[P_OUTC].extend(SubStep[P_OUTC])
                                 elif len(CS1) == 2 and len(CF1):  # found a Hidden Finned X-Wing
                                     SubStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
                                     if _elim_cands_in_finned_fish(Cand, BS, CS1, CF1, P_ROW, Cands, ElimCands,
-                                                                  SubStep, AIC = True) == 0:
+                                                                  SubStep, AIC = 2) == 0:
                                         SubStep[P_COND] = [[P_VAL, Cand], [P_OP, OP_POS],
                                                            [P_ROW, r4], [P_COL, c4],
                                                            [P_CON, ]] + SubStep[P_COND]
                                         Step[P_SUBS].append(SubStep)
+                                        Step[P_OUTC].extend(SubStep[P_OUTC])
                                 Cands[r4][c4].discard(Cand)
                     if len(Step[P_SUBS]):
                         Step[P_TECH] = T_ALMOST_X_WING
@@ -235,15 +233,17 @@ def tech_almost_x_wings(Grid, Step, Cands, ElimCands = None):
                                                            [P_ROW, r4], [P_COL, c4],
                                                            [P_CON, ]] + SubStep[P_COND]
                                         Step[P_SUBS].append(SubStep)
+                                        Step[P_OUTC].extend(SubStep[P_OUTC])
                                 elif len(CS1) == 2 and len(CF1):  # found a Hidden Finned XWing
                                     SubStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
                                     if _elim_cands_in_finned_fish(Cand, BS, CS1, CF1, P_COL, Cands, ElimCands,
-                                                                  SubStep, AIC = True) == 0:
+                                                                  SubStep, AIC = 2) == 0:
                                         SubStep[P_TECH] = T_FINNED_X_WING
                                         SubStep[P_COND] = [[P_VAL, Cand], [P_OP, OP_POS],
                                                            [P_ROW, r4], [P_COL, c4],
                                                            [P_CON, ]] + SubStep[P_COND]
                                         Step[P_SUBS].append(SubStep)
+                                        Step[P_OUTC].extend(SubStep[P_OUTC])
                                 Cands[r4][c4].discard(Cand)
                     if len(Step[P_SUBS]):
                         Step[P_TECH] = T_ALMOST_X_WING
@@ -258,7 +258,7 @@ def tech_almost_x_wings(Grid, Step, Cands, ElimCands = None):
     return -1
 
 
-def tech_swordfish(Grid, Step, Cands, ElimCands = None):
+def tech_swordfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A Swordfish occurs when the same candidate occurs only 2 or 3 times
     # in three separate rows (base sets)and at least two of the candidates are
     # aligned in the associated columns (cover sets).  Here the candidate can be
@@ -270,6 +270,8 @@ def tech_swordfish(Grid, Step, Cands, ElimCands = None):
     #
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Swordfish
+
+    if Method != T_UNDEF and Method != T_SWORDFISH: return -1
 
     for Cand in range(1, 10):
         # look at rows
@@ -322,13 +324,15 @@ def tech_swordfish(Grid, Step, Cands, ElimCands = None):
                             return 0
     return -1
 
-def tech_finned_swordfish(Grid, Step, Cands, ElimCands = None):
-    return _finned_swordfish(Grid, Step, Cands, ElimCands, AIC = False)
+def tech_finned_swordfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_FINNED_SWORDFISH: return -1
+    return _finned_swordfish(Grid, Step, Cands, ElimCands, AIC = 0)
 
-def tech_kraken_swordfish(Grid, Step, Cands, ElimCands = None):
-    return _finned_swordfish(Grid, Step, Cands, ElimCands, AIC = True)
+def tech_kraken_swordfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_SWORDFISH: return -1
+    return _finned_swordfish(Grid, Step, Cands, ElimCands, AIC = 2)
 
-def _finned_swordfish(Grid, Step, Cands, ElimCands = None, AIC = False):
+def _finned_swordfish(Grid, Step, Cands, ElimCands = None, AIC = 0):
     # A Swordfish occurs when the same candidate occurs only 2 or 3 times
     # in three separate rows (base sets)and at least two of the candidates are
     # aligned in the associated columns (cover sets).  Here the candidate can be
@@ -340,6 +344,12 @@ def _finned_swordfish(Grid, Step, Cands, ElimCands = None, AIC = False):
     #
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Swordfish
+
+    # AIC == 0:  only look for a weak link between the ccells.
+    # AIC == 1:  only look for a weak link and between the ccells or the
+    #            ccells "see" a strong link
+    # AIC == 2:  weak link, "see" a strong link or weak-ended-AIC.
+
 
     for Cand in range(1, 10):
         # look at rows
@@ -364,7 +374,7 @@ def _finned_swordfish(Grid, Step, Cands, ElimCands = None, AIC = False):
                         if ci > 1: CS.add(cvr)
                         else: CF.add(cvr)
                     if len(CS) == 3 and len(CF):
-                        if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, ElimCands, Step, AIC) == 0:
+                        if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, ElimCands, Step, AIC = AIC) == 0:
                             return 0
         # look at cols
         BC = [set() for i in range(9)]
@@ -388,11 +398,11 @@ def _finned_swordfish(Grid, Step, Cands, ElimCands = None, AIC = False):
                         if ci > 1: CS.add(cvr)
                         else: CF.add(cvr)
                     if len(CS) == 3 and len(CF):
-                        if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, ElimCands, Step, AIC) == 0:
+                        if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, ElimCands, Step, AIC = AIC) == 0:
                             return 0
     return -1
 
-def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
+def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A Swordfish occurs when the same candidate occurs only 2 or 3 times
     # in three separate rows (base sets)and at least two of the candidates are
     # aligned in the associated columns (cover sets).  Here the candidate can be
@@ -404,6 +414,8 @@ def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
     #
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Swordfish
+
+    if Method != T_UNDEF and Method != T_ALMOST_SWORDFISH: return -1
 
     for Cand in range(1, 10):
         # look at rows
@@ -444,6 +456,7 @@ def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
                                                                [P_ROW, r4], [P_COL, c4],
                                                                [P_CON, ]] + SubStep[P_COND]
                                             Step[P_SUBS].append(SubStep)
+                                            Step[P_OUTC].extend(SubStep[P_OUTC])
                                     elif len(CS1) == 3 and len(CF1):  # found a Hidden finned swordfish
                                         SubStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
                                         if _elim_cands_in_finned_fish(Cand, BS, CS1, CF1, P_ROW, Cands, ElimCands,
@@ -453,6 +466,7 @@ def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
                                                                [P_ROW, r4], [P_COL, c4],
                                                                [P_CON, ]] + SubStep[P_COND]
                                             Step[P_SUBS].append(SubStep)
+                                            Step[P_OUTC].extend(SubStep[P_OUTC])
                                     Cands[r4][c4].discard(Cand)
                         if len(Step[P_SUBS]):
                             Step[P_TECH] = T_ALMOST_SWORDFISH
@@ -502,6 +516,7 @@ def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
                                                                [P_ROW, r4], [P_COL, c4],
                                                                [P_CON, ]] + SubStep[P_COND]
                                             Step[P_SUBS].append(SubStep)
+                                            Step[P_OUTC].extend(SubStep[P_OUTC])
                                     elif len(CS1) == 3 and len(CF1):  # found a Hidden Finned swordfish
                                         SubStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
                                         if _elim_cands_in_finned_fish(Cand, BS, CS1, CF1, P_COL, Cands, ElimCands,
@@ -511,6 +526,7 @@ def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
                                                                [P_ROW, r4], [P_COL, c4],
                                                                [P_CON, ]] + SubStep[P_COND]
                                             Step[P_SUBS].append(SubStep)
+                                            Step[P_OUTC].extend(SubStep[P_OUTC])
                                     Cands[r4][c4].discard(Cand)
                         if len(Step[P_SUBS]):
                             Step[P_TECH] = T_ALMOST_SWORDFISH
@@ -524,7 +540,7 @@ def tech_almost_swordfish(Grid, Step, Cands, ElimCands = None):
                             return 0
     return -1
 
-def tech_jellyfish(Grid, Step, Cands, ElimCands = None):
+def tech_jellyfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     # A Jellyfish occurs when the same candidate occurs only 2 to 4 times in
     # in four separate rows (base sets)and at least two of the candidates are
     # aligned in the associated columns (cover sets).  Here the candidate can be
@@ -536,6 +552,8 @@ def tech_jellyfish(Grid, Step, Cands, ElimCands = None):
     #
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Jellyfish
+
+    if Method != T_UNDEF and Method != T_JELLYFISH: return -1
 
     for Cand in range(1, 10):
         # look at rows
@@ -592,13 +610,19 @@ def tech_jellyfish(Grid, Step, Cands, ElimCands = None):
                                 return 0
     return -1
 
-def tech_finned_jellyfish(Grid, Step, Cands, ElimCands = None):
-    return _finned_jellyfish(Grid, Step, Cands, ElimCands, AIC = False)
+def tech_finned_jellyfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_FINNED_JELLYFISH: return -1
+    return _finned_jellyfish(Grid, Step, Cands, ElimCands, AIC = 0)
 
-def tech_kraken_jellyfish(Grid, Step, Cands, ElimCands = None):
-    return _finned_jellyfish(Grid, Step, Cands, ElimCands, AIC = True)
+def tech_kraken_jellyfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_JELLYFISH: return -1
+    return _finned_jellyfish(Grid, Step, Cands, ElimCands, AIC = 2)
 
-def _finned_jellyfish(Grid, Step, Cands, ElimCands = None, AIC = False):
+def _finned_jellyfish(Grid, Step, Cands, ElimCands = None, AIC = 0):
+    # AIC == 0:  only look for a weak link between the ccells.
+    # AIC == 1:  only look for a weak link and between the ccells or the
+    #            ccells "see" a strong link
+    # AIC == 2:  weak link, "see" a strong link or weak-ended-AIC.
 
     for Cand in range(1, 10):
         # look at rows
@@ -655,9 +679,11 @@ def _finned_jellyfish(Grid, Step, Cands, ElimCands = None, AIC = False):
                                 return 0
     return -1
 
-def tech_almost_jellyfish(Grid, Step, Cands, ElimCands = None):
+def tech_almost_jellyfish(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
     #  Logic techniques tech_swordfish and tech_finned_swordfish must be tried
     #  prior to trying this technique.
+
+    if Method != T_UNDEF and Method != T_ALMOST_JELLYFISH: return -1
 
     for Cand in range(1, 10):
         # look at rows
@@ -701,6 +727,7 @@ def tech_almost_jellyfish(Grid, Step, Cands, ElimCands = None):
                                                                        [P_ROW, r4], [P_COL, c4],
                                                                        [P_CON, ]] + SubStep[P_COND]
                                                     Step[P_SUBS].append(SubStep)
+                                                    Step[P_OUTC].extend(SubStep[P_OUTC])
                                             else:
                                                 for base in [r0, r1, r2, r3]:
                                                     if len(BC[base] - CF1) < 2:
@@ -714,6 +741,7 @@ def tech_almost_jellyfish(Grid, Step, Cands, ElimCands = None):
                                                                        [P_ROW, r4], [P_COL, c4],
                                                                        [P_CON, ]] + SubStep[P_COND]
                                                     Step[P_SUBS].append(SubStep)
+                                                    Step[P_OUTC].extend(SubStep[P_OUTC])
                                         Cands[r4][c4].discard(Cand)
                             if len(Step[P_SUBS]):
                                 Step[P_TECH] = T_ALMOST_JELLYFISH
@@ -765,6 +793,7 @@ def tech_almost_jellyfish(Grid, Step, Cands, ElimCands = None):
                                                                    [P_ROW, r4], [P_COL, c4],
                                                                    [P_CON, ]] + SubStep[P_COND]
                                                 Step[P_SUBS].append(SubStep)
+                                                Step[P_OUTC].extend(SubStep[P_OUTC])
                                         elif len(CS1) == 4 and len(CF1):  # found a Hidden finned jellyfish
                                             SubStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
                                             if _elim_cands_in_finned_fish(Cand, BS, CS1, CF1, P_COL, Cands, ElimCands,
@@ -774,6 +803,7 @@ def tech_almost_jellyfish(Grid, Step, Cands, ElimCands = None):
                                                                    [P_ROW, r4], [P_COL, c4],
                                                                    [P_CON, ]] + SubStep[P_COND]
                                                 Step[P_SUBS].append(SubStep)
+                                                Step[P_OUTC].extend(SubStep[P_OUTC])
                                         Cands[r4][c4].discard(Cand)
                             if len(Step[P_SUBS]):
                                 Step[P_TECH] = T_ALMOST_JELLYFISH
@@ -836,14 +866,16 @@ def _elim_cands_in_fish(Cand, BS, CS, rc, Cands, ElimCands, Step):
             return 0
     return -1
 
-def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC = False):
+def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC = 0):
+    # AIC == 0:  only look for a weak link between the ccells.
+    # AIC == 1:  only look for a weak link and between the ccells or the
+    #            ccells "see" a strong link
+    # AIC == 2:  weak link, "see" a strong link or weak-ended-AIC.
 
     Fins = []
     Chains = []
     NrLks = 0  # #links is one less than #Nodes
     Cvrs = 0
-    if AIC: AIC = 2
-    else: AIC = 0
     if rc == P_ROW:
         for r in sorted(BS):
             for c in sorted(CF):
@@ -883,7 +915,7 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC
                 if Cand not in Cands[r][c]: continue
                 NL = [[] for i in range(len(Fins))]
                 for i, (Rf, Cf) in enumerate(Fins):
-                    NL[i] = are_ccells_weakly_linked(Rf, Cf, Cand, r, c, Cand, Cands)
+                    NL[i] = are_ccells_weakly_linked(Rf, Cf, Cand, r, c, Cand, Cands, AIC = AIC)
                     if not NL[i]: break
                 else:
                     Cvrs += 1
@@ -917,7 +949,6 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC
             return -1
         if rc == P_ROW:
             Step[P_COND] = [[P_VAL, Cand], [P_ROW, BS], [P_COL, CS]]
-            # Step[P_COND] = [[P_VAL, Cand], flist([P_ROW, sorted(BS)]), flist([P_COL, sorted(CS)])]
         elif rc == P_COL:
             Step[P_COND] = [[P_VAL, Cand], [P_COL, BS], [P_ROW, CS]]
         else:
