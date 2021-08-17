@@ -12,6 +12,7 @@ from wx.lib.embeddedimage import PyEmbeddedImage
 
 
 from globals import *
+from solve_utils import *
 
 OP = ["" for i in range(OP_NR_OPS)]
 OP[OP_POS]  = "?-"  # Possibility, perhaps something to try
@@ -110,20 +111,23 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         SzrDlg.Add(SzrBtns, 0, wx.ALIGN_CENTRE, 0)
 
         self.BtnSlvTo = wx.Button(self, wx.ID_ANY, "Solve to Selected Step", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.BtnSaveStep = wx.Button(self, wx.ID_ANY, "Save Selected Step", wx.DefaultPosition, wx.DefaultSize, 0)
         self.BtnClose = wx.Button(self, wx.ID_ANY, "Close", wx.DefaultPosition, wx.DefaultSize, 0)
         self.BtnSlvTo.Bind(wx.EVT_BUTTON, self.on_solve_to)
+        self.BtnSaveStep.Bind(wx.EVT_BUTTON, self.on_save_step)
         self.BtnClose.Bind(wx.EVT_BUTTON, self.on_close)
 
-        if self.NB.GetSelection() != 1:
-            self.BtnSlvTo.Disable()
+        self.BtnSlvTo.Disable()
+        self.BtnSaveStep.Disable()
 
         SzrBtns.Add(self.BtnSlvTo, 0, wx.ALIGN_CENTRE, 0)
+        SzrBtns.Add(self.BtnSaveStep, 0, wx.ALIGN_CENTRE, 0)
         SzrBtns.Add(self.BtnClose, 0, wx.ALIGN_CENTRE, 0)
         SzrDlg.Add((0, 7), 0, 0, 0)  # Add a 7 pixel vertical spacer
 
         Props = self.Creator.Props
         #  Write the summary.
-        G = Props[PR_GIVENS]
+        G = Props[PR_GVN_HISTO]
         self.SumLC.InsertColumn(0, "Attribute", wx.LIST_FORMAT_LEFT, -1)
         self.SumLC.InsertColumn(1, "Value", wx.LIST_FORMAT_RIGHT, -1)
         self.SumLC.InsertColumn(2, "Comment", wx.LIST_FORMAT_LEFT, -1)
@@ -196,16 +200,16 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
                                 # LVLS[Props[PR_HISTO][Step[P_TECH]][HT_LVL]],
                                 Props[PR_HISTO][Step[P_TECH]][HT_TXT],
                                 f"{Step[P_DIFF]:d}",
-                                construct_str(Step[P_COND]),
-                                construct_str(Step[P_OUTC])])
+                                tkns_to_str(Step[P_COND]),
+                                tkns_to_str(Step[P_OUTC])])
             if len(Step[P_SUBS]):
                 for k, SubStep in enumerate(Step[P_SUBS]):
                     self.SolnLC.Append([f"{j+1:d}.{k+1:d}",
                                         # LVLS[Props[PR_HISTO][SubStep[P_TECH]][HT_LVL]],
                                         Props[PR_HISTO][SubStep[P_TECH]][HT_TXT],
                                         f"{SubStep[P_DIFF]:d}",
-                                        construct_str(SubStep[P_COND]),
-                                        construct_str(SubStep[P_OUTC])])
+                                        tkns_to_str(SubStep[P_COND]),
+                                        tkns_to_str(SubStep[P_OUTC])])
 
         self.SolnLC.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
         self.SolnLC.SetColumnWidth(1, wx.LIST_AUTOSIZE)
@@ -231,7 +235,19 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
     def on_item_selected(self, e):
         self.ToStep = e.Index
+        self.BtnSaveStep.Enable()
         self.BtnSlvTo.Enable()
+
+    def on_save_step(self, e):
+        Step = self.Creator.Props[PR_STEPS][self.ToStep]
+        Grid = Step[P_GRID]
+        Gvns = self.Creator.Props[PR_GIVENS]
+        G = [[Grid[r][c] + 10 if not Gvns[r][c] and Grid[r][c] else Grid[r][c] for c in range(9)] for r in range(9)]
+        if not save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), G, Step[P_ELIM], Step):
+            wx.MessageBox("Could not save puzzle, do not know why . . .\n"
+                          "Please send saved puzzle to developers",
+                          "Warning",
+                          wx.ICON_WARNING | wx.OK)
 
     def on_solve_to(self, e):
         if self.ToStep > self.FromStep:
@@ -278,10 +294,13 @@ class UserGuide(wx.Dialog):
     def on_close(self, e):
         wx.CallAfter(self.Destroy)
 
-def open_puzzle(Fp, G):
+def open_puzzle(Fp, Pzl):
     # Selects a puzzle with the FileDialog opening in Cwd, and returns a loaded
     # puzzle in grid G.  Note that the parent of the FileDialog is set to None.
-    #
+    #   Grid = [[0 for c in range(9)] for r in range(9)]
+    #   Elim = [[set() for c in range(9)] for r in range(9)]
+    #   Meth = -1
+    #   Pzl = [Grid, Elm, Meth]
     # Parms:
     #   Fp:  In:  a tuple containing the default directory and filename                  strings.
     #   G:   In:  Empty grid.
@@ -289,6 +308,9 @@ def open_puzzle(Fp, G):
     #             Empty cell is 0
     #             Given values are 1 to 9
     #             Placed values are 11 thru 19.  (offset by 10)
+    #  E:    In:  Empty cell grid of cands to eliminate
+    #        Out: Cell grid of cands to eliminate.
+    #  M:    Out:  will return T_UNDEF if method in file is not recognised.
     # Returns:  None:  Could not load file properly
     #           (Dir, Fn) Tuple of successfully loaded file.
 
@@ -306,16 +328,57 @@ def open_puzzle(Fp, G):
     dlg.Destroy()
     try:
         with open(Fs, "rt") as f:
-            vb = f.read(MAX_SVL_FILE_SIZE)
+            sG = f.readline(MAX_SVL_FILE_SIZE)
     except (OSError, IOError):
         return None
 
-    if grid_str_to_grid(vb.strip('\n'), G): return os.path.split(Fs)
+    lG = sG.replace("\n", "").split("|")
+    if lG[0] and grid_str_to_grid(lG[0], Pzl[0]):
+        if len(lG) >= 2 and lG[1]:
+            for sElim in lG[1].split(";"):
+                r, c, op, Cands = parse_ccell_phrase(sElim)
+                if r < 0 or op != OP_ELIM: break
+                Pzl[1][r][c] = Cands
+        if len(lG) >= 3 and lG[2]:
+            for m in range(T_NR_TECHS):
+                if T[m][T_TXT] == lG[2]:
+                    break
+            else:
+                m = T_UNDEF
+            Pzl[2] = m
+        return os.path.split(Fs)
+        #     else:
+        #         if len(lG) >= 3 and lG[2]:
+        #             for m in range(T_NR_TECHS):
+        #                 if T[m][T_TXT] == lG[2]:
+        #                     break
+        #             else: m = T_UNDEF
+        #             Pzl[2] = m
+        #         return os.path.split(Fs)
+        # else: return os.path.split(Fs)
 
     wx.MessageBox("Invalid Sudoku value file format",
                   "Warning",
                   wx.ICON_WARNING | wx.OK)
     return None
+
+def parse_ccell_phrase(St):
+    # only knows how to parse rycx-=digits, and rycx:=digit
+
+    if St[0] != "r" or St[2] != "c": return -1, -1, -1, -1
+    r = int(St[1])-1
+    if not 0 <= r <= 8: return -1, -1, -1, -1
+    c = int(St[3])-1
+    if not 0 <= c <= 8: return -1, -1, -1, -1
+    if St[4:6] == "-=":
+        op = OP_ELIM
+    elif St[4:6] == ":=":
+        op = OP_ASNV
+    else: return -1, -1, -1, -1
+    Cands = set(int(z) for z in St[6:])
+    if not Cands: return -1, -1, -1, -1
+    if len(Cands) > 1 and op == OP_ASNV: return -1, -1, -1, -1
+    return r, c, op, Cands
 
 
 def grid_str_to_grid(sG, G, Placed = True, GivensOnly = False):
@@ -336,16 +399,17 @@ def grid_str_to_grid(sG, G, Placed = True, GivensOnly = False):
         return False  # error parsing the grid string.
     return True if rc == 81 else False
 
-def grid_to_grid_str(G, sG):
+def grid_to_grid_str(G, sG = None):
 
+    if sG == None: sG = ""
     for r in range(9):
         for c in range(9):
             if G[r][c] > 10: sG += "+"; G[r][c] %= 10
-            sG += chr(G[r][c])
-    return True
+            sG += f"{G[r][c]}"
+    return sG
 
 
-def save_puzzle(Fp, G):
+def save_puzzle(Fp, G, ElimCands = None, Step = None):
     # Selects a puzzle filename with the save FileDialog in Cwd, and returns
     # after saving the sudoku values in the grid G.  Note that the parent of
     # the FileDialog is set to None.
@@ -357,10 +421,21 @@ def save_puzzle(Fp, G):
     # Returns:  None: Could not save selected file.
     #           Tuple containing directory and filename of saved file.
 
-    vb = ""
-    grid_to_grid_str(G, vb)
-    vb += "\n"
-
+    sG = ""
+    sG = grid_to_grid_str(G, sG)
+    sE = ""
+    if ElimCands:
+        for r in range(9):
+            for c in range(9):
+                if ElimCands[r][c]:
+                    if sE: sE += ";"
+                    sE += f"r{r+1}c{c+1}-="
+                    for v in sorted(ElimCands[r][c]):
+                        sE += f"{v}"
+        sG += f"|{sE}"
+    if Step:
+        sG += f"|{T[Step[P_TECH]][T_TXT]}"
+        sG += f"|{tkns_to_str(Step[P_COND])}|{tkns_to_str(Step[P_OUTC])}\n".replace(" ","").replace(".", "")
     dlg = wx.FileDialog(None, message = "Save A Puzzle",
                         defaultDir = Fp[0],
                         defaultFile = Fp[1],
@@ -375,7 +450,7 @@ def save_puzzle(Fp, G):
 
     try:
         with open(Fs, "wt") as f:
-            f.write(vb)
+            f.write(sG)
     except (IOError, OSError):
         wx.MessageBox("Error writing file",
                       "Warning",
@@ -383,7 +458,7 @@ def save_puzzle(Fp, G):
         return None
     return os.path.split(Fs)
 
-def construct_str(Tkns):
+def tkns_to_str(Tkns):
 
     St = ""
     for Tkn in Tkns:

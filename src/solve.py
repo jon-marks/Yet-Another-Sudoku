@@ -1,5 +1,5 @@
 from random import sample
-from copy import copy
+from copy import copy, deepcopy
 
 from globals import *
 from solve_utils import *
@@ -57,7 +57,7 @@ Techniques = [tech_exposed_singles,
 
 
 
-def grade_puzzle(Grid, Props):
+def grade_puzzle(Grid, Props, Elims = None, NextMeth = T_UNDEF):
     # Puzzles are graded by being solved using logic techniques to find the
     # highest level of expertise required to solve the puzzle and various other
     # parameters characterising the puzzle as described in the Props parameter
@@ -99,8 +99,7 @@ def grade_puzzle(Grid, Props):
     #          False: Invalid puzzle
 
     Steps = []
-    tf = logic_solve_puzzle(Grid, Steps)
-#    if logic_solve_puzzle(Grid, Steps):
+    tf = logic_solve_puzzle(Grid, Steps, Elims, NextMeth)
     Histo = [{HT_NR:    0,
               HT_TXT:   T[i][T_TXT],
               HT_LVL:   T[i][T_LVL],
@@ -124,22 +123,19 @@ def grade_puzzle(Grid, Props):
             if H[HT_LVL] > MaxLvl:
                 MaxLvl = H[HT_LVL]
 
-    # for i in range(T_NR_TECHS):
-    #     H = Histo[i]
-    #     H[HT_ADIFF] = H[HT_DIFF]*H[HT_NR]
-    #     Diff += H[HT_ADIFF]
     Props[PR_ACT_LVL] = MaxLvl
     Props[PR_STEPS] = Steps
     Props[PR_HISTO] = Histo
     Props[PR_DIFF] = Diff
     return tf
-#        return True
-#    else:
-#        return False
 
-def logic_solve_puzzle(Grid, Steps):
+def logic_solve_puzzle(Grid, Steps, Elims = None, Meth = T_UNDEF):
     # Solve the puzzle passed in grid, returning the ordered list of logic
     # solution steps.
+    #
+    # If the first method is not T_UNDEF and the first step cannot be solved
+    # with the the specified method, then try to solve without the method
+    # constraint
     #
     # Parms:
     #  Grid: In:   Contains the puzzle to grade, needs to be a valid puzzle.
@@ -162,24 +158,31 @@ def logic_solve_puzzle(Grid, Steps):
 
     NrEmpties = 0
     Cands = [[set() for c in range(9)] for r in range(9)]
+    if not Elims: Elims = deepcopy(Cands)
     for r in range(9):
         for c in range(9):
             if not Grid[r][c]:  # Cell is empty
                 NrEmpties += 1
                 for Cand in range(1, 10):
+#                    if Cand in Elims[r][c]: continue
                     if cell_val_has_no_conflicts(Cand, Grid, r, c):
                         Cands[r][c].add(Cand)
+                Cands[r][c] -= Elims[r][c]
+
     while NrEmpties > 0:
-        Step = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
+        Step = {P_GRID: deepcopy(Grid), P_ELIM: deepcopy(Elims), P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
         for tech in Techniques:
-            NrSlvd = tech(Grid, Step, Cands)
+            NrSlvd = tech(Grid, Step, Cands, ElimCands = Elims, Method = Meth)
             if NrSlvd < 0:
                 continue
             Steps.append(Step)
             NrEmpties -= NrSlvd
+            Meth = T_UNDEF
             break
         else:
-            if _tech_brute_force(Grid, Step, Cands):
+            if Meth != T_UNDEF:
+                Meth = T_UNDEF
+            elif _tech_brute_force(Grid, Step, Cands):
                 NrEmpties -= 1
                 Steps.append(Step)
             else:
@@ -187,7 +190,7 @@ def logic_solve_puzzle(Grid, Steps):
     return True
 
 
-def solve_next_step(Grid, Step, ElimCands):
+def solve_next_step(Grid, Step, ElimCands, Method = T_UNDEF):
     # Find the solution for the next step, used in providing hints to users.
     # Hints cannot be taken from the solution list as the user more than likely
     # solved the puzzle to this point taking a different path to that of the
@@ -215,7 +218,7 @@ def solve_next_step(Grid, Step, ElimCands):
     #             subsequent calls to this function to prevent the same hints
     #             being given.
     # Returns:  True:  A solution found.
-    #           False: Invalid puzzle or incorrect partial solution.
+    #           False: Can't solve next step - either invalid puzzle or bug in program.
 
     Cands = [[set() for c in range(9)] for r in range(9)]
     for r in range(9):
@@ -226,13 +229,12 @@ def solve_next_step(Grid, Step, ElimCands):
                         Cands[r][c].add(Cand)
                 Cands[r][c] -= ElimCands[r][c]
     for tech in Techniques:
-        if tech(Grid, Step, Cands, ElimCands) >= 0:
+        if tech(Grid, Step, Cands, ElimCands, Method = Method) >= 0:
             return True
 
-    return _tech_brute_force(Grid, Step, Cands, ElimCands)
-
-
-
+    if Method == T_UNDEF or Method == T_BRUTE_FORCE:
+        return _tech_brute_force(Grid, Step, Cands, ElimCands)
+    return False
 
 def _tech_brute_force(Grid, Step, Cands, ElimCands = None):
     # first randomly pick the empty to hint on.

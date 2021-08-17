@@ -22,7 +22,7 @@ import wx
 # Local imports
 
 from globals import *
-from misc import open_puzzle, save_puzzle, ListSolnWindow, construct_str
+from misc import open_puzzle, save_puzzle, ListSolnWindow, tkns_to_str, grid_str_to_grid
 from generate import *
 from solve import *
 from timer import *
@@ -263,7 +263,8 @@ class Sudoku:
 
         self.StatusBar.update_level(LVLS[self.Props[PR_ACT_LVL]])
         self.NrGivens = 0
-        self.Props[PR_GIVENS] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.Props[PR_GVN_HISTO] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.Props[PR_GIVENS] = [[g[r][c] for c in range(9)] for r in range(9)]
         for r in range(9):
             for c in range(9):
                 self.Grid[r][c][C_VAL] = g[r][c]
@@ -271,7 +272,7 @@ class Sudoku:
                     self.Grid[r][c][C_ST] = CVS_GIVEN
                     self.Board.write_cell_value(g[r][c], r, c, CVS_GIVEN)
                     self.NrGivens += 1
-                    self.Props[PR_GIVENS][g[r][c] - 1] += 1
+                    self.Props[PR_GVN_HISTO][g[r][c] - 1] += 1
                 else:
                     self.Grid[r][c][C_ST] = CVS_CANDS
                     self.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
@@ -295,12 +296,14 @@ class Sudoku:
             self.LSW = None
 
         G = [[0 for c in range(9)] for r in range(9)]
+        E = [[set() for c in range(9)] for r in range(9)]
+        Pzl = [G, E, T_UNDEF]
         # Following uses tuple as a hack to pass PzlDir and PzlFn by ref.
-        Fp = open_puzzle((self.PzlDir, self.PzlFn), G)
+        Fp = open_puzzle((self.PzlDir, self.PzlFn), Pzl)
         if Fp is None:
             self.gen_event(EV_SC_FIN, True)
             return
-
+        M = Pzl[2]
         # load the parsed grid into self.Grid and update the board.
         self.NrConflicts = self.NrGivens = 0
         for r in range(9):
@@ -336,7 +339,7 @@ class Sudoku:
         else:
             self.PzlDir, self.PzlFn = Fp
             self.MainWindow.SetTitle(TITLE + " - " + Fp[1])
-            self.gen_event(EV_SC_VLD)
+            self.gen_event(EV_SC_VLD, E, M)
 
     def on_entry_state(self, e, Cleanup = False):
         if Cleanup:
@@ -399,8 +402,32 @@ class Sudoku:
                 for r in range(9):
                     for c in range(9):
                         self.Board.write_cell_value(g[r][c][C_VAL], r, c, g[r][c][C_ST])
-        # elif Key in range(0x31, 0x3a):  # UTF-8 "1" through "9"
-        else:
+        elif Key == wx.WXK_CONTROL_V:
+            TDO = wx.TextDataObject()
+            if wx.TheClipboard.Open():
+                wx.TheClipboard.GetData(TDO)
+                sG = TDO.GetText()
+                G = [[0 for c in range(9)] for r in range(9)]
+                if sG and grid_str_to_grid(sG, G, Placed = False):
+                    self.NrConflicts = self.NrGivens = 0
+                    self.Board.clear_board()
+                    for r in range(9):
+                        for c in range(9):
+                            v = G[r][c]
+                            if v:
+                                self.NrGivens += 1
+                                self.Grid[r][c][C_VAL] = v
+                                self.Grid[r][c][C_ST] = CVS_ENTER
+                                G[r][c] = 0
+                                if not cell_val_has_no_conflicts(v, G, r, c):
+                                    self.NrConflicts += 1
+                                    self.Grid[r][c][C_ST] = CVS_CANDS | CVS_CNFLT
+                                G[r][c] = v
+                            else:
+                                self.Grid[r][c][C_VAL] = 0
+                                self.Grid[r][c][C_ST] = CVS_EMPTY
+                            self.Board.write_cell_value(v, r, c, self.Grid[r][c][C_ST])
+        else:  # Key in range(0x31, 0x3a):  # UTF-8 "1" through "9"
             (val, cvs) = key_to_val_cvs(Key)
             if val != 0:
                 # In Entry state, place the value in the selected cells and check
@@ -472,7 +499,7 @@ class Sudoku:
         self.SelList.clear()
         self.gen_event(EV_SC_ENT, False)
 
-    def on_validate_state(self, e):
+    def on_validate_state(self, e, Elims = None, NextMeth = T_UNDEF):
         if self.NrConflicts:
             if wx.MessageBox(f"Puzzle has {self.NrConflicts:d} conflicts.\n"
                              "Do you want to go back and correct instead of starting over?",
@@ -506,23 +533,29 @@ class Sudoku:
             # 0.  Copy the solved grid into self.Grid[][][C_SLVD], convert entered
             #     values to Givens and update board.
             self.NrGivens = 0
-            self.Props[PR_GIVENS] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            self.Props[PR_GVN_HISTO] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            self.Props[PR_GIVENS] = [[0 for c in range(9)] for r in range(9)]
             for r in range(9):
                 for c in range(9):
                     self.Grid[r][c][C_SLVD] = Soln[S_GRID][r][c]
+                    if Elims: self.Grid[r][c][C_ELIM] = copy(Elims[r][c])
                     if self.Grid[r][c][C_ST] == CVS_ENTER:
                         self.Grid[r][c][C_ST] = CVS_GIVEN
                         self.Board.write_cell_value(G[r][c], r, c, CVS_GIVEN)
-                        self.Props[PR_GIVENS][G[r][c]-1] += 1
+                        self.Props[PR_GVN_HISTO][G[r][c] - 1] += 1
+                        self.Props[PR_GIVENS][r][c] = G[r][c]
                         self.NrGivens += 1
                     elif self.Grid[r][c][C_ST] != CVS_PLACE:
                         self.Grid[r][c][C_ST] = CVS_CANDS
                         self.Board.write_cell_value(0, r, c, CVS_CANDS, self.Grid[r][c][C_CAND])
             # 1.  Grade the puzzle
-            # The grid g should still be good.
+            #     The existing grid G is still good.
+            # # placed values in the grid are offset by 10.
+            # G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] != CVS_PLACE else self.Grid[r][c][C_VAL] + 10
+            #       for c in range(9)] for r in range(9)]
             self.Props[PR_REQ_LVL] = self.Lvl
             self.Props[PR_NR_HOLES] = 81-self.NrGivens
-            if grade_puzzle(G, self.Props):
+            if grade_puzzle(G, self.Props, Elims, NextMeth):
                 self.StatusBar.update_level(LVLS[self.Props[PR_ACT_LVL]])
                 # 2.  Clear any selected cells
                 while len(self.SelList):
@@ -650,9 +683,22 @@ class Sudoku:
                 self.Flags |= GF_CORR
 
     def on_solve_save_state(self, e):
-        G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] == CVS_GIVEN else self.Grid[r][c][C_VAL] + 10
+        G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] != CVS_PLACE else self.Grid[r][c][C_VAL] + 10
               for c in range(9)] for r in range(9)]
-        Fp = save_puzzle((self.PzlDir, self.PzlFn), G)
+        E = [[self.Grid[r][c][C_ELIM] for c in range(9)] for r in range(9)]
+        # fp = save_puzzle((self.PzlDir, self.PzlFn), G, ElimCands = E, Step = self.Props[PR_STEPS][0])
+        G1 = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
+        E1 = deepcopy(E)
+        Step = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
+        if solve_next_step(G1, Step, E1) >= 0:
+            Fp = save_puzzle((self.PzlDir, self.PzlFn), G, ElimCands = E, Step = Step)
+        else:
+            Fp = save_puzzle((self.PzlDir,self.PzlFn), G, ElimCands = E)
+            wx.MessageBox("Bug in program!  Cannot solve next step\n"
+                          "Please send saved puzzle to developers",
+                          "Information",
+                          wx.ICON_INFORMATION | wx.OK)
+
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
             self.MainWindow.SetTitle(TITLE + " - " + self.PzlFn)
@@ -876,7 +922,7 @@ class Sudoku:
 
                 Ans = wx.MessageBox(f"Clearer Hint:\n"
                                     f"Technique: {T[Step[P_TECH]][T_TXT]}.\n"
-                                    f"Condition:  {construct_str(Step[P_COND])}\n"
+                                    f"Condition:  {tkns_to_str(Step[P_COND])}\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
                                     "Clearer Hint",
@@ -885,8 +931,8 @@ class Sudoku:
             else:  #  H_CLEAREST
                 Ans = wx.MessageBox(f"Clearest Hint:\n"
                                     f"Technique:  {T[Step[P_TECH]][T_TXT]}.\n"
-                                    f"Condition:  {construct_str(Step[P_COND])}\n"
-                                    f"Outcome:    {construct_str(Step[P_OUTC])}\n"
+                                    f"Condition:  {tkns_to_str(Step[P_COND])}\n"
+                                    f"Outcome:    {tkns_to_str(Step[P_OUTC])}\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
                                     "Clearest Hint",
@@ -918,7 +964,7 @@ class Sudoku:
             self.Board.clear_board()
             self.NrConflicts = 0  # A count of conflicted cells in the grid
             self.NrEmpties = 81-self.NrGivens  # All cells are empty
-            self.FilledVals = copy(self.Props[PR_GIVENS])
+            self.FilledVals = copy(self.Props[PR_GVN_HISTO])
             self.SelList.clear()  # list of (r,c) tuples of selected cells
             self.History.clear()  # History list (undo buffer) for Entry and Solve
             self.Flags = 0
@@ -950,8 +996,8 @@ class Sudoku:
                 for c in range(9):
                     if not g[r][c]:  # Cell is empty (can show candidates)
                         i = 0
-                        for r1 in range(3):
-                            for c1 in range(3):
+                        for r1 in [0, 1, 2]:
+                            for c1 in [0, 1, 2]:
                                 i += 1
                                 if cell_val_has_no_conflicts(i, g, r, c) \
                                         and i not in self.Grid[r][c][C_ELIM]:

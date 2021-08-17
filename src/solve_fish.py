@@ -874,8 +874,9 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC
 
     Fins = []
     Chains = []
+    AICFound = False
     NrLks = 0  # #links is one less than #Nodes
-    Cvrs = 0
+    # Cvrs = 0
     if rc == P_ROW:
         for r in sorted(BS):
             for c in sorted(CF):
@@ -890,7 +891,10 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC
                     NL[i] = are_ccells_weakly_linked(Rf, Cf, Cand, r, c, Cand, Cands, AIC = AIC)
                     if not NL[i]: break
                 else:  # the cover in rc sees all the fins.
-                    Cvrs += 1
+                    if AIC:
+                        for N in NL:
+                            if len(N) > 2: AICFound = True
+                    # Cvrs += 1
                     Cands[r][c].discard(Cand)
                     if Step[P_OUTC]:
                         Step[P_OUTC].append([P_SEP, ])
@@ -918,7 +922,10 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC
                     NL[i] = are_ccells_weakly_linked(Rf, Cf, Cand, r, c, Cand, Cands, AIC = AIC)
                     if not NL[i]: break
                 else:
-                    Cvrs += 1
+                    if AIC:
+                        for N in NL:
+                            if len(N) > 2: AICFound = True
+                    # Cvrs += 1
                     Cands[r][c].discard(Cand)
                     if Step[P_OUTC]:
                         Step[P_OUTC].append([P_SEP, ])
@@ -937,13 +944,13 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, ElimCands, Step, AIC
     if Step[P_OUTC]:
         Ord = len(BS)
         if Ord == 2:
-            Step[P_TECH] = T_FINNED_X_WING if NrLks == Cvrs else T_KRAKEN_X_WING
+            Step[P_TECH] = T_FINNED_X_WING if not AICFound else T_KRAKEN_X_WING
             Step[P_DIFF] = T[T_FINNED_X_WING][T_DIFF] + NrLks * AIC_LK_DIFF
         elif Ord == 3:
-            Step[P_TECH] = T_FINNED_SWORDFISH if NrLks == Cvrs else T_KRAKEN_SWORDFISH
+            Step[P_TECH] = T_FINNED_SWORDFISH if not AICFound else T_KRAKEN_SWORDFISH
             Step[P_DIFF] = T[T_FINNED_SWORDFISH][T_DIFF] + NrLks * AIC_LK_DIFF
         elif Ord == 4:
-            Step[P_TECH] = T_FINNED_JELLYFISH if NrLks == Cvrs else T_KRAKEN_JELLYFISH
+            Step[P_TECH] = T_FINNED_JELLYFISH if not AICFound else T_KRAKEN_JELLYFISH
             Step[P_DIFF] = T[T_FINNED_JELLYFISH][T_DIFF] + NrLks * AIC_LK_DIFF
         else:
             return -1

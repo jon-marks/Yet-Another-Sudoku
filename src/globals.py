@@ -25,7 +25,7 @@ VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
-MAX_SVL_FILE_SIZE = 1024  # even this value is generous
+MAX_SVL_FILE_SIZE = 4096  # even this value is generous
 
 #  subdir's relative to cwd.
 PUZZLES_DIR = "puzzles"
@@ -113,7 +113,6 @@ GRP_HL_TINT      = 8   # Tint RGB by this value for group highlighting
 CVS_EMPTY = 0x0000  # Cell value is empty (value = 0)
 CVS_ENTER = 0x0001  # Cell has an un-conflicted value in Entry state
 CVS_GIVEN = 0x0002  # Cell contains a given value.
-#CVS_SOLVE = 0x0003  # Cell contains a possibly solved value (depends on assistance)
 CVS_PLACE = 0x0003  # Cell contains a placed value (may or may not be correct)
 CVS_CNFLT = 0x0010  # Cell value is conflicted with another in Entry/Solve
 CVS_ERROR = 0x0005  # Cell contains an incorrectly solved value
@@ -264,7 +263,8 @@ P_COND = 1  # Ordered list of cell properties identified for the logic techniqu
 P_OUTC = 2  # Ordered list of cell updates on applying the logic technique
 P_DIFF = 3  # The total difficulty of the step
 P_SUBS = 4  # Ordered list of sub-steps - a recursion of Step Attributes
-
+P_GRID = 5  # The grid before logic steps.
+P_ELIM = 6  # The grid of eliminated candidates before the logic step
 
 # The lexical tokens of for cell description phrases
 P_ROW = 10  # cell row index
@@ -307,10 +307,11 @@ HT_DIFF  = 3  # Difficulty score of the technique
 HT_ADIFF = 4  # Accumulated difficulty score
 
 # Puzzle properties
-PR_REQ_LVL  = 0  # Requested level of expertise
-PR_ACT_LVL  = 1  # Actual level of expertise
-PR_NR_HOLES = 2  # The total number of holes dug
-PR_GIVENS   = 3  # Value histogram of the givens
-PR_STEPS    = 4  # The list of steps a solution path
-PR_HISTO    = 5  # Solution steps histogram
-PR_DIFF     = 6  # The difficulty of the puzzle.
+PR_REQ_LVL    = 0  # Requested level of expertise
+PR_ACT_LVL    = 1  # Actual level of expertise
+PR_NR_HOLES   = 2  # The total number of holes dug
+PR_GVN_HISTO  = 3  # Value histogram of the givens
+PR_STEPS      = 4  # The list of steps a solution path
+PR_HISTO      = 5  # Solution steps histogram
+PR_DIFF       = 6  # The difficulty of the puzzle.
+PR_GIVENS     = 7  # Grid containing only givens

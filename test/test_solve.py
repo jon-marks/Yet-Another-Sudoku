@@ -1,102 +1,86 @@
 import pytest
 from copy import copy
+import os
 #import csv
 
 from globals import *
-from misc import grid_str_to_grid
+from misc import grid_str_to_grid, tkns_to_str, parse_ccell_phrase
 from solve import solve_next_step
 from solve_utils import *
 
-RegrList = []
-
-with open("test-data/logic_step_regression.csv", "rt") as f:
-    i = 0
-    while 1:
-        Line = f.readline()
-        i += 1
-        if not Line: break
-        if Line == "\n": continue
-        Line = Line.removesuffix("\n")
-        (Csv, Hash, Cmt) = Line.partition("#")  # discard Hash & Cmt
-        if not Csv or Csv == "": continue
-        TD = Csv.split(",")
-        if len(TD) != 7:
-            print(f"Warning: Discarding line {i}: Wrong number of csv fields {len(TD)}, should be 7.")
-            continue
-        for t in range(T_NR_TECHS):
-            if T[t][T_TXT] == TD[0]:
-                TestLine = i
-                TestIdx  = t
-
-                # TestTxt = copy(TD[0])
-                break
-        else:
-            print(f"Warning: Discarding line {i}: Logic Method \'{TD[0]}\' not found.")
-            continue
-        if not len(TD[1]):
-            print(f"Warning: Discarding line {i}: At least one candidate is required in field 2.")
-            continue
-        TestCands = [int(TD[1][i]) for i in range(len(TD[1]))]
-        TestGrid = [[0 for c in range(9)] for r in range(9)]
-        if not grid_str_to_grid(TD[2], TestGrid, Placed = False):
-            print(f"Warning: Discarding line {i}: Could not parse test grid in field 3.")
-            continue
-        TestElim = [[set() for c in range(9)] for r in range(9)]
-        SlvdElim = []
-        SlvdPlcd = []
-        SlvdXtra = copy(TD[6])
-        List     = TD[3].split()  # TestElim
-        for E in List:  # 1 <= xx <= 9
-            if len(E) == 3:
-                Ccell = (int(E[1]), int(E[2]), int(E[0]))
-                if 1 <= Ccell[0] <= 9 and 1 <= Ccell[1] <= 9 and 1 <= Ccell[2] <= 9:
-                    TestElim[Ccell[0]-1][Ccell[1]-1].add(Ccell[2])
-                else: break
-            else: break
-        else:
-            List = TD[4].split()
-            for E in List:
-                if len(E) == 3:
-                    Ccell = (int(E[1]), int(E[2]), int(E[0]))
-                    if 1 <= Ccell[0] <= 9 and 1 <= Ccell[1] <= 9 and 1 <= Ccell[2] <= 9:
-                        SlvdElim.append(Ccell)
-                    else: break
-                else: break
-            else:
-                List = TD[5].split()
-                for E in List:
-                    if len(E) == 3:
-                        Ccell = (int(E[1]), int(E[2]), int(E[0]))
-                        if 1 <= Ccell[0] <= 9 and 1 <= Ccell[1] <= 9 and 1 <= Ccell[2] <= 9:
-                            SlvdPlcd.append(Ccell)
-                        else: break
-                    else: break
-                else:
-                    RegrList.append((TD, TestLine, TestIdx, TestCands, TestGrid, TestElim, SlvdElim, SlvdPlcd, SlvdXtra))
-                    continue
-                print(f"Warning: Discarding line {i}: Error parsing solved placements, field 6.")
+#@pytest.fixture
+def create_regrlist(RegrList):
+    asdfsf = os.getcwd()
+    with open("test-data/logic-step-regression-1.0.txt", "rt") as f:
+        TLine = 0
+        while 1:
+            Line = f.readline()
+            TLine += 1
+            if not Line: break
+            if Line == "\n" or Line[0] == "#": continue
+            TD = Line.removesuffix("\n").split("|")
+            if len(TD) != 5:
+                print(f"Warning: Line {i}: Wrong number of csv fields {len(TD)}, should be 5.|{Line}")
                 continue
-            print(f"Warning: Discarding line {i}: Error parsing solved eliminations, field 5.")
-            continue
-        print(f"Warning: Discarding line {i}: Error parsing test eliminations, field 4.")
-    # end of while loop.
+            TGrid = [[0 for c in range(9)] for r in range(9)]
+            if not grid_str_to_grid(TD[0], TGrid, Placed = False):
+                print(f"Warning: Line {i}: Cannot translate grid string.|{Line}")
+                continue
+            sElim = TD[1].replace(" ", "").replace(".", "")
+            TElim = [[set() for c in range(9)] for r in range(9)]
+            for sE in sElim.split(";"):
+                if not sE: continue
+                r, c, op, Cands = parse_ccell_phrase(sE)
+                if r < 0:
+                    print(f"Warning: Line {i}: Cannot parse Cands to remove, field 2.|{Line}")
+                    break
+                TElim[r][c] |= Cands
+            else:
+                # TD[2] contains method to test.
+                for TTech in range(T_NR_TECHS):
+                    if T[TTech][T_TXT] == TD[2]: break
+                else:
+                    if TD[2]: print(f"Info: Line {i}: Cannot find method \'{TD[2]}\' Will find best method.")
+                    TId = T_UNDEF
+                # TD[3] and TD[4] contains Expected condition and outcome, both can be empty
+                #   Condition is compared verbatim with Actual condition.
+                #   Outcome split into a set of cell grammar phrases to be compared
+                #   with actual. Set, as order of phrase may vary in original strings
+                sExpCond = TD[3].replace(" ", "").replace(".", "")
+                osExpOutc = set(TD[4].replace(" ", "").replace(".", "").split(";"))
+                RegrList.append((TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc))
+    return RegrList
+        # end of while loop.
 
-@pytest.mark.parametrize("TD1, TLine, TIdx, TCands, TGrid, TElim, SElim, SPlcd, SXtra", RegrList)
-def test_solve_next_step(TD1, TLine, TIdx, TCands, TGrid, TElim, SElim, SPlcd, SXtra):
+Regr = []
+create_regrlist(Regr)
+
+@pytest.mark.parametrize("TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc", Regr)
+def test_solve_next_step(TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc):
 
     TStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
-    assert solve_next_step(TGrid, TStep, TElim), f"Line {TLine}: Unable to solve step!"
+    res = solve_next_step(TGrid, TStep, TElim, Method = TTech)
+    res1 = True
+    if not res:
+        # The step could not solved with the method specified in TTech.  Can it
+        # find a method to solve the next step?
+        res1 = solve_next_Step(TGrid, TStep, TElim)
 
-    assert T[TStep[P_TECH]][T_TXT] == TD1[0], f"Line {TLine}: Solved with different logic technique!"
-
-    Outcome = set(construct_str(TStep[P_OUTC]).replace(" ", "").split(";"))
-
-
-    result = set()
-abd = [("1+1",2), ("2+2",4)]
-
-# @pytest.mark.parametrize("test_input, expected", abd)
-# def test_eval(test_input, expected):
-#     sdf = RegrList
-#
-#     assert eval(test_input) == expected
+    if res:
+        # possibilities here are that the same or different condition and outcome was found
+        sCond = tkns_to_str(TStep[P_COND]).replace(" ", "").replace(".", "")
+        osOutc = set(tkns_to_str(TStep[P_OUTC]).replace(" ", "").replace(".", "").split(";"))
+        assert sCond == sExpCond and osOutc == osExpOutc,\
+            f"{TLine}|Passed with different condition and ouctome:" \
+            f"Expected: {sExpCond}|{sorted(osExpOutc)}, " \
+            f"Actual: {sCond}|{sorted(osOutc)}"
+    elif res1:
+        # test passed using a with different method
+        sCond = tkns_to_str(TStep[P_COND]).replace(" ", "").replace(".", "")
+        osOutc = set(tkns_to_str(TStep[P_OUTC]).replace(" ", "").replace(".", "").split(";"))
+        assert Tstep[P_TECH] == TTECH,\
+            f"{TLine}:Passed with with different method:" \
+            f"Expected: {T[TTECH][T_TXT]}|{sExpCond}|{sorted(osExpOutc)}, " \
+            f"Actual: {T[TStep[P_TECH]][T_TXT]}|{sCond}|{sorted(osOutc)}"
+    else:  # test truly failed.
+        assert False, f"{TLine}:Failed"

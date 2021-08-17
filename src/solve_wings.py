@@ -6,6 +6,10 @@ from solve_utils import *
 
 
 def tech_y_wings(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
+    # Y Wings only involve bi-value cells.   AB sees AC through a different
+    # house to that where it sees BC.  In any cell that sees both BC and AC, C
+    # (if present) can be eliminated.
+    #
     # Find a cell with 2 cands.  This is cell BC which cands Cb, Cc.
     # Then look, NS, then EW then in the box for AB.  If AB is found, then look
     # in the other "directions" for AC.
@@ -119,8 +123,6 @@ def _tech_w_wings(Grid, Step, Cands, ElimCands = None, AIC = 1):
         for c in range(9):
             if len(Cands[r][c]) == 2:
                 BVList.append([r, c, sorted(Cands[r][c])])
-    if AIC: AIC = 2
-    else: AIC = 1
     if len(BVList) > 1:
         BVList = sorted(sorted(BVList, key = lambda a: a[2][1]), key = lambda a: a[2][0])
         for i in range(len(BVList)-1):
@@ -151,7 +153,7 @@ def _tech_w_wings(Grid, Step, Cands, ElimCands = None, AIC = 1):
                                 ElimCands[r0][c0].add(Candx)
                     if Step[P_OUTC]:
                         Lks = len(Nodes) - 1
-                        Step[P_TECH] = T_W_WING if Lks <= 3 else T_W_WING_AIC
+                        Step[P_TECH] = T_W_WING if Lks <= 3 else T_KRAKEN_W_WING
                         Step[P_DIFF] = T[T_W_WING][T_DIFF] + (Lks - 3) * AIC_LK_DIFF
                         Step[P_OUTC].append([P_END, ])
                         Chain = []

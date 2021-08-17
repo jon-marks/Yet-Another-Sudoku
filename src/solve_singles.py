@@ -17,8 +17,9 @@ def tech_exposed_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                 Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c],
                                 [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                if ElimCands is None:
-                    discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                Cands[r][c].clear()
+                discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                if ElimCands: ElimCands[r][c].clear()
                 return 1
     return -1
 
@@ -46,9 +47,10 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                 Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_ROW, r],
                                 [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                if ElimCands is None:
-                    Cands[r][c].clear()
-                    discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                # if ElimCands is None:
+                Cands[r][c].clear()
+                discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                if ElimCands: ElimCands[r][c].clear()
                 return 1
             # Scan the col
             D = Cands[r][c].copy()
@@ -60,9 +62,10 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                 Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_COL, c],
                                 [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                if ElimCands is None:
-                    Cands[r][c].clear()
-                    discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                # if ElimCands is None:
+                Cands[r][c].clear()
+                discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                if ElimCands: ElimCands[r][c].clear()
                 return 1
             # scan the block.
             D = Cands[r][c].copy()
@@ -78,9 +81,10 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                 Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_BOX, (br//3)*3 + bc//3],
                                 [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                if ElimCands is None:
-                    Cands[r][c].clear()
-                    discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                # if ElimCands is None:
+                Cands[r][c].clear()
+                discard_cand_from_peers(Grid[r][c], r, c, Cands)
+                if ElimCands: ElimCands[r][c].clear()
                 return 1
     return -1
 
@@ -116,51 +120,53 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                         # possibility of locking, check pointing first
                         Rx = sorted((or1, or2))
                         C2 = sorted(set(range(9)) - {bc, bc1, bc2})
-                        if Cand not in (Cands[or1][bc] | Cands[or1][bc1] | Cands[or1][bc2]
+                        if Method == T_UNDEF or Method == T_POINTING_LOCKED_SINGLE:
+                            if Cand not in (Cands[or1][bc] | Cands[or1][bc1] | Cands[or1][bc2]
                                         | Cands[or2][bc] | Cands[or2][bc1] | Cands[or2][bc2]):
                             # Candidate is locked to the row and can be discarded
                             # from balance of row.
-                            for c in C2:  # set(range(9)) - {bc, bc1, bc2}:
-                                if Cand in Cands[r0][c]:
-                                    Cands[r0][c].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    if ElimCands is not None:
-                                        ElimCands[r0][c].add(Cand)
-                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_POINTING_LOCKED_SINGLE):
-                                Step[P_TECH] = T_POINTING_LOCKED_SINGLE
-                                Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
-                                                [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                [P_ROW, Rx], [P_COL, bc, bc1, bc2],
-                                                [P_END, ]]
-                                return 0
-                        # else check claiming
-                        U = set()
-                        for c in C2:  # set(range(9))-{bc, bc1, bc2}:
-                            U |= Cands[r0][c]
-                        if Cand not in U:
-                            # Candidate is locked to the col, Candidate vals in the rest
-                            # of the block can be discarded
-                            for c in [bc, bc1, bc2]:
-                                for x in Rx:  # or1, or2]:
-                                    if Cand in Cands[x][c]:
-                                        Cands[x][c].discard(Cand)
+                                for c in C2:  # set(range(9)) - {bc, bc1, bc2}:
+                                    if Cand in Cands[r0][c]:
+                                        Cands[r0][c].discard(Cand)
                                         if Step[P_OUTC]:
                                             Step[P_OUTC].append([P_SEP, ])
-                                        Step[P_OUTC].extend([[P_ROW, x], [P_COL, c],
+                                        Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                        if ElimCands is not None:
-                                            ElimCands[x][c].add(Cand)
-                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_CLAIMING_LOCKED_SINGLE):
-                                Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
-                                Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
-                                                [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                [P_ROW, r0], [P_COL, C2], [P_END, ]]
-                                return 0
+                                        if ElimCands:
+                                            ElimCands[r0][c].add(Cand)
+                                if Step[P_OUTC]:
+                                    Step[P_TECH] = T_POINTING_LOCKED_SINGLE
+                                    Step[P_OUTC].append([P_END, ])
+                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
+                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_ROW, Rx], [P_COL, bc, bc1, bc2],
+                                                    [P_END, ]]
+                                    return 0
+                        # else check claiming
+                        if Method == T_UNDEF or Method == T_CLAIMING_LOCKED_SINGLE:
+                            U = set()
+                            for c in C2:  # set(range(9))-{bc, bc1, bc2}:
+                                U |= Cands[r0][c]
+                            if Cand not in U:
+                                # Candidate is locked to the row, Candidate vals in the rest
+                                # of the block can be discarded
+                                for c in [bc, bc1, bc2]:
+                                    for x in Rx:  # or1, or2]:
+                                        if Cand in Cands[x][c]:
+                                            Cands[x][c].discard(Cand)
+                                            if Step[P_OUTC]:
+                                                Step[P_OUTC].append([P_SEP, ])
+                                            Step[P_OUTC].extend([[P_ROW, x], [P_COL, c],
+                                                                 [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                            if ElimCands:
+                                                ElimCands[x][c].add(Cand)
+                                if Step[P_OUTC]:
+                                    Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
+                                    Step[P_OUTC].append([P_END, ])
+                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
+                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_ROW, r0], [P_COL, C2], [P_END, ]]
+                                    return 0
             # then scan the columns
             for c0, oc1, oc2 in zip([bc, bc1, bc2], [bc1, bc2, bc], [bc2, bc, bc1]):
                 for Cand in Cands[br][c0] | Cands[br1][c0] | Cands[br2][c0]:
@@ -175,51 +181,53 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                         # possibility of locking, check for pointing first
                         Cx = sorted((oc1, oc2))
                         R2 = sorted(set(range(9)) - {br, br1, br2})
-                        if Cand not in (Cands[br][oc1] | Cands[br1][oc1] | Cands[br2][oc1]
-                                        | Cands[br][oc2] | Cands[br1][oc2] | Cands[br2][oc2]):
-                            # Candidate is locked to the col, and can be discarded
-                            # from the balance of the col.
-                            for r in R2:  # set(range(9)) - {br, br1, br2}:
-                                if Cand in Cands[r][c0]:
-                                    Cands[r][c0].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r], [P_COL, c0],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    if ElimCands is not None:
-                                        ElimCands[r][c0].add(Cand)
-                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_POINTING_LOCKED_SINGLE):
-                                Step[P_TECH] = T_POINTING_LOCKED_SINGLE
-                                Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
-                                                [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                [P_ROW, br, br1, br2], [P_COL, Cx],
-                                                [P_END, ]]
-                                return 0
-                        # else check claiming
-                        U = set()
-                        for r in R2:  # set(range(9)) - {br, br1, br2}:
-                            U |= Cands[r][c0]
-                        if Cand not in U:
-                            # Candidate is locked to the col, Candidate vals in the rest
-                            # of the block can be discarded
-                            for r in [br, br1, br2]:
-                                for x in Cx:
-                                    if Cand in Cands[r][x]:
-                                        Cands[r][x].discard(Cand)
+                        if Method == T_UNDEF or Method == T_POINTING_LOCKED_SINGLE:
+                            if Cand not in (Cands[br][oc1] | Cands[br1][oc1] | Cands[br2][oc1]
+                                            | Cands[br][oc2] | Cands[br1][oc2] | Cands[br2][oc2]):
+                                # Candidate is locked to the col, and can be discarded
+                                # from the balance of the col.
+                                for r in R2:  # set(range(9)) - {br, br1, br2}:
+                                    if Cand in Cands[r][c0]:
+                                        Cands[r][c0].discard(Cand)
                                         if Step[P_OUTC]:
                                             Step[P_OUTC].append([P_SEP, ])
-                                        Step[P_OUTC].extend([[P_ROW, r], [P_COL, x],
+                                        Step[P_OUTC].extend([[P_ROW, r], [P_COL, c0],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                        if ElimCands is not None:
-                                            ElimCands[r][oc1].add(Cand)
-                            if Step[P_OUTC] and (Method == T_UNDEF or Method == T_CLAIMING_LOCKED_SINGLE):
-                                Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
-                                Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
-                                                [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                [P_ROW, R2], [P_COL, c0], [P_END, ]]
-                                return 0
+                                        if ElimCands:
+                                            ElimCands[r][c0].add(Cand)
+                                if Step[P_OUTC]:
+                                    Step[P_TECH] = T_POINTING_LOCKED_SINGLE
+                                    Step[P_OUTC].append([P_END, ])
+                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
+                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_ROW, br, br1, br2], [P_COL, Cx],
+                                                    [P_END, ]]
+                                    return 0
+                        # else check claiming
+                        if Method == T_UNDEF or Method == T_CLAIMING_LOCKED_SINGLE:
+                            U = set()
+                            for r in R2:  # set(range(9)) - {br, br1, br2}:
+                                U |= Cands[r][c0]
+                            if Cand not in U:
+                                # Candidate is locked to the col, Candidate vals in the rest
+                                # of the block can be discarded
+                                for r in [br, br1, br2]:
+                                    for x in Cx:
+                                        if Cand in Cands[r][x]:
+                                            Cands[r][x].discard(Cand)
+                                            if Step[P_OUTC]:
+                                                Step[P_OUTC].append([P_SEP, ])
+                                            Step[P_OUTC].extend([[P_ROW, r], [P_COL, x],
+                                                                 [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                            if ElimCands:
+                                                ElimCands[r][x].add(Cand)
+                                if Step[P_OUTC]:
+                                    Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
+                                    Step[P_OUTC].append([P_END, ])
+                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
+                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_ROW, R2], [P_COL, c0], [P_END, ]]
+                                    return 0
     return -1
 
 def tech_empty_rects(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
@@ -304,7 +312,7 @@ def tech_empty_rects(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                     if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
                                     Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
                                                          [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    if ElimCands is not None: ElimCands[r3][c3].add(Cand)
+                                    if ElimCands: ElimCands[r3][c3].add(Cand)
                                 Step[P_OUTC].append([P_END, ])
                                 Step[P_COND] = [[P_VAL, Cand], [P_OP, OP_CNT, n], [P_BOX, (rb//3)*3 + cb//3]]
                                 for r3, c3 in BC:
