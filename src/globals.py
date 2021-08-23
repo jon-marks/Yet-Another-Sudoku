@@ -214,7 +214,19 @@ H_VAGUE    = 0
 H_CLEARER  = 1
 H_CLEAREST = 2
 
-# Solving logic Techniques
+# Names of patterns (conditions) in a puzzle that can be recognised by YAS.
+# Note:  that a solving technique (method) may be able to recognise and solve for more than
+# one of pattern.  For example the locked singles method in solve_singles can solve
+# for both claiming and pointing locked singles, the exposed_pairs and exposed_triples
+# also find the locked exposed subsets too, bent_triples finds both Y-Wings and
+# XYZ-Wings, bent_quads finds all manner of bent quads included WXYZ-wings, and so on.
+# Also Note:  sometimes it has been necessary to force a technique to solve for only
+# one of the patterns it can recognise and resolve at a time.  This is necessary to be
+# able to prioritise solving techniques, for example resolving Kraken fish is a
+# simple AIC extension of finned fish, however in the sequence of solving techniques
+# (human) simpler and easier than recognising kraken fish such as the simple AIC's
+# should be attempted first.  Otherwize we end up with a solution path that uses much
+# more complex techniques to solve a puzzle when simpler methods can be used.
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
 T_HIDDEN_SINGLE             = 1
@@ -245,12 +257,13 @@ T_W_WING                    = 25
 T_KRAKEN_W_WING             = 26
 T_XYZ_WING                  = 27
 T_WXYZ_WING                 = 28
-T_EMPTY_RECT                = 29
-T_X_CHAIN                   = 30
-T_XY_CHAIN                  = 31
-T_CONTINOUS_LOOP            = 32
-T_BRUTE_FORCE               = 33
-T_NR_TECHS                  = 34
+T_BENT_EXPOSED_QUAD         = 29
+T_EMPTY_RECT                = 30
+T_X_CHAIN                   = 31
+T_XY_CHAIN                  = 32
+T_CONTINOUS_LOOP            = 33
+T_BRUTE_FORCE               = 34
+T_NR_TECHS                  = 35
 
 # Technique attribute field enums
 TA_TXT  = 0

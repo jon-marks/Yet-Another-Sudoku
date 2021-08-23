@@ -49,7 +49,8 @@ T[T_Y_WING]                  = ["Y-Wing",                  LVL_INTERMEDIATE,   5
 T[T_W_WING]                  = ["W-Wing",                  LVL_PROFICIENT,     55]
 T[T_KRAKEN_W_WING]           = ["Kraken W-Wing",           LVL_PROFICIENT,     95]
 T[T_XYZ_WING]                = ["XYZ-Wing",                LVL_PROFICIENT,     60]
-T[T_WXYZ_WING]               = ["WXYZ-Wing",               LVL_PROFICIENT,     65]
+T[T_WXYZ_WING]               = ["WXYZ-Wing",               LVL_ACCOMPLISHED,  100]
+T[T_BENT_EXPOSED_QUAD]       = ["Bent Exposed Quad",       LVL_ACCOMPLISHED,  110]
 T[T_EMPTY_RECT]              = ["Empty Rectangle",         LVL_PROFICIENT,     45]
 T[T_X_CHAIN]                 = ["X-Chain",                 LVL_PROFICIENT,     60]
 T[T_XY_CHAIN]                = ["XY-Chain",                LVL_PROFICIENT,     70]
@@ -95,7 +96,7 @@ def discard_cand_from_peers(Cand, r, c, Cands):
             Cands[r1][c1].discard(Cand)
 
 def cells_in_same_house(r1, c1, r2, c2):
-    #Cells see each other in same house
+    # Cells see each other in same house
     if r1 == r2 or c1 == c2 or (r1//3 == r2//3 and c1//3 == c2//3):
         return True
     return False
@@ -204,21 +205,296 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK):
                 LCL.append((r, c, Cand1, LK_WEAK))
     return LCL
 
-def cells_seen_by_both(r1, c1, r2, c2):
-    # returns a list of (r, c) tuples that both cells can see.  Both cells are
-    # in different boxes.
+# def cells_intersect(Cells):
+#     # Cells is a list of (r, c) tuples.
+#     # Returns a list of (r, c) tuples that all the passed cells can see.
+#
+#     # The number of Cell tuples must be between two and four.
+#     NrCells = len(Cells)
+#     if not 2 <= NrCells <= 4:return []
+#
+#     Twrs = [[], [], []]; Flrs = [[], [], []]
+#     NrTwrs = [0, 0, 0]; NrFlrs = [0, 0, 0]
+#     for r, c in Cells:
+#         if r > 8 or c > 8: return []
+#         Twrs[c//3].append((r, c)); Flrs[r//3].append((r, c))
+#         NrTwrs[c//3] += 1; NrFlrs[r//3] += 1
+#
+#     if NrCells == 2:
+#         if 2 in NrTwrs and 2 in NrFlrs: return []  # cells in same box.
+#         r0, c0 = Cells[0]; r1, c1 = Cells[1]
+#         if 2 in NrFlrs:  # both cells on the same floor.
+#             if r0 == r1: return []  #  not a wing
+#             cb0 = (c0//3)*3; cb1 = (c1//3)*3
+#             return [(r0, cb1), (r0, cb1+1), (r0, cb1+2), (r1, cb0), (r1, cb0+1), (r1, cb0+2)]
+#         if 2 in NrTwrs:  # both cells in same tower
+#             if c0 == c1: return []
+#             rb0 = (r0//3)*3; rb1 = (c1//3)*3
+#             return [(rb0, c1), (rb0+1, c1), (rb0+2, c1), (rb1, c0), (rb1+1, c0), (rb1+2, c0)]
+#         return [(r0, c1) (r1, c0)]
+#     if NrCells == 3:
+#         if 3 in NrTwrs and 3 in NrFlrs: return []  # cells all in same box.
+#         r0, c0 = Cells[0]; r1, c1 = Cells[1]; r2, c2 = Cells[2]
+#         if 3 in NrFlrs:  # cells are all on the same floor.
+#             cb0 = (c0//3)*3; cb1 = (c1//3)*3; cb2 = (c2//3)*3
+#             if r0 == r1:
+#                 if cb0 == cb2:  # Cell[0] is in the intersection
+#                     return [(r0, )]
+#                 elif cb1 == cb2: # Cell[1] is in the intersection
+#                     return []
+#                 return []
+#             elif r0 == r2:
+#                 if cb0 == cb1: # Cell[0] is in the intersection
+#                     return []
+#                 elif cb2 == cb1:  # Cell [2] is in the intersection
+#                     return []
+#                 return []
+#             elif r1 == r2:
+#                 if cb1 == cb0: # Cell [1] is in the intersection
+#                     return []
+#                 elif cb2 == cb0:  # Cell [2] is in the intersection
+#                     return []
+#                 return []
+#             return []
+#         elif 3 in NrTwrs:  # cells are in the same tower.
+#             rb0 = (r0//3)*3; rb1 = (r1//3)*3; rb2 = (r2//3)*3
+#             if c0 == c1:
+#                 if rb0 == rb2:
+#                     return []
+#                 elif rb1 == rb2:
+#                     return []
+#                 return []
+#             elif c0 == c2:
+#                 if rb0 == rb1:
+#                     return []
+#                 elif rb2 == rb1:
+#                     return []
+#                 return []
+#             elif c1 == c2:
+#                 if rb1 == rb0:
+#                     return []
+#                 elif rb2 == rb0:
+#                     return []
+#                 return []
+#             return []
+#         return []
+#     if NrCells == 4:
+#         if 4 in NrTwrs and 4 in NrFlrs: return []
+#         r0, c0 = Cells[0]; r1, c1 = Cells[1]; r2, c2 = Cells[2]; r3, c3 = Cells[3]
+#         if 4 in NrFlrs:  # cells are all on the same floor.
+#             cb0 = (c0//3)*3; cb1 = (c1//3)*3; cb2 = (c2//3)*3; cb3 = (c3//3)*3
+#             if 3 in NrTwrs:  # 3 cells in the box
+#                 Twr = (NrTwrs.index(3))*3
+#                 BoxRow = [False, False, False]
+#                 for rb, cb in Twrs[Twr]:
+#                     BoxRow
+#                 pass
+#             elif 2 in NrTwrs:  # 2 cells in the box
+#                 pass
+#
+#
+#
+#
+#             if 2 in NrTwrs # and two are in the same box.
+#     if 2
+#         if len(Twr[0])
+#
+#     Twr = []; Flr = []
+#     for r, c in Cells:
+#         if r > 8 or c > 8: return []
+#         Flr.append((r//3)*3); Twr.append((c//3)*3)
+#     if NrCells == 2:
+#         if Flr[0] == Flr[1] and Twr[0] == Twr[1]: return []  # r1,c1 and r2,c2 cannot be in same box.
+#         r0, c0 = Cells[0]; r1, c1 = Cells[1]
+#         if Flr[0] == Flr[1]:  # both cells on same floor
+#             return [(r0, Twr[1]), (r0, Twr[1]+1), (r0, Twr[1]+2), (r1, Twr[0]), (r1, Twr[0]+1), (r1, Twr[0]+2)]
+#         if Twr[0] == Twr[1]:  # both cells in the same tower
+#             return [(Flr[0], c1), (Flr[0]+1, c1), (Flr[0]+2, c1), (Flr[1], c0), (Flr[1]+1, c0), (Flr[1]+2, c0)]
+#         # diagonally opposed cells
+#         return [(r0, c1), (r1, c0)]
+#     if NrCells == 3:
+#         r0, c0 = Cells[0]; r1, c1 = Cells[1]; r2, c2 = Cells[2]
+#         if Flr[0] == Flr[1] == Flr[2]:  # same floor.
+#             if Twr[0] == Twr[1]:  # Either Cell[0] and Cell[1] in the box, and
+#                 if r0 == r2:  #    either Cell[0] and Cell[2] in the same row
+#                     # Cell[0] is in the intersection.
+#                     return [(r2, (c0+1)%3+Twr[0]), (r2, (c0+2)%3+Twr[0])]
+#                 elif r1 == r2: #   or Cell[1] and Cell[2] in the same row
+#                     # Cell[1] is in the intersection
+#                     return [(r2, (c1+1)%3+Twr[0]), (r2, (c1+2)%3+Twr[0])]
+#                 return []
+#             elif Twr[0] == Twr[2]:  # Or Cell [0] and Cell[2] in the box and
+#                 if r0 == r1:    #    either Cell[0] and Cell [1] in the same row
+#                     # Cell[0] is in the intersection.
+#                     return [(r1, (c0+1)%3+Twr[0]), (r1, (c0+2)%3+Twr[0])]
+#                 elif r1 == r2:
+#                     # Cell[2] is in the intersection
+#                     return [(r1, (c2+1)%3+Twr[0]), (r1, (c2+2)%3+Twr[0])]
+#                 return []
+#             elif Twr[1] == Twr[2]:
+#                 if r0 == r1:
+#                     # Cell[1] is in the intersection
+#                     return [(r0, (c1+1)%3+Twr[1]), (r0, (c1+2)%3+Twr[1])]
+#                 elif r0 == r2:
+#                     return [(r0, (c2+1)%3+Twr[1]), (r0, (c2+2)%3+Twr[1])]
+#                 return []
+#             return []
+#         if Twr[0] == Twr[1] == Twr[2]:  # same tower
+#             if Flr[0] == Flr[1]:
+#                 if   c0 == c2: return [((r0+1)%3+Flr[0], c2), ((r0+2)%3+Flr[0], c2)]
+#                 elif c1 == c2: return [((r1+1)%3+Flr[0], c2), ((r1+2)%3+Flr[0], c2)]
+#                 return []
+#             elif Flr[0] == Flr[2]:
+#                 if   c0 == c1: return [((r0+1)%3+Flr[0], c1), ((r0+2)%3+Flr[0], c1)]
+#                 elif c1 == c2: return [((r2+1)%3+Flr[0], c1), ((r2+2)%3+Flr[0], c1)]
+#                 return []
+#             elif Flr[1] == Flr[2]:
+#                 if   c0 == c1: return [((r1+1)%3+Flr[1], c0), ((r1+2)%3+Flr[1], c0)]
+#                 elif c0 == c2: return [((r2+1)%3+Flr[1], c0), ((r2+2)%3+Flr[1], c0)]
+#             return []
+#         return []
+#     if NrCells == 4:
+#         r0, c0 = Cell[0]; r1, c1 = Cell[1]; r2, c2 = Cell[2]; r3, c3 = Cell[3]
+#         if Flr[0] == Flr[1] == Flr[2] == Flr[3]:  # same floor
+#
+#
+#
+#
+#
+#
+#     # returns a list of (r, c) tuples that both cells can see.  Both cells are
+#     # in different boxes.
+#
+#
+# def cells_that_see_both(r1, c1, r2, c2):
+#     # returns a set of (r, c) tuples that both cells can see.  Both cells are
+#     # in different boxes.
+#
+#     if r1 == r2 and c1 == c2: return [] # cells need to be different.
+#
+#     f1 = (r1//3)*3; f2 = (r2//3)*3
+#     t1 = (c1//3)*3; t2 = (c2//3)*3
+#
+#     if f1 == f2 and t1 == t2:  # cells in same box.
+#         cc = {(f1, t1), (f1, t1+1), (f1, t1+2), (f1+1, t1), (f1+1, t1+1), (f1+1, t1+2), (f1+2, t1), (f1+2, t1+1), (f1+2, t1+2)} - {(r1, c1), (r2, c2)}
+#         if r1 == r2:  # all cells along the row outside the box too.
+#             for c in (set(range(9) - {t1, t1+1, t1+2})):
+#                 cc.add((r1, c))
+#         if c1 == c2:  # all cells along col outside box too.
+#             for r in set(range(9) - {f1, f1+2, f1+2}):
+#                 cc.add((r, c1))
+#         return sorted(cc)
+#     if f1 == f2:  # both cells on same floor
+#         return [(r1, t2), (r1, t2+1), (r1, t2+2), (r2, t1), (r2, t1+1), (r2, t1+2)]
+#     if t1 == t2:  # both cells in the same tower
+#         return [(f1, c2), (f1+1, c2), (f1+2, c2), (f2, c1), (f2+1, c1), (f2+2, c1)]
+#     return [(r1, c2), (r2, c1)]
 
-    f1 = (r1//3)*3; f2 = (r2//3)*3
-    t1 = (c1//3)*3; t2 = (c2//3)*3
+def cells_that_see_all_of(Cells):
+    # Cells = list of (r,c) tuples.  Returns another list of (r, c) tuples that
+    # can see the passed cells.
 
-    if f1 == f2 and t1 == t2:
-        return []  # r1,c1 and r2,c2 cannot be in same box.
-    if f1 == f2:  # both cells on same floor
-        return [(r1, t2), (r1, t2+1), (r1, t2+2), (r2, t1), (r2, t1+1), (r2, t1+2)]
-    if t1 == t2:  # both cells in the same tower
-        return [(f1, c2), (f1+1, c2), (f1+2, c2), (f2, c1), (f2+1, c1), (f2+2, c1)]
-    # boxes cannot see each other
-    return [(r1, c2), (r2, c1)]
+    # only needs to handle 3 or 4 cells.  For three or more cells to be seen by
+    # any other cell, the cells to be seen, and the cell that is doing the seeing
+    # all need to be in the same chute.
+
+    sR = set(); sC = set(); sF = set(); sT = set()
+    for r, c in Cells:
+        sR.add(r); sC.add(c); sF.add((r//3)*3); sT.add((c//3)*3)
+    if len(Cells) == len(sF) == len(sT) == 2:  # 2 cells in separate houses
+        r0, c0 = Cells[0]; r1, c1 = Cells[1]
+        return [(r0, c1), (r1, c0)]
+
+    rtn = set()
+    if len(sF) == len(sT) == 1:  # all cells are in the same box.
+        f = list(sF)[0]; t = list(sT)[0]
+        rtn = {(f, t), (f, t+1), (f, t+2), (f+1, t), (f+1, t+1), (f+1, t+2), (f+2, t), (f+2, t+1), (f+2, t+2)} - set(Cells)
+        if len(sR) == 1:  # and in the same row.
+            r = list(sR)[0]
+            for c in sorted(set(range(9)) - {t, t+1, t+2}):
+                rtn.add((r, c))
+        if len(sC) == 1:  # and in the same col.
+            c = list(sC)[0]
+            for r in sorted(set(range(9)) - {f, f+1, f+2}):
+                rtn.add((r, c))
+        return sorted(rtn)
+    sCells = set(Cells)
+
+    if len(sF) == 1: # cells are all on the same floor.
+        for r0 in sR:
+            for c0 in range(9):
+                if (r0, c0) in sCells: continue
+                for r1, c1 in Cells:
+                    if not cells_in_same_house(r0, c0, r1, c1):
+                        break
+                else:  # r0,c0 can see all cells in patterns
+                    rtn.add((r0, c0))
+        return sorted(rtn)
+
+    if len(sT) == 1:  # cells are all in the same tower
+        for c0 in sC:
+            for r0 in range (9):
+                if (r0, c0) in sCells: continue
+                for r1, c1 in Cells:
+                    if not cells_in_same_house(r0, c0, r1, c1):
+                        break
+                else:  # r0, c0 can see all the cell patterns
+                    rtn.add((r0, c0))
+    return sorted(rtn)
+
+#
+# def cells_seen_by_three(r0, c0, r1, c1, r2, c2):
+#
+#     f0 = (r0//3)*3; f1 = (r1//3)*3; f2 = (r2//3)*3
+#     t0 = (c0//3)*3; t1 = (c1//3)*3; t2 = (c2//3)*3
+#
+#     if f0 == f1 == f2 and t0 == t1 == t2: return []  # r0,c0, r1,c1 and r2,c2 cannot be in same box.
+#
+#     if f0 == f1 == f2 and len({r0, r1, r2}) == 2:  # all three in two rows on same floor
+#         if r0 == r1:  # r2 in different row.
+#             if t2 == t0:  # r0, c0 is in the intersection
+#                 return [(r0, t0 + (c0+1)%3), (r0, t0 + (c0+2)%3)]
+#             if t2 == t1:  # r1, c1 is in the intersection
+#                 return [(r1, t1 + (c1+1)%3), (r1, t1 + (c1+2)%3)]
+#         if r0 == r2: # r1 in different row.
+#             if t1 == t0:  # r0, c0 is in the intersection.
+#                 return [(r0, t0 + (c0+1)%3), (r0, t0 + (c0+2)%3)]
+#             if t1 == t2:  # r2, c2 is in the intersection
+#                 return [(r2, t2 + (c2+1)%3), (r2, t2 + (c2+2)%3)]
+#         if r1 == r2:  # r0 in different row
+#             if t0 == t1:  # r1, c1 is in the intersection.
+#                 return [(r1, t1 + (c1+1)%3), (r1, t1 + (c1+2)%3)]
+#             if t0 == t2:  # r2, c2 is in the intersection
+#                 return [(r2, t2 + (c2+1)%3), (r2, t2 + (c2+2)%3)]
+#     if t0 == t1 == t2 and len({c0, c1, c2}) == 2:  # all three in two cols in the same tower
+#         if c0 == c1:  # c2 is the different col.
+#             if f2 == f0:  # r0, c0 is in the intersection
+#                 return [(f0 + (r0+1)%3, c0), (f0 + (r0+2)%3, c0)]
+#             if f2 == f1:  # r1, c1 is in the intersection
+#                 return [(f1 + (r1+1)%3, c1), (f1 + (r1+2)%3, c1)]
+#         if c0 == c2:  # c1 is the different col.
+#             if f1 == f0:  # r0, c0 is in the intersection.
+#                 return [(f0 + (r0+1)%3, c0), (f0 + (r0+2)%3, c0)]
+#             if f1 == f2:  # r2, c2 is in the intersection
+#                 return [(f2 + (r2+1)%3, c2), (f2 + (r2+2)%3, c2)]
+#         if c1 == c2:  # c0 is the different col.
+#             if f0 == f1:  # r1, c1 is in the intersection
+#                 return [(f1 + (r1+1)%3, c1), (f1 + (r1+2)%3, c1)]
+#             if f0 == f2:  # r2, c2 is in the intersection
+#                 return [(f2 + (r2+1)%3, c2), (f2 + (r2+2)%3, c2)]
+#     return []
+#
+# def cells_seen_by_four(r0, c0, r1, c1, r2, c2, r3, c3):
+#
+#     f0 = (r0//3)*3; f1 = (r1//3)*3; f2 = (r2//3)*3; f3 = (r3//3)*3
+#     t0 = (c0//3)*3; t1 = (c1//3)*3; t2 = (c2//3)*3; t3 = (c3//3)*3
+#
+#     if f0 == f1 == f2 == f3 and t0 == t1 == t2 == t3: return []  # r0,c0, r1,c1 and r2,c2 and r3, c3cannot be in same box.
+#
+#     if f0 == f1 == f2 == f3:  # all cells on same floor.
+#
+#
+#     return
 
 def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands):
     # if r1, c1, r2, c2 belong to a group link, the group is passed as a set.

@@ -23,6 +23,8 @@ from solve_wings import *
 #   satisfied.
 # * exposed subsets of a particular order before the hidden subset of same order
 # * With fish, order (2, 3, 4) before finned (2, 3, 4) before almost (2, 3, 4).
+# * The reason there are less techniques than there are patterns (T_... enums)
+#   is that some techniques are able to resolve more than one pattern.
 
 Techniques = [tech_exposed_singles,
               tech_hidden_singles,
@@ -40,10 +42,11 @@ Techniques = [tech_exposed_singles,
               tech_y_wings,
               tech_w_wings,
               tech_xyz_wings,
-              tech_wxyz_wings,
               tech_finned_x_wings,
               tech_finned_swordfish,
               tech_finned_jellyfish,
+              tech_wxyz_wings,
+              tech_bent_exposed_quads,
               tech_kraken_w_wings,
               tech_kraken_x_wings,
               tech_kraken_swordfish,

@@ -553,6 +553,7 @@ class Sudoku:
             # # placed values in the grid are offset by 10.
             # G = [[self.Grid[r][c][C_VAL] if self.Grid[r][c][C_ST] != CVS_PLACE else self.Grid[r][c][C_VAL] + 10
             #       for c in range(9)] for r in range(9)]
+            self.StatusBar.update_0("Grading Puzzle, may take some time. . .")
             self.Props[PR_REQ_LVL] = self.Lvl
             self.Props[PR_NR_HOLES] = 81-self.NrGivens
             if grade_puzzle(G, self.Props, Elims, NextMeth):
