@@ -7,7 +7,7 @@ from solve_singles import *
 from solve_subsets import *
 from solve_fish import *
 from solve_wings import *
-
+from solve_chains import *
 
 
 
@@ -36,9 +36,10 @@ Techniques = [tech_exposed_singles,
               tech_exposed_quads,
               tech_hidden_quads,
               tech_x_wings,
-              tech_empty_rects,
               tech_swordfish,
               tech_jellyfish,
+              tech_three_link_x_chains,
+              tech_empty_rects,
               tech_y_wings,
               tech_w_wings,
               tech_xyz_wings,
@@ -47,14 +48,15 @@ Techniques = [tech_exposed_singles,
               tech_finned_jellyfish,
               tech_wxyz_wings,
               tech_bent_exposed_quads,
+              tech_longer_x_chains,
               tech_kraken_w_wings,
               tech_kraken_x_wings,
               tech_kraken_swordfish,
               tech_kraken_jellyfish,
-              tech_almost_x_wings,    # Skyscraper and 2 string kites are easier
-                                      # ways of spotting the same patterns.
-              tech_almost_swordfish,  # Sashimi variants.
-              tech_almost_jellyfish,  # Sashimi variants.
+              # tech_almost_x_wings,    # Skyscraper and 2 string kites are easier
+              #                         # ways of spotting the same patterns.
+              # tech_almost_swordfish,  # Sashimi variants.
+              # tech_almost_jellyfish,  # Sashimi variants.
               ]
 
 
@@ -173,7 +175,7 @@ def logic_solve_puzzle(Grid, Steps, Elims = None, Meth = T_UNDEF):
                 Cands[r][c] -= Elims[r][c]
 
     while NrEmpties > 0:
-        Step = {P_GRID: deepcopy(Grid), P_ELIM: deepcopy(Elims), P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
+        Step = {P_GRID: deepcopy(Grid), P_ELIM: deepcopy(Elims), P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
         for tech in Techniques:
             NrSlvd = tech(Grid, Step, Cands, ElimCands = Elims, Method = Meth)
             if NrSlvd < 0:
@@ -252,7 +254,7 @@ def _tech_brute_force(Grid, Step, Cands, ElimCands = None):
     if _solve_puzzle_backtrack(G):
         Step[P_TECH] = T_BRUTE_FORCE
         Grid[r][c] = G[r][c]
-        Step[P_COND] = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END, ]]
+        Step[P_PTRN] = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END, ]]
         Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
         if ElimCands is None:
             Cands[r][c].clear()

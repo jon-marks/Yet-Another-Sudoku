@@ -134,6 +134,8 @@ class Sudoku:
         self.GameTimer  = GameTimer(StatusBar)
         self.Board      = Board(MainWindow, self)
 
+        self.Puzzle     = None
+
         self.Grid = [[{C_VAL:  0,
                        C_ST:   CVS_EMPTY,
                        C_SEL:  False,
@@ -190,6 +192,8 @@ class Sudoku:
 
     def on_close(self, e):
         self.GameTimer.on_close(e)
+        if self.LSW:
+            self.LSW.on_close(e)
 
     def gen_event(self, e, *args, **kwds):
         # Moore model state machines: An event arriving at a state machine
@@ -226,8 +230,11 @@ class Sudoku:
         self.StatusBar.update_0("")
         if Cleanup:
             self.GameTimer.stop()
-            self.clear_grid()
+            self.reset()
             self.Board.clear_board()
+            if self.Puzzle is not None:
+                del self.Puzzle
+                self.Puzzle = None
             self.PzlFn = ""
             self.MainWindow.SetTitle(TITLE)
             if self.LSW is not None:
@@ -243,7 +250,7 @@ class Sudoku:
         # self.Lvl and symmetry self.Sym options and returns with the logic step
         # to solve the puzzle in self.Steps.
 
-        self.clear_grid()
+        self.reset()
         self.Board.clear_board()
         self.Flags &= ~GF_UNSAVED_CHANGES
         if self.LSW is not None:
@@ -288,7 +295,7 @@ class Sudoku:
                              wx.ICON_QUESTION | wx.YES_NO, self) == wx.NO:
                 self.gen_event(EV_SC_ENT, False)
                 return
-        self.clear_grid()
+        self.reset()
         self.Board.clear_board()
         self.Flags &= ~GF_UNSAVED_CHANGES
         if self.LSW is not None:
@@ -343,7 +350,7 @@ class Sudoku:
 
     def on_entry_state(self, e, Cleanup = False):
         if Cleanup:
-            self.clear_grid()
+            self.reset()
             self.Board.clear_board()
 
     def on_entry_save_state(self, e):
@@ -507,7 +514,7 @@ class Sudoku:
                 self.MenuBar.miPuzzleEnter.Check()
                 self.gen_event(EV_SC_ENT, False)
             else:
-                self.clear_grid()
+                self.reset()
                 self.Board.clear_board()
                 self.gen_event(EV_SC_FIN)
             return
@@ -519,7 +526,7 @@ class Sudoku:
                 self.MenuBar.miPuzzleEnter.Check()
                 self.gen_event(EV_SC_ENT, False)
             else:
-                self.clear_grid()
+                self.reset()
                 self.Board.clear_board()
                 self.gen_event(EV_SC_FIN)
             return
@@ -586,7 +593,7 @@ class Sudoku:
             self.MenuBar.miPuzzleEnter.Check()
             self.gen_event(EV_SC_ENT, False)
         else:
-            self.clear_grid()
+            self.reset()
             self.Board.clear_board()
             self.gen_event(EV_SC_FIN)
 
@@ -690,7 +697,7 @@ class Sudoku:
         # fp = save_puzzle((self.PzlDir, self.PzlFn), G, ElimCands = E, Step = self.Props[PR_STEPS][0])
         G1 = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
         E1 = deepcopy(E)
-        Step = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
+        Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_SUBS: []}
         if solve_next_step(G1, Step, E1) >= 0:
             Fp = save_puzzle((self.PzlDir, self.PzlFn), G, ElimCands = E, Step = Step)
         else:
@@ -908,7 +915,7 @@ class Sudoku:
                                     return
 
         g = [[self.Grid[r][c][C_VAL] for c in range(9)] for r in range(9)]
-        Step = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_SUBS: []}
+        Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_SUBS: []}
         e = [[copy(self.Grid[r][c][C_ELIM]) for c in range(9)] for r in range(9)]
         if solve_next_step(g, Step, e):
             if h == H_VAGUE:
@@ -923,7 +930,7 @@ class Sudoku:
 
                 Ans = wx.MessageBox(f"Clearer Hint:\n"
                                     f"Technique: {T[Step[P_TECH]][T_TXT]}.\n"
-                                    f"Condition:  {tkns_to_str(Step[P_COND])}\n"
+                                    f"Condition:  {tkns_to_str(Step[P_PTRN])}\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
                                     "Clearer Hint",
@@ -932,7 +939,7 @@ class Sudoku:
             else:  #  H_CLEAREST
                 Ans = wx.MessageBox(f"Clearest Hint:\n"
                                     f"Technique:  {T[Step[P_TECH]][T_TXT]}.\n"
-                                    f"Condition:  {tkns_to_str(Step[P_COND])}\n"
+                                    f"Condition:  {tkns_to_str(Step[P_PTRN])}\n"
                                     f"Outcome:    {tkns_to_str(Step[P_OUTC])}\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
@@ -956,8 +963,11 @@ class Sudoku:
 
 
     def on_list_soln_state(self, e):
-        self.LSW = ListSolnWindow(self)
-        self.LSW.Show()
+        if self.LSW:
+            self.LSW.SetFocus()
+        else:
+            self.LSW = ListSolnWindow(self)
+            self.LSW.Show()
         self.gen_event(EV_SC_SLV)
 
     def on_restart_solve_state(self, e):
@@ -1049,7 +1059,7 @@ class Sudoku:
                     self.Board.set_cand_value(r, c, r1, c1, False)
                 # else: #  silently ignore other operations
 
-    def clear_grid(self):
+    def reset(self):
         # initialise / reset the main grid structure.
 
         self.Grid = [[{C_VAL:  0,

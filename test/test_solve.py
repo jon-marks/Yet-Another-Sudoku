@@ -58,7 +58,7 @@ create_regrlist(Regr)
 @pytest.mark.parametrize("TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc", Regr)
 def test_solve_next_step(TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc):
 
-    TStep = {P_TECH: T_UNDEF, P_COND: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
+    TStep = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
     res = solve_next_step(TGrid, TStep, TElim, Method = TTech)
     res1 = True
     if not res:
@@ -68,7 +68,7 @@ def test_solve_next_step(TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc):
 
     if res:
         # possibilities here are that the same or different condition and outcome was found
-        sCond = tkns_to_str(TStep[P_COND]).replace(" ", "").replace(".", "")
+        sCond = tkns_to_str(TStep[P_PTRN]).replace(" ", "").replace(".", "")
         osOutc = set(tkns_to_str(TStep[P_OUTC]).replace(" ", "").replace(".", "").split(";"))
         assert sCond == sExpCond and osOutc == osExpOutc,\
             f"{TLine}|Passed with different condition and ouctome:" \
@@ -76,7 +76,7 @@ def test_solve_next_step(TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc):
             f"Actual: {sCond}|{sorted(osOutc)}"
     elif res1:
         # test passed using a with different method
-        sCond = tkns_to_str(TStep[P_COND]).replace(" ", "").replace(".", "")
+        sCond = tkns_to_str(TStep[P_PTRN]).replace(" ", "").replace(".", "")
         osOutc = set(tkns_to_str(TStep[P_OUTC]).replace(" ", "").replace(".", "").split(";"))
         assert Tstep[P_TECH] == TTECH,\
             f"{TLine}:Passed with with different method:" \

@@ -14,7 +14,7 @@ def tech_exposed_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                 # This is an exposed single no need to subtract anything.
                 Step[P_TECH] = T_EXPOSED_SINGLE
                 Grid[r][c]   = Cands[r][c].pop()
-                Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c],
+                Step[P_PTRN] = [[P_VAL, Grid[r][c]], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c],
                                 [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
                 Cands[r][c].clear()
@@ -44,7 +44,7 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
             if len(D) == 1:  # Hidden single found in row.
                 Step[P_TECH] = T_HIDDEN_SINGLE
                 Grid[r][c]   = D.pop()
-                Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_ROW, r],
+                Step[P_PTRN] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_ROW, r],
                                 [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
                 # if ElimCands is None:
@@ -59,7 +59,7 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
             if len(D) == 1:  # Hidden single found in col.
                 Step[P_TECH] = T_HIDDEN_SINGLE
                 Grid[r][c]   = D.pop()
-                Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_COL, c],
+                Step[P_PTRN] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_COL, c],
                                 [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
                 # if ElimCands is None:
@@ -78,7 +78,7 @@ def tech_hidden_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
             if len(D) == 1:  # Hidden single found in blk.
                 Step[P_TECH] = T_HIDDEN_SINGLE
                 Grid[r][c]   = D.pop()
-                Step[P_COND] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_BOX, (br//3)*3 + bc//3],
+                Step[P_PTRN] = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_BOX, (br//3)*3+bc//3],
                                 [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
                 Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
                 # if ElimCands is None:
@@ -137,7 +137,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_POINTING_LOCKED_SINGLE
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
+                                    Step[P_PTRN] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
                                                     [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
                                                     [P_ROW, Rx], [P_COL, bc, bc1, bc2],
                                                     [P_END, ]]
@@ -163,7 +163,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
+                                    Step[P_PTRN] = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
                                                     [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
                                                     [P_ROW, r0], [P_COL, C2], [P_END, ]]
                                     return 0
@@ -198,7 +198,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_POINTING_LOCKED_SINGLE
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
+                                    Step[P_PTRN] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
                                                     [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
                                                     [P_ROW, br, br1, br2], [P_COL, Cx],
                                                     [P_END, ]]
@@ -224,7 +224,7 @@ def tech_locked_singles(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_CLAIMING_LOCKED_SINGLE
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
+                                    Step[P_PTRN] = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
                                                     [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
                                                     [P_ROW, R2], [P_COL, c0], [P_END, ]]
                                     return 0
@@ -314,10 +314,10 @@ def tech_empty_rects(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                                          [P_OP, OP_ELIM], [P_VAL, Cand]])
                                     if ElimCands: ElimCands[r3][c3].add(Cand)
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, Cand], [P_OP, OP_CNT, n], [P_BOX, (rb//3)*3 + cb//3]]
+                                Step[P_PTRN] = [[P_VAL, Cand], [P_OP, OP_CNT, n], [P_BOX, (rb//3)*3+cb//3]]
                                 for r3, c3 in BC:
-                                    Step[P_COND].extend([[P_CON, ], [P_ROW, r3], [P_COL, c3]])
-                                Step[P_COND].append([P_END, ])
+                                    Step[P_PTRN].extend([[P_CON, ], [P_ROW, r3], [P_COL, c3]])
+                                Step[P_PTRN].append([P_END, ])
                                 return 0
     return -1
 

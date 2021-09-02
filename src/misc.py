@@ -5,13 +5,11 @@ some non modal windows eg:eg list solution and user guide.
 
 """
 import os
-import wx
+
 import wx.html
 import wx.lib.mixins.listctrl as lcmi  # list control mix in
 from wx.lib.embeddedimage import PyEmbeddedImage
 
-
-from globals import *
 from solve_utils import *
 
 OP = ["" for i in range(OP_NR_OPS)]
@@ -189,26 +187,23 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         # Write the solution path.
         w, h, d, e = DC.GetFullTextExtent("Step000", SysFont)
         self.SolnLC.InsertColumn(0, "Step", wx.LIST_FORMAT_RIGHT, w)
-        #self.SolnLC.InsertColumn(1, "Level", wx.LIST_FORMAT_LEFT, -1)
         self.SolnLC.InsertColumn(1, "Technique", wx.LIST_FORMAT_LEFT, -1)
         self.SolnLC.InsertColumn(2, "Diff.", wx.LIST_FORMAT_RIGHT, -1)
-        self.SolnLC.InsertColumn(3, "Condition", wx.LIST_FORMAT_LEFT, -1)
+        self.SolnLC.InsertColumn(3, "Pattern", wx.LIST_FORMAT_LEFT, -1)
         self.SolnLC.InsertColumn(4, "Outcome", wx.LIST_FORMAT_LEFT, -1)
 
         for j, Step in enumerate(Props[PR_STEPS]):
             self.SolnLC.Append([f"{(j+1):d}",
-                                # LVLS[Props[PR_HISTO][Step[P_TECH]][HT_LVL]],
                                 Props[PR_HISTO][Step[P_TECH]][HT_TXT],
                                 f"{Step[P_DIFF]:d}",
-                                tkns_to_str(Step[P_COND]),
+                                tkns_to_str(Step[P_PTRN]),
                                 tkns_to_str(Step[P_OUTC])])
             if len(Step[P_SUBS]):
                 for k, SubStep in enumerate(Step[P_SUBS]):
                     self.SolnLC.Append([f"{j+1:d}.{k+1:d}",
-                                        # LVLS[Props[PR_HISTO][SubStep[P_TECH]][HT_LVL]],
                                         Props[PR_HISTO][SubStep[P_TECH]][HT_TXT],
                                         f"{SubStep[P_DIFF]:d}",
-                                        tkns_to_str(SubStep[P_COND]),
+                                        tkns_to_str(SubStep[P_PTRN]),
                                         tkns_to_str(SubStep[P_OUTC])])
 
         self.SolnLC.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
@@ -435,7 +430,7 @@ def save_puzzle(Fp, G, ElimCands = None, Step = None):
         sG += f"|{sE}"
     if Step:
         sG += f"|{T[Step[P_TECH]][T_TXT]}"
-        sG += f"|{tkns_to_str(Step[P_COND])}|{tkns_to_str(Step[P_OUTC])}\n".replace(" ","").replace(".", "")
+        sG += f"|{tkns_to_str(Step[P_PTRN])}|{tkns_to_str(Step[P_OUTC])}\n".replace(" ", "").replace(".", "")
     dlg = wx.FileDialog(None, message = "Save A Puzzle",
                         defaultDir = Fp[0],
                         defaultFile = Fp[1],

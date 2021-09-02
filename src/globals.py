@@ -246,9 +246,9 @@ T_JELLYFISH                 = 14
 T_FINNED_X_WING             = 15
 T_FINNED_SWORDFISH          = 16
 T_FINNED_JELLYFISH          = 17
-T_ALMOST_X_WING             = 18
-T_ALMOST_SWORDFISH          = 19
-T_ALMOST_JELLYFISH          = 20
+T_SKYSCRAPER                = 18
+T_TWO_STRING_KITE           = 19
+T_TURBOT_FISH               = 20
 T_KRAKEN_X_WING             = 21
 T_KRAKEN_SWORDFISH          = 22
 T_KRAKEN_JELLYFISH          = 23
@@ -260,10 +260,11 @@ T_WXYZ_WING                 = 28
 T_BENT_EXPOSED_QUAD         = 29
 T_EMPTY_RECT                = 30
 T_X_CHAIN                   = 31
-T_XY_CHAIN                  = 32
-T_CONTINOUS_LOOP            = 33
-T_BRUTE_FORCE               = 34
-T_NR_TECHS                  = 35
+T_X_LOOP                    = 32
+T_XY_CHAIN                  = 33
+T_CONTINOUS_LOOP            = 34
+T_BRUTE_FORCE               = 35
+T_NR_TECHS                  = 36
 
 # Technique attribute field enums
 TA_TXT  = 0
@@ -272,7 +273,7 @@ TA_DIFF = 2
 
 # Logic Technique Step Attributes
 P_TECH = 0  # The logic technique used
-P_COND = 1  # Ordered list of cell properties identified for the logic techniqu
+P_PTRN = 1  # Ordered list of cell properties identified for the logic technique
 P_OUTC = 2  # Ordered list of cell updates on applying the logic technique
 P_DIFF = 3  # The total difficulty of the step
 P_SUBS = 4  # Ordered list of sub-steps - a recursion of Step Attributes
@@ -282,12 +283,12 @@ P_ELIM = 6  # The grid of eliminated candidates before the logic step
 # The lexical tokens of for cell description phrases
 P_ROW = 10  # cell row index
 P_COL = 11  # cell column index or set of cell column indices
-P_BOX = 13  # box coords (down, across)
-P_OP  = 14  # Operator
-P_VAL = 15  # digit 0 - 9
-P_SEP = 16  # Separator between cell phrases
-P_CON = 17  # Concatinater for combining cell collections
-P_END = 18  # End of list of phrases
+P_BOX = 12  # box coords (down, across)
+P_OP  = 13  # Operator
+P_VAL = 14  # digit 0 - 9
+P_SEP = 15  # Separator between cell phrases
+P_CON = 16  # Concatinator for combining cell collections
+P_END = 17  # End of list of phrases
 
 # Logic technique operator enumerations
 OP_POS  = 0   # "?-" Possibility, perhaps something to try

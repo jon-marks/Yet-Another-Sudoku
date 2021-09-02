@@ -61,7 +61,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 ElimCands[r][c2].add(Cand)
                 if Step[P_OUTC]:  # Candidates were eliminated
                     Step[P_OUTC].append([P_END, ])
-                    Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                    Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                     [P_ROW, r], [P_COL, c, c1], [P_END, ]]
                     return 0
     # then scan the cols.
@@ -113,7 +113,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                     ElimCands[r2][c].add(Cand)
                 if Step[P_OUTC]:  # Candidates were eliminated
                     Step[P_OUTC].append([P_END, ])
-                    Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                    Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                     [P_ROW, r, r1], [P_COL, c], [P_END, ]]
                     return 0
     # and finally scan the blocks.
@@ -149,7 +149,7 @@ def tech_exposed_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                     if Step[P_OUTC]:
                         Step[P_TECH] = T_EXPOSED_PAIR
                         Step[P_OUTC].append([P_END, ])
-                        Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                        Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                         [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1],
                                         [P_END, ]]
                         return 0
@@ -200,7 +200,7 @@ def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                             D3 = sorted(D1)
                             Step[P_TECH] = T_HIDDEN_PAIR
                             Step[P_OUTC].append([P_END, ])
-                            Step[P_COND] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_ROW, r],
+                            Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_ROW, r],
                                             [P_COL, c, c1], [P_END, ]]
                             return 0
     # then scan the cols
@@ -235,7 +235,7 @@ def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                             D3 = sorted(D1)
                             Step[P_TECH] = T_HIDDEN_PAIR
                             Step[P_OUTC].append([P_END, ])
-                            Step[P_COND] = [[P_VAL, D3], [P_OP, OP_CNT, 2],
+                            Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2],
                                             [P_ROW, r, r1], [P_COL, c], [P_END, ]]
                             return 0
     # then scan the blocks
@@ -278,7 +278,7 @@ def tech_hidden_pairs(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 D3 = sorted(D1)
                                 Step[P_TECH] = T_HIDDEN_PAIR
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_BOX, (r//3)*3 + c//3],
+                                Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_BOX, (r//3)*3+c//3],
                                                 [P_CON, ], [P_ROW, r], [P_COL, c],
                                                 [P_CON, ], [P_ROW, r1], [P_COL, c1],
                                                 [P_END, ]]
@@ -349,7 +349,7 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                         ElimCands[r][c3].add(Cand)
                         if Step[P_OUTC]:  # Candidates were eliminated
                             Step[P_OUTC].append([P_END, ])
-                            Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                            Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c], [P_CON, ],
                                             [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c1], [P_CON, ],
@@ -410,7 +410,7 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                         ElimCands[r3][c].add(Cand)
                         if Step[P_OUTC]:  # Candidates were eliminated
                             Step[P_OUTC].append([P_END, ])
-                            Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                            Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c], [P_CON, ],
                                             [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ],
                                             [P_ROW, r1], [P_COL, c], [P_CON, ],
@@ -455,7 +455,7 @@ def tech_exposed_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                             if Step[P_OUTC]:
                                 Step[P_TECH] = T_EXPOSED_TRIPLE
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                                Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c], [P_CON, ],
                                                 [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
                                                 [P_ROW, r1], [P_COL, c1], [P_CON, ],
@@ -519,10 +519,10 @@ def tech_hidden_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                     if Cand in D3:
                                         C.append(c2)
                                     if i:
-                                        Step[P_COND].append([P_CON, ])
-                                    Step[P_COND].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
+                                        Step[P_PTRN].append([P_CON, ])
+                                    Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
                                                          [P_ROW, r], [P_COL, C]])
-                                Step[P_COND].append([P_END, ])
+                                Step[P_PTRN].append([P_END, ])
                                 return 0
     # then scan the cols
     for c in range(9):
@@ -571,10 +571,10 @@ def tech_hidden_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                     if Cand in D3:
                                         R.append(r2)
                                     if i:
-                                        Step[P_COND].append([P_CON, ])
-                                    Step[P_COND].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(R)],
+                                        Step[P_PTRN].append([P_CON, ])
+                                    Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(R)],
                                                          [P_ROW, R], [P_COL, c]])
-                                Step[P_COND].append([P_END, ])
+                                Step[P_PTRN].append([P_END, ])
                                 return 0
     # then scan the blocks
     for br in [0, 3, 6]:
@@ -622,7 +622,7 @@ def tech_hidden_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_HIDDEN_TRIPLE
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = []
+                                    Step[P_PTRN] = []
                                     for i, Cand in enumerate(DT):
                                         C = []
                                         if Cand in D1:
@@ -632,12 +632,12 @@ def tech_hidden_triples(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                         if Cand in D3:
                                             C.append((r2, c2))
                                         if i:
-                                            Step[P_COND].append([P_CON, ])
-                                        Step[P_COND].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
+                                            Step[P_PTRN].append([P_CON, ])
+                                        Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
                                                              [P_BOX, (br//3)*3 + bc//3]])
                                         for (r4, c4) in C:
-                                            Step[P_COND].extend([[P_CON, ], [P_ROW, r4], [P_COL, c4]])
-                                    Step[P_COND].append([P_END, ])
+                                            Step[P_PTRN].extend([[P_CON, ], [P_ROW, r4], [P_COL, c4]])
+                                    Step[P_PTRN].append([P_END, ])
                                     return 0
     return -1
 
@@ -679,7 +679,7 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                             if Step[P_OUTC]:  # Candidates were eliminated
                                 Step[P_TECH] = T_EXPOSED_QUAD
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                                Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c], [P_CON, ],
                                                 [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c1], [P_CON, ],
@@ -720,7 +720,7 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                             if Step[P_OUTC]:  # Candidates were eliminated
                                 Step[P_TECH] = T_EXPOSED_QUAD
                                 Step[P_OUTC].append([P_END, ])
-                                Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                                Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r], [P_COL, c], [P_CON, ],
                                                 [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ],
                                                 [P_ROW, r1], [P_COL, c], [P_CON, ],
@@ -772,7 +772,7 @@ def tech_exposed_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                 if Step[P_OUTC]:
                                     Step[P_TECH] = T_EXPOSED_QUAD
                                     Step[P_OUTC].append([P_END, ])
-                                    Step[P_COND] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                                    Step[P_PTRN] = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                                     [P_ROW, r], [P_COL, c], [P_CON, ],
                                                     [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
                                                     [P_ROW, r1], [P_COL, c1], [P_CON, ],
@@ -843,10 +843,10 @@ def tech_hidden_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                         if Cand in D4:
                                             C.append(c3)
                                         if i:
-                                            Step[P_COND].append([P_CON, ])
-                                        Step[P_COND].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
+                                            Step[P_PTRN].append([P_CON, ])
+                                        Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
                                                              [P_ROW, r], [P_COL, C]])
-                                    Step[P_COND].append([P_END, ])
+                                    Step[P_PTRN].append([P_END, ])
                                     return 0
     # then scan the cols
     for c in range(9):
@@ -902,10 +902,10 @@ def tech_hidden_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                         if Cand in D4:
                                             R.append(r3)
                                         if i:
-                                            Step[P_COND].append([P_CON, ])
-                                        Step[P_COND].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(R)],
+                                            Step[P_PTRN].append([P_CON, ])
+                                        Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(R)],
                                                              [P_ROW, R], [P_COL, c]])
-                                        Step[P_COND].append([P_END, ])
+                                        Step[P_PTRN].append([P_END, ])
                                     return 0
     # then scan the blocks
     for br in [0, 3, 6]:
@@ -961,7 +961,7 @@ def tech_hidden_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                     if Step[P_OUTC]:
                                         Step[P_TECH] = T_HIDDEN_QUAD
                                         Step[P_OUTC].append([P_END, ])
-                                        Step[P_COND] = []
+                                        Step[P_PTRN] = []
                                         for i, Cand in enumerate(DT):
                                             C = []
                                             if Cand in D1:
@@ -973,11 +973,11 @@ def tech_hidden_quads(Grid, Step, Cands, ElimCands = None, Method = T_UNDEF):
                                             if Cand in D4:
                                                 C.append((r3, c3))
                                             if i:
-                                                Step[P_COND].append([P_CON, ])
-                                            Step[P_COND].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
+                                                Step[P_PTRN].append([P_CON, ])
+                                            Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)],
                                                                  [P_BOX, (br//3)*3 + bc//3]])
                                             for (r5, c5) in C:
-                                                Step[P_COND].extend([[P_CON, ], [P_ROW, r5], [P_COL, c5]])
-                                        Step[P_COND].append([P_END, ])
+                                                Step[P_PTRN].extend([[P_CON, ], [P_ROW, r5], [P_COL, c5]])
+                                        Step[P_PTRN].append([P_END, ])
                                         return 0
     return -1

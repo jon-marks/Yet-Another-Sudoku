@@ -1,12 +1,19 @@
 
 from globals import *
 
-LK_ERR  = 0b1000
-LK_NONE = 0b0000
-LK_WEAK = 0b0001
-LK_STRG = 0b0010
-LK_STWK = 0b0011   # a strong link is also a weak link.
-LK_WKST = 0b0100   # strong link masquerading as a weak link
+# Link strength enumerations.
+# LK_ERR  = 0x1000
+LK_NONE = 0x0000   # must be 0, code relies on this.
+LK_WEAK = 0x0001
+LK_STRG = 0x0002
+LK_STWK = 0x0003   # a strong link is also a weak link.
+LK_WKST = 0x0004   # strong link masquerading as a weak link
+
+# Link orientation enumerations
+LK_ROW = 0x0010
+LK_COL = 0x0020
+LK_BOX = 0x0040
+LK_ANY = 0x0070
 
 # T enumerations
 T_TXT  = 0  # Textual description
@@ -18,6 +25,7 @@ T_DIFF = 2  # Difficulty of technique
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
 AIC_LK_DIFF = 15
+AIC_GRP_LK_DIFF = 35
 
 T = [[] for j in range(T_NR_TECHS)]
 #                               Txt                        Lvl               Diff
@@ -39,9 +47,9 @@ T[T_JELLYFISH]               = ["Jellyfish",               LVL_PROFICIENT,     5
 T[T_FINNED_X_WING]           = ["Finned X-Wing",           LVL_PROFICIENT,     60]
 T[T_FINNED_SWORDFISH]        = ["Finned Swordfish",        LVL_PROFICIENT,     65]
 T[T_FINNED_JELLYFISH]        = ["Finned Jellyfish",        LVL_PROFICIENT,     70]
-T[T_ALMOST_X_WING]           = ["Almost X-Wing",           LVL_PROFICIENT,     80]
-T[T_ALMOST_SWORDFISH]        = ["Almost Swordfish",        LVL_PROFICIENT,     90]
-T[T_ALMOST_JELLYFISH]        = ["Almost Jellyfish",        LVL_PROFICIENT,    100]
+T[T_SKYSCRAPER]              = ["Skyscraper",              LVL_PROFICIENT,     45]
+T[T_TWO_STRING_KITE]         = ["Two String Kite",         LVL_PROFICIENT,     45]
+T[T_TURBOT_FISH]             = ["Turbot Fish",             LVL_PROFICIENT,     50]
 T[T_KRAKEN_X_WING]           = ["Kraken X-Wing",           LVL_ACCOMPLISHED,  100]
 T[T_KRAKEN_SWORDFISH]        = ["Kraken Swordfish",        LVL_ACCOMPLISHED,  100]
 T[T_KRAKEN_JELLYFISH]        = ["Kraken Jellyfish",        LVL_ACCOMPLISHED,  100]
@@ -53,6 +61,7 @@ T[T_WXYZ_WING]               = ["WXYZ-Wing",               LVL_ACCOMPLISHED,  10
 T[T_BENT_EXPOSED_QUAD]       = ["Bent Exposed Quad",       LVL_ACCOMPLISHED,  110]
 T[T_EMPTY_RECT]              = ["Empty Rectangle",         LVL_PROFICIENT,     45]
 T[T_X_CHAIN]                 = ["X-Chain",                 LVL_PROFICIENT,     60]
+T[T_X_LOOP]                  = ["X-Loop",                  LVL_PROFICIENT,     65]
 T[T_XY_CHAIN]                = ["XY-Chain",                LVL_PROFICIENT,     70]
 T[T_CONTINOUS_LOOP]          = ["Continuous Loop",         LVL_PROFICIENT,     70]
 # . . . .
@@ -102,7 +111,7 @@ def cells_in_same_house(r1, c1, r2, c2):
     return False
 
 
-def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK):
+def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False):
     # Returns a list of ccells that the ccell(r, c, Cand) can see.
     # If Type == LK_STRG, only strong links will be returned.
     # r, c can be a grouped link.
@@ -128,23 +137,16 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK):
             for c1 in sorted(C1):
                 LCL.append((r1, c1, Cand,  LK_WEAK))
             # list group links
-            if len(Twr[0]) > 1:
-                if C1 - Twr[0]: LCL.append((r1, Twr[0], Cand, LK_WEAK))
-                else: LCL.append((r1, Twr[0], Cand, LK_STWK))
-            if len(Twr[1]) > 1:
-                if C1 - Twr[1]: LCL.append((r1, Twr[1], Cand, LK_WEAK))
-                else: LCL.append((r1, Twr[1], Cand, LK_STWK))
-            if len(Twr[2]) > 1:
-                if C1 - Twr[2]: LCL.append((r1, Twr[2], Cand, LK_WEAK))
-                else: LCL.append((r1, Twr[2], Cand, LK_STWK))
-        # # only interested in strong group links where there are weak links.
-        # t0 = len(T[0]); t1 = len(T[1]); t2 = len(T[2])
-        # if t0 > 1 and not t1 and not t2:
-        #     LCL.append((r, sorted(T[0]), Cand, LK_STWK))
-        # elif not t0 and t1 > 1 and not t2:
-        #     LCL.append((r, sorted(T[1]), Cand, LK_STWK))
-        # elif not t0 and not t1 and t2 > 1:
-        #     LCL.append((r, sorted(T[2]), Cand, LK_STWK))
+            if GrpLks:
+                if len(Twr[0]) > 1:
+                    if C1 - Twr[0]: LCL.append((r1, Twr[0], Cand, LK_WEAK))
+                    else: LCL.append((r1, Twr[0], Cand, LK_STWK))
+                if len(Twr[1]) > 1:
+                    if C1 - Twr[1]: LCL.append((r1, Twr[1], Cand, LK_WEAK))
+                    else: LCL.append((r1, Twr[1], Cand, LK_STWK))
+                if len(Twr[2]) > 1:
+                    if C1 - Twr[2]: LCL.append((r1, Twr[2], Cand, LK_WEAK))
+                    else: LCL.append((r1, Twr[2], Cand, LK_STWK))
 
     # scan the column
     R1 = set()
@@ -163,22 +165,16 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK):
             for r1 in sorted(R1):
                 LCL.append((r1, c1, Cand, LK_WEAK))
             # look for group links
-            if len(Flr[0]) > 1:
-                if R1 - Flr[0]: LCL.append((Flr[0], c1, Cand, LK_WEAK))
-                else: LCL.append((Flr[0], c1, Cand, LK_STWK))
-            if len(Flr[1]) > 1:
-                if R1 - Flr[1]: LCL.append((Flr[1], c1, Cand, LK_WEAK))
-                else: LCL.append((Flr[1], c1, Cand, LK_STWK))
-            if len(Flr[2]) > 1:
-                if R1 - Flr[2]: LCL.append((Flr[2], c1, Cand, LK_WEAK))
-                else: LCL.append((Flr[2], c1, Cand, LK_STWK))
-        # f0 = len(F[0]); f1 = len(F[1]); f2 = len(F[2])
-        # if f0 > 1 and not f1 and not f2:
-        #     LCL.append((sorted(F[0]), c, Cand, LK_STWK))
-        # elif not f0 and f1 > 1 and not f2:
-        #     LCL.append((sorted(F[1]), c, Cand, LK_STWK))
-        # elif not f0 and not f1 and f2 > 1:
-        #     LCL.append((sorted(F[2]), c, Cand, LK_STWK))
+            if GrpLks:
+                if len(Flr[0]) > 1:
+                    if R1 - Flr[0]: LCL.append((Flr[0], c1, Cand, LK_WEAK))
+                    else: LCL.append((Flr[0], c1, Cand, LK_STWK))
+                if len(Flr[1]) > 1:
+                    if R1 - Flr[1]: LCL.append((Flr[1], c1, Cand, LK_WEAK))
+                    else: LCL.append((Flr[1], c1, Cand, LK_STWK))
+                if len(Flr[2]) > 1:
+                    if R1 - Flr[2]: LCL.append((Flr[2], c1, Cand, LK_WEAK))
+                    else: LCL.append((Flr[2], c1, Cand, LK_STWK))
 
     if len(R) == len(C) == 1:
         # scan the box
@@ -205,196 +201,12 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK):
                 LCL.append((r, c, Cand1, LK_WEAK))
     return LCL
 
-# def cells_intersect(Cells):
-#     # Cells is a list of (r, c) tuples.
-#     # Returns a list of (r, c) tuples that all the passed cells can see.
-#
-#     # The number of Cell tuples must be between two and four.
-#     NrCells = len(Cells)
-#     if not 2 <= NrCells <= 4:return []
-#
-#     Twrs = [[], [], []]; Flrs = [[], [], []]
-#     NrTwrs = [0, 0, 0]; NrFlrs = [0, 0, 0]
-#     for r, c in Cells:
-#         if r > 8 or c > 8: return []
-#         Twrs[c//3].append((r, c)); Flrs[r//3].append((r, c))
-#         NrTwrs[c//3] += 1; NrFlrs[r//3] += 1
-#
-#     if NrCells == 2:
-#         if 2 in NrTwrs and 2 in NrFlrs: return []  # cells in same box.
-#         r0, c0 = Cells[0]; r1, c1 = Cells[1]
-#         if 2 in NrFlrs:  # both cells on the same floor.
-#             if r0 == r1: return []  #  not a wing
-#             cb0 = (c0//3)*3; cb1 = (c1//3)*3
-#             return [(r0, cb1), (r0, cb1+1), (r0, cb1+2), (r1, cb0), (r1, cb0+1), (r1, cb0+2)]
-#         if 2 in NrTwrs:  # both cells in same tower
-#             if c0 == c1: return []
-#             rb0 = (r0//3)*3; rb1 = (c1//3)*3
-#             return [(rb0, c1), (rb0+1, c1), (rb0+2, c1), (rb1, c0), (rb1+1, c0), (rb1+2, c0)]
-#         return [(r0, c1) (r1, c0)]
-#     if NrCells == 3:
-#         if 3 in NrTwrs and 3 in NrFlrs: return []  # cells all in same box.
-#         r0, c0 = Cells[0]; r1, c1 = Cells[1]; r2, c2 = Cells[2]
-#         if 3 in NrFlrs:  # cells are all on the same floor.
-#             cb0 = (c0//3)*3; cb1 = (c1//3)*3; cb2 = (c2//3)*3
-#             if r0 == r1:
-#                 if cb0 == cb2:  # Cell[0] is in the intersection
-#                     return [(r0, )]
-#                 elif cb1 == cb2: # Cell[1] is in the intersection
-#                     return []
-#                 return []
-#             elif r0 == r2:
-#                 if cb0 == cb1: # Cell[0] is in the intersection
-#                     return []
-#                 elif cb2 == cb1:  # Cell [2] is in the intersection
-#                     return []
-#                 return []
-#             elif r1 == r2:
-#                 if cb1 == cb0: # Cell [1] is in the intersection
-#                     return []
-#                 elif cb2 == cb0:  # Cell [2] is in the intersection
-#                     return []
-#                 return []
-#             return []
-#         elif 3 in NrTwrs:  # cells are in the same tower.
-#             rb0 = (r0//3)*3; rb1 = (r1//3)*3; rb2 = (r2//3)*3
-#             if c0 == c1:
-#                 if rb0 == rb2:
-#                     return []
-#                 elif rb1 == rb2:
-#                     return []
-#                 return []
-#             elif c0 == c2:
-#                 if rb0 == rb1:
-#                     return []
-#                 elif rb2 == rb1:
-#                     return []
-#                 return []
-#             elif c1 == c2:
-#                 if rb1 == rb0:
-#                     return []
-#                 elif rb2 == rb0:
-#                     return []
-#                 return []
-#             return []
-#         return []
-#     if NrCells == 4:
-#         if 4 in NrTwrs and 4 in NrFlrs: return []
-#         r0, c0 = Cells[0]; r1, c1 = Cells[1]; r2, c2 = Cells[2]; r3, c3 = Cells[3]
-#         if 4 in NrFlrs:  # cells are all on the same floor.
-#             cb0 = (c0//3)*3; cb1 = (c1//3)*3; cb2 = (c2//3)*3; cb3 = (c3//3)*3
-#             if 3 in NrTwrs:  # 3 cells in the box
-#                 Twr = (NrTwrs.index(3))*3
-#                 BoxRow = [False, False, False]
-#                 for rb, cb in Twrs[Twr]:
-#                     BoxRow
-#                 pass
-#             elif 2 in NrTwrs:  # 2 cells in the box
-#                 pass
-#
-#
-#
-#
-#             if 2 in NrTwrs # and two are in the same box.
-#     if 2
-#         if len(Twr[0])
-#
-#     Twr = []; Flr = []
-#     for r, c in Cells:
-#         if r > 8 or c > 8: return []
-#         Flr.append((r//3)*3); Twr.append((c//3)*3)
-#     if NrCells == 2:
-#         if Flr[0] == Flr[1] and Twr[0] == Twr[1]: return []  # r1,c1 and r2,c2 cannot be in same box.
-#         r0, c0 = Cells[0]; r1, c1 = Cells[1]
-#         if Flr[0] == Flr[1]:  # both cells on same floor
-#             return [(r0, Twr[1]), (r0, Twr[1]+1), (r0, Twr[1]+2), (r1, Twr[0]), (r1, Twr[0]+1), (r1, Twr[0]+2)]
-#         if Twr[0] == Twr[1]:  # both cells in the same tower
-#             return [(Flr[0], c1), (Flr[0]+1, c1), (Flr[0]+2, c1), (Flr[1], c0), (Flr[1]+1, c0), (Flr[1]+2, c0)]
-#         # diagonally opposed cells
-#         return [(r0, c1), (r1, c0)]
-#     if NrCells == 3:
-#         r0, c0 = Cells[0]; r1, c1 = Cells[1]; r2, c2 = Cells[2]
-#         if Flr[0] == Flr[1] == Flr[2]:  # same floor.
-#             if Twr[0] == Twr[1]:  # Either Cell[0] and Cell[1] in the box, and
-#                 if r0 == r2:  #    either Cell[0] and Cell[2] in the same row
-#                     # Cell[0] is in the intersection.
-#                     return [(r2, (c0+1)%3+Twr[0]), (r2, (c0+2)%3+Twr[0])]
-#                 elif r1 == r2: #   or Cell[1] and Cell[2] in the same row
-#                     # Cell[1] is in the intersection
-#                     return [(r2, (c1+1)%3+Twr[0]), (r2, (c1+2)%3+Twr[0])]
-#                 return []
-#             elif Twr[0] == Twr[2]:  # Or Cell [0] and Cell[2] in the box and
-#                 if r0 == r1:    #    either Cell[0] and Cell [1] in the same row
-#                     # Cell[0] is in the intersection.
-#                     return [(r1, (c0+1)%3+Twr[0]), (r1, (c0+2)%3+Twr[0])]
-#                 elif r1 == r2:
-#                     # Cell[2] is in the intersection
-#                     return [(r1, (c2+1)%3+Twr[0]), (r1, (c2+2)%3+Twr[0])]
-#                 return []
-#             elif Twr[1] == Twr[2]:
-#                 if r0 == r1:
-#                     # Cell[1] is in the intersection
-#                     return [(r0, (c1+1)%3+Twr[1]), (r0, (c1+2)%3+Twr[1])]
-#                 elif r0 == r2:
-#                     return [(r0, (c2+1)%3+Twr[1]), (r0, (c2+2)%3+Twr[1])]
-#                 return []
-#             return []
-#         if Twr[0] == Twr[1] == Twr[2]:  # same tower
-#             if Flr[0] == Flr[1]:
-#                 if   c0 == c2: return [((r0+1)%3+Flr[0], c2), ((r0+2)%3+Flr[0], c2)]
-#                 elif c1 == c2: return [((r1+1)%3+Flr[0], c2), ((r1+2)%3+Flr[0], c2)]
-#                 return []
-#             elif Flr[0] == Flr[2]:
-#                 if   c0 == c1: return [((r0+1)%3+Flr[0], c1), ((r0+2)%3+Flr[0], c1)]
-#                 elif c1 == c2: return [((r2+1)%3+Flr[0], c1), ((r2+2)%3+Flr[0], c1)]
-#                 return []
-#             elif Flr[1] == Flr[2]:
-#                 if   c0 == c1: return [((r1+1)%3+Flr[1], c0), ((r1+2)%3+Flr[1], c0)]
-#                 elif c0 == c2: return [((r2+1)%3+Flr[1], c0), ((r2+2)%3+Flr[1], c0)]
-#             return []
-#         return []
-#     if NrCells == 4:
-#         r0, c0 = Cell[0]; r1, c1 = Cell[1]; r2, c2 = Cell[2]; r3, c3 = Cell[3]
-#         if Flr[0] == Flr[1] == Flr[2] == Flr[3]:  # same floor
-#
-#
-#
-#
-#
-#
-#     # returns a list of (r, c) tuples that both cells can see.  Both cells are
-#     # in different boxes.
-#
-#
-# def cells_that_see_both(r1, c1, r2, c2):
-#     # returns a set of (r, c) tuples that both cells can see.  Both cells are
-#     # in different boxes.
-#
-#     if r1 == r2 and c1 == c2: return [] # cells need to be different.
-#
-#     f1 = (r1//3)*3; f2 = (r2//3)*3
-#     t1 = (c1//3)*3; t2 = (c2//3)*3
-#
-#     if f1 == f2 and t1 == t2:  # cells in same box.
-#         cc = {(f1, t1), (f1, t1+1), (f1, t1+2), (f1+1, t1), (f1+1, t1+1), (f1+1, t1+2), (f1+2, t1), (f1+2, t1+1), (f1+2, t1+2)} - {(r1, c1), (r2, c2)}
-#         if r1 == r2:  # all cells along the row outside the box too.
-#             for c in (set(range(9) - {t1, t1+1, t1+2})):
-#                 cc.add((r1, c))
-#         if c1 == c2:  # all cells along col outside box too.
-#             for r in set(range(9) - {f1, f1+2, f1+2}):
-#                 cc.add((r, c1))
-#         return sorted(cc)
-#     if f1 == f2:  # both cells on same floor
-#         return [(r1, t2), (r1, t2+1), (r1, t2+2), (r2, t1), (r2, t1+1), (r2, t1+2)]
-#     if t1 == t2:  # both cells in the same tower
-#         return [(f1, c2), (f1+1, c2), (f1+2, c2), (f2, c1), (f2+1, c1), (f2+2, c1)]
-#     return [(r1, c2), (r2, c1)]
 
 def cells_that_see_all_of(Cells):
-    # Cells = list of (r,c) tuples.  Returns another list of (r, c) tuples that
-    # can see the passed cells.
+    # Cells = list of two to four (r,c) tuples.  Returns another list of (r, c) tuples that
+    # can see all the passed cells.
 
-    # only needs to handle 3 or 4 cells.  For three or more cells to be seen by
+    # For three or more cells to be seen by
     # any other cell, the cells to be seen, and the cell that is doing the seeing
     # all need to be in the same chute.
 
@@ -442,61 +254,8 @@ def cells_that_see_all_of(Cells):
                     rtn.add((r0, c0))
     return sorted(rtn)
 
-#
-# def cells_seen_by_three(r0, c0, r1, c1, r2, c2):
-#
-#     f0 = (r0//3)*3; f1 = (r1//3)*3; f2 = (r2//3)*3
-#     t0 = (c0//3)*3; t1 = (c1//3)*3; t2 = (c2//3)*3
-#
-#     if f0 == f1 == f2 and t0 == t1 == t2: return []  # r0,c0, r1,c1 and r2,c2 cannot be in same box.
-#
-#     if f0 == f1 == f2 and len({r0, r1, r2}) == 2:  # all three in two rows on same floor
-#         if r0 == r1:  # r2 in different row.
-#             if t2 == t0:  # r0, c0 is in the intersection
-#                 return [(r0, t0 + (c0+1)%3), (r0, t0 + (c0+2)%3)]
-#             if t2 == t1:  # r1, c1 is in the intersection
-#                 return [(r1, t1 + (c1+1)%3), (r1, t1 + (c1+2)%3)]
-#         if r0 == r2: # r1 in different row.
-#             if t1 == t0:  # r0, c0 is in the intersection.
-#                 return [(r0, t0 + (c0+1)%3), (r0, t0 + (c0+2)%3)]
-#             if t1 == t2:  # r2, c2 is in the intersection
-#                 return [(r2, t2 + (c2+1)%3), (r2, t2 + (c2+2)%3)]
-#         if r1 == r2:  # r0 in different row
-#             if t0 == t1:  # r1, c1 is in the intersection.
-#                 return [(r1, t1 + (c1+1)%3), (r1, t1 + (c1+2)%3)]
-#             if t0 == t2:  # r2, c2 is in the intersection
-#                 return [(r2, t2 + (c2+1)%3), (r2, t2 + (c2+2)%3)]
-#     if t0 == t1 == t2 and len({c0, c1, c2}) == 2:  # all three in two cols in the same tower
-#         if c0 == c1:  # c2 is the different col.
-#             if f2 == f0:  # r0, c0 is in the intersection
-#                 return [(f0 + (r0+1)%3, c0), (f0 + (r0+2)%3, c0)]
-#             if f2 == f1:  # r1, c1 is in the intersection
-#                 return [(f1 + (r1+1)%3, c1), (f1 + (r1+2)%3, c1)]
-#         if c0 == c2:  # c1 is the different col.
-#             if f1 == f0:  # r0, c0 is in the intersection.
-#                 return [(f0 + (r0+1)%3, c0), (f0 + (r0+2)%3, c0)]
-#             if f1 == f2:  # r2, c2 is in the intersection
-#                 return [(f2 + (r2+1)%3, c2), (f2 + (r2+2)%3, c2)]
-#         if c1 == c2:  # c0 is the different col.
-#             if f0 == f1:  # r1, c1 is in the intersection
-#                 return [(f1 + (r1+1)%3, c1), (f1 + (r1+2)%3, c1)]
-#             if f0 == f2:  # r2, c2 is in the intersection
-#                 return [(f2 + (r2+1)%3, c2), (f2 + (r2+2)%3, c2)]
-#     return []
-#
-# def cells_seen_by_four(r0, c0, r1, c1, r2, c2, r3, c3):
-#
-#     f0 = (r0//3)*3; f1 = (r1//3)*3; f2 = (r2//3)*3; f3 = (r3//3)*3
-#     t0 = (c0//3)*3; t1 = (c1//3)*3; t2 = (c2//3)*3; t3 = (c3//3)*3
-#
-#     if f0 == f1 == f2 == f3 and t0 == t1 == t2 == t3: return []  # r0,c0, r1,c1 and r2,c2 and r3, c3cannot be in same box.
-#
-#     if f0 == f1 == f2 == f3:  # all cells on same floor.
-#
-#
-#     return
 
-def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands):
+def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, Orient = LK_ANY):
     # if r1, c1, r2, c2 belong to a group link, the group is passed as a set.
     # Two ccells are directly linked if:
     #   * they are two different candidates in the same cell, or
@@ -518,14 +277,14 @@ def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands):
 
     if R1iR2 and C1iC2:  # the two (grouped) ccells intersect
         if Cand1 == Cand2:  # cell cannot link to itself
-            return LK_ERR
+            return LK_NONE
         elif r1 == r2 and c1 == c2 and len(Cands[r1][c1]) == 2:  # only possible if all scalars
             return LK_STWK
         else:
             return LK_WEAK
 
     if Cand1 != Cand2:  # Cands must be same value if ccells are different or grouped ccells do not intersect.
-        return LK_ERR
+        return LK_NONE
 
     Ccells = []
     for r in R1:
@@ -535,23 +294,24 @@ def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands):
         for c in C2:
             Ccells.append((r, c))
 
-    for f in [0, 3, 6]:
-        for t in [0, 3, 6]:
-            if R1uR2 <= {f, f+1, f+2} and C1uC2 <= {t, t+1, t+2}:
-                # (Grouped) Ccells in the same box.
-                for r in [f, f+1, f+2]:
-                    for c in [t, t+1, t+2]:
-                        if (r, c) in Ccells: continue
-                        if Cand1 in Cands[r][c]: return LK_WEAK
-                return LK_STWK
+    if Orient & LK_BOX:
+        for f in [0, 3, 6]:
+            for t in [0, 3, 6]:
+                if R1uR2 <= {f, f+1, f+2} and C1uC2 <= {t, t+1, t+2}:
+                    # (Grouped) Ccells in the same box.
+                    for r in [f, f+1, f+2]:
+                        for c in [t, t+1, t+2]:
+                            if (r, c) in Ccells: continue
+                            if Cand1 in Cands[r][c]: return LK_WEAK
+                    return LK_STWK
 
-    if R1iR2:  # if the rows intersect
+    if R1iR2 and Orient & LK_ROW:  # if the rows intersect
         for r in sorted(R1iR2):
             for c in range(9):
                 if (r, c) in Ccells: continue
                 if Cand1 in Cands[r][c]: return LK_WEAK
         return LK_STWK
-    if C1iC2:  # if the columns intersect
+    if C1iC2 and Orient  & LK_COL:  # if the columns intersect
         for c in sorted(C1iC2):
             for r in range(9):
                 if (r, c) in Ccells: continue
@@ -560,66 +320,7 @@ def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands):
     return LK_NONE
 
 
-    # if R1iR2:  # if the rows intersect: (can only happen if on the same floor).
-    #     f = (list(R1iR2)[0]//3)*3
-    #     for t in [0, 3, 6]:  # if they are in same tower as well as floor, ie house
-    #         Cx = {t, t+1, t+2} - C1uC2
-    #         if not Cx:  # Cx is either empty or single value set if ccells in same tower.
-    #             # if Cx is empty, then if the remaining cells do not contain the candidate
-    #             # then there is a strong link, else it is a weak link.
-    #             for ra in [f, f+1, f+2]:
-    #                 for ca in [t, t+1, t+2]:
-    #                     if (ra, ca, Cand1) in Ccells: continue
-    #                     return LK_WEAK
-    #             return LK_STWK
-    #         elif len(Cx) ==  1:
-    #             ca = Cx.pop()
-    #             for ra in [f, f+1, f+2]:
-    #                 if Cand1 == Cands[ra][ca]:
-    #                     return LK_WEAK
-    #             return LK_STWK
-    # # not in the same tower.
-    # # if these ccells contain the only candidate values in the intersection
-    # # of rows across the remaining columns, then it is a strong link, else weak.
-    # for ra in sorted(R1iR2):
-    #     for ca in range(9):
-    #         if (ra, ca, Cand1) in Ccells: continue
-    #         return LK_WEAK
-    #     return LK_STWK
-    #
-    # for ca in sorted(C1iC2):
-    #     for ra in range(9):
-    #         if (ra, ca, Cand1) in Ccells: continue
-    #         return LK_WEAK
-    #     return LK_STWK
-    # return LK_NONE
-    #
-
-    # if Cand1 not in Cands[r1][c1] or Cand1 not in Cands[r2][c2]:
-    #     return LK_ERR  # Candidate not in one or both cells
-    # if r1 == r2:  # cells in same row.
-    #     for c in set(range(9)) - {c1, c2}:
-    #         if Cand1 in Cands[r1][c]: return LK_WEAK
-    #     return LK_STWK
-    #
-    # if c1 == c2:  # cells in same col
-    #     for r in set(range(9)) - {r1, r2}:
-    #         if Cand1 in Cands[r][c1]: return LK_WEAK
-    #     return LK_STWK
-    #
-    # f1 = (r1//3)*3; f2 = (r2//3)*3
-    # t1 = (c1//3)*3; t2 = (c2//3)*3
-    # if f1 == f2 and t1 == t2:  # cells are in the same box.
-    #     n = 0
-    #     for r in [f1, f1+1, f1+2]:
-    #         for c in [t1, t1+1, t1+2]:
-    #             if Cand1 in Cands[r][c]: n += 1
-    #             if n > 2: return LK_WEAK
-    #     if n == 2: return LK_STWK
-    # # No link found.
-    # return LK_NONE
-
-def are_ccells_aic_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = False, UsedCcells = None, Depth = 0):
+def are_ccells_aic_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = False, UsedCcells = None, Depth = 0, GrpLks = False):
     # if an odd length AIC with strong end links can be found then return a list
     # of the nodes of the chain, else None.  Includes same cand in house or
     # diff cands in a cell
@@ -630,53 +331,95 @@ def are_ccells_aic_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = False, Used
 #    if depth == 10: return []
 #    print ("aic_linked", depth)
     lk = ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands)
-    if lk & LK_ERR: return []
+    if lk & LK_NONE: return []
 
     if lk & LK_STRG:
         return [(r1, c1, Cand1, LK_STRG), (r2, c2, Cand2, -1)]
 
     if not AIC: return []
 
+    # # build out a list of strong links from both ccells 1 and 2
+    # LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks = GrpLks)
+    # LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands, LK_STRG, GrpLks = GrpLks)
+    # if not (LCLa and LCLb): return []
+    # if UsedCcells is None: UsedCcells = []
+    # for ra, ca, Canda, Lka in LCLa:
+    #     if (ra, ca, Canda) in UsedCcells: continue
+    #     for rb, cb, Candb, Lkb in LCLb:
+    #         if (rb, cb, Candb) in UsedCcells: continue
+    #         if (ra, ca, Canda) == (rb, cb, Candb): continue
+    #         lk = ccells_are_linked(ra, ca, Canda, rb, cb, Candb, Cands)
+    #         if lk == LK_ERR: return []
+    #         if lk == LK_WEAK:
+    #             return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WEAK),
+    #                     (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
+    #         elif lk == LK_STWK:
+    #             return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WKST),
+    #                     (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
+    #         else:  # LK_NONE:
+    #             # build out nodes of weak links from ccells a and b.
+    #             UC1 = UsedCcells + [(ra, ca, Canda), (rb, cb, Candb)]
+    #             LCLc = list_ccells_linked_to(ra, ca, Canda, Cands, GrpLks = GrpLks)
+    #             LCLd = list_ccells_linked_to(rb, cb, Candb, Cands, GrpLks = GrpLks)
+    #             for rc, cc, Candc, Lkc in LCLc:
+    #                 if (rc, cc, Candc) in UC1: continue
+    #                 for rd, cd, Candd, Lkd in LCLd:
+    #                     if (rd, cd, Candd) in UC1: continue
+    #                     if (rc, cc, Candc) == (rd, cd, Candd): continue
+    #                     UC1 += [(rc, cc, Candc), (rd, cd, Candd)]
+    #                     Nodes = are_ccells_aic_linked(rc, cc, Candc, rd, cd, Candd, Cands,
+    #                                                   AIC = AIC, UsedCcells = UC1, Depth = Depth+1, GrpLks = GrpLks)
+    #                     if len(Nodes):
+    #                         Nodes.pop()
+    #                         if Lkc == LK_STWK: Lkc = LK_WKST
+    #                         if Lkd == LK_STWK: Lkd = LK_WKST
+    #                         return [(r1, c1, Cand1, Lka), (ra, ca, Canda, Lkc)] + Nodes + \
+    #                                [(rd, cd, Candd, Lkd), (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
     # build out a list of strong links from both ccells 1 and 2
-    LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG)
-    LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands, LK_STRG)
+    LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks = GrpLks)
+    LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands, LK_STRG, GrpLks = GrpLks)
     if not (LCLa and LCLb): return []
     if UsedCcells is None: UsedCcells = []
+    # Scan for all possible links between ccells in LCLa and LCLb, before looking for
+    # longer chains.
     for ra, ca, Canda, Lka in LCLa:
         if (ra, ca, Canda) in UsedCcells: continue
         for rb, cb, Candb, Lkb in LCLb:
             if (rb, cb, Candb) in UsedCcells: continue
             if (ra, ca, Canda) == (rb, cb, Candb): continue
             lk = ccells_are_linked(ra, ca, Canda, rb, cb, Candb, Cands)
-            if lk == LK_ERR: return []
             if lk == LK_WEAK:
                 return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WEAK),
                         (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
             elif lk == LK_STWK:
                 return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WKST),
                         (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
-            else:  # LK_NONE:
-                # build out nodes of weak links from ccells a and b.
-                UC1 = UsedCcells + [(ra, ca, Canda), (rb, cb, Candb)]
-                LCLc = list_ccells_linked_to(ra, ca, Canda, Cands)
-                LCLd = list_ccells_linked_to(rb, cb, Candb, Cands)
-                for rc, cc, Candc, Lkc in LCLc:
-                    if (rc, cc, Candc) in UC1: continue
-                    for rd, cd, Candd, Lkd in LCLd:
-                        if (rd, cd, Candd) in UC1: continue
-                        if (rc, cc, Candc) == (rd, cd, Candd): continue
-                        UC1 += [(rc, cc, Candc), (rd, cd, Candd)]
-                        Nodes = are_ccells_aic_linked(rc, cc, Candc, rd, cd, Candd, Cands,
-                                                      AIC = AIC, UsedCcells = UC1, Depth = Depth+1)
-                        if len(Nodes):
-                            Nodes.pop()
-                            if Lkc == LK_STWK: Lkc = LK_WKST
-                            if Lkd == LK_STWK: Lkd = LK_WKST
-                            return [(r1, c1, Cand1, Lka), (ra, ca, Canda, Lkc)] + Nodes + \
-                                   [(rd, cd, Candd, Lkd), (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
+    # nothing found at this length of chain, look at next nodes in the chain.
+    for ra, ca, Canda, Lka in LCLa:
+        if (ra, ca, Canda) in UsedCcells: continue
+        for rb, cb, Candb, Lkb in LCLb:
+            if (rb, cb, Candb) in UsedCcells: continue
+            if (ra, ca, Canda) == (rb, cb, Candb): continue
+            UC1 = UsedCcells + [(ra, ca, Canda), (rb, cb, Candb)]
+            LCLc = list_ccells_linked_to(ra, ca, Canda, Cands, GrpLks = GrpLks)
+            LCLd = list_ccells_linked_to(rb, cb, Candb, Cands, GrpLks = GrpLks)
+            for rc, cc, Candc, Lkc in LCLc:
+                if (rc, cc, Candc) in UC1: continue
+                for rd, cd, Candd, Lkd in LCLd:
+                    if (rd, cd, Candd) in UC1: continue
+                    if (rc, cc, Candc) == (rd, cd, Candd): continue
+                    UC1 += [(rc, cc, Candc), (rd, cd, Candd)]
+                    Nodes = are_ccells_aic_linked(rc, cc, Candc, rd, cd, Candd, Cands,
+                                                  AIC = AIC, UsedCcells = UC1, Depth = Depth+1, GrpLks = GrpLks)
+                    if len(Nodes):
+                        Nodes.pop()
+                        if Lkc == LK_STWK: Lkc = LK_WKST
+                        if Lkd == LK_STWK: Lkd = LK_WKST
+                        return [(r1, c1, Cand1, Lka), (ra, ca, Canda, Lkc)] + Nodes + \
+                               [(rd, cd, Candd, Lkd), (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
     return []
 
-def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0):
+def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0, GrpLks = False):
     # if the ccells are directly connected by a weak link, or are AIC linked in
     # an odd length chain with weak end links, then return the list of
     # connected ccells.
@@ -686,7 +429,7 @@ def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0):
 
     # First check to see if the ccells are directly linked.
     lk = ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands)
-    if lk & LK_ERR: return []
+    if lk & LK_NONE: return []
 
     if lk & LK_STRG:
         return [(r1, c1, Cand1, LK_WKST), (r2, c2, Cand2, -1)]
@@ -696,8 +439,8 @@ def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0):
     if not AIC: return []
 
     # Then check if the two ccells see a strong link or strong end link AIC.
-    LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands)
-    LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands)
+    LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands, GrpLks = GrpLks)
+    LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands, GrpLks = GrpLks)
     if not (len(LCLa) and len(LCLb)): return []
     if AIC == 1: AIC = False
     else: AIC = True
@@ -706,7 +449,7 @@ def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0):
             if (ra, ca, Canda) == (rb, cb, Candb): continue
             UsedCcells = [(r1, c1, Cand1), (r2, c2, Cand2), (ra, ca, Canda), (rb, cb, Candb)]
             Nodes = are_ccells_aic_linked(ra, ca, Canda, rb, cb, Candb, Cands,
-                                          AIC = AIC, UsedCcells = UsedCcells)
+                                          AIC = AIC, UsedCcells = UsedCcells, GrpLks = GrpLks)
             if Nodes:
                 Nodes.pop()
                 if Lka == LK_STWK: Lka = LK_WKST
@@ -721,52 +464,3 @@ def are_cells_strongly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, OddLen = True
     # return the tokenized list of the chain.  Includes same can in house and diff
     # cands in a ccell.
     return []
-
-# def cells_see_a_strong_link(r1, c1, r2, c2, Cand, Cands, Depth = 0):
-#     # either an direct strong link or through an X-Chain.
-#     # Returns the coords of the strong link,
-#
-#     LCL1 = list_cells_linked_to(r1, c1, Cand, Cands)
-#     LCL2 = list_cells_linked_to(r2, c2, Cand, Cands)
-#     if not (len(LCL1) and len(LCL2)): return False
-#     for ra, ca, Lka in LCL1:
-#         for rb, cb, Lkb in LCL2:
-#             if cells_are_strongly_linked(ra, ca, rb, cb, Cand, Cands, Depth):
-#                 return True
-#     return False
-#
-# def cells_are_strongly_linked(r1, c1, r2, c2, Cand, Cands, Depth=0):
-#     # Linked through an X-chain where the starting and ending link are strong.
-#     # (An X-chain is an alternating strong/weak link chain on the same candidate
-#     # value).  Another implication is that the X-chain has an odd number of
-#     # links
-#
-#     # The simplest case is where the two cells are directly linked by a single
-#     # strong link.
-#     if cells_are_group_linked(r1, c1, r2, c2, Cand, Cands) & LK_STRG:
-#         return True
-#     # Now, not so simple, start building out the X-Chain simultaneously from both
-#     # ends.  First try two strong links, connected in the middle by a weak link.
-#     LCL1 = list_cells_linked_to(r1, c1, Cand, Cands)
-#     LCL2 = list_cells_linked_to(r2, c2, Cand, Cands)
-#     if not (len(LCL1) and len(LCL2)): return False
-#     for ra, ca, Lka in LCL1:
-#         for rb, cb, Lkb in LCL2:
-#             if Lka & Lkb & LK_STRG:
-#                 if cells_in_same_house(ra, ca, rb, cb):  # at least a weak link
-#                     return True
-#                 if Depth == 1:
-#                     continue  # reached the 9 link limit.
-#                 if cells_see_a_strong_link(ra, ca, rb, cb, Cand, Cands, Depth+1):
-#                     return True
-#     return False
-
-# def flist(hl):
-#     fl = []  # list()
-#     for i in hl:
-#         if isinstance(i, list):
-#             fl.extend(flist(i))
-#         else:
-#             fl.append(i)
-#     return fl
-
