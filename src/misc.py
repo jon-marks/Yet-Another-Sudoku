@@ -30,7 +30,7 @@ OP[OP_PARC] = ")"   # Closing parenthesis
 OP[OP_SETO] = "{"   # Opening set
 OP[OP_SETC] = "}"   # Closing set
 
-#import images
+# import images
 SmallUpArrow = PyEmbeddedImage(
         "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAADxJ"
         "REFUOI1jZGRiZqAEMFGke2gY8P/f3/9kGwDTjM8QnAaga8JlCG3CAJdt2MQxDCAUaOjyjKMp"
@@ -56,10 +56,10 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
     def __init__(self, Parent):
         if Parent.PzlFn != "":
-            T = "Yet Another Sudoku Solution" + " - " + Parent.PzlFn
+            sT = "Yet Another Sudoku Solution" + " - " + Parent.PzlFn
         else:
-            T = "Yet Another Sudoku Solution"
-        wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = T,
+            sT = "Yet Another Sudoku Solution"
+        wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = sT,
                            pos = wx.DefaultPosition,
                            size = LIST_SOLN_DLG_SZ,
                            style = wx.DEFAULT_DIALOG_STYLE | wx.DIALOG_NO_PARENT | wx.RESIZE_BORDER)
@@ -110,28 +110,32 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
         self.BtnSlvTo = wx.Button(self, wx.ID_ANY, "Solve to Selected Step", wx.DefaultPosition, wx.DefaultSize, 0)
         self.BtnSaveStep = wx.Button(self, wx.ID_ANY, "Save Selected Step", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.BtnCopyStep = wx.Button(self, wx.ID_ANY, "Copy Selected Step", wx.DefaultPosition, wx.DefaultSize, 0)
         self.BtnClose = wx.Button(self, wx.ID_ANY, "Close", wx.DefaultPosition, wx.DefaultSize, 0)
         self.BtnSlvTo.Bind(wx.EVT_BUTTON, self.on_solve_to)
         self.BtnSaveStep.Bind(wx.EVT_BUTTON, self.on_save_step)
+        self.BtnCopyStep.Bind(wx.EVT_BUTTON, self.on_copy_step)
         self.BtnClose.Bind(wx.EVT_BUTTON, self.on_close)
 
         self.BtnSlvTo.Disable()
         self.BtnSaveStep.Disable()
+        self.BtnCopyStep.Disable()
 
         SzrBtns.Add(self.BtnSlvTo, 0, wx.ALIGN_CENTRE, 0)
         SzrBtns.Add(self.BtnSaveStep, 0, wx.ALIGN_CENTRE, 0)
+        SzrBtns.Add(self.BtnCopyStep, 0, wx.ALIGN_CENTRE, 0)
         SzrBtns.Add(self.BtnClose, 0, wx.ALIGN_CENTRE, 0)
         SzrDlg.Add((0, 7), 0, 0, 0)  # Add a 7 pixel vertical spacer
 
-        Props = self.Creator.Props
+        Props = self.Creator.Puzzle.get_props()
         #  Write the summary.
-        G = Props[PR_GVN_HISTO]
+        G = Props[PR_GVNS_HISTO]
         self.SumLC.InsertColumn(0, "Attribute", wx.LIST_FORMAT_LEFT, -1)
         self.SumLC.InsertColumn(1, "Value", wx.LIST_FORMAT_RIGHT, -1)
         self.SumLC.InsertColumn(2, "Comment", wx.LIST_FORMAT_LEFT, -1)
-        self.SumLC.Append(["Expertise Level:", LVLS[Props[PR_ACT_LVL]], "Highest expertise level required to solve"])
+        self.SumLC.Append(["Expertise Level:", LVLS[Props[PR_LVL]], "Highest expertise level required to solve"])
         self.SumLC.Append(["Difficulty:", str(Props[PR_DIFF]), "Accumulated difficulty of all steps"])
-        self.SumLC.Append(["Givens:", str(81-Props[PR_NR_HOLES]),
+        self.SumLC.Append(["Givens:", str(Props[PR_NR_GVNS]),
                            f"[1]={G[0]}, [2]={G[1]}, [3]={G[2]}, [4]={G[3]}, [5]={G[4]},"
                            f"[6]={G[5]}, [7]={G[6]}, [8]={G[7]}, [9]={G[8]}"])
         self.SumLC.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -151,14 +155,15 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         self.StatLC.InsertColumn(4, "Difficulty", wx.LIST_FORMAT_RIGHT, -1)
         self.StatLC.InsertColumn(5, "Score", wx.LIST_FORMAT_RIGHT, -1)
         DM = self.itemDataMap = {}  # self.itemDataMap dict rqd by column sorter mixin
-        H = sorted(Props[PR_HISTO], key=lambda a: a[3])
+#        H = sorted(Props[PR_STEPS_HISTO], key=lambda a: a[3])
+        H = Props[PR_STEPS_HISTO]
         for i, HT in enumerate(H):
             Row = [f"{i+1:3d}",
-                   f"{HT[HT_NR]:3d}",
-                   HT[HT_TXT],
-                   LVLS[HT[HT_LVL]],
-                   f"{HT[HT_DIFF]:6d}",
-                   f"{HT[HT_ADIFF]:6d}"]
+                   f"{H[HT][HT_NR]:3d}",
+                   H[HT][HT_TXT],
+                   LVLS[H[HT][HT_LVL]],
+                   f"{H[HT][HT_DIFF]:6d}",
+                   f"{H[HT][HT_ADIFF]:6d}"]
             DM[i] = Row
             # self.StatLC.Append(Row)
             self.StatLC.InsertItem(i, Row[0], -1)
@@ -194,17 +199,10 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
         for j, Step in enumerate(Props[PR_STEPS]):
             self.SolnLC.Append([f"{(j+1):d}",
-                                Props[PR_HISTO][Step[P_TECH]][HT_TXT],
+                                H[Step[P_TECH]][HT_TXT],
                                 f"{Step[P_DIFF]:d}",
                                 tkns_to_str(Step[P_PTRN]),
                                 tkns_to_str(Step[P_OUTC])])
-            if len(Step[P_SUBS]):
-                for k, SubStep in enumerate(Step[P_SUBS]):
-                    self.SolnLC.Append([f"{j+1:d}.{k+1:d}",
-                                        Props[PR_HISTO][SubStep[P_TECH]][HT_TXT],
-                                        f"{SubStep[P_DIFF]:d}",
-                                        tkns_to_str(SubStep[P_PTRN]),
-                                        tkns_to_str(SubStep[P_OUTC])])
 
         self.SolnLC.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
         self.SolnLC.SetColumnWidth(1, wx.LIST_AUTOSIZE)
@@ -226,23 +224,57 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
     def on_nb_page_change(self, e):
         if self.NB.GetSelection() != 1:
             self.BtnSlvTo.Disable()
-            self.ToStep = -1
+            self.BtnSaveStep.Disable()
+            self.BtnCopyStep.Disable()
+        else:
+            if self.ToStep != 0:
+                self.BtnSlvTo.Enable()
+                self.BtnSaveStep.Enable()
+                self.BtnCopyStep.Enable()
 
     def on_item_selected(self, e):
         self.ToStep = e.Index
-        self.BtnSaveStep.Enable()
         self.BtnSlvTo.Enable()
+        self.BtnSaveStep.Enable()
+        self.BtnCopyStep.Enable()
 
     def on_save_step(self, e):
-        Step = self.Creator.Props[PR_STEPS][self.ToStep]
-        Grid = Step[P_GRID]
-        Gvns = self.Creator.Props[PR_GIVENS]
-        G = [[Grid[r][c] + 10 if not Gvns[r][c] and Grid[r][c] else Grid[r][c] for c in range(9)] for r in range(9)]
-        if not save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), G, Step[P_ELIM], Step):
+        P = self.Creator.Puzzle
+        Step = self.Creator.Puzzle.Steps[self.ToStep]
+        G1 = Step[P_GRID]
+        G  = [[G1[r][c] if not G1[r][c] or P.Givens[r][c] else G1[r][c]+10 for c in range(9)] for r in range(9)]
+        C  = Step[P_CAND]  # self.Creator.Puzzle.Cands
+        E1 = [[set() for c in range(9)] for r in range(9)]
+        for r in range(9):
+            for c in range(9):
+                if not G1[r][c]:
+                    Cands = set()
+                    for Cand in range(1, 10):
+                        if not cell_val_has_conflicts(G1, r, c, Cand):
+                            Cands.add(Cand)
+                    E1[r][c] = Cands - C[r][c]
+        if not save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), G, E1, Step):
             wx.MessageBox("Could not save puzzle, do not know why . . .\n"
                           "Please send saved puzzle to developers",
                           "Warning",
                           wx.ICON_WARNING | wx.OK)
+
+    def on_copy_step(self, e):
+        P = self.Creator.Puzzle
+        Step = self.Creator.Puzzle.Steps[self.ToStep]
+        G1 = Step[P_GRID]
+        G  = [[G1[r][c] if not G1[r][c] or P.Givens[r][c] else G1[r][c]+10 for c in range(9)] for r in range(9)]
+        C  = Step[P_CAND]  # self.Creator.Puzzle.Cands
+        E1 = [[set() for c in range(9)] for r in range(9)]
+        for r in range(9):
+            for c in range(9):
+                if not G1[r][c]:
+                    Cands = set()
+                    for Cand in range(1, 10):
+                        if not cell_val_has_conflicts(G1, r, c, Cand):
+                            Cands.add(Cand)
+                    E1[r][c] = Cands - C[r][c]
+        copy_puzzle_to_clipboard(G, E1, Step)
 
     def on_solve_to(self, e):
         if self.ToStep > self.FromStep:
@@ -280,7 +312,7 @@ class UserGuide(wx.Dialog):
         self.BtnClose = wx.Button(self, wx.ID_ANY, "Close", wx.DefaultPosition, wx.DefaultSize, 0)
         self.BtnClose.Bind(wx.EVT_BUTTON, self.on_close)
         szr.Add(self.BtnClose, 0, wx.ALIGN_CENTER | wx.TOP, 2)
-        szr.Add((0, 7), 0, 0, 0)  #  Add a 7 pixel spacer.
+        szr.Add((0, 7), 0, 0, 0)  # Add a 7 pixel spacer.
         self.htc.LoadFile(os.path.join(os.path.dirname(__file__), "../doc/user_guide.html"))
         self.SetSizer(szr)
         self.Layout()
@@ -317,45 +349,58 @@ def open_puzzle(Fp, Pzl):
 
     if dlg.ShowModal() != wx.ID_OK:
         dlg.Destroy()
-        return None
+        return None, 0
 
     Fs = dlg.GetPath()
     dlg.Destroy()
     try:
         with open(Fs, "rt") as f:
-            sG = f.readline(MAX_SVL_FILE_SIZE)
+            sPzl = f.readline(MAX_SVL_FILE_SIZE)
     except (OSError, IOError):
-        return None
+        return None, 0
 
-    lG = sG.replace("\n", "").split("|")
-    if lG[0] and grid_str_to_grid(lG[0], Pzl[0]):
-        if len(lG) >= 2 and lG[1]:
-            for sElim in lG[1].split(";"):
-                r, c, op, Cands = parse_ccell_phrase(sElim)
-                if r < 0 or op != OP_ELIM: break
-                Pzl[1][r][c] = Cands
-        if len(lG) >= 3 and lG[2]:
-            for m in range(T_NR_TECHS):
-                if T[m][T_TXT] == lG[2]:
-                    break
-            else:
-                m = T_UNDEF
-            Pzl[2] = m
-        return os.path.split(Fs)
-        #     else:
-        #         if len(lG) >= 3 and lG[2]:
-        #             for m in range(T_NR_TECHS):
-        #                 if T[m][T_TXT] == lG[2]:
-        #                     break
-        #             else: m = T_UNDEF
-        #             Pzl[2] = m
-        #         return os.path.split(Fs)
-        # else: return os.path.split(Fs)
+    Flds = parse_pzl_str(sPzl, Pzl)
+    if Flds: return os.path.split(Fs), Flds
+    else: return None, 0
 
-    wx.MessageBox("Invalid Sudoku value file format",
-                  "Warning",
-                  wx.ICON_WARNING | wx.OK)
-    return None
+def parse_pzl_str(sPzl, Pzl):
+
+    lG = sPzl.replace("\n", "").split("|")
+    lenlG = len(lG)
+    Pzl[PZL_GRID] = [[0 for c in range(9)] for r in range(9)]
+    Pzl[PZL_ELIMS] = [[set() for c in range(9)] for r in range(9)]
+    if not grid_str_to_grid(lG[0], Pzl[PZL_GRID]):
+        wx.MessageBox("Invalid Sudoku value puzzle spec format - grid.",
+                      "Warning",
+                      wx.ICON_WARNING | wx.OK)
+        return 0
+    if lenlG >= 2 and lG[1]:
+        for sE in lG[1].split(";"):
+            r, c, op, Cands = parse_ccell_phrase(sE)
+            if r < 0 or op != OP_ELIM:
+                wx.MessageBox("Invalid Sudoku value puzzle spec format - elims.",
+                              "Warning",
+                              wx.ICON_WARNING | wx.OK)
+                return 0
+            Pzl[PZL_ELIMS][r][c] = Cands
+    if lenlG >= 3 and lG[2]:
+
+        for Tx in T:  # m in range(len(T):
+            if T[Tx][T_TXT] == lG[2]:
+                Pzl[PZL_METH] = Tx
+                break
+        else:
+            m = T_UNDEF
+            # wx.MessageBox(f"Invalid Sudoku value puzzle spec format - unrecognised method.",
+            #               "Warning",
+            #               wx.ICON_WARNING | wx.OK)
+            # return 0
+    else: Pzl[PZL_METH] = T_UNDEF
+    if lenlG == 5:
+        Pzl[PZL_PTRN] = lG[3]
+        Pzl[PZL_OUTC] = lG[4]
+    return lenlG
+
 
 def parse_ccell_phrase(St):
     # only knows how to parse rycx-=digits, and rycx:=digit
@@ -388,7 +433,7 @@ def grid_str_to_grid(sG, G, Placed = True, GivensOnly = False):
         if v == " ": i += 1; continue
         if v == "+":
             if GivensOnly: i += 2; rc += 2; continue
-            if Placed: G[rc//9][rc%9] = 10;
+            if Placed: G[rc//9][rc%9] = 10
             i += 1; v = sG[i]
         if v.isdigit(): G[rc//9][rc%9] += int(v); i +=1; rc += 1; continue
         return False  # error parsing the grid string.
@@ -396,13 +441,35 @@ def grid_str_to_grid(sG, G, Placed = True, GivensOnly = False):
 
 def grid_to_grid_str(G, sG = None):
 
-    if sG == None: sG = ""
+    if sG is None: sG = ""
     for r in range(9):
         for c in range(9):
             if G[r][c] > 10: sG += "+"; G[r][c] %= 10
             sG += f"{G[r][c]}"
     return sG
 
+def copy_puzzle_to_clipboard(G, ElimCands = None, Step = None):
+
+    sG = ""
+    sG = grid_to_grid_str(G, sG)
+    sE = ""
+    if ElimCands:
+        for r in range(9):
+            for c in range(9):
+                if ElimCands[r][c]:
+                    if sE: sE += ";"
+                    sE += f"r{r+1}c{c+1}-="
+                    for v in sorted(ElimCands[r][c]):
+                        sE += f"{v}"
+        sG += f"|{sE}"
+    if Step:
+        sG += f"|{T[Step[P_TECH]][T_TXT]}"
+        sG += f"|{tkns_to_str(Step[P_PTRN])}|{tkns_to_str(Step[P_OUTC])}\n".replace(" ", "").replace(".", "")
+    if wx.TheClipboard.Open():
+        wx.TheClipboard.SetData(wx.TextDataObject(sG))
+        wx.TheClipboard.Close()
+        return True
+    return False
 
 def save_puzzle(Fp, G, ElimCands = None, Step = None):
     # Selects a puzzle filename with the save FileDialog in Cwd, and returns
@@ -504,4 +571,3 @@ def tkns_to_str(Tkns):
 #         else:
 #             fl.append(i)
 #     return fl
-

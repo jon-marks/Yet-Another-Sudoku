@@ -37,10 +37,10 @@ def create_regrlist(RegrList):
                 TElim[r][c] |= Cands
             else:
                 # TD[2] contains method to test.
-                for TTech in range(T_NR_TECHS):
-                    if T[TTech][T_TXT] == TD[2]: break
+                for Tx in T: # TTech in range(len):
+                    if T[Tx][T_TXT] == TD[2]: break
                 else:
-                    if TD[2]: print(f"Info: Line {i}: Cannot find method \'{TD[2]}\' Will find best method.")
+                    if TD[2]: print(f"Info: Line {TLine}: Cannot find method \'{TD[2]}\' Will find best method.")
                     TId = T_UNDEF
                 # TD[3] and TD[4] contains Expected condition and outcome, both can be empty
                 #   Condition is compared verbatim with Actual condition.
@@ -58,7 +58,7 @@ create_regrlist(Regr)
 @pytest.mark.parametrize("TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc", Regr)
 def test_solve_next_step(TLine, TD, TTech, TGrid, TElim, sExpCond, osExpOutc):
 
-    TStep = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
+    TStep = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0}
     res = solve_next_step(TGrid, TStep, TElim, Method = TTech)
     res1 = True
     if not res:

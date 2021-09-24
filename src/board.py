@@ -27,8 +27,8 @@ GCF_GRP_HL = 0x0002  # Part of transient group highlight
 
 # grid cell attributes
 GC_SHOW     = 0  # What is being displayed - assumes CVS_* enums from
-                 # globals.py, which also is the index to the cell_fg_clr.
-                 # through CVS_CLRS[]
+                    # globals.py, which also is the index to the cell_fg_clr.
+                    # through CVS_CLRS[]
 GC_FRM_WIN  = 1  # Cell frame window object where the selected frame is indicated
 GC_CELL_WIN = 2  # Cell window - the inside window of the selection frame
 GC_FLAGS    = 3  # Cell is selected or not.
@@ -416,6 +416,8 @@ class Board:
         if st != CVS_CANDS:
             if st & CVS_CNFLT:
                 C[GC_STC].SetForegroundColour(CVS_CLRS[CVS_CNFLT])
+            elif st & CVS_ERROR:
+                C[GC_STC].SetForegroundColour(CVS_CLRS[CVS_ERROR])
             else:
                 C[GC_STC].SetForegroundColour(CVS_CLRS[st])
             C[GC_STC].SetLabel("")  # double write required with diff text as
@@ -438,8 +440,12 @@ class Board:
             for rd in [0, 1, 2]:
                 for cd in [0, 1, 2]:
                     D = C[GC_CAND][rd][cd]
-                    if cands is not None:
-                        D[CD_SEL] = cands[rd][cd]
+                    if cands:  # is not None:
+                        cand = (rd*3)+cd+1
+                        if cand in cands:
+                            D[CD_SEL] = True
+                        else:
+                            D[CD_SEL] = False
                     else:
                         D[CD_SEL] = False
                     if D[CD_SEL]:
@@ -456,6 +462,8 @@ class Board:
                     D[CD_STC].Show()
         C[GC_SHOW] = st
 
+    def is_cell_selected(self, r, c):
+        return self.Cell[r][c][GC_FLAGS] & GCF_SEL
 
     def select_cell(self, r, c, tf):
         if tf:
@@ -507,7 +515,12 @@ class Board:
                                 D[CD_STC].SetLabel("")
                                 D[CD_STC].SetLabel(str(i))
 
+    def is_cand_val_set(self, rc, cc, rd, cd):
+        return self.Cell[rc][cc][GC_CAND][rd][cd][CD_SEL]
+
     def set_cand_value(self, rc, cc, rd, cd, tf, hl = False):
+        # a shortcut for just setting candidate vals instead of write_cell_value
+        # in additions to changing the highliahting (bolding) of the cand value
         if hl:
             FgClr = CVS_CLRS[CVS_SVSHL]
             Font = self.CandBold

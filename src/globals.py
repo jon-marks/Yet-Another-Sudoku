@@ -13,8 +13,8 @@ Audit:
 
 import wx
 
-#DEBUG   = True
-DEBUG   = False
+# DEBUG   = True
+DEBUG   = True
 
 TITLE   = 'Yet Another Sudoku App'
 BLURB   = '*  Feature rich\n' \
@@ -22,6 +22,8 @@ BLURB   = '*  Feature rich\n' \
 
 VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
+# Generic enumerations
+UNDEF   = -1
 
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
@@ -110,12 +112,12 @@ GRP_HL_TINT      = 8   # Tint RGB by this value for group highlighting
 # Constants below this line influence code operation, change with caution.
 
 # Cell value states
-CVS_EMPTY = 0x0000  # Cell value is empty (value = 0)
+CVS_EMPTY = 0x0000  # Cell value is empty (value = 0) code wants CVS_EMPTY == 0
 CVS_ENTER = 0x0001  # Cell has an un-conflicted value in Entry state
 CVS_GIVEN = 0x0002  # Cell contains a given value.
 CVS_PLACE = 0x0003  # Cell contains a placed value (may or may not be correct)
 CVS_CNFLT = 0x0010  # Cell value is conflicted with another in Entry/Solve
-CVS_ERROR = 0x0005  # Cell contains an incorrectly solved value
+CVS_ERROR = 0x0020  # Cell contains an incorrectly solved value
 CVS_CANDS = 0x0006  # Candidate values are being displayed in the cell.
 CVS_SVGHL = 0x0007  # Same value given highlight (note val cor to CVS_GIVEN)
 CVS_SVSHL = 0x0008  # Same value solve highlight (note val cor to CVS_SOLVE)
@@ -214,6 +216,17 @@ H_VAGUE    = 0
 H_CLEARER  = 1
 H_CLEAREST = 2
 
+# Puzzle Info Enumerations
+PZL_GRID    = 0  # a 9x9 grids of givens vals and placed values (cand + 10)
+PZL_ELIMS   = 1  # a 9x9 grid of sets of eliminated candidates
+PZL_METH    = 2  # the next method to try (if present)
+PZL_PTRN    = 3  # the pattern the next method should find.
+PZL_OUTC    = 4  # the resulting placement of eliminations
+
+# Puzzle Class instantiate instructions
+PZL_GEN     = 10  # Generate a puzzle according to Lvl and Sym setting.
+PZL_LOAD    = 11  # Load a file spec, either pasted with [ctrl]V or from a file
+
 # Names of patterns (conditions) in a puzzle that can be recognised by YAS.
 # Note:  that a solving technique (method) may be able to recognise and solve for more than
 # one of pattern.  For example the locked singles method in solve_singles can solve
@@ -225,8 +238,13 @@ H_CLEAREST = 2
 # able to prioritise solving techniques, for example resolving Kraken fish is a
 # simple AIC extension of finned fish, however in the sequence of solving techniques
 # (human) simpler and easier than recognising kraken fish such as the simple AIC's
-# should be attempted first.  Otherwize we end up with a solution path that uses much
+# should be attempted first.  Otherwise we end up with a solution path that uses much
 # more complex techniques to solve a puzzle when simpler methods can be used.
+
+# Technique Extensions:
+T_KRAKEN                    = 0x80000000
+T_GRPLK                     = 0x40000000
+
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
 T_HIDDEN_SINGLE             = 1
@@ -249,22 +267,45 @@ T_FINNED_JELLYFISH          = 17
 T_SKYSCRAPER                = 18
 T_TWO_STRING_KITE           = 19
 T_TURBOT_FISH               = 20
-T_KRAKEN_X_WING             = 21
-T_KRAKEN_SWORDFISH          = 22
-T_KRAKEN_JELLYFISH          = 23
+# T_KRAKEN_X_WING             = 21
+# T_KRAKEN_SWORDFISH          = 22
+# T_KRAKEN_JELLYFISH          = 23
 T_Y_WING                    = 24
 T_W_WING                    = 25
-T_KRAKEN_W_WING             = 26
+# T_KRAKEN_W_WING             = 26
 T_XYZ_WING                  = 27
 T_WXYZ_WING                 = 28
 T_BENT_EXPOSED_QUAD         = 29
 T_EMPTY_RECT                = 30
 T_X_CHAIN                   = 31
-T_X_LOOP                    = 32
-T_XY_CHAIN                  = 33
-T_CONTINOUS_LOOP            = 34
-T_BRUTE_FORCE               = 35
-T_NR_TECHS                  = 36
+T_EVEN_X_LOOP               = 32
+T_STRONG_X_LOOP             = 33
+T_XY_CHAIN                  = 34
+T_KRAKEN_X_WING             = T_FINNED_X_WING + T_KRAKEN
+T_KRAKEN_SWORDFISH          = T_FINNED_SWORDFISH + T_KRAKEN
+T_KRAKEN_JELLYFISH          = T_FINNED_JELLYFISH + T_KRAKEN
+T_KRAKEN_W_WING             = T_W_WING + T_KRAKEN
+
+T_GL_W_WING                 = T_W_WING + T_GRPLK
+T_GL_SKYSCRAPER             = T_SKYSCRAPER + T_GRPLK
+T_GL_TWO_STRING_KITE        = T_TWO_STRING_KITE + T_GRPLK
+T_GL_TURBOT_FISH            = T_TURBOT_FISH + T_GRPLK
+T_GL_X_CHAIN                = T_X_CHAIN + T_GRPLK
+T_GL_EVEN_X_LOOP            = T_EVEN_X_LOOP + T_GRPLK
+T_GL_STRONG_X_LOOP          = T_STRONG_X_LOOP + T_GRPLK
+T_GL_XY_CHAIN               = T_XY_CHAIN + T_GRPLK
+
+T_GL_KRAKEN_X_WING          = T_KRAKEN_X_WING + T_GRPLK
+T_GL_KRAKEN_SWORDFISH       = T_KRAKEN_SWORDFISH + T_GRPLK
+T_GL_KRAKEN_JELLYFISH       = T_KRAKEN_JELLYFISH + T_GRPLK
+T_GL_KRAKEN_W_WING          = T_KRAKEN_W_WING + T_GRPLK
+
+# T_CONTINOUS_LOOP            = 35
+T_BRUTE_FORCE               = 0x00008000
+
+# # Technique Extensions:
+# T_KRAKEN                    = 0x80000000
+# T_GRPLK                     = 0x40000000
 
 # Technique attribute field enums
 TA_TXT  = 0
@@ -276,9 +317,9 @@ P_TECH = 0  # The logic technique used
 P_PTRN = 1  # Ordered list of cell properties identified for the logic technique
 P_OUTC = 2  # Ordered list of cell updates on applying the logic technique
 P_DIFF = 3  # The total difficulty of the step
-P_SUBS = 4  # Ordered list of sub-steps - a recursion of Step Attributes
+# P_SUBS = 4  # Ordered list of sub-steps - a recursion of Step Attributes
 P_GRID = 5  # The grid before logic steps.
-P_ELIM = 6  # The grid of eliminated candidates before the logic step
+P_CAND = 6  # The grid of eliminated candidates before the logic step
 
 # The lexical tokens of for cell description phrases
 P_ROW = 10  # cell row index
@@ -321,11 +362,11 @@ HT_DIFF  = 3  # Difficulty score of the technique
 HT_ADIFF = 4  # Accumulated difficulty score
 
 # Puzzle properties
-PR_REQ_LVL    = 0  # Requested level of expertise
-PR_ACT_LVL    = 1  # Actual level of expertise
-PR_NR_HOLES   = 2  # The total number of holes dug
-PR_GVN_HISTO  = 3  # Value histogram of the givens
-PR_STEPS      = 4  # The list of steps a solution path
-PR_HISTO      = 5  # Solution steps histogram
-PR_DIFF       = 6  # The difficulty of the puzzle.
-PR_GIVENS     = 7  # Grid containing only givens
+# PR_REQ_LVL    = 0  # Requested level of expertise
+PR_LVL         = 1  # Actual level of expertise
+# PR_NR_HOLES   = 2  # The total number of holes dug
+PR_GVNS_HISTO  = 3  # Value histogram of the givens
+PR_STEPS       = 4  # The list of steps a solution path
+PR_STEPS_HISTO = 5  # Solution steps histogram
+PR_DIFF        = 6  # The difficulty of the puzzle.
+PR_NR_GVNS     = 7  # Grid containing only givens

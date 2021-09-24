@@ -1,4 +1,6 @@
 
+from copy import copy
+
 from globals import *
 
 # Link strength enumerations.
@@ -24,49 +26,59 @@ T_DIFF = 2  # Difficulty of technique
 # each other, for example in covers seeing fins in finned fish or W wings, etc,
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
-AIC_LK_DIFF = 15
-AIC_GRP_LK_DIFF = 35
+KRAKEN_LK_DIFF = 20  # per Kraken link
+GRP_LK_DIFF    = 50  # per group link
 
-T = [[] for j in range(T_NR_TECHS)]
-#                               Txt                        Lvl               Diff
-T[T_EXPOSED_SINGLE]          = ["Exposed Single",          LVL_BEGINNER,       5]
-T[T_HIDDEN_SINGLE]           = ["Hidden Single",           LVL_BEGINNER,       10]
-T[T_CLAIMING_LOCKED_SINGLE]  = ["Claiming Locked Single",  LVL_NOVICE,         15]
-T[T_POINTING_LOCKED_SINGLE]  = ["Pointing Locked Single",  LVL_NOVICE,         15]
-T[T_EXPOSED_PAIR]            = ["Exposed Pair",            LVL_INTERMEDIATE,   15]
-T[T_LOCKED_EXPOSED_PAIR]     = ["Locked Exposed Pair",     LVL_INTERMEDIATE,   20]
-T[T_HIDDEN_PAIR]             = ["Hidden Pair",             LVL_INTERMEDIATE,   20]
-T[T_EXPOSED_TRIPLE]          = ["Exposed Triple",          LVL_INTERMEDIATE,   20]
-T[T_LOCKED_EXPOSED_TRIPLE]   = ["Locked Exposed Triple",   LVL_INTERMEDIATE,   25]
-T[T_HIDDEN_TRIPLE]           = ["Hidden Triple",           LVL_INTERMEDIATE,   30]
-T[T_EXPOSED_QUAD]            = ["Exposed Quad",            LVL_INTERMEDIATE,   35]
-T[T_HIDDEN_QUAD]             = ["Hidden Quad",             LVL_INTERMEDIATE,   40]
-T[T_X_WING]                  = ["X-Wing",                  LVL_PROFICIENT,     45]
-T[T_SWORDFISH]               = ["Swordfish",               LVL_PROFICIENT,     50]
-T[T_JELLYFISH]               = ["Jellyfish",               LVL_PROFICIENT,     55]
-T[T_FINNED_X_WING]           = ["Finned X-Wing",           LVL_PROFICIENT,     60]
-T[T_FINNED_SWORDFISH]        = ["Finned Swordfish",        LVL_PROFICIENT,     65]
-T[T_FINNED_JELLYFISH]        = ["Finned Jellyfish",        LVL_PROFICIENT,     70]
-T[T_SKYSCRAPER]              = ["Skyscraper",              LVL_PROFICIENT,     45]
-T[T_TWO_STRING_KITE]         = ["Two String Kite",         LVL_PROFICIENT,     45]
-T[T_TURBOT_FISH]             = ["Turbot Fish",             LVL_PROFICIENT,     50]
-T[T_KRAKEN_X_WING]           = ["Kraken X-Wing",           LVL_ACCOMPLISHED,  100]
-T[T_KRAKEN_SWORDFISH]        = ["Kraken Swordfish",        LVL_ACCOMPLISHED,  100]
-T[T_KRAKEN_JELLYFISH]        = ["Kraken Jellyfish",        LVL_ACCOMPLISHED,  100]
-T[T_Y_WING]                  = ["Y-Wing",                  LVL_INTERMEDIATE,   50]
-T[T_W_WING]                  = ["W-Wing",                  LVL_PROFICIENT,     55]
-T[T_KRAKEN_W_WING]           = ["Kraken W-Wing",           LVL_PROFICIENT,     95]
-T[T_XYZ_WING]                = ["XYZ-Wing",                LVL_PROFICIENT,     60]
-T[T_WXYZ_WING]               = ["WXYZ-Wing",               LVL_ACCOMPLISHED,  100]
-T[T_BENT_EXPOSED_QUAD]       = ["Bent Exposed Quad",       LVL_ACCOMPLISHED,  110]
-T[T_EMPTY_RECT]              = ["Empty Rectangle",         LVL_PROFICIENT,     45]
-T[T_X_CHAIN]                 = ["X-Chain",                 LVL_PROFICIENT,     60]
-T[T_X_LOOP]                  = ["X-Loop",                  LVL_PROFICIENT,     65]
-T[T_XY_CHAIN]                = ["XY-Chain",                LVL_PROFICIENT,     70]
-T[T_CONTINOUS_LOOP]          = ["Continuous Loop",         LVL_PROFICIENT,     70]
-# . . . .
-T[T_BRUTE_FORCE]             = ["Brute Force",            LVL_EXPERT,        1000]
 
+T = {T_EXPOSED_SINGLE:              ["Exposed Single", LVL_BEGINNER, 5],
+     T_HIDDEN_SINGLE:               ["Hidden Single", LVL_BEGINNER, 10],
+     T_CLAIMING_LOCKED_SINGLE:      ["Claiming Locked Single", LVL_NOVICE, 15],
+     T_POINTING_LOCKED_SINGLE:      ["Pointing Locked Single", LVL_NOVICE, 15],
+     T_EXPOSED_PAIR:                ["Exposed Pair", LVL_INTERMEDIATE, 15],
+     T_LOCKED_EXPOSED_PAIR:         ["Locked Exposed Pair", LVL_INTERMEDIATE, 20],
+     T_HIDDEN_PAIR:                 ["Hidden Pair", LVL_INTERMEDIATE, 20],
+     T_EXPOSED_TRIPLE:              ["Exposed Triple", LVL_INTERMEDIATE, 20],
+     T_LOCKED_EXPOSED_TRIPLE:       ["Locked Exposed Triple", LVL_INTERMEDIATE, 25],
+     T_HIDDEN_TRIPLE:               ["Hidden Triple", LVL_INTERMEDIATE, 30],
+     T_EXPOSED_QUAD:                ["Exposed Quad", LVL_INTERMEDIATE, 35],
+     T_HIDDEN_QUAD:                 ["Hidden Quad", LVL_INTERMEDIATE, 40],
+     T_X_WING:                      ["X-Wing", LVL_PROFICIENT, 45],
+     T_SWORDFISH:                   ["Swordfish", LVL_PROFICIENT, 50],
+     T_JELLYFISH:                   ["Jellyfish", LVL_PROFICIENT, 55],
+     T_FINNED_X_WING:               ["Finned X-Wing", LVL_PROFICIENT, 60],
+     T_FINNED_SWORDFISH:            ["Finned Swordfish", LVL_PROFICIENT, 65],
+     T_FINNED_JELLYFISH:            ["Finned Jellyfish", LVL_PROFICIENT, 70],
+     T_SKYSCRAPER:                  ["Skyscraper", LVL_PROFICIENT, 45],
+     T_TWO_STRING_KITE:             ["Two String Kite", LVL_PROFICIENT, 45],
+     T_TURBOT_FISH:                 ["Turbot Fish", LVL_PROFICIENT, 50],
+     T_EMPTY_RECT:                  ["Empty Rectangle", LVL_PROFICIENT, 45],
+     T_Y_WING:                      ["Y-Wing", LVL_INTERMEDIATE, 50],
+     T_W_WING:                      ["W-Wing", LVL_PROFICIENT, 55],
+     T_XYZ_WING:                    ["XYZ-Wing", LVL_PROFICIENT, 60],
+     T_WXYZ_WING:                   ["WXYZ-Wing", LVL_ACCOMPLISHED, 100],
+     T_BENT_EXPOSED_QUAD:           ["Bent Exposed Quad", LVL_ACCOMPLISHED, 110],
+     T_X_CHAIN:                     ["X-Chain", LVL_PROFICIENT, 70],
+     T_EVEN_X_LOOP:                 ["Even X-Loop", LVL_PROFICIENT, 70],
+     T_STRONG_X_LOOP:               ["Strong X-Loop", LVL_PROFICIENT, 70],
+     T_XY_CHAIN:                    ["XY-Chain", LVL_PROFICIENT, 70],
+     T_KRAKEN_X_WING:               ["Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
+     T_KRAKEN_SWORDFISH:            ["Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
+     T_KRAKEN_JELLYFISH:            ["Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
+     T_KRAKEN_W_WING:               ["Kraken W-Wing", LVL_PROFICIENT, 95],
+     T_GL_W_WING:                   ["Group Linked W-Wing", LVL_PROFICIENT, 45],
+     T_GL_SKYSCRAPER:               ["Group Linked Skyscraper", LVL_PROFICIENT, 45],
+     T_GL_TWO_STRING_KITE:          ["Group Linked Two String Kite", LVL_PROFICIENT, 45],
+     T_GL_TURBOT_FISH:              ["Group Linked Turbot Fish", LVL_PROFICIENT, 50],
+     T_GL_X_CHAIN:                  ["Group Linked X-Chain", LVL_PROFICIENT, 70],
+     T_GL_EVEN_X_LOOP:              ["Group Linked Even X-Loop", LVL_PROFICIENT, 70],
+     T_GL_STRONG_X_LOOP:            ["Group Linked Strong X-Loop", LVL_PROFICIENT, 70],
+     T_GL_XY_CHAIN:                 ["Group Linked XY-Chain", LVL_PROFICIENT, 70],
+     T_GL_KRAKEN_X_WING:            ["Group Linked Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
+     T_GL_KRAKEN_SWORDFISH:         ["Group Linked Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
+     T_GL_KRAKEN_JELLYFISH:         ["Group Linked Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
+     T_GL_KRAKEN_W_WING:            ["Group Linked Kraken W-Wing", LVL_PROFICIENT, 95],
+
+     T_BRUTE_FORCE:                 ["Brute Force", LVL_EXPERT, 1000]}
 
 def cell_val_has_no_conflicts(v, grid, r, c):
     #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
@@ -74,6 +86,7 @@ def cell_val_has_no_conflicts(v, grid, r, c):
     #  grid:  IN:  grid to test value
     #  r, c   IN:  row and column in grid for test.
     # Check that val not in row
+
     if not (v in grid[r]):
         # Check that not in col
         if not (v in [grid[0][c], grid[1][c], grid[2][c],
@@ -87,6 +100,40 @@ def cell_val_has_no_conflicts(v, grid, r, c):
                           +grid[br+2][bc:bc+3])):
                 return True
     return False
+
+def cell_val_has_conflicts(grid, r, c, val = 0):
+    # if val != 0 then grid[r][c] is zero, else caller made a mistake.
+    # and unpredictable results.
+    #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
+
+    if val == grid[r][c] == 0: return False  # empty cell cannot be conflicted.
+
+    if val: v = val
+    else: v = grid[r][c]; grid[r][c] = 0
+
+    if not (v in grid[r]):
+        # Check that not in col
+        if not (v in [grid[0][c], grid[1][c], grid[2][c],
+                      grid[3][c], grid[4][c], grid[5][c],
+                      grid[6][c], grid[7][c], grid[8][c]]):
+            # Check that not in block/box
+            br = (r//3)*3
+            bc = (c//3)*3
+            if not (v in (grid[br][bc:bc+3]
+                          +grid[br+1][bc:bc+3]
+                          +grid[br+2][bc:bc+3])):
+                if not val: grid[r][c] = v
+                return False
+    if not val: grid[r][c] = v
+    return True
+
+def link_house(N0, N1):
+    r0, c0 = N0; r1, c1 = N1
+    if r0 == r1: return LK_ROW
+    if c0 == c1: return LK_COL
+    if r0//3 == r1//3 and c0//3 == c1//3: return LK_BOX
+    return LK_NONE
+
 
 def token_link(Lk):
     if Lk == LK_WEAK: return OP_WLK
@@ -210,17 +257,29 @@ def cells_that_see_all_of(Cells):
     # any other cell, the cells to be seen, and the cell that is doing the seeing
     # all need to be in the same chute.
 
-    sR = set(); sC = set(); sF = set(); sT = set()
+    Cells1 = []; RowGrp = ColGrp = False
     for r, c in Cells:
-        sR.add(r); sC.add(c); sF.add((r//3)*3); sT.add((c//3)*3)
-    if len(Cells) == len(sF) == len(sT) == 2:  # 2 cells in separate houses
-        r0, c0 = Cells[0]; r1, c1 = Cells[1]
-        return [(r0, c1), (r1, c0)]
+        if isinstance(r, int) and isinstance(c, int): Cells1.append((r, c))
+        elif isinstance(c, int):
+            if len(r) > 1: RowGrp = True
+            for r0 in r: Cells1.append((r0, c))
+        elif isinstance(r, int):
+            if len(c) > 1: ColGrp = True
+            for c0 in c: Cells1.append((r, c0))
+
+    sR = set(); sC = set(); sF = set(); sT = set()
+    for r, c in Cells1: sR.add(r); sC.add(c); sF.add((r//3)*3); sT.add((c//3)*3)
 
     rtn = set()
+    if len(Cells) == len(sF) == len(sT) == 2:  # 2 (grouped) cells in separate houses
+        (r0, c0) = Cells[0]; r1, c1 = Cells[1]
+        if isinstance(r0, int) and isinstance(c1, int): rtn.add((r0, c1))
+        if isinstance(r1, int) and isinstance(c0, int): rtn.add((r1, c0))
+        return sorted(rtn)
+
     if len(sF) == len(sT) == 1:  # all cells are in the same box.
         f = list(sF)[0]; t = list(sT)[0]
-        rtn = {(f, t), (f, t+1), (f, t+2), (f+1, t), (f+1, t+1), (f+1, t+2), (f+2, t), (f+2, t+1), (f+2, t+2)} - set(Cells)
+        rtn = {(f, t), (f, t+1), (f, t+2), (f+1, t), (f+1, t+1), (f+1, t+2), (f+2, t), (f+2, t+1), (f+2, t+2)} - set(Cells1)
         if len(sR) == 1:  # and in the same row.
             r = list(sR)[0]
             for c in sorted(set(range(9)) - {t, t+1, t+2}):
@@ -230,13 +289,13 @@ def cells_that_see_all_of(Cells):
             for r in sorted(set(range(9)) - {f, f+1, f+2}):
                 rtn.add((r, c))
         return sorted(rtn)
-    sCells = set(Cells)
-
-    if len(sF) == 1: # cells are all on the same floor.
+    rtn = set()
+    if len(sF) == 1:  # cells are all on the same floor.
         for r0 in sR:
+            if RowGrp: rtn = set(); break  # only groups along the rows valid here
             for c0 in range(9):
-                if (r0, c0) in sCells: continue
-                for r1, c1 in Cells:
+                if (r0, c0) in Cells1: continue
+                for r1, c1 in Cells1:
                     if not cells_in_same_house(r0, c0, r1, c1):
                         break
                 else:  # r0,c0 can see all cells in patterns
@@ -245,17 +304,86 @@ def cells_that_see_all_of(Cells):
 
     if len(sT) == 1:  # cells are all in the same tower
         for c0 in sC:
-            for r0 in range (9):
-                if (r0, c0) in sCells: continue
-                for r1, c1 in Cells:
+            if ColGrp: rtn = set(); break  # only groups along the col valid here.
+            for r0 in range(9):
+                if (r0, c0) in Cells1: continue
+                for r1, c1 in Cells1:
                     if not cells_in_same_house(r0, c0, r1, c1):
                         break
                 else:  # r0, c0 can see all the cell patterns
                     rtn.add((r0, c0))
     return sorted(rtn)
+    #
+    # GrpLks = False
+    # for r, c in Cells:
+    #     if isinstance(r, int): sR.add(r); sF.add((r//3)*3)
+    #     else:
+    #         sR.add(tuple(r)); sF.add((copy(r).pop()//3)*3)
+    #         GrpLks = True
+    #     if isinstance(c, int): sC.add(c); sT.add((c//3)*3)
+    #     else:
+    #         sC.add(tuple(c)); sT.add((copy(c).pop()//3)*3)
+    #         GrpLks = True
+    #
+    # rtn = set()
+    # if len(Cells) == len(sF) == len(sT) == 2:  # 2 cells in separate houses
+    #     (r0, c0) = Cells[0]; r1, c1 = Cells[1]
+    #     if isinstance(r0, int) and isinstance(c1, int): rtn.add((r0, c1))
+    #     if isinstance(r1, int) and isinstance(c0, int): rtn.add((r1, c0))
+    #     return sorted(rtn)
+    #
+    # if GrpLks:
+    #     Cells1 = []
+    #     for r, c in Cells:
+    #         if isinstance(r, int) and isinstance(c, int): Cells1.append((r, c))
+    #         elif isinstance(c, int):
+    #             for r0 in r: Cells1.append((r0, c))
+    #         elif isinstance(r, int):
+    #             for c0 in c: Cells1.append((r, c0))
+    #     Cells = Cells1
+    #
+    # if len(sF) == len(sT) == 1:  # all cells are in the same box.
+    #     f = list(sF)[0]; t = list(sT)[0]
+    #     rtn = {(f, t), (f, t+1), (f, t+2), (f+1, t), (f+1, t+1), (f+1, t+2), (f+2, t), (f+2, t+1), (f+2, t+2)}
+    #     rtn -= set(Cells)
+    #     if len(sR) == 1:  # and in the same row.
+    #         r = list(sR)[0]
+    #         for c in sorted(set(range(9)) - {t, t+1, t+2}):
+    #             rtn.add((r, c))
+    #     if len(sC) == 1:  # and in the same col.
+    #         c = list(sC)[0]
+    #         for r in sorted(set(range(9)) - {f, f+1, f+2}):
+    #             rtn.add((r, c))
+    #     return sorted(rtn)
+    #
+    # # sCells = set(Cells)
+    # rtn = set()
+    # if len(sF) == 1:  # cells are all on the same floor.
+    #     for r0 in sR:
+    #         if not isinstance(r0, int): rtn = set(); break  # only row groups valid here
+    #         for c0 in range(9):
+    #             if (r0, c0) in Cells: continue
+    #             for r1, c1 in Cells:
+    #                 if not cells_in_same_house(r0, c0, r1, c1):
+    #                     break
+    #             else:  # r0,c0 can see all cells in patterns
+    #                 rtn.add((r0, c0))
+    #     return sorted(rtn)
+    #
+    # if len(sT) == 1:  # cells are all in the same tower
+    #     for c0 in sC:
+    #         if not isinstance(c0, int): rtn = set(); break  # only col groups valid here.
+    #         for r0 in range(9):
+    #             if (r0, c0) in Cells: continue
+    #             for r1, c1 in Cells:
+    #                 if not cells_in_same_house(r0, c0, r1, c1):
+    #                     break
+    #             else:  # r0, c0 can see all the cell patterns
+    #                 rtn.add((r0, c0))
+    # return sorted(rtn)
 
 
-def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, Orient = LK_ANY):
+def ccells_are_linked(RC1, Cand1, RC2, Cand2, Cands, Orient = LK_ANY):
     # if r1, c1, r2, c2 belong to a group link, the group is passed as a set.
     # Two ccells are directly linked if:
     #   * they are two different candidates in the same cell, or
@@ -268,6 +396,7 @@ def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, Orient = LK_ANY):
     # Note that a strong link can masquerade as a weak link, but a weak link
     # cannot masquerade as a strong link.
 
+    (r1, c1) = RC1; (r2, c2) = RC2
     R1 = {r1} if isinstance(r1, int) else r1
     C1 = {c1} if isinstance(c1, int) else c1
     R2 = {r2} if isinstance(r2, int) else r2
@@ -304,14 +433,15 @@ def ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, Orient = LK_ANY):
                             if (r, c) in Ccells: continue
                             if Cand1 in Cands[r][c]: return LK_WEAK
                     return LK_STWK
-
-    if R1iR2 and Orient & LK_ROW:  # if the rows intersect
+    # if R1iR2 and Orient & LK_ROW:  # if the rows intersect
+    if R1iR2 and len(R1uR2) == 1 and Orient & LK_ROW:  # if the rows intersect
         for r in sorted(R1iR2):
             for c in range(9):
                 if (r, c) in Ccells: continue
                 if Cand1 in Cands[r][c]: return LK_WEAK
         return LK_STWK
-    if C1iC2 and Orient  & LK_COL:  # if the columns intersect
+    # if C1iC2 and Orient  & LK_COL:  # if the columns intersect
+    if C1iC2 and len(C1uC2) == 1 and Orient & LK_COL:  # if the columns intersect
         for c in sorted(C1iC2):
             for r in range(9):
                 if (r, c) in Ccells: continue
@@ -330,7 +460,7 @@ def are_ccells_aic_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = False, Used
 
 #    if depth == 10: return []
 #    print ("aic_linked", depth)
-    lk = ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands)
+    lk = ccells_are_linked((r1, c1), Cand1, (r2, c2), Cand2, Cands)
     if lk & LK_NONE: return []
 
     if lk & LK_STRG:
@@ -338,43 +468,6 @@ def are_ccells_aic_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = False, Used
 
     if not AIC: return []
 
-    # # build out a list of strong links from both ccells 1 and 2
-    # LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks = GrpLks)
-    # LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands, LK_STRG, GrpLks = GrpLks)
-    # if not (LCLa and LCLb): return []
-    # if UsedCcells is None: UsedCcells = []
-    # for ra, ca, Canda, Lka in LCLa:
-    #     if (ra, ca, Canda) in UsedCcells: continue
-    #     for rb, cb, Candb, Lkb in LCLb:
-    #         if (rb, cb, Candb) in UsedCcells: continue
-    #         if (ra, ca, Canda) == (rb, cb, Candb): continue
-    #         lk = ccells_are_linked(ra, ca, Canda, rb, cb, Candb, Cands)
-    #         if lk == LK_ERR: return []
-    #         if lk == LK_WEAK:
-    #             return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WEAK),
-    #                     (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
-    #         elif lk == LK_STWK:
-    #             return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WKST),
-    #                     (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
-    #         else:  # LK_NONE:
-    #             # build out nodes of weak links from ccells a and b.
-    #             UC1 = UsedCcells + [(ra, ca, Canda), (rb, cb, Candb)]
-    #             LCLc = list_ccells_linked_to(ra, ca, Canda, Cands, GrpLks = GrpLks)
-    #             LCLd = list_ccells_linked_to(rb, cb, Candb, Cands, GrpLks = GrpLks)
-    #             for rc, cc, Candc, Lkc in LCLc:
-    #                 if (rc, cc, Candc) in UC1: continue
-    #                 for rd, cd, Candd, Lkd in LCLd:
-    #                     if (rd, cd, Candd) in UC1: continue
-    #                     if (rc, cc, Candc) == (rd, cd, Candd): continue
-    #                     UC1 += [(rc, cc, Candc), (rd, cd, Candd)]
-    #                     Nodes = are_ccells_aic_linked(rc, cc, Candc, rd, cd, Candd, Cands,
-    #                                                   AIC = AIC, UsedCcells = UC1, Depth = Depth+1, GrpLks = GrpLks)
-    #                     if len(Nodes):
-    #                         Nodes.pop()
-    #                         if Lkc == LK_STWK: Lkc = LK_WKST
-    #                         if Lkd == LK_STWK: Lkd = LK_WKST
-    #                         return [(r1, c1, Cand1, Lka), (ra, ca, Canda, Lkc)] + Nodes + \
-    #                                [(rd, cd, Candd, Lkd), (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
     # build out a list of strong links from both ccells 1 and 2
     LCLa = list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks = GrpLks)
     LCLb = list_ccells_linked_to(r2, c2, Cand2, Cands, LK_STRG, GrpLks = GrpLks)
@@ -387,7 +480,7 @@ def are_ccells_aic_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = False, Used
         for rb, cb, Candb, Lkb in LCLb:
             if (rb, cb, Candb) in UsedCcells: continue
             if (ra, ca, Canda) == (rb, cb, Candb): continue
-            lk = ccells_are_linked(ra, ca, Canda, rb, cb, Candb, Cands)
+            lk = ccells_are_linked((ra, ca), Canda, (rb, cb), Candb, Cands)
             if lk == LK_WEAK:
                 return [(r1, c1, Cand1, Lka), (ra, ca, Canda, LK_WEAK),
                         (rb, cb, Candb, Lkb), (r2, c2, Cand2, -1)]
@@ -428,7 +521,7 @@ def are_ccells_weakly_linked(r1, c1, Cand1, r2, c2, Cand2, Cands, AIC = 0, GrpLk
     # AIC == 2:  Look for weak link, see strong link or weak-ended AIC. The ccells are weakly linked (A-P=Q-R=. . .=Z-B)
 
     # First check to see if the ccells are directly linked.
-    lk = ccells_are_linked(r1, c1, Cand1, r2, c2, Cand2, Cands)
+    lk = ccells_are_linked((r1, c1), Cand1, (r2, c2), Cand2, Cands)
     if lk & LK_NONE: return []
 
     if lk & LK_STRG:

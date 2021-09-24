@@ -22,9 +22,12 @@ from solve_chains import *
 # * some, but not all techniques depend on a prior logic condition not being
 #   satisfied.
 # * exposed subsets of a particular order before the hidden subset of same order
-# * With fish, order (2, 3, 4) before finned (2, 3, 4) before almost (2, 3, 4).
+# * With fish, order (2, 3, 4) before finned (2, 3, 4) before Kraken (2, 3, 4).
 # * The reason there are less techniques than there are patterns (T_... enums)
 #   is that some techniques are able to resolve more than one pattern.
+# * _kraken_ refers to the technique using an AIC chain as a strong or weak link.
+# * ..._gl refers to the technique using group links in its chains.
+
 
 Techniques = [tech_exposed_singles,
               tech_hidden_singles,
@@ -38,103 +41,39 @@ Techniques = [tech_exposed_singles,
               tech_x_wings,
               tech_swordfish,
               tech_jellyfish,
-              tech_three_link_x_chains,
-              tech_empty_rects,
               tech_y_wings,
+              tech_three_link_x_chains,  # skyscrapers, 2 string kites and turbot fish
+              tech_empty_rects,
               tech_w_wings,
-              tech_xyz_wings,
-              tech_finned_x_wings,
+              tech_xyz_wings,        # not before y-wings
+              tech_finned_x_wings,   # finned fish never before ordinary fish
               tech_finned_swordfish,
               tech_finned_jellyfish,
               tech_wxyz_wings,
               tech_bent_exposed_quads,
-              tech_longer_x_chains,
-              tech_kraken_w_wings,
-              tech_kraken_x_wings,
+              tech_other_x_chains,  # never before three link X-Chains
+              tech_even_x_loops,         # never before X-Wings
+              tech_strong_x_loops,
+              # tech_xy_chains,
+              tech_kraken_x_wings,  # kraken fish never before finned fish
               tech_kraken_swordfish,
               tech_kraken_jellyfish,
-              # tech_almost_x_wings,    # Skyscraper and 2 string kites are easier
-              #                         # ways of spotting the same patterns.
-              # tech_almost_swordfish,  # Sashimi variants.
-              # tech_almost_jellyfish,  # Sashimi variants.
+              tech_kraken_w_wings,  # never before W-Wings.
+              tech_gl_w_wings,
+              tech_gl_three_link_x_chains,
+              tech_gl_other_x_chains,
+              tech_gl_even_x_loops,
+              tech_gl_strong_x_loops,
+              # tech_gl_xy_chains,
+              tech_gl_kraken_x_wings,
+              tech_gl_kraken_swordfish,
+              tech_gl_kraken_jellyfish,
+              tech_gl_kraken_w_wings,
               ]
 
 
+def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
 
-
-def grade_puzzle(Grid, Props, Elims = None, NextMeth = T_UNDEF):
-    # Puzzles are graded by being solved using logic techniques to find the
-    # highest level of expertise required to solve the puzzle and various other
-    # parameters characterising the puzzle as described in the Props parameter
-    # below.
-    #
-    # Parms:
-    #  Grid: In:  Contains the puzzle to grade, needs to be a valid puzzle.
-    #        Out: The solved puzzle.
-    #  Props: Out:  The characteristics of the puzzle in a dict.
-    #   PR_REQ_LVL:  The requested level of expertise (from menu).  It is common
-    #                to find minimal puzzles with ~20 givens that are easy to
-    #                solve with simple logic techniques.
-    #   PR_ACT_LVL:  The actual level of expertise needed to solve the puzzle
-    #                (logic techniques in this band and below).
-    #   PR_NR_HOLES: The number holes/empties (81 - number of givens)
-    #   PR_STEPS:    The ordered list of logic techniques solution path that the
-    #                program found Each step in the list is a dict containing.
-    #       P_TECH:  The enumeration of the logic technique, eg T_*
-    #       P_DESC:  Text describing identification of logic technique
-    #       P_SLVD:  list of solved cells in dict object:
-    #           P_VAL:  Cell value
-    #           P_ROW:  Row coord of cell
-    #           P_COL:  Col coord of cell
-    #       P_ELIM:  List of values a cell cannot assume - eliminated candidates
-    #           P_VAL:  Candidate value to be eliminated
-    #           P_ROW:  Row coord of cell where candidate is eliminated
-    #           P_COL:  Col coord of cell where candidate is eliminated.
-    #       P_SUBS:  Ordered list of sub-steps as a recursion of Steps.
-    #   PR_HISTO:    A histogram pivot of the steps summarising the count of
-    #                each logic technique and a difficulty accumulation as a
-    #                logic technique list of dict items:
-    #       HT_NR:     Count of that logic technique used to solve the puzzle
-    #       HT_TXT:    Textual name of the logic techniques
-    #       HT_LVL:    The expertise of the logic technique
-    #       HT_DIFF:   The "perceived" difficulty of the logic technique
-    #       HT_ADIFF:  = HT_NR * HT_DIFF
-    #   PR_DIFF:     Overall puzzle difficulty.
-    # Returns: True:  Puzzle valid and solution found.
-    #          False: Invalid puzzle
-
-    Steps = []
-    tf = logic_solve_puzzle(Grid, Steps, Elims, NextMeth)
-    Histo = [{HT_NR:    0,
-              HT_TXT:   T[i][T_TXT],
-              HT_LVL:   T[i][T_LVL],
-              HT_DIFF:  T[i][T_DIFF],
-              HT_ADIFF: 0} for i in range(T_NR_TECHS)]
-    MaxLvl = Diff = 0
-    for S in Steps:
-        if not S[P_DIFF]: S[P_DIFF] = T[S[P_TECH]][T_DIFF]
-        Diff += S[P_DIFF]
-        H = Histo[S[P_TECH]]
-        H[HT_NR] += 1
-        H[HT_ADIFF] += S[P_DIFF]
-        if H[HT_LVL] > MaxLvl:
-            MaxLvl = H[HT_LVL]
-        for S1 in S[P_SUBS]:
-            if not S1[P_DIFF]: S1[P_DIFF] = T[S[P_TECH]][T_DIFF]
-            Diff += S1[P_DIFF]
-            H = Histo[S1[P_TECH]]
-            H[HT_NR] += 1
-            H[HT_ADIFF] += S[P_DIFF]
-            if H[HT_LVL] > MaxLvl:
-                MaxLvl = H[HT_LVL]
-
-    Props[PR_ACT_LVL] = MaxLvl
-    Props[PR_STEPS] = Steps
-    Props[PR_HISTO] = Histo
-    Props[PR_DIFF] = Diff
-    return tf
-
-def logic_solve_puzzle(Grid, Steps, Elims = None, Meth = T_UNDEF):
     # Solve the puzzle passed in grid, returning the ordered list of logic
     # solution steps.
     #
@@ -144,58 +83,79 @@ def logic_solve_puzzle(Grid, Steps, Elims = None, Meth = T_UNDEF):
     #
     # Parms:
     #  Grid: In:   Contains the puzzle to grade, needs to be a valid puzzle.
-    #        Out:  The solved puzzle.
+
     #  Steps: Out:   The ordered list of logic techniques solution path that the
-    #                program found Each step in the list is a dict containing.
-    #       P_TECH:  The enumeration of the logic technique, eg T_*
-    #       P_DESC:  Text describing identification of logic technique
-    #       P_SLVD:  list of solved cells in dict object:
-    #           P_VAL:  Cell value
-    #           P_ROW:  Row coord of cell
-    #           P_COL:  Col coord of cell
-    #       P_ELIM:  List of values a cell cannot assume - eliminated candidates
-    #           P_VAL:  Candidate value to be eliminated
-    #           P_ROW:  Row coord of cell where candidate is eliminated
-    #           P_COL:  Col coord of cell where candidate is eliminated.
-    #       P_SUBS:  Ordered list of sub-steps as a recursion of Steps.
-    # Returns: True:  Puzzle valid and solution found.
-    #          False: Invalid puzzle
+    #  Cands: In Cands starting state.
+    #  Meth:  Suggested starting method, will start from first technique if unsuccess.
+    # Returns: The Maximum Expertise Level required to solve the puzzle
 
     NrEmpties = 0
-    Cands = [[set() for c in range(9)] for r in range(9)]
-    if not Elims: Elims = deepcopy(Cands)
+    Steps = []
+    G = [[Grid[r][c] for c in range(9)] for r in range(9)]
+    C = [[set() for c in range(9)] for r in range(9)]
     for r in range(9):
         for c in range(9):
-            if not Grid[r][c]:  # Cell is empty
+            if not G[r][c]:
                 NrEmpties += 1
-                for Cand in range(1, 10):
-#                    if Cand in Elims[r][c]: continue
-                    if cell_val_has_no_conflicts(Cand, Grid, r, c):
-                        Cands[r][c].add(Cand)
-                Cands[r][c] -= Elims[r][c]
+                for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+                    if cell_val_has_no_conflicts(Cand, G, r, c):
+                        C[r][c].add(Cand)
+                if Elims: C[r][c] -= Elims[r][c]
+
+    MaxLvl = 0
+    if Meth != T_UNDEF and NrEmpties > 0:
+        Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_GRID: deepcopy(G), P_CAND: deepcopy(C)}
+        for tech in Techniques:
+            NrSlvd = tech(G, Step, C, Method = Meth)
+            if NrSlvd == -2: continue
+            if NrSlvd >= 0:
+                Steps.append(Step)
+                if T[Step[P_TECH]][T_LVL] > MaxLvl: MaxLvl = T[Step[P_TECH]][T_LVL]
+                NrEmpties -= NrSlvd
+                if Soln:
+                    for r in range(9):
+                        for c in range(9):
+                            if G[r][c] > 0:
+                                if G[r][c] != Soln[r][c]:
+                                    print (f"Invalid Assignment: r{r}c{c}:={Soln[r][c]}.")
+                                    return UNDEF, Steps
+                            else:
+                                if Soln[r][c] not in C[r][c]:
+                                    print (f"Invalid Elimination: r{r}c{c}-={Soln[r][c]}.")
+                                    return UNDEF, Steps
+            break
 
     while NrEmpties > 0:
-        Step = {P_GRID: deepcopy(Grid), P_ELIM: deepcopy(Elims), P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_SUBS: []}
+        Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_GRID: deepcopy(G), P_CAND: deepcopy(C)}
         for tech in Techniques:
-            NrSlvd = tech(Grid, Step, Cands, ElimCands = Elims, Method = Meth)
-            if NrSlvd < 0:
-                continue
+            NrSlvd = tech(G, Step, C)
+            if NrSlvd < 0: continue
             Steps.append(Step)
+            if T[Step[P_TECH]][T_LVL] > MaxLvl: MaxLvl = T[Step[P_TECH]][T_LVL]
             NrEmpties -= NrSlvd
-            Meth = T_UNDEF
+            if Soln:
+                for r in range(9):
+                    for c in range(9):
+                        if G[r][c] > 0:
+                            if G[r][c] != Soln[r][c]:
+                                print(f"Invalid Assignment: r{r}c{c}:={Soln[r][c]}.")
+                                return UNDEF, Steps
+                        else:
+                            if Soln[r][c] not in C[r][c]:
+                                print(f"Invalid Elimination: r{r}c{c}-={Soln[r][c]}.")
+                                return UNDEF, Steps
             break
         else:
-            if Meth != T_UNDEF:
-                Meth = T_UNDEF
-            elif _tech_brute_force(Grid, Step, Cands):
-                NrEmpties -= 1
-                Steps.append(Step)
-            else:
-                return False
-    return True
+            if not _tech_brute_force(G, Step, C):
+                # An error occured - bug in program
+                return UNDEF, Steps
+            NrEmpties -= 1
+            Steps.append(Step)
+            MaxLvl = LVL_GURU
+    return MaxLvl, Steps
 
 
-def solve_next_step(Grid, Step, ElimCands, Method = T_UNDEF):
+def solve_next_step(Grid, Step, Elims, Method = T_UNDEF):
     # Find the solution for the next step, used in providing hints to users.
     # Hints cannot be taken from the solution list as the user more than likely
     # solved the puzzle to this point taking a different path to that of the
@@ -225,23 +185,24 @@ def solve_next_step(Grid, Step, ElimCands, Method = T_UNDEF):
     # Returns:  True:  A solution found.
     #           False: Can't solve next step - either invalid puzzle or bug in program.
 
-    Cands = [[set() for c in range(9)] for r in range(9)]
+    C = [[set() for c in range(9)] for r in range(9)]
     for r in range(9):
         for c in range(9):
-            if not Grid[r][c]:  # Cell is empty
-                for Cand in range(1, 10):
+            if not Grid[r][c]:
+                for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
                     if cell_val_has_no_conflicts(Cand, Grid, r, c):
-                        Cands[r][c].add(Cand)
-                Cands[r][c] -= ElimCands[r][c]
+                        C[r][c].add(Cand)
+                C[r][c] -= Elims[r][c]
+
     for tech in Techniques:
-        if tech(Grid, Step, Cands, ElimCands, Method = Method) >= 0:
+        if tech(Grid, Step, C, Method = Method) >= 0:
             return True
 
     if Method == T_UNDEF or Method == T_BRUTE_FORCE:
-        return _tech_brute_force(Grid, Step, Cands, ElimCands)
+        return _tech_brute_force(Grid, Step, C)
     return False
 
-def _tech_brute_force(Grid, Step, Cands, ElimCands = None):
+def _tech_brute_force(Grid, Step, Cands):
     # first randomly pick the empty to hint on.
     r = c = 0
     for s in sample(range(81), k = 81):
@@ -256,14 +217,11 @@ def _tech_brute_force(Grid, Step, Cands, ElimCands = None):
         Grid[r][c] = G[r][c]
         Step[P_PTRN] = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END, ]]
         Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-        if ElimCands is None:
-            Cands[r][c].clear()
-            discard_cand_from_peers(Grid[r][c], r, c, Cands)
+        Cands[r][c].clear()
+        discard_cand_from_peers(Grid[r][c], r, c, Cands)
         return True
     else:
         return False
-
-
 
 def _solve_puzzle_backtrack(Grid, Cell = 0):
     #  Recursive backtracking function to find a Sudoku puzzle. If the
@@ -289,7 +247,7 @@ def _solve_puzzle_backtrack(Grid, Cell = 0):
         #        Soln[0] = [[Grid[r1][c1] for c1 in range(9)] for r1 in range(9)]
         return True  # All cells successfully filled
 
-    for v in range(1, 10):
+    for v in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
         if cell_val_has_no_conflicts(v, Grid, r, c):
             Grid[r][c] = v
             if _solve_puzzle_backtrack(Grid, Cell+1):

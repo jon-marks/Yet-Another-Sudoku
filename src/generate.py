@@ -7,10 +7,17 @@ from solve import *
 seed()
 if DEBUG:
     import logging as log
-
     seed(0)
 
-def check_puzzle(Grid, Soln, cell = 0):
+def check_puzzle(Grid):
+
+    St = {S_FOUND: 0, S_GRID: None}
+    _check_puzzle(Grid, St)
+    return St[S_FOUND], St[S_GRID]
+
+
+
+def _check_puzzle(Grid, Soln, cell = 0):
     #  Recursive backtracking function to solve a Sudoku puzzle as a check.
     #  Returns True if only one solution is found, returns False if there is no
     #  solution or more than one solution.
@@ -42,12 +49,13 @@ def check_puzzle(Grid, Soln, cell = 0):
             Soln[S_GRID] = [[Grid[r][c] for c in range(9)] for r in range(9)]
             return False  # Continue looking for a second solution
         else:  # a second solution found - this is an invalid puzzle
+            Soln[S_GRID] = None
             return True  # 2nd soln found pop back out of the stack.
 
     for v in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
         if cell_val_has_no_conflicts(v, Grid, r, c):
             Grid[r][c] = v
-            if check_puzzle(Grid, Soln, cell+1):
+            if _check_puzzle(Grid, Soln, cell+1):
                 Grid[r][c] = 0
                 return True
     Grid[r][c] = 0
@@ -69,8 +77,6 @@ def gen_filled_grid(Grid, cell = 0):
     r = cell//9
     c = cell%9
     vals = sample(range(1, 10), k = 9)
-    #    vals = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    #    shuffle(vals)
     for v in vals:
         if cell_val_has_no_conflicts(v, Grid, r, c):
             Grid[r][c] = v
@@ -117,6 +123,7 @@ def scramble_puzzle(grid):
     v = sample(range(1, 10), k = 9)  # randomize the 9 digits
     v.insert(0, 0)
 
+    # one of 8 ways of transposition.
     R = randint(0, 7)
     if R == 0:
         return [[v[grid1[r][c]] for c in range(9)] for r in range(9)]
@@ -150,37 +157,48 @@ def minimalise_puzzle(G):
         v = G1[r][c]
         G1[r][c] = 0
         Soln = {S_FOUND: 0, S_GRID: None}
-        check_puzzle(G1, Soln)
-        if Soln[S_FOUND] == 1:
+        NrFound, Soln = check_puzzle(G1)
+        if NrFound == 1:
             G[r][c] = 0
         else:
             G1[r][c] = v
+    return G
 
-def _create_random_puzzle(Grid, Props):
-    #  Creates a puzzle with up to nh randomly placed holes that can be solved
-    #  using the techniques passed in ltl.
-    #  Grid:    In:  A fully populated Grid (board) that obeys Sudoku rules
-    #           Out: A valid puzzle with up to nh holes dug
-    #  Props    Out: Ordered lists of the the specific logic steps to solve
-    #                each hole.
-    #  returns: True with a valid puzzle.
-    #           False with an invalid puzzle. (To be implemented)
+def create_puzzle(Lvl, Puzzle):
+# def create_puzzle(Soln, Lvl, Sym, Givens, Steps):
+    # Soln:     In:     The solved grid from which to dig holes.
+    # Lvl:      In:     The desired expertise level.
+    # Sym:      In:     Puzzle symmetry.
+    # Givens:   Out:    The created puzzle grid.
+    # Steps:    Out:    The logical steps to solve the puzzle.
+    # Returns:          The actual expertise level <= desired expertise level.
 
+    Puzzle.Givens = [[Puzzle.Soln[r][c] for c in range(9)] for r in range(9)]
+    return CreatePuzzle[Puzzle.Sym](Lvl, Puzzle)
+
+def _create_random_puzzle(Lvl, Puzzle):
+# def _create_random_puzzle(Grid, Lvl, Steps):
+
+    # Puzzle.NrEmpties = 0
     h = sample(range(81), k = 81)
-    Props[PR_NR_HOLES] = 0
+    # ActLvl = LVL_BEGINNER
     for hdx in h:
-        Grid1 = [[Grid[r][c] for c in range(9)] for r in range(9)]
         r = hdx//9
         c = hdx%9
-        # v = Grid1[r][c]
-        Grid1[r][c] = 0
-        Soln = {S_FOUND: 0, S_GRID: None}
-        check_puzzle(Grid1, Soln)  # check_puzzle() returns with unsolved puzzle preserved in Grid1
-        if Soln[S_FOUND] == 1:
-            grade_puzzle(Grid1, Props)  # grade_puzzle returns with solved puzzle in Grid1
-            if Props[PR_REQ_LVL] >= Props[PR_ACT_LVL]:
-                Grid[r][c] = 0
-                Props[PR_NR_HOLES] += 1
+        v = Puzzle.Givens[r][c]
+        Puzzle.Givens[r][c] = 0
+
+        # St = {S_FOUND: 0, S_GRID: None}
+        NrFound, Soln = check_puzzle(Puzzle.Givens)
+        # check_puzzle(Grid, St)  # check_puzzle() returns with unsolved puzzle preserved in Grid1
+        if NrFound == 1:
+            Puzzle.Lvl, Steps = logic_solve_puzzle(Puzzle.Givens)  # logic solving the puzzle does not alter grid.
+            if Lvl >= Puzzle.Lvl:
+                # Puzzle.NrEmpties += 1
+                Puzzle.Steps = Steps
+                continue
+        else: Puzzle.Givens[r][c] = v
+
 
 def _create_dihedral_puzzle(grid, nh, ltl, props):
     # TODO _create_dihedral_puzzle(grid, nh, ltl, props):

@@ -130,6 +130,11 @@ class MainMenubar(wx.MenuBar):
         self.mPuzzle.Append(self.miPuzzleRestart)
         parent.Bind(wx.EVT_MENU, self.on_puzzle_restart, self.miPuzzleRestart)
 
+        self.miPuzzleRestartGO = wx.MenuItem(self.mPuzzle, wx.ID_ANY, "Start Over (&Givens Only)",
+                                             "Restart the current puzzle", wx.ITEM_NORMAL)
+        self.mPuzzle.Append(self.miPuzzleRestartGO)
+        parent.Bind(wx.EVT_MENU, self.on_puzzle_restart_go, self.miPuzzleRestartGO)
+
         self.miPuzzleGiveUp = wx.MenuItem(self.mPuzzle, wx.ID_ANY, "Start &New",
                                           "Give up current puzzle", wx.ITEM_NORMAL)
         self.mPuzzle.Append(self.miPuzzleGiveUp)
@@ -488,7 +493,7 @@ class MainMenubar(wx.MenuBar):
         self.mHelp.Append(self.miHelpGuide)
         parent.Bind(wx.EVT_MENU, self.on_help_guide, self.miHelpGuide)
 
-        #Which menu items are enabled in which non-interim (async) states
+        # Which menu items are enabled in which non-interim (async) states
         #                                           IDLE,  ENTER, SOLVE, PAUSE
         self.MIS = {self.miPuzzleGenerate:        [True,  False, False, False],
                     self.miPuzzleEnter:           [True,  True,  False, False],
@@ -502,7 +507,8 @@ class MainMenubar(wx.MenuBar):
                     self.miPuzzleHintClearer:     [False, False, True,  False],
                     self.miPuzzleHintClearest:    [False, False, True,  False],
                     self.miPuzzleListSoln:        [False, False, True,  False],
-                    self.miPuzzleRestart:         [True,  False, True,  False],
+                    self.miPuzzleRestart:         [False, False, True,  False],
+                    self.miPuzzleRestartGO:       [False, False, True,  False],
                     self.miPuzzleGiveUp:          [False, False, True,  False],
                     self.miPuzzleExit:            [True,  True,  True,  False],
                     self.miViewZoomTiny:          [True,  True,  True,  False],
@@ -582,7 +588,10 @@ class MainMenubar(wx.MenuBar):
         self.Parent.Sudoku.gen_event(EV_SC_LSN)
 
     def on_puzzle_restart(self, e):
-        self.Parent.Sudoku.gen_event(EV_SC_RST)
+        self.Parent.Sudoku.gen_event(EV_SC_RST, GO = False)
+
+    def on_puzzle_restart_go(self, e):
+        self.Parent.Sudoku.gen_event(EV_SC_RST, GO = True)
 
     def on_puzzle_give_up(self, e):
         self.Parent.Sudoku.gen_event(EV_SC_FIN, True)  # cleanup is true
