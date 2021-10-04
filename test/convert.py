@@ -17,7 +17,7 @@ def convert():
             i = 0
             Test = 0
             while 1:
-                Line = f.readline()
+                Line= f.readline()
                 i += 1
                 print(f"{perf_counter():f}: Processing Line {i}, Test: {Test}")
                 if not Line: break

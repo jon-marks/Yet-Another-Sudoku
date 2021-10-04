@@ -128,11 +128,12 @@ def cell_val_has_conflicts(grid, r, c, val = 0):
     return True
 
 def link_house(N0, N1):
+    # N0 and N1 must be linked, else erroneous LK_BOX cand be returned.
     r0, c0 = N0; r1, c1 = N1
     if r0 == r1: return LK_ROW
     if c0 == c1: return LK_COL
-    if r0//3 == r1//3 and c0//3 == c1//3: return LK_BOX
-    return LK_NONE
+    # if r0//3 == r1//3 and c0//3 == c1//3: return LK_BOX
+    return LK_BOX
 
 
 def token_link(Lk):
@@ -257,14 +258,12 @@ def cells_that_see_all_of(Cells):
     # any other cell, the cells to be seen, and the cell that is doing the seeing
     # all need to be in the same chute.
 
-    Cells1 = []; RowGrp = ColGrp = False
+    Cells1 = []
     for r, c in Cells:
         if isinstance(r, int) and isinstance(c, int): Cells1.append((r, c))
         elif isinstance(c, int):
-            if len(r) > 1: RowGrp = True
             for r0 in r: Cells1.append((r0, c))
         elif isinstance(r, int):
-            if len(c) > 1: ColGrp = True
             for c0 in c: Cells1.append((r, c0))
 
     sR = set(); sC = set(); sF = set(); sT = set()
@@ -292,7 +291,6 @@ def cells_that_see_all_of(Cells):
     rtn = set()
     if len(sF) == 1:  # cells are all on the same floor.
         for r0 in sR:
-            if RowGrp: rtn = set(); break  # only groups along the rows valid here
             for c0 in range(9):
                 if (r0, c0) in Cells1: continue
                 for r1, c1 in Cells1:
@@ -304,7 +302,6 @@ def cells_that_see_all_of(Cells):
 
     if len(sT) == 1:  # cells are all in the same tower
         for c0 in sC:
-            if ColGrp: rtn = set(); break  # only groups along the col valid here.
             for r0 in range(9):
                 if (r0, c0) in Cells1: continue
                 for r1, c1 in Cells1:
@@ -434,18 +431,22 @@ def ccells_are_linked(RC1, Cand1, RC2, Cand2, Cands, Orient = LK_ANY):
                             if Cand1 in Cands[r][c]: return LK_WEAK
                     return LK_STWK
     # if R1iR2 and Orient & LK_ROW:  # if the rows intersect
-    if R1iR2 and len(R1uR2) == 1 and Orient & LK_ROW:  # if the rows intersect
-        for r in sorted(R1iR2):
-            for c in range(9):
-                if (r, c) in Ccells: continue
-                if Cand1 in Cands[r][c]: return LK_WEAK
+    # if R1iR2 and len(R1uR2) == 1 and Orient & LK_ROW:  # if the rows intersect
+    if len(R1uR2) == 1 and Orient & LK_ROW:  # if the rows intersect
+        # for r in sorted(R1iR2):
+        r = list(R1iR2)[0]
+        for c in range(9):
+            if (r, c) in Ccells: continue
+            if Cand1 in Cands[r][c]: return LK_WEAK
         return LK_STWK
     # if C1iC2 and Orient  & LK_COL:  # if the columns intersect
-    if C1iC2 and len(C1uC2) == 1 and Orient & LK_COL:  # if the columns intersect
-        for c in sorted(C1iC2):
-            for r in range(9):
-                if (r, c) in Ccells: continue
-                if Cand1 in Cands[r][c]: return LK_WEAK
+    # if C1iC2 and len(C1uC2) == 1 and Orient & LK_COL:  # if the columns intersect
+    if len(C1uC2) == 1 and Orient & LK_COL:  # if the columns intersect
+        # for c in sorted(C1iC2):
+        c = list(C1iC2)[0]
+        for r in range(9):
+            if (r, c) in Ccells: continue
+            if Cand1 in Cands[r][c]: return LK_WEAK
         return LK_STWK
     return LK_NONE
 
