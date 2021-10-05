@@ -295,8 +295,8 @@ def _bent_subset_elims(Cells, UCands, Cands, Step, Method):
     else:  # NrCells == 4
         TwoCands = FourCands = 0
         for NrCand in NrCands:
-            if NrCands == 2: TwoCands += 1
-            elif NrCands == 4: FourCands += 1
+            if NrCand == 2: TwoCands += 1
+            elif NrCand == 4: FourCands += 1
         if Method == T_WXYZ_WING and TwoCands == 3 and FourCands == 1: Step[P_TECH] = T_WXYZ_WING
         elif Method == T_BENT_EXPOSED_QUAD: Step[P_TECH] = T_BENT_EXPOSED_QUAD
         else: return False
