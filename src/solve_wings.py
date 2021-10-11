@@ -20,6 +20,24 @@ def tech_gl_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and Method != T_GL_W_WING: return -2
     return _w_wings(Grid, Step, Cands, AIC = 2, GrpLks = True)
 
+def tech_y_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_Y_WING: return -2
+    return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_Y_WING)
+
+def tech_xyz_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_XYZ_WING: return -2
+    return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_XYZ_WING)
+
+def tech_wxyz_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_WXYZ_WING: return -2
+    return _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_WXYZ_WING)
+
+def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_BENT_EXPOSED_QUAD: return -2
+    return _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_BENT_EXPOSED_QUAD)
+
+
+
 def _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = False):
     # Defined by two bi-value cells with the same candidates that cannot
     # directly "see each other, but are connected by a strong link on one of the
@@ -81,14 +99,6 @@ def _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = False):
                         return 0
     return -1
 
-def tech_y_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_Y_WING: return -2
-    return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_Y_WING)
-
-def tech_xyz_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_XYZ_WING: return -2
-    return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_XYZ_WING)
-
 def _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
     # a bent (exposed) triple can only be either a Y-Wing or a XYZ-Wing.
     # Note that in a bent triple, the pincers (URC) cells can only have 2 pincers
@@ -143,14 +153,6 @@ def _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
                         if len(Cands[ra][ca]) == 2 and len(U | Cands[ra][ca]) == 3:
                             if _bent_subset_elims(BT+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Method): return 0
     return -1
-
-def tech_wxyz_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_WXYZ_WING: return -2
-    return _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_WXYZ_WING)
-
-def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_BENT_EXPOSED_QUAD: return -2
-    return _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_BENT_EXPOSED_QUAD)
 
 
 def _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):

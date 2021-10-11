@@ -7,7 +7,8 @@ from solve_singles import *
 from solve_subsets import *
 from solve_fish import *
 from solve_wings import *
-from solve_chains import *
+from solve_x_chains import *
+from solve_xy_chains import *
 
 
 
@@ -54,7 +55,9 @@ Techniques = [tech_exposed_singles,
               tech_other_x_chains,  # never before three link X-Chains
               tech_even_x_loops,         # never before X-Wings
               tech_strong_x_loops,
-              # tech_xy_chains,
+              tech_remote_pairs,
+              tech_xy_chains,
+              tech_xy_loops,
               tech_kraken_x_wings,  # kraken fish never before finned fish
               tech_kraken_swordfish,
               tech_kraken_jellyfish,

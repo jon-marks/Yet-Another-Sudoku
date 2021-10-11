@@ -1,0 +1,184 @@
+from copy import deepcopy
+
+from globals import *
+from solve_utils import *
+
+REV = 0
+FWD  = 1
+
+def tech_remote_pairs(Grid, Step, Cands, Method = T_UNDEF):
+
+    if Method != T_UNDEF and Method != T_REMOTE_PAIR: return -2
+
+    class RPNE:  # Remote Pair node element
+        def __init__(self, r = -1, c = -1, AltLk = -1, ConnNodes = None):
+            self.r = r
+            self.c = c
+            self.AltLk = AltLk
+            self.ConnNodes = [] if ConnNodes is None else ConnNodes
+
+    class RPBVLE:  # Remote Pair Bi-Value Net lists element, BVList = [RPBVLE, ...]
+        def __init__(self, RPCands = None, RPN = None):
+            self.RPCands = set() if RPCands is None else RPCands
+            self.RPNoList = [] if RPN is None else [RPN, ]
+            self.RPNeList = []
+
+    # build a list of bi-value cells.
+    BVL0 = []
+    for r in range(9):
+        for c in range(9):
+            if len(Cands[r][c]) == 2:
+                for RPBVLElem in BVL0:
+                    if Cands[r][c] == RPBVLElem.RPCands:
+                        RPBVLElem.RPNoList.append(RPNE(r, c))
+                        break
+                else: BVL0.append(RPBVLE(Cands[r][c], RPNE(r, c)))
+
+    for BVL in BVL0:
+        if len(BVL.RPNoList) < 4: continue
+
+        for i in range(len(BVL.RPNoList)-1):
+            Ni = BVL.RPNoList[i]
+            if Ni.AltLk >= 0: continue
+            Ni.AltLk = 0
+            for j in range(i+1, len(BVL.RPNoList)):
+                Nj = BVL.RPNoList[j]
+                if Nj.AltLk >= 0: continue
+                if Ni.r == Nj.r or Ni.c == Nj.c or (Ni.r//3 == Nj.r//3 and Ni.c//3 == Nj.c//3):
+                    Ni.AltLk = 0; Nj.AltLk = 1
+                    Ni.ConnNodes.append(Nj)
+                    BVL.RPNeList.append([Ni, Nj])
+                    _next_net_node(BVL, Ni, REV)
+                    _next_net_node(BVL, Nj, FWD)
+            if BVL.RPNeList and len(BVL.RPNeList[-1]) > 3:
+                if _remote_pair_elims(BVL, Cands, Step): return 0
+    return -1
+
+def _next_net_node(BVL, Ni, Dir = FWD):
+
+    for Nj in BVL.RPNoList:
+        if Nj.AltLk >= 0: continue
+        if Ni.r == Nj.r or Ni.c == Nj.c or (Ni.r//3 == Nj.r//3 and Ni.c//3 == Nj.c//3):
+            Nj.AltLk = (Ni.AltLk+1) & 0x01
+            if Dir == FWD:
+                Ni.ConnNodes.append(Nj)
+                BVL.RPNeList[-1].append(Nj)
+                _next_net_node(BVL, Nj, FWD)
+            else:
+                Nj.ConnNodes.append(Ni)
+                BVL.RPNeList[-1].insert(0, Nj)
+                _next_net_node(BVL, Nj, REV)
+
+def _remote_pair_elims(BVL, Cands, Step):
+
+    CandI = set()
+    for r in range(9):
+        for c in range(9):
+            CandI = Cands[r][c] & BVL.RPCands
+            if CandI:
+                Found1Alt = -1
+                for N in BVL.RPNeList[-1]:
+                    if (r, c) != (N.r, N.c) and (r == N.r or c == N.c or (r//3 == N.r//3 and c//3 == N.c//3)):  # If CandI is not part of the net
+                        if Found1Alt == -1: Found1Alt = N.AltLk
+                        elif Found1Alt != N.AltLk:
+                            #  Found CandI that can be eliminated.
+                            Cands[r][c] -= CandI
+                            if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+                            Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, CandI]])
+    if Step[P_OUTC]:
+        Step[P_OUTC].append([P_END, ])
+        Step[P_TECH] = T_REMOTE_PAIR
+        Cand1, Cand2 = sorted(BVL.RPCands)
+        Step[P_PTRN] = [[P_OP, OP_PARO], [P_VAL, Cand1], [P_OP, OP_SLK], [P_VAL, Cand2], [P_OP, OP_PARC], [P_OP, OP_PARO]]
+        # N = BVL.RPNeList[-1][0]
+        walk_subnets(BVL.RPNeList[-1][0], Step[P_PTRN])
+        Step[P_PTRN].append([P_OP, OP_PARC])
+        return True
+    return False
+
+def walk_subnets(N, Ptrn):
+
+    while N:
+        if Ptrn[-1] != [P_OP, OP_PARO] and Ptrn[-1] != [P_CON, ]: Ptrn.append([P_OP, OP_WSLK])
+        Ptrn.extend([[P_ROW, N.r], [P_COL, N.c]])
+        NrNodes = len(N.ConnNodes)
+        if NrNodes == 0: break
+        if NrNodes == 1: N = N.ConnNodes[0]; continue
+        #  else:  NrNodes > 1
+        Ptrn.extend([[P_OP, OP_WSLK],[P_OP, OP_PARO]])
+        for N0 in N.ConnNodes:
+            if Ptrn[-1] != [P_OP, OP_PARO]: Ptrn.append([P_CON, ])
+            walk_subnets(N0, Ptrn)
+        Ptrn.append([P_OP, OP_PARC])
+        break
+
+def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
+    # 1. Build a list of BV cells.
+    # 2. Search the BV list for 2 cells with common candidates not in the same house.
+    # 3. If those common candidates result in an elimination, attempt to build an XY- chain out of
+    #    the cells in the BV list.
+
+    class BVCell:
+        def __init__(self, r = -1, c = -1, Cands = None):
+            self.r = r; self.c = c; self.Cands = Cands
+
+    class XYCUC:
+        def __init__(self):
+            XY  = []    # XY-chain or XY-loop being built
+            OE  = []    # Other end of the XY-Chain/loop
+            UN  = []    # list of used ccells in the XY-Chain/loop
+            EL  = []    # Ccells to eliminate if an XY Chain can be made.
+
+    BVL = []
+    for r in range(9):
+        for c in range(9):
+            if len(Cands[r][c]) == 2: BVL.append(BVCell(r, c, Cands[r][c]))
+
+    lenBVL = len(BVL)
+    XYCStarts = []
+    for i in range(lenBVL-1):
+        # ri = BVList[i].r; ci = BVList[i].c; Candi = BVList[i].Cands
+        for j in range(i+1, lenBVL):
+            UN = []  # Used ccells
+            EL = []  # Eliminated ccells
+            # rj = BVList[j].r; cj = BVList[i].c; Candj = BVList[j].Cands
+            # EN = [(BVL[i].r, BVL[i].c, BVL[i].Cands), (BVL[j].r, BVL[j].c, BVL[j].Cands)]
+            for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
+                for r0, c0 in cells_that_see_all_of([(BVL[i].r, BVL[i].c), (BVL[j].r, BVL[j].c)]):
+                    UN = [(BVL[i].r, BVL[i].c, Cand), (BVL[i].r, BVL[i].c, BVL[i].Cands ^ Cand), (BVL[j].r, BVL[j].c, Cand), (BVL[i].r, BVL[i].c, BVL[j].Cands ^ Cand)]
+                    if (r0, c0, Cand) in UN: continue
+                    if Cand in Cands[r0][c0]: EL.append((r0, r1, Cand))
+                if EL:
+                    X = XYCUC()
+                    X.XY.extend([(BVL[i].r, BVL[i].c, Cand, LK_STRG), (BVL[i].r, BVL[i].c, BVL[i].Cands ^ Cand, -1)])
+                    X.OE.extend([(BVL[j].r, BVL[j].c, BVL[j].Cands ^ Cand, LK_STRG), (BVL[i].r, BVL[i].c, Cand, -1)])
+                    X.UN = UN
+                    X.EL = EL
+                    XYCStarts.append(deepcopy(X))
+            Candi = CandiBVList[i].Cands & BVList[j].Cands
+            # for Cand in sorted(Candi):
+
+
+
+
+    return -1
+
+def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
+
+    return -1
+
+def find_same_val_bival_cells(Cands):
+    # return a list of chains of same value bi-value-cells.
+
+    find_bival_cells(Cands)
+
+    return -1
+
+
+def find_bival_cells(Cands):
+    # returns a list of all bi-value cells in the grid of the form [(r, c, {cand1, cand2}), ...]
+
+    BVList = []
+    for r in range(9):
+        for c in range(9):
+            if len(Cands[r][c]) == 2: BVList.append((r, c, Cands[r][c]))

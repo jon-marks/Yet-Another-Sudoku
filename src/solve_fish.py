@@ -3,6 +3,42 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
+def tech_finned_x_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_FINNED_X_WING: return -2
+    return _finned_x_wings(Grid, Step, Cands, T_FINNED_X_WING, AIC = 0, GrpLks = False)
+
+def tech_kraken_x_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_X_WING: return -2
+    return _finned_x_wings(Grid, Step, Cands, T_KRAKEN_X_WING, AIC = 2, GrpLks = False)
+
+def tech_gl_kraken_x_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_GL_KRAKEN_X_WING: return -2
+    return _finned_x_wings(Grid, Step, Cands, T_GL_KRAKEN_X_WING, AIC = 2, GrpLks = True)
+
+def tech_finned_swordfish(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_FINNED_SWORDFISH: return -2
+    return _finned_swordfish(Grid, Step, Cands, T_FINNED_SWORDFISH, AIC = 0)
+
+def tech_kraken_swordfish(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_SWORDFISH: return -2
+    return _finned_swordfish(Grid, Step, Cands, T_KRAKEN_SWORDFISH, AIC = 2, GrpLks = False)
+
+def tech_gl_kraken_swordfish(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_GL_KRAKEN_SWORDFISH: return -2
+    return _finned_swordfish(Grid, Step, Cands, T_GL_KRAKEN_SWORDFISH, AIC = 2, GrpLks = True)
+
+def tech_finned_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_FINNED_JELLYFISH: return -2
+    return _finned_jellyfish(Grid, Step, Cands, T_FINNED_JELLYFISH, AIC = 0)
+
+def tech_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_KRAKEN_JELLYFISH: return -2
+    return _finned_jellyfish(Grid, Step, Cands, T_KRAKEN_JELLYFISH, AIC = 2, GrpLks = False)
+
+def tech_gl_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
+    if Method != T_UNDEF and Method != T_GL_KRAKEN_JELLYFISH: return -2
+    return _finned_jellyfish(Grid, Step, Cands, T_GL_KRAKEN_JELLYFISH, AIC = 2, GrpLks = True)
+
 def tech_x_wings(Grid, Step, Cands, Method = T_UNDEF):
     # A X-Wing occurs when the same candidate occurs twice each in two separate
     # rows (base sets), and these candidates lie in the same two columns (cover
@@ -61,19 +97,6 @@ def tech_x_wings(Grid, Step, Cands, Method = T_UNDEF):
                 else:
                     if _elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
     return -1
-
-def tech_finned_x_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_FINNED_X_WING: return -2
-    return _finned_x_wings(Grid, Step, Cands, T_FINNED_X_WING, AIC = 0, GrpLks = False)
-
-def tech_kraken_x_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_KRAKEN_X_WING: return -2
-    return _finned_x_wings(Grid, Step, Cands, T_KRAKEN_X_WING, AIC = 2, GrpLks = False)
-
-def tech_gl_kraken_x_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_KRAKEN_X_WING: return -2
-    return _finned_x_wings(Grid, Step, Cands, T_GL_KRAKEN_X_WING, AIC = 2, GrpLks = True)
-
 
 def _finned_x_wings(Grid, Step, Cands, Method, AIC = 0, GrpLks = False):
     # The same holds true for columns instead of rows. That is the base sets are
@@ -238,18 +261,6 @@ def tech_swordfish(Grid, Step, Cands, Method = T_UNDEF):
                     else:
                         if _elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
     return -1
-
-def tech_finned_swordfish(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_FINNED_SWORDFISH: return -2
-    return _finned_swordfish(Grid, Step, Cands, T_FINNED_SWORDFISH, AIC = 0)
-
-def tech_kraken_swordfish(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_KRAKEN_SWORDFISH: return -2
-    return _finned_swordfish(Grid, Step, Cands, T_KRAKEN_SWORDFISH, AIC = 2, GrpLks = False)
-
-def tech_gl_kraken_swordfish(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_KRAKEN_SWORDFISH: return -2
-    return _finned_swordfish(Grid, Step, Cands, T_GL_KRAKEN_SWORDFISH, AIC = 2, GrpLks = True)
 
 def _finned_swordfish(Grid, Step, Cands, Method, AIC = 0, GrpLks = False):
     # TODO Need to update this description.  A Swordfish occurs when the same candidate occurs only 2 or 3 times

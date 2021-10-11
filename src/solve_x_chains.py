@@ -18,7 +18,6 @@ def tech_gl_three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and not (Method == T_GL_SKYSCRAPER or Method == T_GL_TWO_STRING_KITE or Method == T_GL_TURBOT_FISH): return -2
     return _three_link_x_chains(Grid, Step, Cands, Method, GrpLks = True)
 
-
 def tech_other_x_chains(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and Method != T_X_CHAIN: return -2
     return _x_chains(Grid, Step, Cands)
@@ -298,31 +297,19 @@ def find_x_chain_starts(Cands, GrpLks = False):
                         if Cand in Cands[r0][c0]:  EL.append((r0, c0))  # accumulate eliminations
                     if EL:
                         X = XCUC()
-                        # XCuc[i].append(XCUC())
-                        # X = XCuc[i][-1]
                         X.XC.extend([(No0, LK_STRG), (Nl0, -1)])
                         X.OE.extend([(Nl1, LK_STRG), (No1, -1)])
-                        # X.XC.extend(deepcopy([(No0, LK_STRG), (Nl0, -1)]))
-                        # X.OE.extend(deepcopy([(Nl1, LK_STRG), (No1, -1)]))
                         X.UN = UN
                         if GrpLks:
-                            # for r, c in [No0, Nl0, No1, Nl1]:
-                            #     if isinstance(r, int) and isinstance(c, int): X.UN.append((r, c))
-                            #     elif isinstance(c, int):
-                            #         for r1 in r: X.UN.append((r1, c))
-                            #     elif isinstance(r, int):
-                            #         for c1 in c: X.UN.append((r, c1))
-                            for r, c in EL:
+                             for r, c in EL:
                                 if isinstance(r, int) and isinstance(c, int): X.EL.append((r, c))
                                 elif isinstance(c, int):
                                     for r1 in r: X.EL.append((r1, c))
                                 elif isinstance(r, int):
                                     for c1 in c: X.EL.append((r, c1))
                         else: X.EL.extend(EL)
-                            # X.UN.extend([No0, Nl0, No1, Nl1])
 
                         XCuc[i].append(deepcopy(X))
-                        # XCuc[i].append(X)
     return Lks, XCuc
 
 
