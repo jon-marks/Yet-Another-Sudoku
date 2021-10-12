@@ -573,8 +573,6 @@ def _x_loop_elims(XLoop, Cand, Cands, Step, Method):
 
     # returns:  True  if eliminations
     #           False if no eliminations
-
-
     lenC = len(XLoop)
     for i in range(lenC - 1):
         (rx, cx), Lkx = XLoop[i]

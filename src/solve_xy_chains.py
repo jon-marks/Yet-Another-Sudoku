@@ -124,7 +124,7 @@ class BVCELL:  # Bi-value cell
     def __init__(self, r = -1, c = -1, Cands = None):
         self.r = r; self.c = c; self.Cands = Cands
 
-class NODE: # Node in a chain with link type to partner on right.
+class NODE:  # Node in a chain with link type to partner on right.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
 
@@ -144,7 +144,6 @@ def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and not (Method == T_XY_CHAIN or Method == T_Y_WING): return -2
 
     BVL, XYC0 = _find_xy_chain_starts(Cands)
-
     while XYC0:
         XYC1 = []
         for X in XYC0:
@@ -172,6 +171,36 @@ def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
         XYC0 = XYC1
     return -1
 
+def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
+
+    if Method != T_UNDEF and Method != T_XY_LOOP: return -2
+
+    BVL, XYL0 = _find_xy_loop_starts(Cands)
+    while XYL0:
+        XYL1 = []
+        for X in XYL0:
+            for BVC in BVL:
+                for Cell in X.UC:
+                    if Cell.r == BVC.r and Cell.c == BVC.c: break
+                else:  # BVC is not in the UC list
+                    if X.XY[-1].Cand not in BVC.Cands: continue
+                    Lk = ccells_are_linked((X.XY[-1].r, X.XY[-1].c), X.XY[-1].Cand, (BVC.r, BVC.c), X.XY[-1].Cand, Cands)
+                    if Lk == LK_NONE: continue
+                    # BVC is linked to XY, connect it.
+                    X1 = deepcopy(X)
+                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                    X1.XY.extend([NODE(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODE(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
+                    # Does this newly added BVC connect to the OE.
+                    Lk = ccells_are_linked((X1.XY[-1].r, X1.XY[-1].c), X1.XY[-1].Cand, (X1.OE[0].r, X1.OE[0].c), X1.OE[0].Cand, Cands)
+                    if Lk == LK_NONE:
+                        X1.UC.append(CELL(BVC.r, BVC.c))
+                        XYL1.append(X1)
+                    else:
+                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                        X1.XY.extend(X.OE)
+                        if _xy_loop_elims(X1, Cands, Step): return 0
+        XYL0 = XYL1
+    return -1
 
 def _find_xy_chain_starts(Cands):
 
@@ -192,18 +221,40 @@ def _find_xy_chain_starts(Cands):
                     if CELL(r0, c0) not in UC and Cand in Cands[r0][c0]: EL.append(CCELL(r0, c0, Cand))
                 if EL:
                     X = XYCUC()
-                    Cands0 = BVL[i].Cands
-                    abcd = Cands0 ^ {Cand}
-                    abce = abcd.pop()
-                    node0 = NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG)
-                    node1 = NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)
-                    X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG), NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
-                    X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG), NODE(BVL[i].r, BVL[i].c, Cand, -1)])
+                    X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG),
+                                 NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
+                    X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
+                                 NODE(BVL[j].r, BVL[j].c, Cand, LK_NONE)])
                     X.UC = UC
                     X.EL = EL
                     XYCStarts.append(deepcopy(X))
     return BVL, XYCStarts
 
+def _find_xy_loop_starts(Cands):
+
+    BVL = []
+    for r in range(9):
+        for c in range(9):
+            if len(Cands[r][c]) == 2:  BVL.append(BVCELL(r, c, Cands[r][c]))
+
+    lenBVL = len(BVL)
+    XYLStarts = []
+    for i in range(lenBVL-1):
+        for j in range(i+1, lenBVL):
+            UC = []
+            for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
+                UC = [CELL(BVL[i].r, BVL[i].c), CELL(BVL[j].r, BVL[j].c)]
+                Lk = ccells_are_linked((BVL[i].r, BVL[i].c), Cand, (BVL[j].r, BVL[j].c), Cand, Cands)
+                if Lk == LK_NONE: continue
+                X = XYCUC()
+                X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG),
+                             NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
+                X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
+                             NODE(BVL[j].r, BVL[j].c, Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST),
+                             NODE(BVL[i].r, BVL[i].c, Cand, LK_NONE)])
+                X.UC = UC
+                XYLStarts.append(deepcopy(X))
+    return BVL, XYLStarts
 
 def _xy_chain_elims(X, Cands, Step):
 
@@ -218,29 +269,49 @@ def _xy_chain_elims(X, Cands, Step):
     while 1:
         Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],
                              [P_ROW, X.XY[i].r], [P_COL, X.XY[i].c]])
-        if X.XY[i+1].Lk == -1: Step[P_PTRN].append([P_END, ]); break
+        if X.XY[i+1].Lk == LK_NONE: Step[P_PTRN].append([P_END, ]); break
         Step[P_PTRN].append([P_OP, OP_WLK if X.XY[i+1].Lk == LK_WEAK else OP_WSLK])
         i += 2
     return True
 
+def _xy_loop_elims(X, Cands, Step):
 
+    for i in range(len(X.XY)):
+        if X.XY[i].Lk & LK_WEAK:  # captures both LK_WEAK and LK_WKST
+            r = X.XY[i].r; c = X.XY[i].c; Cand = X.XY[i].Cand
+            if r == X.XY[i+1].r:  # house is a row
+                for c in sorted(set(range(9)) - {c, X.XY[i+1].c}):
+                    if Cand in Cands[r][c]:
+                        Cands[r][c].discard(Cand)
+                        if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+                        Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+            elif c == X.XY[i+1].c:  # house is a col
+                for r in sorted(set(range(9))-{r, X.XY[i+1].r}):
+                    if Cand in Cands[r][c]:
+                        Cands[r][c].discard(Cand)
+                        if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+                        Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+            else:  # house is a box
+                for rb in range((r//3)*3, 3):
+                    for cb in range((c//3)*3, 3):
+                        if (rb == r and cb == c) or (rb == X.XY[i+1].r and cb == X.XY[i+1].c): continue
+                        if Cand in Cands[rb][cb]:
+                            Cands[rb][cb].discard(Cand)
+                            if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+                            Step[P_OUTC].extend([[P_ROW, rb], [P_COL, cb], [P_OP, OP_ELIM], [P_VAL, Cand]])
+    if Step[P_OUTC]:
+        Step[P_OUTC].append([P_END, ])
+        Step[P_TECH] = T_XY_LOOP
+        Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * KRAKEN_LK_DIFF
+        i = 0
+        while 1:
+            Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],
+                                 [P_ROW, X.XY[i].r], [P_COL, X.XY[i].c]])
+            Step[P_PTRN].append([P_OP, OP_WLK if X.XY[i+1].Lk == LK_WEAK else OP_WSLK])
+            if X.XY[i+2].Lk == LK_NONE:
+                Step[P_PTRN].extend([[P_VAL, X.XY[0].Cand], [P_ROW, X.XY[0].r], [P_COL, X.XY[0].c], [P_END, ]])
+                break
+            i += 2
+        return True
+    return False
 
-def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
-
-    return -1
-
-def find_same_val_bival_cells(Cands):
-    # return a list of chains of same value bi-value-cells.
-
-    find_bival_cells(Cands)
-
-    return -1
-
-
-def find_bival_cells(Cands):
-    # returns a list of all bi-value cells in the grid of the form [(r, c, {cand1, cand2}), ...]
-
-    BVList = []
-    for r in range(9):
-        for c in range(9):
-            if len(Cands[r][c]) == 2: BVList.append((r, c, Cands[r][c]))

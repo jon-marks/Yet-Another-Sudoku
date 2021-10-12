@@ -9,7 +9,7 @@ LK_NONE = 0x0000   # must be 0, code relies on this.
 LK_WEAK = 0x0001
 LK_STRG = 0x0002
 LK_STWK = 0x0003   # a strong link is also a weak link.
-LK_WKST = 0x0004   # strong link masquerading as a weak link
+LK_WKST = 0x0007   # strong link masquerading as a weak link
 
 # Link orientation enumerations
 LK_ROW = 0x0010
@@ -62,7 +62,7 @@ T = {T_EXPOSED_SINGLE:              ["Exposed Single", LVL_BEGINNER, 5],
      T_STRONG_X_LOOP:               ["Strong X-Loop", LVL_PROFICIENT, 70],
      T_REMOTE_PAIR:                 ["Remote Pair", LVL_ACCOMPLISHED, 80],
      T_XY_CHAIN:                    ["XY-Chain", LVL_ACCOMPLISHED, 80],
-     T_XY_LOOP:                     ["XY_Loop", LVL_ACCOMPLISHED, 80],
+     T_XY_LOOP:                     ["XY-Loop", LVL_ACCOMPLISHED, 80],
      T_KRAKEN_X_WING:               ["Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
      T_KRAKEN_SWORDFISH:            ["Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
      T_KRAKEN_JELLYFISH:            ["Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
