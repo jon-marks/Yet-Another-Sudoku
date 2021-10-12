@@ -293,8 +293,9 @@ def find_x_chain_starts(Cands, GrpLks = False):
                     else: EN = [No0, No1]
                     EL = []  # eliminations
                     for r0, c0 in cells_that_see_all_of([No0, No1]):
-                        if (r0, c0) in EN: continue  # disallow overlapping nodes
-                        if Cand in Cands[r0][c0]:  EL.append((r0, c0))  # accumulate eliminations
+                        # if (r0, c0) in EN: continue  # disallow overlapping nodes
+                        # if Cand in Cands[r0][c0]:  EL.append((r0, c0))  # accumulate eliminations
+                        if (r0, c0) not in EN and Cand in Cands[r0][c0]: EL.append((r0, c0))  # accumulate eliminations
                     if EL:
                         X = XCUC()
                         X.XC.extend([(No0, LK_STRG), (Nl0, -1)])
@@ -542,36 +543,27 @@ def find_single_cand_strong_links(Cand, Cands, GrpLks = False):
     return Lks
 
 def _x_chain_elims(X, Cand, Cands, Step, Method):
-    # returns:  True if eliminations
-    #           False if no eliminations
+    # returns:  always True because it is only called when there are elims to be made.
 
-    # LenC = len(X.XC)
-    # (re0, ce0), le0 = XChain[0]; (re1, ce1), le1 = XChain[LenC-1]
-    # print(f"Cand:{Cand}, Xchain: {XChain}")
-    # if ce0 == {3, 4}:
-    #     print ("Help!")
     for r0, c0 in X.EL:  # cells_that_see_all_of([(re0, ce0), (re1, ce1)]):
-        if Cand in Cands[r0][c0]:
-            Cands[r0][c0].discard(Cand)
-            if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-            Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
-    if Step[P_OUTC]:
-        Step[P_OUTC].append([P_END, ])
-        Step[P_TECH] = Method
-        Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_PARO]])
-        NrLks = NrGrpLks = 0
-        for (r0, c0), lk0 in X.XC:
-            if not isinstance(r0, int) and len(r0) > 1: NrGrpLks += 1
-            if not isinstance(c0, int) and len(c0) > 1: NrGrpLks += 1
-            NrLks += 1
-            if lk0 == -1:
-                Step[P_PTRN].extend([[P_ROW, r0], [P_COL, c0]])
-            else:
-                Step[P_PTRN].extend([[P_ROW, r0], [P_COL, c0], [P_OP, token_link(lk0)]])
-        Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + (NrLks - NrGrpLks) * KRAKEN_LK_DIFF + NrGrpLks * GRP_LK_DIFF
-        Step[P_PTRN].extend([[P_OP, OP_PARC], [P_END, ]])
-        return True
-    return False
+        Cands[r0][c0].discard(Cand)
+        if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+        Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+    Step[P_OUTC].append([P_END, ])
+    Step[P_TECH] = Method
+    Step[P_PTRN].extend([[P_VAL, Cand], [P_OP, OP_PARO]])
+    NrLks = NrGrpLks = 0
+    for (r0, c0), lk0 in X.XC:
+        if not isinstance(r0, int) and len(r0) > 1: NrGrpLks += 1
+        if not isinstance(c0, int) and len(c0) > 1: NrGrpLks += 1
+        NrLks += 1
+        if lk0 == -1:
+            Step[P_PTRN].extend([[P_ROW, r0], [P_COL, c0]])
+        else:
+            Step[P_PTRN].extend([[P_ROW, r0], [P_COL, c0], [P_OP, token_link(lk0)]])
+    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + (NrLks - NrGrpLks) * KRAKEN_LK_DIFF + NrGrpLks * GRP_LK_DIFF
+    Step[P_PTRN].extend([[P_OP, OP_PARC], [P_END, ]])
+    return True
 
 def _x_loop_elims(XLoop, Cand, Cands, Step, Method):
     # In any AIC loop (X-Loop is a type of AIC loop), all Candidates in the houses of the weak

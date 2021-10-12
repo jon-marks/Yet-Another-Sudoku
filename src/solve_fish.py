@@ -443,18 +443,6 @@ def tech_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
                             if _elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
     return -1
 
-def tech_finned_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_FINNED_JELLYFISH: return -2
-    return _finned_jellyfish(Grid, Step, Cands, T_FINNED_JELLYFISH, AIC = 0)
-
-def tech_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_KRAKEN_JELLYFISH: return -2
-    return _finned_jellyfish(Grid, Step, Cands, T_KRAKEN_JELLYFISH, AIC = 2, GrpLks = False)
-
-def tech_gl_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_KRAKEN_JELLYFISH: return -2
-    return _finned_jellyfish(Grid, Step, Cands, T_GL_KRAKEN_JELLYFISH, AIC = 2, GrpLks = True)
-
 def _finned_jellyfish(Grid, Step, Cands, Method, AIC = 0, GrpLks = False):
     # AIC == 0:  only look for a weak link between the ccells.
     # AIC == 1:  only look for a weak link and between the ccells or the

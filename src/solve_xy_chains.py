@@ -105,12 +105,35 @@ def walk_subnets(N, Ptrn):
         if NrNodes == 0: break
         if NrNodes == 1: N = N.ConnNodes[0]; continue
         #  else:  NrNodes > 1
-        Ptrn.extend([[P_OP, OP_WSLK],[P_OP, OP_PARO]])
+        Ptrn.extend([[P_OP, OP_WSLK], [P_OP, OP_PARO]])
         for N0 in N.ConnNodes:
             if Ptrn[-1] != [P_OP, OP_PARO]: Ptrn.append([P_CON, ])
             walk_subnets(N0, Ptrn)
         Ptrn.append([P_OP, OP_PARC])
         break
+
+class CELL:
+    def __init__(self, r = -1, c = -1):
+        self.r = r; self.c = c
+
+class CCELL:  # CCell.
+    def __init__(self, r = -1, c = -1, Cand = -1):
+        self.r = r; self.c = c; self.Cand = Cand
+
+class BVCELL:  # Bi-value cell
+    def __init__(self, r = -1, c = -1, Cands = None):
+        self.r = r; self.c = c; self.Cands = Cands
+
+class NODE: # Node in a chain with link type to partner on right.
+    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
+        self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
+
+class XYCUC:
+    def __init__(self):
+        self.XY  = []    # XY-chain or XY-loop being built
+        self.OE  = []    # Other end of the XY-Chain/loop
+        self.UC  = []    # list of used cells in the XY-Chain/loop
+        self.EL  = []    # Ccells to eliminate if an XY Chain can be made.
 
 def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
     # 1. Build a list of BV cells.
@@ -118,50 +141,89 @@ def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
     # 3. If those common candidates result in an elimination, attempt to build an XY- chain out of
     #    the cells in the BV list.
 
-    class BVCell:
-        def __init__(self, r = -1, c = -1, Cands = None):
-            self.r = r; self.c = c; self.Cands = Cands
+    if Method != T_UNDEF and not (Method == T_XY_CHAIN or Method == T_Y_WING): return -2
 
-    class XYCUC:
-        def __init__(self):
-            XY  = []    # XY-chain or XY-loop being built
-            OE  = []    # Other end of the XY-Chain/loop
-            UN  = []    # list of used ccells in the XY-Chain/loop
-            EL  = []    # Ccells to eliminate if an XY Chain can be made.
+    BVL, XYC0 = _find_xy_chain_starts(Cands)
+
+    while XYC0:
+        XYC1 = []
+        for X in XYC0:
+            # Find a BV cell to add to the XY chain being built and see if it can connect to the OE (other end)
+            for BVC in BVL:
+                for Cell in X.UC:
+                    if Cell.r == BVC.r and Cell.c == BVC.c: break
+                else:  # BVC is not in the UC list.
+                    if X.XY[-1].Cand not in BVC.Cands: continue
+                    Lk = ccells_are_linked((X.XY[-1].r, X.XY[-1].c), X.XY[-1].Cand, (BVC.r, BVC.c), X.XY[-1].Cand, Cands)
+                    if Lk == LK_NONE: continue
+                    # BVC is linked to XY, connect it.
+                    X1 = deepcopy(X)
+                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                    X1.XY.extend([NODE(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODE(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
+                    # Does this newly added BVC connect to the OE.
+                    Lk = ccells_are_linked((X1.XY[-1].r, X1.XY[-1].c), X1.XY[-1].Cand, (X1.OE[0].r, X1.OE[0].c), X1.OE[0].Cand, Cands)
+                    if Lk == LK_NONE:
+                        X1.UC.append(CELL(BVC.r, BVC.c))
+                        XYC1.append(X1)
+                    else:
+                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                        X1.XY.extend(X.OE)
+                        if _xy_chain_elims(X1, Cands, Step): return 0
+        XYC0 = XYC1
+    return -1
+
+
+def _find_xy_chain_starts(Cands):
 
     BVL = []
     for r in range(9):
         for c in range(9):
-            if len(Cands[r][c]) == 2: BVL.append(BVCell(r, c, Cands[r][c]))
+            if len(Cands[r][c]) == 2: BVL.append(BVCELL(r, c, Cands[r][c]))
 
     lenBVL = len(BVL)
     XYCStarts = []
     for i in range(lenBVL-1):
-        # ri = BVList[i].r; ci = BVList[i].c; Candi = BVList[i].Cands
         for j in range(i+1, lenBVL):
-            UN = []  # Used ccells
+            UC = []  # Used cells
             EL = []  # Eliminated ccells
-            # rj = BVList[j].r; cj = BVList[i].c; Candj = BVList[j].Cands
-            # EN = [(BVL[i].r, BVL[i].c, BVL[i].Cands), (BVL[j].r, BVL[j].c, BVL[j].Cands)]
             for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
+                UC = [CELL(BVL[i].r, BVL[i].c), CELL(BVL[j].r, BVL[j].c)]
                 for r0, c0 in cells_that_see_all_of([(BVL[i].r, BVL[i].c), (BVL[j].r, BVL[j].c)]):
-                    UN = [(BVL[i].r, BVL[i].c, Cand), (BVL[i].r, BVL[i].c, BVL[i].Cands ^ Cand), (BVL[j].r, BVL[j].c, Cand), (BVL[i].r, BVL[i].c, BVL[j].Cands ^ Cand)]
-                    if (r0, c0, Cand) in UN: continue
-                    if Cand in Cands[r0][c0]: EL.append((r0, r1, Cand))
+                    if CELL(r0, c0) not in UC and Cand in Cands[r0][c0]: EL.append(CCELL(r0, c0, Cand))
                 if EL:
                     X = XYCUC()
-                    X.XY.extend([(BVL[i].r, BVL[i].c, Cand, LK_STRG), (BVL[i].r, BVL[i].c, BVL[i].Cands ^ Cand, -1)])
-                    X.OE.extend([(BVL[j].r, BVL[j].c, BVL[j].Cands ^ Cand, LK_STRG), (BVL[i].r, BVL[i].c, Cand, -1)])
-                    X.UN = UN
+                    Cands0 = BVL[i].Cands
+                    abcd = Cands0 ^ {Cand}
+                    abce = abcd.pop()
+                    node0 = NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG)
+                    node1 = NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)
+                    X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG), NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
+                    X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG), NODE(BVL[i].r, BVL[i].c, Cand, -1)])
+                    X.UC = UC
                     X.EL = EL
                     XYCStarts.append(deepcopy(X))
-            Candi = CandiBVList[i].Cands & BVList[j].Cands
-            # for Cand in sorted(Candi):
+    return BVL, XYCStarts
 
 
+def _xy_chain_elims(X, Cands, Step):
+
+    for Cc in X.EL:
+        Cands[Cc.r][Cc.c].discard(Cc.Cand)
+        if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+        Step[P_OUTC].extend([[P_ROW, Cc.r], [P_COL, Cc.c], [P_OP, OP_ELIM], [P_VAL, Cc.Cand]])
+    Step[P_OUTC].append([P_END, ])
+    Step[P_TECH] = T_Y_WING if len(X.XY) == 6 else T_XY_CHAIN
+    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * KRAKEN_LK_DIFF
+    i = 0
+    while 1:
+        Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],
+                             [P_ROW, X.XY[i].r], [P_COL, X.XY[i].c]])
+        if X.XY[i+1].Lk == -1: Step[P_PTRN].append([P_END, ]); break
+        Step[P_PTRN].append([P_OP, OP_WLK if X.XY[i+1].Lk == LK_WEAK else OP_WSLK])
+        i += 2
+    return True
 
 
-    return -1
 
 def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
 

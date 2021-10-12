@@ -485,7 +485,7 @@ class Sudoku:
                                           "Information",
                                           wx.ICON_INFORMATION | wx.OK)
                             oPzl = None
-                            self.gen_event(EV_SC_FIN, True)
+                            self.gen_event(EV_SC_SLV)
                             return
                         if self.ShowCands:
                             Cands = set()

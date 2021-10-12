@@ -30,12 +30,18 @@ Description:
      *  View, select or save-for-later puzzles from the cache.
 
 Notes on programming style used here:
-1.  The three major single instance classes are: TODO:  This para requires work.
+1.  The three major single instance classes are:
     Sudoku:  This class manages the overall operation of the Sudoku program as
     a state machine, coordinating the activities of the other two major objects
+
     Board: This is the man machine Interface class responsible for drawing the
     grid, receiving user input and displaying puzzle information
-    Puzzle: handles all the data associated with a puzzle and the the inputting / creation of puzzlesgeneration of An intent of the top level software design behind the code is to favour an
+
+    Puzzle: handles all the data associated with a puzzle and the the inputting
+    / creation of puzzle and holding interim state through progressions of validating
+    and/or solving puzzles.
+
+    An intent of the top level software design behind the code is to favour an
     egalitarian cluster of loosly coupled tightly contained objects rather than
     a hierachical structure of objects. Not to say that hierachy and inheritance
     are avoided when their use makes sense.
@@ -54,12 +60,14 @@ Notes on programming style used here:
     my speed testing I found list comprehensions to be about 8 times faster than
     the equivalent deepcopy()'s.
 
-3.  By convention, use enumerated dicts to emulate the quivalaent of C-like
-    typedef struct's rather rather than dataclasses.  Both afford similar
-    readability albeit dataclass syntax being more familiar.  I suspect that the
-    enumerated dicts are slightly more efficient in resources and speed, but
-    this is yet to be confirmed.
-    https://stackoverflow.com/questions/35988/c-like-structures-in-python
+3.  I started coding using enumerated dicts and lists to emulate the equivalent of C-like
+    structures, but as my experience with Python grew, I saw the reduced
+    complexity and improved readability attained by using (data) classes.  In this
+    regard the code lacks consistency with earlier work using enumerated dict and lists
+    and later work using classes.  The classes approach is preferred and encouraged
+    going forward.  (Anyone wishing to clean up the the earlier inconsist code to
+    improve maintainability and readability, please feel free).
+    https://stackoverflow.com/questions/35988/c-like-structures-in-python.
 
 4.  Note a programming style that favours processing info in tables, rather than
     writing a long lists of if / elif / else type or other algorithmic flow.
