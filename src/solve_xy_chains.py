@@ -6,6 +6,14 @@ from solve_utils import *
 REV = 0
 FWD  = 1
 
+class XYCUC:
+    def __init__(self):
+        self.XY  = []    # XY-chain or XY-loop being built
+        self.OE  = []    # Other end of the XY-Chain/loop
+        self.UC  = []    # list of used cells in the XY-Chain/loop
+        self.EL  = []    # Ccells to eliminate if an XY Chain can be made.
+
+
 def tech_remote_pairs(Grid, Step, Cands, Method = T_UNDEF):
 
     if Method != T_UNDEF and Method != T_REMOTE_PAIR: return -2
@@ -111,29 +119,6 @@ def walk_subnets(N, Ptrn):
             walk_subnets(N0, Ptrn)
         Ptrn.append([P_OP, OP_PARC])
         break
-
-class CELL:
-    def __init__(self, r = -1, c = -1):
-        self.r = r; self.c = c
-
-class CCELL:  # CCell.
-    def __init__(self, r = -1, c = -1, Cand = -1):
-        self.r = r; self.c = c; self.Cand = Cand
-
-class BVCELL:  # Bi-value cell
-    def __init__(self, r = -1, c = -1, Cands = None):
-        self.r = r; self.c = c; self.Cands = Cands
-
-class NODE:  # Node in a chain with link type to partner on right.
-    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
-        self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
-
-class XYCUC:
-    def __init__(self):
-        self.XY  = []    # XY-chain or XY-loop being built
-        self.OE  = []    # Other end of the XY-Chain/loop
-        self.UC  = []    # list of used cells in the XY-Chain/loop
-        self.EL  = []    # Ccells to eliminate if an XY Chain can be made.
 
 def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
     # 1. Build a list of BV cells.

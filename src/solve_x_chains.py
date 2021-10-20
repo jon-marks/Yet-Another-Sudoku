@@ -74,7 +74,6 @@ def _x_chains(Grid, Step, Cands, GrpLks = False):
     # to a longer chain length  XCuc ==> X-Chain under construction structure.
 
     Lks, XCuc = find_x_chain_starts(Cands, GrpLks)
-
     CandsXC = {1, 2, 3, 4, 5, 6, 7, 8, 9}
     while CandsXC:
         # Each iteration attempts to add another strong link to the remaining chains.  If the link
@@ -112,7 +111,7 @@ def _x_chains(Grid, Step, Cands, GrpLks = False):
                         Lk = ccells_are_linked(Nb, Cand, Noe, Cand, Cands)
                         if Lk != LK_NONE:
                             X1.XC[-1] = (Nb, LK_WEAK if Lk == LK_WEAK else LK_WKST)
-                            X1.XC.extend(X.OE)
+                            X1.XC.extend(X1.OE)
                             if GrpLks:
                                 if _x_chain_elims(X1, Cand, Cands, Step, T_GL_X_CHAIN): return 0
                             else:
@@ -121,10 +120,12 @@ def _x_chains(Grid, Step, Cands, GrpLks = False):
                         else:
                             X1.UN.extend(Lx)
                             XCuc1.append(X1)
-            if len(XCuc1): XCuc[i] = XCuc1
-            else:
-                CandsXC.discard(Cand)
-                XCuc[i] = []
+            if not XCuc1: CandsXC.discard(Cand)
+            XCuc[i] = XCuc1
+            # if len(XCuc1): XCuc[i] = XCuc1
+            # else:
+            #     CandsXC.discard(Cand)
+            #     XCuc[i] = []
     return -1
 
 def _even_x_loops(Grid, Step, Cands, GrpLks = False):
@@ -175,7 +176,7 @@ def _even_x_loops(Grid, Step, Cands, GrpLks = False):
                         Lk = ccells_are_linked(Nb, Cand, Noe, Cand, Cands)
                         if Lk != LK_NONE:
                             X1.XC[-1] = (Nb, LK_WEAK if Lk == LK_WEAK else LK_WKST)
-                            X1.XC.extend(X.OE)
+                            X1.XC.extend(X1.OE)
                             if GrpLks:
                                 if _x_loop_elims(X1.XC, Cand, Cands, Step, T_GL_EVEN_X_LOOP): return 0
                             else:
@@ -184,10 +185,13 @@ def _even_x_loops(Grid, Step, Cands, GrpLks = False):
                         else:
                             X1.UN.extend(Lx)
                             XLuc1.append(X1)
-            if len(XLuc1): XLuc[i] = XLuc1
-            else:
-                CandsXC.discard(Cand)
-                XLuc[i] = []
+            if not XLuc1: CandsXC.discard(Cand)
+            XLuc[i] = XLuc1
+            #
+            # if XLuc1: XLuc[i] = XLuc1
+            # else:
+            #     CandsXC.discard(Cand)
+            #     XLuc[i] = []
     return -1
 
 def _strong_x_loops(Grid, Step, Cands, GrpLks = False):
@@ -227,7 +231,7 @@ def _strong_x_loops(Grid, Step, Cands, GrpLks = False):
                         Lk = ccells_are_linked(Nb, Cand, Noe, Cand, Cands)
                         if Lk != LK_NONE:
                             X1.XC[-1] = (Nb, LK_WEAK if Lk == LK_WEAK else LK_WKST)
-                            X1.XC.extend(X.OE)
+                            X1.XC.extend(X1.OE)
                             if GrpLks: return _x_loop_asnmt(X1.XC, Grid, Cand, Cands, Step, T_GL_STRONG_X_LOOP)
                             else: return _x_loop_asnmt(X1.XC, Grid, Cand, Cands, Step, T_STRONG_X_LOOP)
                         else:
@@ -261,7 +265,7 @@ def find_x_chain_starts(Cands, GrpLks = False):
     Lks  = [[], [], [], [], [], [], [], [], []]
     XCuc = [[], [], [], [], [], [], [], [], []]
     for i, Cand in enumerate(range(1, 10)):
-        Lks[i] = find_single_cand_strong_links(Cand, Cands, GrpLks)
+        Lks[i] = find_strong_single_cand_links_btwn_cells(Cand, Cands, GrpLks)
 
         lenLks = len(Lks[i])
         for l0 in range(lenLks-1):
@@ -293,22 +297,21 @@ def find_x_chain_starts(Cands, GrpLks = False):
                     else: EN = [No0, No1]
                     EL = []  # eliminations
                     for r0, c0 in cells_that_see_all_of([No0, No1]):
-                        # if (r0, c0) in EN: continue  # disallow overlapping nodes
-                        # if Cand in Cands[r0][c0]:  EL.append((r0, c0))  # accumulate eliminations
                         if (r0, c0) not in EN and Cand in Cands[r0][c0]: EL.append((r0, c0))  # accumulate eliminations
                     if EL:
                         X = XCUC()
                         X.XC.extend([(No0, LK_STRG), (Nl0, -1)])
                         X.OE.extend([(Nl1, LK_STRG), (No1, -1)])
                         X.UN = UN
-                        if GrpLks:
-                             for r, c in EL:
-                                if isinstance(r, int) and isinstance(c, int): X.EL.append((r, c))
-                                elif isinstance(c, int):
-                                    for r1 in r: X.EL.append((r1, c))
-                                elif isinstance(r, int):
-                                    for c1 in c: X.EL.append((r, c1))
-                        else: X.EL.extend(EL)
+                        X.EL = EL
+                        # if GrpLks:
+                        #      for r, c in EL:
+                        #         if isinstance(r, int) and isinstance(c, int): X.EL.append((r, c))
+                        #         elif isinstance(c, int):
+                        #             for r1 in r: X.EL.append((r1, c))
+                        #         elif isinstance(r, int):
+                        #             for c1 in c: X.EL.append((r, c1))
+                        # else: X.EL.extend(EL)
 
                         XCuc[i].append(deepcopy(X))
     return Lks, XCuc
@@ -331,7 +334,7 @@ def find_even_x_loop_starts(Cands, GrpLks = False):
     Lks  = [[], [], [], [], [], [], [], [], []]
     XLuc = [[], [], [], [], [], [], [], [], []]
     for i, Cand in enumerate(range(1, 10)):
-        Lks[i] = find_single_cand_strong_links(Cand, Cands, GrpLks)
+        Lks[i] = find_strong_single_cand_links_btwn_cells(Cand, Cands, GrpLks)
 
         lenLks = len(Lks[i])
         for l0 in range(lenLks-1):
@@ -396,8 +399,8 @@ def find_strong_x_loop_starts(Cands, GrpLks = False):
     Lks  = [[], [], [], [], [], [], [], [], []]
     XLuc = [[], [], [], [], [], [], [], [], []]
     for i, Cand in enumerate(range(1, 10)):
-        Lks[i] = find_single_cand_strong_links(Cand, Cands, GrpLks)
-
+        Lks[i] = find_strong_single_cand_links_btwn_cells(Cand, Cands, GrpLks)
+        # Note lks [i] ==> ((r, c), (r, c))  # Cand is assumed known because it was passed
         lenLks = len(Lks[i])
         for l0 in range(lenLks-1):
             N0a, N0b = Lks[i][l0]
@@ -425,122 +428,6 @@ def find_strong_x_loop_starts(Cands, GrpLks = False):
                         XLuc[i].append(X)
     return Lks, XLuc
 
-def find_single_cand_strong_links(Cand, Cands, GrpLks = False):
-
-    Lks = []
-    if GrpLks:
-        # look in rows
-        for r in range(9):
-            C = []; Twr = [set(), set(), set()]
-            for c in range(9):
-                if Cand in Cands[r][c]: C.append(c); Twr[c//3].add(c)
-            if len(C) == 2 and (((r, C[0]), (r, C[1])) not in Lks and ((r, C[1]), (r, C[0])) not in Lks):
-                Lks.append(((r, C[0]), (r, C[1])))
-            else:
-                if Twr[0] and Twr[1] and Twr[2]: continue
-                t0 = Twr[0].pop() if len(Twr[0]) == 1 else Twr[0]
-                t1 = Twr[1].pop() if len(Twr[1]) == 1 else Twr[1]
-                t2 = Twr[2].pop() if len(Twr[2]) == 1 else Twr[2]
-                if t0 and t1 and (((r, t0), (r, t1)) not in Lks and ((r, t1), (r, t0)) not in Lks):
-                    Lks.append(((r, t0), (r, t1)))
-                elif t0 and t2 and (((r, t0), (r, t2)) not in Lks and ((r, t2), (r, t0)) not in Lks):
-                    Lks.append(((r, t0), (r, t2)))
-                elif t1 and t2 and (((r, t1), (r, t2)) not in Lks and ((r, t2), (r, t1)) not in Lks):
-                        Lks.append(((r, t1), (r, t2)))
-        # look in cols
-        for c in range(9):
-            R = []; Flr = [set(), set(), set()]
-            for r in range(9):
-                if Cand in Cands[r][c]: R.append(r); Flr[r//3].add(r)
-            if len(R) == 2 and (((R[0], c), (R[1], c)) not in Lks and ((R[1], c), (R[0], c)) not in Lks):
-                Lks.append(((R[0], c), (R[1], c)))
-            else:
-                if Flr[0] and Flr[1] and Flr[2]: continue
-                f0 = Flr[0].pop() if len(Flr[0]) == 1 else Flr[0]
-                f1 = Flr[1].pop() if len(Flr[1]) == 1 else Flr[1]
-                f2 = Flr[2].pop() if len(Flr[2]) == 1 else Flr[2]
-                if f0 and f1 and (((f0, c), (f1, c)) not in Lks and ((f1, c), (f0, c)) not in Lks):
-                    Lks.append(((f0, c), (f1, c)))
-                elif f0 and f2 and (((f0, c), (f2, c)) not in Lks and ((f2, c), (f0, c)) not in Lks):
-                    Lks.append(((f0, c), (f2, c)))
-                elif f1 and f2 and (((f1, c), (f2, c)) not in Lks and ((f2, c), (f1, c)) not in Lks):
-                    Lks.append(((f1, c), (f2, c)))
-        # #look in boxes
-        for br, bc in [(0, 0), (0, 3), (0, 6), (3, 0), (3, 3), (3, 6), (6, 0), (6, 3), (6, 6)]:
-            sR = set(); sC = set()
-            for r, c in [(br, bc), (br, bc+1), (br, bc+2), (br+1, bc), (br+1, bc+1), (br+1, bc+2), (br+2, bc), (br+2, bc+1), (br+2, bc+2)]:
-                if Cand in Cands[r][c]:
-                    sR.add(r); sC.add(c)
-            if len(sR) == 2:  # 2 rows - a strong link btwn two rows in the box.
-                N = []
-                for r in sR:
-                    sC1 = set()
-                    for c in [bc, bc+1, bc+2]:
-                        if Cand in Cands[r][c]: sC1.add(c)
-                    if len(sC1) == 1: N.append((r, sC1.pop()))
-                    else: N.append((r, sC1))
-                if ((N[0], N[1]) not in Lks) and ((N[1], N[0]) not in Lks): Lks.append((N[0], N[1]))
-            if len(sC) == 2:  # 2 cols - a strong link btwn two cols in the box.
-                N = []
-                for c in sC:
-                    sR1 = set()
-                    for r in [br, br+1, br+2]:
-                        if Cand in Cands[r][c]: sR1.add(r)
-                    if len(sR1) == 1: N.append((sR1.pop(), c))
-                    else: N.append((sR1, c))
-                if ((N[0], N[1]) not in Lks) and ((N[1], N[0]) not in Lks): Lks.append((N[0], N[1]))
-            if len(sR) == len(sC) == 3:
-                n = 0; R = [0, 0, 0]; C = [0, 0, 0]
-                for r, c in [(br, bc), (br, bc+1), (br, bc+2), (br+1, bc), (br+1, bc+1), (br+1, bc+2), (br+2, bc), (br+2, bc+1), (br+2, bc+2)]:
-                    if Cand in Cands[r][c] and (Cand in Cands[(r-1)%3][c] or Cand in Cands[(r+1)%3][c] or Cand in Cands[r][(c-1)%3] or Cand in Cands[r][(c+1)%3]):
-                    # if Cand in Cands[r][c]:
-                        # r1 = c1 = -1
-                        n += 1; R[r-br] += 1; C[c-bc] += 1
-                Rs = sorted(R); Cs = sorted(C)
-                if Rs == Cs == [1, 1, 2]:
-                    r1 = c1 = -1
-                    for i in [0, 1, 2]:
-                        if R[i] > 1: r1 = i
-                        if C[i] > 1: c1 = i
-                    N1 = (br+r1, {bc+(c1+1)%3, bc+(c1+2)%3})
-                    N2 = ({br+(r1+1)%3, br+(r1+2)%3}, bc+c1)
-                    Lks.append((N1, N2))
-                if Rs == Cs == [1, 1, 3]:
-                    r1 = c1 = -1
-                    for i in [0, 1, 2]:
-                        if R[i] > 1: r1 = i
-                        if C[i] > 1: c1 = i
-                    N1 = (br+r1, {bc+(c1+1)%3, bc+(c1+2)%3})
-                    N2 = ({br+r1, br+(r1+1)%3, br+(r1+2)%3}, bc+c1)
-                    N3 = (br+r1, {bc+c1, bc+(c1+1)%3, bc+(c1+2)%3})
-                    N4 = ({br+(r1+1)%3, br+(r1+2)%3}, bc+c1)
-                    Lks.extend([(N1, N2), (N3, N4)])
-
-    else:  # No group links
-        # look in rows
-        for r in range(9):
-            C = []
-            for c in range(9):
-                if Cand in Cands[r][c]: C.append(c)
-            if len(C) == 2 and (((r, C[0]), (r, C[1])) not in Lks and ((r, C[1]), (r, C[0])) not in Lks):
-                Lks.append(((r, C[0]), (r, C[1])))
-        # look in cols
-        for c in range(9):
-            R = []
-            for r in range(9):
-                if Cand in Cands[r][c]: R.append(r)
-            if len(R) == 2 and (((R[0], c), (R[1], c)) not in Lks and ((R[1], c), (R[0], c)) not in Lks):
-                Lks.append(((R[0], c), (R[1], c)))
-        # look in boxes
-        for b in range(9):
-            rb = (b//3)*3; cb = (b%3)*3
-            B = []
-            for r in [rb, rb+1, rb+2]:
-                for c in [cb, cb+1, cb+2]:
-                    if Cand in Cands[r][c]: B.append((r, c))
-            if len(B) == 2:
-                if (B[0], B[1]) not in Lks and (B[1], B[0]) not in Lks: Lks.append(B)
-    return Lks
 
 def _x_chain_elims(X, Cand, Cands, Step, Method):
     # returns:  always True because it is only called when there are elims to be made.

@@ -268,19 +268,22 @@ T_SKYSCRAPER                = 18
 T_TWO_STRING_KITE           = 19
 T_TURBOT_FISH               = 20
 T_REMOTE_PAIR               = 21
-T_XY_CHAIN                  = 22
-T_XY_LOOP                   = 23
-T_Y_WING                    = 24
-T_W_WING                    = 25
-# T_KRAKEN_W_WING             = 26
-T_XYZ_WING                  = 27
-T_WXYZ_WING                 = 28
-T_BENT_EXPOSED_QUAD         = 29
-T_EMPTY_RECT                = 30
-T_X_CHAIN                   = 31
-T_EVEN_X_LOOP               = 32
-T_STRONG_X_LOOP             = 33
-# T_XY_CHAIN                  = 34
+T_Y_WING                    = 22
+T_W_WING                    = 23
+T_XYZ_WING                  = 24
+T_WXYZ_WING                 = 25
+T_BENT_EXPOSED_QUAD         = 26
+T_EMPTY_RECT                = 27
+T_X_CHAIN                   = 28
+T_EVEN_X_LOOP               = 29
+T_STRONG_X_LOOP             = 30
+T_XY_CHAIN                  = 31
+T_XY_LOOP                   = 32
+T_SC_AI_CHAIN               = 33
+T_DC_AI_CHAIN               = 34
+T_EVEN_AI_LOOP              = 35
+T_STRONG_AI_LOOP            = 36
+
 T_KRAKEN_X_WING             = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_SWORDFISH          = T_FINNED_SWORDFISH + T_KRAKEN
 T_KRAKEN_JELLYFISH          = T_FINNED_JELLYFISH + T_KRAKEN
@@ -294,6 +297,10 @@ T_GL_X_CHAIN                = T_X_CHAIN + T_GRPLK
 T_GL_EVEN_X_LOOP            = T_EVEN_X_LOOP + T_GRPLK
 T_GL_STRONG_X_LOOP          = T_STRONG_X_LOOP + T_GRPLK
 T_GL_XY_CHAIN               = T_XY_CHAIN + T_GRPLK
+T_GL_SC_AI_CHAIN            = T_SC_AI_CHAIN + T_GRPLK
+T_GL_DC_AI_CHAIN            = T_DC_AI_CHAIN + T_GRPLK
+T_GL_EVEN_AI_LOOP           = T_EVEN_AI_LOOP + T_GRPLK
+T_GL_STRONG_AI_LOOP         = T_STRONG_AI_LOOP + T_GRPLK
 
 T_GL_KRAKEN_X_WING          = T_KRAKEN_X_WING + T_GRPLK
 T_GL_KRAKEN_SWORDFISH       = T_KRAKEN_SWORDFISH + T_GRPLK
@@ -370,3 +377,20 @@ PR_STEPS       = 4  # The list of steps a solution path
 PR_STEPS_HISTO = 5  # Solution steps histogram
 PR_DIFF        = 6  # The difficulty of the puzzle.
 PR_NR_GVNS     = 7  # Grid containing only givens
+
+
+class CELL:
+    def __init__(self, r = -1, c = -1):
+        self.r = r; self.c = c
+
+class CCELL:  # CCell.
+    def __init__(self, r = -1, c = -1, Cand = -1):
+        self.r = r; self.c = c; self.Cand = Cand
+
+class BVCELL:  # Bi-value cell
+    def __init__(self, r = -1, c = -1, Cands = None):
+        self.r = r; self.c = c; self.Cands = Cands
+
+class NODE:  # Node in a chain with link type to partner on right.
+    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
+        self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk

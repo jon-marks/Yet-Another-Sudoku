@@ -9,7 +9,7 @@ from solve_fish import *
 from solve_wings import *
 from solve_x_chains import *
 from solve_xy_chains import *
-
+from solve_ai_chains import *
 
 
 
@@ -58,16 +58,23 @@ Techniques = [tech_exposed_singles,
               tech_remote_pairs,
               tech_xy_chains,
               tech_xy_loops,
-              tech_kraken_x_wings,  # kraken fish never before finned fish
-              tech_kraken_swordfish,
-              tech_kraken_jellyfish,
-              tech_kraken_w_wings,  # never before W-Wings.
+              tech_sc_ai_chains,
+              tech_dc_ai_chains,
+              tech_even_ai_loops,
+              tech_strong_ai_loops,
               tech_gl_w_wings,
               tech_gl_three_link_x_chains,
               tech_gl_other_x_chains,
               tech_gl_even_x_loops,
               tech_gl_strong_x_loops,
-              # tech_gl_xy_chains,
+              tech_gl_sc_ai_chains,
+              tech_gl_dc_ai_chains,
+              tech_gl_even_ai_loops,
+              tech_gl_strong_ai_loops,
+              tech_kraken_x_wings,  # kraken fish never before finned fish
+              tech_kraken_swordfish,
+              tech_kraken_jellyfish,
+              tech_kraken_w_wings,  # never before W-Wings.
               tech_gl_kraken_x_wings,
               tech_gl_kraken_swordfish,
               tech_gl_kraken_jellyfish,
@@ -120,11 +127,11 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
                         for c in range(9):
                             if G[r][c] > 0:
                                 if G[r][c] != Soln[r][c]:
-                                    print (f"Invalid Assignment: r{r}c{c}:={Soln[r][c]}.")
+                                    print (f"Invalid Assignment: r{r+1}c{c+1}:={Soln[r][c]}.")
                                     return UNDEF, Steps
                             else:
                                 if Soln[r][c] not in C[r][c]:
-                                    print (f"Invalid Elimination: r{r}c{c}-={Soln[r][c]}.")
+                                    print (f"Invalid Elimination: r{r+1}c{c+1}-={Soln[r][c]}.")
                                     return UNDEF, Steps
             break
 
@@ -141,11 +148,11 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
                     for c in range(9):
                         if G[r][c] > 0:
                             if G[r][c] != Soln[r][c]:
-                                print(f"Invalid Assignment: r{r}c{c}:={Soln[r][c]}.")
+                                print(f"Invalid Assignment: r{r+1}c{c+1}:={Soln[r][c]}.")
                                 return UNDEF, Steps
                         else:
                             if Soln[r][c] not in C[r][c]:
-                                print(f"Invalid Elimination: r{r}c{c}-={Soln[r][c]}.")
+                                print(f"Invalid Elimination: r{r+1}c{c+1}-={Soln[r][c]}.")
                                 return UNDEF, Steps
             break
         else:
