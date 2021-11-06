@@ -471,7 +471,7 @@ class Sudoku:
 
         if self.Puzzle: del self.Puzzle
         self.Puzzle = Puzzle(PZL_LOAD, oPzl)
-        NrFound, self.Puzzle.Soln = check_puzzle(self.Puzzle.Grid)
+        NrFound, self.Puzzle.Soln, self.Rsteps = check_puzzle(self.Puzzle.Grid)
         if NrFound == 1:
             for r in range(9):
                 for c in range(9):
@@ -840,7 +840,7 @@ class Sudoku:
 
         if GO and (self.OldGO != GO):
             self.StatusBar.update_0("Revalidating Puzzle, may take some time. . .")
-            NrFound, Soln = check_puzzle(self.Puzzle.Grid)
+            NrFound, Soln, Rsteps = check_puzzle(self.Puzzle.Grid)  # Rsteps discarded here
             if NrFound != 1 and not grid_compare(Soln, self.Puzzle.Soln):
                 wx.MessageBox("Givens do not form a valid puzzle\n"
                               "Information", wx.ICON_INFORMATION | wx.OK)

@@ -138,19 +138,19 @@ def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
                     if Cell.r == BVC.r and Cell.c == BVC.c: break
                 else:  # BVC is not in the UC list.
                     if X.XY[-1].Cand not in BVC.Cands: continue
-                    Lk = ccells_are_linked((X.XY[-1].r, X.XY[-1].c), X.XY[-1].Cand, (BVC.r, BVC.c), X.XY[-1].Cand, Cands)
-                    if Lk == LK_NONE: continue
+                    LkT, LkH = how_ccells_linked(X.XY[-1].r, X.XY[-1].c, X.XY[-1].Cand, BVC.r, BVC.c, X.XY[-1].Cand, Cands)
+                    if LkT == LK_NONE: continue
                     # BVC is linked to XY, connect it.
                     X1 = deepcopy(X)
-                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
                     X1.XY.extend([NODE(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODE(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
                     # Does this newly added BVC connect to the OE.
-                    Lk = ccells_are_linked((X1.XY[-1].r, X1.XY[-1].c), X1.XY[-1].Cand, (X1.OE[0].r, X1.OE[0].c), X1.OE[0].Cand, Cands)
-                    if Lk == LK_NONE:
+                    LkT, LkH = how_ccells_linked(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, X1.OE[0].r, X1.OE[0].c, X1.OE[0].Cand, Cands)
+                    if LkT == LK_NONE:
                         X1.UC.append(CELL(BVC.r, BVC.c))
                         XYC1.append(X1)
                     else:
-                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
                         X1.XY.extend(X.OE)
                         if _xy_chain_elims(X1, Cands, Step): return 0
         XYC0 = XYC1
@@ -169,19 +169,19 @@ def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
                     if Cell.r == BVC.r and Cell.c == BVC.c: break
                 else:  # BVC is not in the UC list
                     if X.XY[-1].Cand not in BVC.Cands: continue
-                    Lk = ccells_are_linked((X.XY[-1].r, X.XY[-1].c), X.XY[-1].Cand, (BVC.r, BVC.c), X.XY[-1].Cand, Cands)
-                    if Lk == LK_NONE: continue
+                    LkT, LkH = how_ccells_linked(X.XY[-1].r, X.XY[-1].c, X.XY[-1].Cand, BVC.r, BVC.c, X.XY[-1].Cand, Cands)
+                    if LkT == LK_NONE: continue
                     # BVC is linked to XY, connect it.
                     X1 = deepcopy(X)
-                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
                     X1.XY.extend([NODE(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODE(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
                     # Does this newly added BVC connect to the OE.
-                    Lk = ccells_are_linked((X1.XY[-1].r, X1.XY[-1].c), X1.XY[-1].Cand, (X1.OE[0].r, X1.OE[0].c), X1.OE[0].Cand, Cands)
-                    if Lk == LK_NONE:
+                    LkT, LkH = how_ccells_linked(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, X1.OE[0].r, X1.OE[0].c, X1.OE[0].Cand, Cands)
+                    if LkT == LK_NONE:
                         X1.UC.append(CELL(BVC.r, BVC.c))
                         XYL1.append(X1)
                     else:
-                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST)
+                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
                         X1.XY.extend(X.OE)
                         if _xy_loop_elims(X1, Cands, Step): return 0
         XYL0 = XYL1
@@ -199,9 +199,10 @@ def _find_xy_chain_starts(Cands):
     for i in range(lenBVL-1):
         for j in range(i+1, lenBVL):
             UC = []  # Used cells
-            EL = []  # Eliminated ccells
+            # EL = []  # Eliminated ccells
             for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
                 UC = [CELL(BVL[i].r, BVL[i].c), CELL(BVL[j].r, BVL[j].c)]
+                EL = []  # Eliminated ccells
                 for r0, c0 in cells_that_see_all_of([(BVL[i].r, BVL[i].c), (BVL[j].r, BVL[j].c)]):
                     if CELL(r0, c0) not in UC and Cand in Cands[r0][c0]: EL.append(CCELL(r0, c0, Cand))
                 if EL:
@@ -229,13 +230,13 @@ def _find_xy_loop_starts(Cands):
             UC = []
             for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
                 UC = [CELL(BVL[i].r, BVL[i].c), CELL(BVL[j].r, BVL[j].c)]
-                Lk = ccells_are_linked((BVL[i].r, BVL[i].c), Cand, (BVL[j].r, BVL[j].c), Cand, Cands)
-                if Lk == LK_NONE: continue
+                LkT, LkH = how_ccells_linked(BVL[i].r, BVL[i].c, Cand, BVL[j].r, BVL[j].c, Cand, Cands)
+                if LkT == LK_NONE: continue
                 X = XYCUC()
                 X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG),
                              NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
                 X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
-                             NODE(BVL[j].r, BVL[j].c, Cand, LK_WEAK if Lk == LK_WEAK else LK_WKST),
+                             NODE(BVL[j].r, BVL[j].c, Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST),
                              NODE(BVL[i].r, BVL[i].c, Cand, LK_NONE)])
                 X.UC = UC
                 XYLStarts.append(deepcopy(X))
@@ -276,7 +277,9 @@ def _xy_loop_elims(X, Cands, Step):
                         Cands[r][c].discard(Cand)
                         if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
                         Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-            else:  # house is a box
+
+            if r//3  == X.XY[i+1].r//3 and c//3 == X.XY[i+1].c//3:  # house is a box, can also overlap with row or col.
+            # else:  # house is a box
                 for rb in range((r//3)*3, 3):
                     for cb in range((c//3)*3, 3):
                         if (rb == r and cb == c) or (rb == X.XY[i+1].r and cb == X.XY[i+1].c): continue

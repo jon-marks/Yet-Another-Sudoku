@@ -4,46 +4,46 @@ import os
 from globals import *
 from misc import grid_str_to_grid, grid_to_grid_str
 from generate import check_puzzle
+from solve import logic_solve_puzzle
+from solve_utils import T, T_DIFF
 
 
 
 def batch_solve():
-    with open("bat-data/sudoku.txt", "rt") as f:
+    with open("bat-data/puzzle-1.0-in.txt", "rt") as f:
         with open ("bat-data/puzzles1.txt", "wt") as f1:
             i = 0; sSt = ""
+            f1.write("# Puzzle                                                                          Solution                                                                          Chk Time  Val Time  Diff  Level        Chk Steps\n")
             while 1:
-                 # if sSt:
-                t = perf_counter()
-                d = int(t//86400)
-                h = int(t%86400//3600)
-                m = int(t%3600//60)
-                s = t%60
-                print(f"{d},{h:02d}:{m:02d}:{s:06.3f}|{i}|{sSt}")
+                t1 = perf_counter()
                 i += 1
-                Line = f.readline()
-                if not Line: break
-                (Line, Hash, Comment) = Line.partition("#")
-                if Line == "\n": continue
-                Line = Line.strip().split(",")
-                # line is now a two element array of pzl and soln.
-                Pzl = [[0 for c in range(9)] for r in range(9)]
-                if not grid_str_to_grid(Line[0], Pzl):
-                    sSt =  f"# Warning: {i}: cannot translate grid_str_to_grid: {line}"
-                    f1.write(f"{sSt}\n")
+                sPzl = f.readline()
+                if not sPzl: break
+                if sPzl == "\n" or sPzl[0] == "#": continue
+                Pzl = [[int(sPzl[(r*9)+c]) if sPzl[(r*9)+c].isdigit() else 0 for c in range(9)] for r in range(9)]
+                Found, Soln, Rsteps = check_puzzle(Pzl)
+                if Found != 1:
+                    f1.write(f"{sPzl[:81]}  *** INVALID PUZZLE!\n")
                     continue
-                Soln = {S_FOUND:0, S_GRID: None}
-                check_puzzle(Pzl, Soln)
-                if Soln[S_FOUND] != 1:
-                    sSt = f"# Warning: {i}: Invalid puzzle, {Soln[S_FOUND]} soultions: {Line}"
-                    f1.write(f"{sSt}\n")
+                sSoln = ""
+                for r in range(9):
+                    for c in range(9):
+                        sSoln += str(Soln[r][c])
+                t2 = perf_counter()
+                Lvl, Steps = logic_solve_puzzle(Pzl, None, None, Soln)
+                if Lvl < 0:
+                    f1.write(f"{sPzl[:81]} {sSoln}  *** BUG: Error in logic soln!\n")
                     continue
-                sSoln = grid_to_grid_str(Soln[S_GRID])
-                if len(Line) > 1 and Line[1] != sSoln:
-                    sSt = f"# Warning: {i}: Different Solution found: {sSoln}: {line}"
-                    f1.write(f"{sSt}\n")
-                    continue
-                sSt = f"{grid_to_grid_str(Pzl)},{sSoln}"
-                f1.write(f"{sSt}\n")
+                Diff = 0
+                for Step in Steps:
+                    Diff += T[Step[P_TECH]][T_DIFF] if Step[P_DIFF] == 0 else Step[P_DIFF]
+                t3 = perf_counter()
+                ta = t2 - t1
+                tb = t3 - t2
+                sTChk = f"{int(ta//60):02d}:{ta%60:06.3f}"
+                sTVal = f"{int(ta//3600):02d}:{int((tb%3600)//60):02d}:{tb%60:06.3f}"
+
+                f1.write(f"{sPzl[:81]} {sSoln} {sTChk} {sTVal} {Diff: 5d} {LVLS[Lvl]:12s} {Rsteps: 9}\n")
                 f1.flush()
 
 if __name__ == "__main__":

@@ -11,9 +11,9 @@ if DEBUG:
 
 def check_puzzle(Grid):
 
-    St = {S_FOUND: 0, S_GRID: None}
+    St = {S_FOUND: 0, S_GRID: None, S_RSTP: 1}
     _check_puzzle(Grid, St)
-    return St[S_FOUND], St[S_GRID]
+    return St[S_FOUND], St[S_GRID], St[S_RSTP]
 
 
 
@@ -55,6 +55,7 @@ def _check_puzzle(Grid, Soln, cell = 0):
     for v in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
         if cell_val_has_no_conflicts(v, Grid, r, c):
             Grid[r][c] = v
+            Soln[S_RSTP] += 1
             if _check_puzzle(Grid, Soln, cell+1):
                 Grid[r][c] = 0
                 return True
@@ -157,7 +158,7 @@ def minimalise_puzzle(G):
         v = G1[r][c]
         G1[r][c] = 0
         Soln = {S_FOUND: 0, S_GRID: None}
-        NrFound, Soln = check_puzzle(G1)
+        NrFound, Soln, Rsteps = check_puzzle(G1)  # discard Rsteps here
         if NrFound == 1:
             G[r][c] = 0
         else:
@@ -189,13 +190,14 @@ def _create_random_puzzle(Lvl, Puzzle):
         Puzzle.Givens[r][c] = 0
 
         # St = {S_FOUND: 0, S_GRID: None}
-        NrFound, Soln = check_puzzle(Puzzle.Givens)
+        NrFound, Soln, Rsteps = check_puzzle(Puzzle.Givens)
         # check_puzzle(Grid, St)  # check_puzzle() returns with unsolved puzzle preserved in Grid1
         if NrFound == 1:
             Puzzle.Lvl, Steps = logic_solve_puzzle(Puzzle.Givens)  # logic solving the puzzle does not alter grid.
             if Lvl >= Puzzle.Lvl:
                 # Puzzle.NrEmpties += 1
                 Puzzle.Steps = Steps
+                Puzzle.Rsteps = Rsteps
                 continue
         else: Puzzle.Givens[r][c] = v
 

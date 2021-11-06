@@ -286,10 +286,14 @@ def tech_empty_rects(Grid, Step, Cands, Method = T_UNDEF):
                             if Cand not in Cands[r2][c2]: continue
                             # empty rect found, what can be eliminated?
                             Elim = []
-                            if ccells_are_linked((r1, c2), Cand, (r2, c2), Cand, Cands) & LK_STRG:
-                                Elim.append((r2, c1))
-                            if ccells_are_linked((r2, c1), Cand, (r2, c2), Cand, Cands) & LK_STRG:
-                                Elim.append((r1, c2))
+                            LkT, LkH = how_ccells_linked(r1, c2, Cand, r2, c2, Cand, Cands)
+                            if LkT & LK_STRG: Elim.append((r2, c1))
+                            LkT, LkH = how_ccells_linked(r2, c1, Cand, r2, c2, Cand, Cands)
+                            if LkT & LK_STRG: Elim.append((r1, c2))
+                            # if how_ccells_linked_deprecated((r1, c2), Cand, (r2, c2), Cand, Cands) & LK_STRG:
+                            #     Elim.append((r2, c1))
+                            # if how_ccells_linked_deprecated((r2, c1), Cand, (r2, c2), Cand, Cands) & LK_STRG:
+                            #     Elim.append((r1, c2))
                             if len(Elim):
                                 Step[P_TECH] = T_EMPTY_RECT
                                 for r3, c3 in Elim:

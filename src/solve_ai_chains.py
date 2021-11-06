@@ -1,261 +1,254 @@
-from copy import deepcopy
 
 from globals import *
 from solve_utils import *
 
-class AICUC:   # AI-Chain under construction
-    def __init__(self):
-        self.ST  = []    # One end of AI-Chain/loop being built
-        self.EN  = []    # Other end of the AI-Chain/loop
-        self.UC  = []    # list of used ccells in the AI-Chain/loop
-        self.EL  = []    # Ccells to eliminate if an AI Chain can be made.
+def tech_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method not in {T_UNDEF, T_W_WING}: return -2
+    return _ai_chains(Grid, Step, Cands, T_W_WING)
+
+def tech_gl_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method not in {T_UNDEF, T_GL_W_WING}: return -2
+    return _ai_chains(Grid, Step, Cands, T_GL_W_WING, GrpLks = True)
+
+def tech_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method not in {T_UNDEF, T_KRAKEN_W_WING}: return -2
+    return _ai_chains(Grid, Step, Cands, T_KRAKEN_W_WING2)
+
+def tech_gl_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+    if Method not in {T_UNDEF, T_GL_KRAKEN_W_WING}: return -2
+    return _ai_chains(Grid, Step, Cands, T_GL_KRAKEN_W_WING, GrpLks = True)
+
+def tech_ai_chains(Grid, Step, Cands, Method = T_UNDEF):
+    if Method not in {T_UNDEF, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP}: return -2
+    return _ai_chains(Grid, Step, Cands, Method)
+
+def tech_gl_ai_chains(Grid, Step, Cands, Method = T_UNDEF):
+    if Method not in {T_UNDEF, T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP}: return -2
+    return _ai_chains(Grid, Step, Cands, Method, GrpLks = True)
 
 
-def tech_sc_ai_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_SC_AI_CHAIN: return -2
+def _ai_chains(Grid, Step, Cands, Method, GrpLks = False):
+    # Chains are found using trees.  AI-Chains need to start with strong links.
+    # There is an orchard for each candidate (AIC[i]).  In each orchard,
+    # each instance of the candidate is a potential tree trunk with up to four strong link branches.
+    #
+    # The algorithm builds this two tier strong link level across all trees in all orchards before
+    # recursing to the next level.  This approach, albeit a bit more
+    # complex tends to find a solution (if there is one) quicker than building a tree in the
+    # conventional way (one leaf at a time).  This is because the odds of finding a shorter
+    # productive (elimination/assignment producing) chain is greater than than of finding a longer
+    # productive chain.  There is no significant time difference for an unproductive search in
+    # either approach
+    #
+    # The chains being built are the paths from first branch off trunk to the leaf.  At each level,
+    # for each new leaf (node or sub-branch) checks are performed to find a productive loop and/or
+    # prune stubs or unproductive chain/loop patterns:
+    # * If no child (sub-branch) links are found for a particular branch (node), this is a stub and
+    #   is pruned.
+    # * If the chain intersects itself (ccell match, not cell match) at any location other than the
+    #   start of the chain, the chain is not valid and that node can be pruned.
+    # * If the chain intersects its start, and forms an even-loop or strong loop pattern, check for
+    #   eliminations/assignments making the loop productive.
+    # * If an unproductive loop (even or strong) is encountered, this is treated as a stub and is
+    #   pruned.
+    # * If the loop is productive, return out the recursive stack with the pattern and outcome
+    #   parameters.
+    # * if the chain leaf is a strong link to it's branch (odd length AIC) and together with the
+    #   starting link can see ccells to eliminate (either same candidate, or different candidate in
+    #   same house); return up recursive stack with pattern and outcome parameters.
+    #
+    # An unproductive search occurs when all the trees for each candidate have been pruned back to
+    # their trunks and the algorithm is stumped :-).
 
-    return _sc_ai_chains(Grid, Step, Cands, Method)
-
-def tech_dc_ai_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_DC_AI_CHAIN: return -2
-
-    return _dc_ai_chains(Grid, Step, Cands, Method)
-
-def tech_even_ai_loops(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_EVEN_AI_LOOP: return -2
-
-    return _even_ai_loops(Grid, Step, Cands, Method)
-
-def tech_strong_ai_loops(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_STRONG_AI_LOOP: return -2
-
-    return _strong_ai_loops(Grid, Step, Cands, Method)
-
-def tech_gl_sc_ai_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_SC_AI_CHAIN: return -2
-
-    return _sc_ai_chains(Grid, Step, Cands, Method, GrpLks = True)
-
-def tech_gl_dc_ai_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_DC_AI_CHAIN: return -2
-
-    return _dc_ai_chains(Grid, Step, Cands, Method, GrpLks = True)
-
-def tech_gl_even_ai_loops(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_EVEN_AI_LOOP: return -2
-
-    return _even_ai_loops(Grid, Step, Cands, Method, GrpLks = True)
-
-def tech_gl_strong_ai_loops(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_STRONG_AI_LOOP: return -2
-
-    return _strong_ai_loops(Grid, Step, Cands, Method, GrpLks = True)
-
-def _sc_ai_chains(Grid, Step, Cands, Method, GrpLks = False):
-
-    AIC0 = _find_sc_ai_chain_starts(Cands, GrpLks)
-    CandsAIC = {1, 2, 3, 4, 5, 6, 7, 8, 9}
+    ChLks = 0
+#    Lvl = 0
+    Status = STATUS()
+    SLks, AIC = _find_ai_chain_starts(Cands, GrpLks)
+#    walk_ai_trees(AIC, f"scratch/tree{Lvl}.txt")
+    CandsAIC = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     while CandsAIC:
-        for Cand in sorted(CandsAIC):
-            AIC1 = []
-            i = Cand-1
-            # for dbg1, X in enumerate(AIC0[i]):
-            for X in AIC0[i]:
-                N0 = X.ST[-1]; Noe = X.EN[0]
-                for r1, c1, Cand1, Lk1 in list_ccells_linked_to(N0.r, N0.c, N0.Cand, Cands, LK_STWK, GrpLks):
-                    UC1 = []
-                    if GrpLks:
-                        if isinstance(r1, int) and isinstance(c1, int): UC1.append((r1, c1, Cand1))
-                        elif isinstance(c1, int):
-                            for rx in r1: UC1.append((rx, c1, Cand1))
-                        elif isinstance(r1, int):
-                            for cx in c1: UC1.append((r1, cx, Cand1))
-                    else: UC1.append((r1, c1, Cand1))
-                    for UCx in UC1:
-                        if UCx in X.UC: break
-                    else:
-                        for r2, c2, Cand2, Lk2 in list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks):
-                            UC2 = []
-                            if GrpLks:
-                                if isinstance(r2, int) and isinstance(c2, int): UC2.append((r2, c2, Cand2))
-                                elif isinstance(c2, int):
-                                    for rx in r2: UC2.append((rx, c2, Cand2))
-                                elif isinstance(r2, int):
-                                    for cx in c2: UC2.append((r2, cx, Cand2))
-                            else: UC2.append((r2, c2, Cand2))
-                            for UCx in UC2:
-                                if UCx in X.UC: break
-                            else:
-                                X1 = deepcopy(X)
-                                X1.ST[-1].Lk = Lk1
-                                X1.ST.extend([NODE(r1, c1, Cand1, LK_STRG), NODE(r2, c2, Cand2, LK_NONE)])
-                                # can this newly added strong link connect to the other ENd?
-                                Lk = ccells_are_linked((r2, c2), Cand2, (Noe.r, Noe.c), Noe.Cand, Cands)
-                                if Lk != LK_NONE:
-                                    X1.ST[-1].Lk = LK_WEAK if Lk == LK_WEAK else LK_WKST
-                                    X1.ST.extend(X1.EN)
-                                    _aic_elims(X1, Cands, Step, T_GL_SC_AI_CHAIN if GrpLks else T_SC_AI_CHAIN)
-                                    return 0
-                                else:
-                                    X1.UC.extend(UC1 + UC2)
-                                    AIC1.append(X1)
-            if AIC1: AIC0[i] = AIC1
-            else:
-                CandsAIC.discard(Cand)
-                AIC0[i] = []
+#        Lvl += 1
+        for i, Cand in enumerate([1, 2, 3, 4, 5, 6, 7, 8, 9]):
+            if AIC[i]:
+                AIC[i] = _find_next_aic_nodes(SLks, AIC[i], Cands, GrpLks, ChLks+1, Method, Status)
+                if Status.Tech != T_UNDEF: return _ai_chain_elims(Status, Grid, Cands, Step)
+                if not AIC[i]: CandsAIC.remove(Cand)
+#        walk_ai_trees(AIC, f"scratch/tree{Lvl}.txt")
     return -1
 
-def _dc_ai_chains(Grid, Step, Cands, Method, GrpLks = False):
+def _find_ai_chain_starts(Cands, GrpLks = False):
+    # Plants the trees in the candidate orchards, each tree can have upto four strong link branches
+    # (row, col, box, and cell).
 
-    # AICDC0 = _find_dc_ai_chain_starts(Cands, GrpLks)
-
-    return -1
-
-def _even_ai_loops(Grid, Step, Cands, Method, GrpLks = False):
-
-    return -1
-
-def _strong_ai_loops(Grid, Step, Cands, Method, GrpLks = False):
-
-    return -1
-
-
-def _find_sc_ai_chain_starts(Cands, GrpLks = False):
-    # find same candidate value
-    # Note that it is much simpler to handle UC and EL lists as tuples rather than CCELL classes.
-
-    # Lks   = [[], [], [], [], [], [], [], [], []]
+    SLks = [[], [], [], [], [], [], [], [], []]
     AICuc = [[], [], [], [], [], [], [], [], []]
-    for i, Cand0 in enumerate(range(1, 10)):
-        Lks = find_all_strong_cand_links(Cand0, Cands, GrpLks)
+    for i, Cand in enumerate(range(1, 10)):
+        SLks[i] = find_all_strong_cand_links(Cand, Cands, GrpLks)
+        NSLks = len(SLks[i])
+        UCS0 = []
+        for j in range(NSLks):
+            ((r0, c0, Cand0), (r1, c1, Cand1)) = SLks[i][j]
+            if (r0, c0, Cand0) in UCS0: continue
+            UCS0.append((r0, c0, Cand0))
+            N = TNODE(r0, c0, Cand0, LK_NONE, None, None, None)
+            N.Children = [TNODE(r1, c1, Cand1, LK_STRG, [(r0, c0, Cand0, LK_STRG)], N, None)]
+            UCS1 = [(r1, c1, Cand1)]
+            for k in range(j+1, NSLks):
+                # up to four slks possible (row, col, box and cell), scan the rest of the SLks for them
+                ((r2, c2, Cand2), (r3, c3, Cand3)) = SLks[i][k]
+                if not are_same_ccells(r0, c0, Cand0, r2, c2, Cand2, GrpLks): continue  # only looking for branches off trunk (r0, c0, Cand0)
+                if (r3, c3, Cand3) in UCS1: continue  # dup SLk, skip.
+                UCS1.append((r3, c3, Cand3))
+                N.Children.append(TNODE(r3, c3, Cand3, LK_STRG, [(r0, c0, Cand0, LK_STRG)], N, None))
+            AICuc[i].append(N)
+    return SLks, AICuc
 
-        lenLks = len(Lks)
-        for l0 in range(lenLks-1):
-            (Cc0o, Cc0l) = Lks[l0]  # Cc0o: open end of link 0, Cc0l: linked end of link 0
-            for l1 in range(l0+1, lenLks):
-                (Cc1o, Cc1l) = Lks[l1]
-                if Cc0o == Cc1l and Cc0l == Cc1o: continue
-                UC = []
-                if GrpLks:
-                    for (r, c, Cand) in [Cc0o, Cc0l, Cc1o, Cc1l]:
-                        if isinstance(r, int) and isinstance(c, int): UC.append((r, c, Cand))
-                        elif isinstance(c, int):
-                            for r1 in r: UC.append((r1, c, Cand))
-                        elif isinstance(r, int):
-                            for c1 in c: UC.append((r, c1, Cand))
-                else: UC = [Cc0o, Cc0l, Cc1o, Cc1l]
-                if len(UC) != len(set(UC)): continue  # if UC contains duplicate links the chain start are touching which is not valid.
-                EN = []  # end nodes
-                if GrpLks:
-                    for (r, c, Cand) in [Cc0o, Cc1o]:
-                        if isinstance(r, int) and isinstance(c, int): EN.append((r, c, Cand))
-                        elif isinstance(c, int):
-                            for r1 in r: EN.append((r1, c, Cand))
-                        elif isinstance(r, int):
-                            for c1 in c: EN.append((r, c1, Cand))
-                else: EN = [Cc0o, Cc1o]
-                EL = []  # are there any eliminations?
-                (r0o, c0o, Cand0o) = Cc0o; (r1o, c1o, Cand1o) = Cc1o
-                for r0, c0 in cells_that_see_all_of([(r0o, c0o), (r1o, c1o)]):
-                    if Cand0 in Cands[r0][c0]: EL.append((r0, c0, Cand0))
-                    # if (r0, c0, Cand0) not in EN and Cand0 in Cands[r0][c0]: EL.append((r0, c0, Cand0))
-                if EL:
-                    (r0l, c0l, Cand0l) = Cc0l; (r1l, c1l, Cand1l) = Cc1l
-                    X = AICUC()
-                    X.ST.extend([NODE(r0o, c0o, Cand0o, LK_STRG), NODE(r0l, c0l, Cand0l, LK_NONE)])
-                    X.EN.extend([NODE(r1l, c1l, Cand1l, LK_STRG), NODE(r1o, c1o, Cand1o, LK_NONE)])
-                    X.UC = UC
-                    X.EL = EL
-                    AICuc[i].append(deepcopy(X))
-    return AICuc
 
-def _find_dc_ai_chain_starts(Cands, GrpLks = False):
-    # seek out two same value candidates in a house first.
+def _find_next_aic_nodes(SLks, Children, Cands, GrpLks, ChLks, Method, Status):
+    # Note: Pruning is achieved by not copying a child branch from the Children list to the Kids list.
 
-    AICDCStarts = []
-    # look in rows first
-    for r in range(9):
-        for c0 in range(8):
-            for c1 in range(c0+1, 9):
-                C0iC1 = sorted(Cands[r][c0] & Cands[r][c1])
-                if len(C0iC1) != 2: continue
-                # found a potential candidate pair in a house. Do their ccells have strong links?
-
-#  loop for both cands rather than inlining the loop.
-                S0 = []; S1 = []
-                for (ra, ca, Canda, Lka) in list_ccells_linked_to(r, c0, C0iC1[0], Cands, LK_STRG, GrpLks):
-                    if ra == r: continue  # only interested in links in cols and boxes
-                    S0.extend([[NODE(r, c0, C0iC1[0], LK_STRG), NODE(ra, ca, C0iC1[0], LK_NONE)]])
-                for (ra, ca, Canda, Lka) in list_ccells_linked_to(r, c1, C0iC1[1], Cands, LK_STRG, GrpLks):
-                    if ra == r: continue
-                    S1.extend([[NODE(ra, ca, C0iC1[1], LK_STRG), NODE(r, c1, C0iC1[1], LK_NONE)]])
-                for Sa in S0:
-                    for Sb in S1:
-                        X = AICUC()
-                        X.ST = Sa
-                        X.EN = Sb
+    Kids = []
+    for C in Children:
+        if C.Children:  # Continue to recurse down the children.
+            C.Children = _find_next_aic_nodes(SLks, C.Children, Cands, GrpLks, ChLks+1, Method, Status)
+            if Status.Tech != T_UNDEF: return Children
+        else:  # at a leaf of the tree, try to grow some branches
+            i = -1
+            Lks1 = []
+            for Candx in sorted(Cands[C.r][C.c] - {C.Cand}):
+                for ((r0, c0, Cand0), (r1, c1, Cand1)) in SLks[Candx-1]:
+                    if Cand0 == Cand1 and C.r == r0 and C.c == c0: Lks1.append(((r0, c0, Cand0), (r1, c1, Cand1)))
+            for ((r0, c0, Cand0), (r1, c1, Cand1)) in [*SLks[C.Cand-1], *Lks1]:
+                for i in range(len(C.Children)):  # if the starting strong link is one of the children, remember it's index in the Children list
+                    if are_same_ccells(r0, c0, Cand0, C.Children[i].r, C.Children[i].c, C.Children[i].Cand, GrpLks):  # Found a matching starting child
+                        # the ending strong link can only intersect the starting link of the chain being built.
+                        Ch1 = [*C.Chain, *[(C.r, C.c, C.Cand, C.Lk), (r0, c0, Cand0, LK_STRG)]]
+                        pos = is_in_chain(r1, c1, Cand1, Ch1, GrpLks)
+                        if pos > 0: continue
+                else:  # Ensure the starting strong link does not intersect the chain
+                    Ch0 = [*C.Chain, *[(C.r, C.c, C.Cand, LK_NONE)]]
+                    pos = is_in_chain(r0, c0, Cand0, Ch0, GrpLks)  # LK_NONE as link to starting strong link has not been determined yet.
+                    if pos >= 0: continue
+                    # The ending strong link may only intersect the starting link of the chain being built.
+                    Ch1 = [*C.Chain, *[(C.r, C.c, C.Cand, LK_NONE), (r0, c0, Cand0, LK_STRG)]]
+                    pos = is_in_chain(r1, c1, Cand1, Ch1, GrpLks)
+                    if pos > 0: continue
+                    # if the starting strong link connects to the chain, add it to the list of children.
+                    LkT, LkH = how_ccells_linked(C.r, C.c, C.Cand, r0, c0, Cand0, Cands, GrpLks)
+                    if LkT == LK_NONE: continue
+                    if LkT != LK_WEAK: LkT = LK_WKST
+                    # C.Lk = LkT
+                    Ch0[-1] = (C.r, C.c, C.Cand, LkT)
+                    Ch1[-2] = (C.r, C.c, C.Cand, LkT)
+                    i = -1
+                if pos == 0:  # a possible Strong AI Loop found. (impossible to form if #links <5)
+                    if Method not in {T_STRONG_AI_LOOP, T_GL_STRONG_AI_LOOP}: continue
+                    if GrpLks:  # The common ccell can only be a scalar, not grouped, with group no unique cell asgnmt can be made, therefore grouped is simply invalid intersecting ccells in the chain
+                        ra, ca, Canda, Lka = Ch1[0]
+                        if not (len(ra) == len(ca) == len(r1) == len(c1) == 1): continue
+                        Status.Outcome = [(list(r1)[0], list(c1)[0], Cand1)]
+                    else:
+                        Status.Outcome = [(r1, c1, Cand1)]
+                    Status.Tech = T_GL_STRONG_AI_CHAIN if GrpLks else T_STRONG_AI_CHAIN
+                    Status.Pattern = [*Ch1, *[(r1, c1, Cand1, LK_NONE)]]
+                    return Children
+                ra, ca, Canda, Lka = Ch1[0]
+                if Method in {T_UNDEF, T_EVEN_AI_LOOP, T_GL_EVEN_AI_LOOP}:  # no intersection, check for an EVEN_AI_LOOP
+                    LkT, LkH = how_ccells_linked(ra, ca, Canda, r1, c1, Cand1, Cands, GrpLks)
+                    if LkT != LK_NONE:  # found EVEN_AI_LOOP pattern, scan for eliminations
+                        if LkT != LK_WEAK: LkT = LK_WKST
+                        Ch2 = [*Ch1[:-1], *[(r1, c1, Cand1, LkT), (ra, ca, Canda, LK_NONE)]]
+                        EL = []
+                        if LkH == LK_CELL:  # eliminations are the other candidates in the cell.
+                            if GrpLks:  # then ccell coords are scalar, not grouped
+                                r1s = list(r1)[0], c1s = list(c1)[0]
+                                EL.append((r1s, c1s, Cands[r1s][c1s] - {Cand1 | Canda}))
+                            else: EL.append((r1, c1, Cands[r1][c1] - {Cand1 | Canda}))
+                        else:  # house is a line or box
+                            for i in range(len(Ch2)-1):
+                                r2, c2, Cand2, Lk2 = Ch2[i]
+                                if Lk2 != LK_STRG:
+                                    r3, c3, Cand3, Lk3 = Ch2[i+1]
+                                    for r4, c4 in cells_that_see_all_of([(r2, c2), (r3, c3)]):  # cells_that_see_all_of handles both scalars and groups
+                                        if Canda in Cands[r4][c4]: EL.append((r4, c4, Canda))
+                        if EL:
+                            Status.Tech = T_GL_EVEN_AI_CHAIN if GrpLks else T_EVEN_AI_CHAIN
+                            Status.Pattern = Ch2
+                            Status.Outcome = EL
+                            return Children
+                if Method in {T_UNDEF, T_SC_AI_CHAIN, T_GL_SC_AI_CHAIN, T_W_WING, T_KRAKEN_W_WING, T_GL_W_WING, T_GL_KRAKEN_W_WING}:  # Strongly ended chain, same candidates check for eliminations
+                    if Canda == Cand1:  # same candidate value ending ccells
+                        EL = []
+                        for r2, c2 in cells_that_see_all_of([(r1, c1), (ra, ca)]):
+                            if Cand1 in Cands[r2][c2]: EL.append((r2, c2, Cand1))
+                        if EL:
+                            Status.Pattern = [*Ch1, *[(r1, c1, Cand1, LK_NONE)]]
+                            # does this chain match the criteria for a W-Wing. a ==> node 0, b ==> node 1, 2 ==> node -2, 1==> node -1
+                            rb, cb, Candb, Lkb = Status.Pattern[1]; r2, c2, Cand2, Lk2 = Status.Pattern[-2]
+                            if Canda != Candb and Candb == Cand2:
+                                NLks = len(Status.Pattern) - 1
+                                if NLks < 5 and Method in {T_UNDEF, T_SC_AI_CHAIN, T_GL_SC_AI_CHAIN}: Status.Tech = T_SC_AI_CHAIN
+                                elif NLks == 5 and Method in {T_UNDEF, T_W_WING, T_GL_SC_AI_CHAIN}: Status.Tech = T_W_WING
+                                elif Method in {T_UNDEF, T_KRAKEN_W_WING, T_GL_KRAKEN_W_WING}:  Status.Tech = T_KRAKEN_W_WING
+                                else: continue
+                            elif Method in {T_UNDEF, T_SC_AI_CHAIN, T_GL_SC_AI_CHAIN}: Status.Tech = T_SC_AI_CHAIN
+                            else: continue
+                            if GrpLks: Status.Tech |= T_GRPLK
+                            Status.Outcome = EL
+                            return Children
+                if Method in {T_UNDEF, T_DC_AI_CHAIN, T_GL_DC_AI_CHAIN}:  # different value candidates
+                    if Canda != Cand1:  # Different candidate value ending ccellsalen(ra)
+                        EL = []
                         if GrpLks:
-                            X.UC = [CCELL(Sa[0].r, Sa[0].c, Sa[0].Cand), CCELL(Sb[1].r, Sb[1].c, Sb[1].Cand)]
-                            if isinstance(Sa[1].r, int) and isinstance(Sa[1].c, int): X.UC.append(CCELL(Sa[1].r, Sa[1].c, Sa[1].Cand))
-                            elif isinstance(S0[1].c, int):
-                                for ra in Sa[1].r: X.UC.append(CCELL(ra, Sa[1].c, Sa[1].Cand))
-                            elif isinstance(Sa[1].r, int):
-                                for ca in Sa[1].c: X.UC.append(CCELL(Sa[1].r, ca, Sa[1].Cand))
-                            if isinstance(S1[1].r, int) and isinstance(S1.c, int): X.UC.append(CCELL(S1[1].r, S1[1].c, S1[1].Cand))
-                            elif isinstance(S1[1].c, int):
-                                for ra in S1[1].r: X.UC.append(CCELL(ra, S1[1].c, S0[1].Cand))
-                            elif isinstance(S1[1].r, int):
-                                for ca in S1[1].c: X.UC.append(CCELL(S1[1].r, ca, S1[1].Cand))
-                        else: X.UC = [CCELL(Sa[0].r, Sa[0].c, Sa[0].Cand), CCELL(Sb[1].r, Sb[1].c, Sb[1].Cand), CCELL(Sa[1].r, Sa[1].c, Sa[1].Cand), CCELL(S1[1].r, S1[1].c, S1[1].Cand)]
-                        AICDCStarts.append(deepcopy(X))
+                            if len(ra) == len(ca) == len(r1) == len(c1) == 1:  # only scalar end ccells, eliminations not possible if grouped
+                                ras = list(ra)[0]; cas = list(ca)[0]; r1s = list(r1)[0]; c1s = list(c1)[0]
+                                if ras == r1s and cas == c1s:
+                                    if len(Cands[r1][c1]) > 2: EL.append((r1s, c1s, Cands[r1s][c1s] - {Cand1 | Canda}))
+                                elif cells_in_same_house(ras, cas, r1s, c1s):
+                                    if Cand1 in Cands[ras][cas]: EL.append((ras, cas, Cand1))
+                                    if Canda in Cands[r1s][c1s]: EL.append((r1s, c1s, Canda))
+                        else:
+                            if ra == r1 and ca == c1:
+                                if len(Cands[r1][c1]) >2: EL.append((r1, c1, Cands[r1][c1] - {Cand1 | Canda}))
+                            elif cells_in_same_house(ra, ca, r1, c1):
+                                if Cand1 in Cands[ra][ca]: EL.append((ra, ca, Cand1))
+                                if Canda in Cands[r1][c1]: EL.append((r1, c1, Canda))
+                        if EL:
+                            Status.Tech = T_GL_DC_AI_CHAIN if GrpLks else T_DC_AI_CHAIN
+                            Status.Pattern = [*Ch1, *[(r1, c1, Cand1, LK_NONE)]]
+                            # Status.Pattern = [*C.Chain, *[(C.r, C.c, C.Cand, LK_STRG), (r, c, Cand, LK_NONE)]]
+                            Status.Outcome = EL
+                            return Children
+                # Algorithm ends up here when the strong link is part of the valid chain and there was no complete AI-Chain pattern identified and resolved.
+                if i == -1: C.Children.append(TNODE(r0, c0, Cand0, LkT, C, Ch0))
+                C.Children[i].Children.append(TNODE(r1, c1, Cand1, LK_STRG, C.Children[i], Ch1))
+        if C.Children: Kids.append(C)
+    return Kids
 
-                S0 = []; S1 = []
-                for (ra, ca, Canda, Lka) in list_ccells_linked_to(r, c0, C0iC1[1], Cands, LK_STRG, GrpLks):
-                    if ra == r: continue  # only interested in links in cols and boxes
-                    S0.extend([[NODE(r, c0, C0iC1[0], LK_STRG), NODE(ra, ca, C0iC1[1], LK_NONE)]])
-                for (ra, ca, Canda, Lka) in list_ccells_linked_to(r, c1, C0iC1[0], Cands, LK_STRG, GrpLks):
-                    if ra == r: continue
-                    S1.extend([[NODE(ra, ca, C0iC1[1], LK_STRG), NODE(r, c1, C0iC1[0], LK_NONE)]])
-                for Sa in S0:
-                    for Sb in S1:
-                        X = AICUC()
-                        X.ST = Sa
-                        X.EN = Sb
-                        if GrpLks:
-                            X.UC = [CCELL(Sa[0].r, Sa[0].c, Sa[0].Cand), CCELL(Sb[1].r, Sb[1].c, Sb[1].Cand)]
-                            if isinstance(Sa[1].r, int) and isinstance(Sa[1].c, int): X.UC.append(CCELL(Sa[1].r, Sa[1].c, Sa[1].Cand))
-                            elif isinstance(S0[1].c, int):
-                                for ra in Sa[1].r: X.UC.append(CCELL(ra, Sa[1].c, Sa[1].Cand))
-                            elif isinstance(Sa[1].r, int):
-                                for ca in Sa[1].c: X.UC.append(CCELL(Sa[1].r, ca, Sa[1].Cand))
-                            if isinstance(S1[1].r, int) and isinstance(S1.c, int): X.UC.append(CCELL(S1[1].r, S1[1].c, S1[1].Cand))
-                            elif isinstance(S1[1].c, int):
-                                for ra in S1[1].r: X.UC.append(CCELL(ra, S1[1].c, S0[1].Cand))
-                            elif isinstance(S1[1].r, int):
-                                for ca in S1[1].c: X.UC.append(CCELL(S1[1].r, ca, S1[1].Cand))
-                        else: X.UC = [CCELL(Sa[0].r, Sa[0].c, Sa[0].Cand), CCELL(Sb[1].r, Sb[1].c, Sb[1].Cand), CCELL(Sa[1].r, Sa[1].c, Sa[1].Cand), CCELL(S1[1].r, S1[1].c, S1[1].Cand)]
-                        AICDCStarts.append(deepcopy(X))
 
-        # still neeed to complete for cols and boxes.
-    return AICDCStarts
 
-def _aic_elims(X, Cands, Step, Method):
-    # returns:  always True because it is only called when there are elims to be made.
+def _ai_chain_elims(S, Grid, Cands, Step):
 
-    for r0, c0, Cand0 in X.EL:  # cells_that_see_all_of([(re0, ce0), (re1, ce1)]):
-        Cands[r0][c0].discard(Cand0)
-        if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-        Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand0]])
-    Step[P_OUTC].append([P_END, ])
-    Step[P_TECH] = Method
-    NrLks = NrGrpLks = 0
-    for N in X.ST:
-        if not isinstance(N.r, int) and len(N.r) > 1: NrGrpLks += 1
-        if not isinstance(N.c, int) and len(N.c) > 1: NrGrpLks += 1
-        NrLks += 1
-        if N.Lk == LK_NONE:
-            Step[P_PTRN].extend([[P_VAL, N.Cand], [P_ROW, N.r], [P_COL, N.c], [P_END, ]])
-        else:
-            Step[P_PTRN].extend([[P_VAL, N.Cand], [P_ROW, N.r], [P_COL, N.c], [P_OP, token_link(N.Lk)]])
-    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + (NrLks - NrGrpLks) * KRAKEN_LK_DIFF + NrGrpLks * GRP_LK_DIFF
-    return True
+    Step[P_TECH] = S.Tech
+    NLks = NGrpLks = 0
+    for r, c, Cand, Lk, in S.Pattern:
+        NLks += 1
+        if not isinstance(r, int) and len(N.r) > 1: NGrpLks += 1
+        if not isinstance(c, int) and len(N.c) > 1: NGrpLks += 1
+        if Lk == LK_NONE: Step[P_PTRN].extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_END, ]])
+        else: Step[P_PTRN].extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
+    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + (NLks - NGrpLks) * KRAKEN_LK_DIFF + NGrpLks * GRP_LK_DIFF
+    if S.Tech in {T_STRONG_AI_LOOP, T_GL_STRONG_AI_LOOP}:
+        r, c, Cand = S.Outcome[0]
+        Grid[r][c] = Cand
+        Cands[r][c].clear()
+        discard_cand_from_peers(Cand, r, c, Cands)
+        Step[P_OUTC] = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+        return 1
+    else:  # Eliminations
+        for r, c, Cand in S.Outcome:
+            Cands[r][c].discard(Cand)
+            if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
+            Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+        Step[P_OUTC].append([P_END, ])
+        return 0

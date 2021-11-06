@@ -4,21 +4,21 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
-def tech_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_W_WING: return -2
-    return _w_wings(Grid, Step, Cands, AIC = 1)
-
-def tech_gl_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_W_WING: return -2
-    return _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = True)
-
-def tech_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_W_WING: return -2
-    return _w_wings(Grid, Step, Cands, AIC = 2)
-
-def tech_gl_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-    if Method != T_UNDEF and Method != T_GL_W_WING: return -2
-    return _w_wings(Grid, Step, Cands, AIC = 2, GrpLks = True)
+# def tech_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method != T_UNDEF and Method != T_W_WING: return -2
+#     return _w_wings(Grid, Step, Cands, AIC = 1)
+#
+# def tech_gl_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method != T_UNDEF and Method != T_GL_W_WING: return -2
+#     return _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = True)
+#
+# def tech_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method != T_UNDEF and Method != T_W_WING: return -2
+#     return _w_wings(Grid, Step, Cands, AIC = 2)
+#
+# def tech_gl_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method != T_UNDEF and Method != T_GL_W_WING: return -2
+#     return _w_wings(Grid, Step, Cands, AIC = 2, GrpLks = True)
 
 def tech_y_wings(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and Method != T_Y_WING: return -2
@@ -38,66 +38,66 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
 
 
 
-def _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = False):
-    # Defined by two bi-value cells with the same candidates that cannot
-    # directly "see each other, but are connected by a strong link on one of the
-    # candidates.  Any other cells with the other candidate value that both
-    # bi-value cells see, can eliminate the other candidate value.
-
-    # scan the grid looking for bi-value cells.
-    BVList = []
-    for r in range(9):
-        for c in range(9):
-            if len(Cands[r][c]) == 2:
-                BVList.append([r, c, sorted(Cands[r][c])])
-    if len(BVList) > 1:
-        BVList = sorted(sorted(BVList, key = lambda a: a[2][1]), key = lambda a: a[2][0])
-        for i in range(len(BVList)-1):
-            r1, c1, BVCand1 = BVList[i]
-            for j in range(i+1, len(BVList)):
-                r2, c2, BVCand2 = BVList[j]
-
-                if BVCand1 != BVCand2 or cells_in_same_house(r1, c1, r2, c2): continue
-                # Here we have a pair of identical bi-value cells that are not
-                # in the same house (because list is sorted on cands, can break
-                # when cands are no longer equal
-                #
-                # Attempt to build a chain on each of the values.  For all links
-                # branching out of both BV cells, see if the other ends of the
-                # link form a strong link.
-                Cand1, Cand2 = BVCand1
-                for Cand, Candx in zip([Cand1, Cand2], [Cand2, Cand1]):
-                    Nodes = are_ccells_weakly_linked(r1, c1, Cand, r2, c2, Cand, Cands, AIC = AIC, GrpLks = GrpLks)
-                    if not Nodes: continue
-                    # for r0, c0 in cells_that_see_both(r1, c1, r2, c2):
-                    for r0, c0 in cells_that_see_all_of([(r1, c1), (r2, c2)]):
-                        if Candx in Cands[r0][c0]:
-                            Cands[r0][c0].discard(Candx)
-                            if Step[P_OUTC]:
-                                Step[P_OUTC].append([P_SEP, ])
-                            Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c0],
-                                                 [P_OP, OP_ELIM], [P_VAL, Candx]])
-                    if Step[P_OUTC]:
-                        Lks = len(Nodes) - 1
-                        NrLks = NrGrpLks = 0
-                        Step[P_TECH] = T_W_WING if Lks <= 3 else T_KRAKEN_W_WING
-                        Step[P_OUTC].append([P_END, ])
-                        Chain = []
-                        for (r, c, Cand0, Lk) in Nodes:
-                            if isinstance(r, set) or isinstance(c, set): GrpLks += 1
-                            if Lk == -1:
-                                Chain.extend([[P_VAL, Cand0], [P_ROW, r], [P_COL, c]])
-                            else:
-                                NrLks += 1
-                                Chain.extend([[P_VAL, Cand0], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
-                        Step[P_DIFF] = T[T_W_WING][T_DIFF] + (Lks - 3 - NrGrpLks) * KRAKEN_LK_DIFF + GrpLks * GRP_LK_DIFF
-                        Step[P_PTRN] = [[P_VAL, Cand1, Cand2], [P_OP, OP_EQ],
-                                        [P_ROW, r1], [P_COL, c1], [P_CON, ],
-                                        [P_ROW, r2], [P_COL, c2], [P_SEP, ]]
-                        Step[P_PTRN].extend(Chain)
-                        Step[P_PTRN].append([P_END, ])
-                        return 0
-    return -1
+# def _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = False):
+#     # Defined by two bi-value cells with the same candidates that cannot
+#     # directly "see each other, but are connected by a strong link on one of the
+#     # candidates.  Any other cells with the other candidate value that both
+#     # bi-value cells see, can eliminate the other candidate value.
+#
+#     # scan the grid looking for bi-value cells.
+#     BVList = []
+#     for r in range(9):
+#         for c in range(9):
+#             if len(Cands[r][c]) == 2:
+#                 BVList.append([r, c, sorted(Cands[r][c])])
+#     if len(BVList) > 1:
+#         BVList = sorted(sorted(BVList, key = lambda a: a[2][1]), key = lambda a: a[2][0])
+#         for i in range(len(BVList)-1):
+#             r1, c1, BVCand1 = BVList[i]
+#             for j in range(i+1, len(BVList)):
+#                 r2, c2, BVCand2 = BVList[j]
+#
+#                 if BVCand1 != BVCand2 or cells_in_same_house(r1, c1, r2, c2): continue
+#                 # Here we have a pair of identical bi-value cells that are not
+#                 # in the same house (because list is sorted on cands, can break
+#                 # when cands are no longer equal
+#                 #
+#                 # Attempt to build a chain on each of the values.  For all links
+#                 # branching out of both BV cells, see if the other ends of the
+#                 # link form a strong link.
+#                 Cand1, Cand2 = BVCand1
+#                 for Cand, Candx in zip([Cand1, Cand2], [Cand2, Cand1]):
+#                     Nodes = are_ccells_weakly_linked(r1, c1, Cand, r2, c2, Cand, Cands, AIC = AIC, GrpLks = GrpLks)
+#                     if not Nodes: continue
+#                     # for r0, c0 in cells_that_see_both(r1, c1, r2, c2):
+#                     for r0, c0 in cells_that_see_all_of([(r1, c1), (r2, c2)]):
+#                         if Candx in Cands[r0][c0]:
+#                             Cands[r0][c0].discard(Candx)
+#                             if Step[P_OUTC]:
+#                                 Step[P_OUTC].append([P_SEP, ])
+#                             Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c0],
+#                                                  [P_OP, OP_ELIM], [P_VAL, Candx]])
+#                     if Step[P_OUTC]:
+#                         Lks = len(Nodes) - 1
+#                         NrLks = NrGrpLks = 0
+#                         Step[P_TECH] = T_W_WING if Lks <= 3 else T_KRAKEN_W_WING
+#                         Step[P_OUTC].append([P_END, ])
+#                         Chain = []
+#                         for (r, c, Cand0, Lk) in Nodes:
+#                             if isinstance(r, set) or isinstance(c, set): GrpLks += 1
+#                             if Lk == -1:
+#                                 Chain.extend([[P_VAL, Cand0], [P_ROW, r], [P_COL, c]])
+#                             else:
+#                                 NrLks += 1
+#                                 Chain.extend([[P_VAL, Cand0], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
+#                         Step[P_DIFF] = T[T_W_WING][T_DIFF] + (Lks - 3 - NrGrpLks) * KRAKEN_LK_DIFF + GrpLks * GRP_LK_DIFF
+#                         Step[P_PTRN] = [[P_VAL, Cand1, Cand2], [P_OP, OP_EQ],
+#                                         [P_ROW, r1], [P_COL, c1], [P_CON, ],
+#                                         [P_ROW, r2], [P_COL, c2], [P_SEP, ]]
+#                         Step[P_PTRN].extend(Chain)
+#                         Step[P_PTRN].append([P_END, ])
+#                         return 0
+#     return -1
 
 def _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
     # a bent (exposed) triple can only be either a Y-Wing or a XYZ-Wing.

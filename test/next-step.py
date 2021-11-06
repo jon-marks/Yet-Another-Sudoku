@@ -8,20 +8,19 @@ from solve import *
 from solve_utils import *
 
 
-def convert():
+def next_step():
     #  Does more than convert the format, also tests the puzzle spec for a solution
     #  and compares the result highlighting differences.
 
-    with open("test-data/logic-step-regression-0.5.txt", "rt") as f:
-        with open("test-data/logic-step-regression-0.55.txt", "wt") as f1:
+    with open("test-data/next-step-1.0-in.txt", "rt") as f:
+        with open("test-data/next-step-1.0-out.txt", "wt") as f1:
             i = 0
             Test = 0
             while 1:
-                Line= f.readline()
+                Line = f.readline()
                 i += 1
                 print(f"{perf_counter():f}: Processing Line {i}, Test: {Test}")
                 if not Line: break
-                if Line[:7] == "Warning": continue  # or Line[:9] == "# Warning": continue
                 if Line == "\n" or Line[0] == "#":
                     f1.write(Line)
                     continue
@@ -49,4 +48,4 @@ def convert():
 
 
 if __name__ == "__main__":
-    convert()
+    next_step()

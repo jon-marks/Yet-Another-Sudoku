@@ -25,6 +25,7 @@ class Puzzle:
         self.NrEmpties = UNDEF  # used to track remaining holes to fill when solving puzzles
         self.Lvl       = UNDEF
         self.Sym       = UNDEF
+        self.Rsteps    = UNDEF  # number of recursion steps (calls) taken to validate puzzle - relates to time
 
         if INSTR == PZL_GEN:
             Lvl = args[0]; self.Sym = args[1]

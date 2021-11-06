@@ -360,6 +360,7 @@ OP_NR_OPS = 16
 # Puzzle Solution attributes
 S_FOUND = 0  # True if found, false otherwise
 S_GRID  = 1  # The solved grid if not None.
+S_RSTP  = 2  # Number of recursive steps (recursion calls) to find solution
 
 # Puzzle properties histogram attribute enums
 HT_NR    = 0  # Count of logic technique used
