@@ -143,6 +143,7 @@ class Sudoku:
         self.VagueHints  = self.ClearerHints = self.ClearestHints = 0
         self.LSW         = None      # list solution window instance.
         self.OldGO       = False     # persistent variable used only in on_restart_state.
+        self.Rsteps      = 0
 
         self.PzlDir = os.path.join(MainWindow.CWD, PUZZLES_DIR)  # where the puzzles are stored
         self.PzlFn  = ""
@@ -311,6 +312,16 @@ class Sudoku:
             self.reset()
             self.Board.clear_board()
         if not self.Grid: self.Grid = [[0 for c in range(9)] for r in range(9)]
+        # update value histogram in status bar.
+        # H = self.ValHisto = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        H = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for r in range(9):
+            for c in range(9):
+                if self.Grid[r][c]: H[(self.Grid[r][c]%10)-1] += 1
+        self.StatusBar.update_0(f"[1]={H[0]}, [2]={H[1]}, [3]={H[2]}, [4]={H[3]}, "
+                                f"[5]={H[4]}, [6]={H[5]}, [7]={H[6]}, [8]={H[7]}, "
+                                f"[9]={H[8]}")
+
 
     def on_entry_save_state(self, e):
         #  off set the value by 10 if it is not a given value.
@@ -373,15 +384,11 @@ class Sudoku:
                                 if self.Grid[r][c] < 10: Cvs |= CVS_ENTER
                                 else: Cvs |= CVS_PLACE
                             self.Board.write_cell_value(G1[r][c], r, c, Cvs)
-                    if not Cvs or Flds > 1:
-                        self.MainWindow.SetTitle(TITLE)
+                    self.MainWindow.SetTitle(TITLE)
+                    if not (Cvs & CVS_CNFLT or Flds == 1):  # Continue to edit placed and givens.
                         self.MenuBar.miPuzzleEnter.Check(False)
                         self.gen_event(EV_SC_VLD, oPzl)
                         return
-                    else:  # only givens and placed provided, remain in enter mode.
-                        self.MainWindow.SetTitle(TITLE)
-                        G = oPzl[PZL_GRID]
-                        self.MenuBar.miPuzzleEnter.Check()
             self.gen_event(EV_SC_ENT, False)
             return
 
@@ -424,6 +431,7 @@ class Sudoku:
     def on_minimalise_state(self, e):
         #  Only given/entered values are considered, placed values are lost.
         # self.History.append(deepcopy(self.Grid))
+        self.StatusBar.update_0("Minimalising Puzzle, may take some time. . .")
         G = [[self.Grid[r][c] if self.Grid[r][c] < 10 else 0 for c in range(9)] for r in range(9)]
         self.Grid = minimalise_puzzle(G)
         # self.NrConflicts = self.NrGivens = 0

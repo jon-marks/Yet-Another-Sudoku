@@ -382,7 +382,7 @@ def parse_pzl_str(sPzl, Pzl):
                               "Warning",
                               wx.ICON_WARNING | wx.OK)
                 return 0
-            Pzl[PZL_ELIMS][r][c] = Cands
+            Pzl[PZL_ELIMS][r][c] |= Cands
     if lenlG >= 3 and lG[2]:
 
         for Tx in T:  # m in range(len(T):
@@ -404,6 +404,7 @@ def parse_pzl_str(sPzl, Pzl):
 
 def parse_ccell_phrase(St):
     # only knows how to parse rycx-=digits, and rycx:=digit
+    # note that cands is always returned as a set.
 
     if St[0] != "r" or St[2] != "c": return -1, -1, -1, -1
     r = int(St[1])-1

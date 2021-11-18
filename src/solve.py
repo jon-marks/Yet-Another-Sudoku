@@ -68,11 +68,11 @@ Techniques = [tech_exposed_singles,
               tech_kraken_x_wings,  # kraken fish never before finned fish
               tech_kraken_swordfish,
               tech_kraken_jellyfish,
-              tech_kraken_w_wings,  # never before W-Wings.
+              # tech_kraken_w_wings,  # never before W-Wings.
               tech_gl_kraken_x_wings,
               tech_gl_kraken_swordfish,
               tech_gl_kraken_jellyfish,
-              tech_gl_kraken_w_wings,
+              # tech_gl_kraken_w_wings,
               ]
 
 

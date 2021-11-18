@@ -24,6 +24,7 @@ def convert():
                 if Line[:7] == "Warning": continue  # or Line[:9] == "# Warning": continue
                 if Line == "\n" or Line[0] == "#":
                     f1.write(Line)
+                    f1.flush()
                     continue
                 oPzl = {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
                 Flds = parse_pzl_str(Line, oPzl)
@@ -43,6 +44,7 @@ def convert():
                 sOutc = tkns_to_str(TStep[P_OUTC]).replace(" ", "").replace(".", "")
                 TD = Line.rstrip(" \n").split("|", 3)
                 if oPzl[PZL_METH] != TStep[P_TECH]:
+                    if len(TD) == 2: TD.append("")
                     f1.write(f"# Info: Expected: {TD[2]}; Actual: {sMeth}, line: {Line}")
                 f1.write(f"{TD[0]}|{TD[1]}|{sMeth}|{sCond}|{sOutc}\n")
                 f1.flush()
