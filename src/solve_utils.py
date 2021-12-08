@@ -7,9 +7,11 @@
 #  pattern searches using group links is required and and passing all (r, c) parameters as
 #  sets.  That is when GrpLKS is set, r and c are set objects, when GrpLks is False,
 #  r and c are scalars.
-#
+
+#  This module does not import any lower level project modules, it is a lowest level module.
 
 from copy import copy
+
 from globals import *
 
 # Link strength enumerations.
@@ -168,6 +170,26 @@ def cell_val_has_no_conflicts(v, grid, r, c):
                 return True
     return False
 
+def cell_val_has_no_conflicts1(v, grid, r, c):
+    #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
+    #  v:     IN:  value to test in the grid
+    #  grid:  IN:  grid to test value
+    #  r, c   IN:  row and column in grid for test.
+    # Check that val not in row
+    # cdef int br, bc, r1, c1
+
+    br = (r//3)*3; bc = (c//3)*3
+    for i in range(9):
+        if v == grid[r][i]: return False
+        if v == grid[i][c]: return False
+        r1 = br + i//3; c1 = bc + i%3
+        if v == grid[r1][c1]: return False
+    # for r1 in range(br, br+3):
+    #     for c1 in range(bc, bc+3):
+    #         if v == grid[r1][c1]: return False
+    return True
+
+
 def cell_val_has_conflicts(grid, r, c, val = 0):
     # if val != 0 then grid[r][c] is zero, else caller made a mistake.
     # and unpredictable results.
@@ -193,6 +215,22 @@ def cell_val_has_conflicts(grid, r, c, val = 0):
                 return False
     if not val: grid[r][c] = v
     return True
+
+def determine_cands(Grid, Elims = None):
+    # Cands is passed in as an empty 9x9 2D list of set().
+
+    NrEmpties = 0
+    Cands = [[set() for c in range(9)] for r in range(9)]
+    for r in range(9):
+        for c in range(9):
+            if not Grid[r][c]:
+                NrEmpties += 1
+                Cands0 = set(range(1, 10))
+                if Elims:  Cands0 -= Elims[r][c]
+                for Cand in Cands0:
+                    if cell_val_has_no_conflicts(Cand, Grid, r, c):
+                        Cands[r][c].add(Cand)
+    return NrEmpties, Cands
 
 def link_house(r0, c0, r1, c1, GrpLks = False):
     # ccells must be linked else erroneous LK_BOX cand be returned.

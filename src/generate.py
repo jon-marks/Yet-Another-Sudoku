@@ -1,23 +1,39 @@
 from copy import copy, deepcopy
-from random import randint, sample, seed
+from random import randint, randrange, sample, shuffle, seed
+import os, sys
+if not os.getenv("PYCHARM_HOSTED"):
+    cwd = os.getcwd()
+    sys.path.insert(0, os.path.join(cwd, "src"))
+    sys.path.insert(0, os.path.join(cwd, "lib"))
+
+if os.getenv("CYTHON"):
+    CYTHON = True
+    from solve_utils_x import cell_val_has_no_conflicts  # import solve_utils_x as sux
+else:
+    CYTHON = False
+    from solve_utils import cell_val_has_no_conflicts  #import solve_utils as su
 
 from globals import *
 from solve import *
 
-seed()
-if DEBUG:
-    import logging as log
-    seed(0)
+# from solve_utils import cell_val_has_no_conflicts, cell_val_has_no_conflicts1
+
+
+if DEBUG: seed(0)
+else: seed()
 
 def check_puzzle(Grid):
+    # This function wraps the recursive check_puzzle_rcs, because the callers
+    # want St returned, rather than passed, and that interferes with the the
+    # returning true or false through the recursion.
+    # TODO: Change St from Dict to data class/struct.
+    # THIS WRAPPING IS NOT TO BE CONFUSED WITH CYWRAP
 
-    St = {S_FOUND: 0, S_GRID: None, S_RSTP: 1}
-    _check_puzzle(Grid, St)
-    return St[S_FOUND], St[S_GRID], St[S_RSTP]
+    St = {S_FOUND: 0, S_GRID: None}
+    check_puzzle_rcs(Grid, St)
+    return St[S_FOUND], St[S_GRID]
 
-
-
-def _check_puzzle(Grid, Soln, cell = 0):
+def check_puzzle_rcs(Grid, Soln, cell = 0):
     #  Recursive backtracking function to solve a Sudoku puzzle as a check.
     #  Returns True if only one solution is found, returns False if there is no
     #  solution or more than one solution.
@@ -52,17 +68,16 @@ def _check_puzzle(Grid, Soln, cell = 0):
             Soln[S_GRID] = None
             return True  # 2nd soln found pop back out of the stack.
 
-    for v in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+    for v in range(1, 10):
         if cell_val_has_no_conflicts(v, Grid, r, c):
             Grid[r][c] = v
-            Soln[S_RSTP] += 1
-            if _check_puzzle(Grid, Soln, cell+1):
+            if check_puzzle_rcs(Grid, Soln, cell+1):
                 Grid[r][c] = 0
                 return True
     Grid[r][c] = 0
     return False
 
-def gen_filled_grid(Grid, cell = 0):
+def gen_filled_grid(Grid = None, cell = 0):
     #  Recursive backtracking function to generate a full Grid that obeys
     #  Sudoku rules
     #  Grid: In:  a complete zeroed out Grid, otherwise undefined results
@@ -73,16 +88,19 @@ def gen_filled_grid(Grid, cell = 0):
     #        Recursive call: The current cell position
     #  Returns:  True always to the non-recursive caller
 
-    if cell >= 81:
-        return True
+    if Grid is None: Grid = [[0 for c in range(9)] for r in range(9)]
+    if cell >= 81: return True
     r = cell//9
     c = cell%9
-    vals = sample(range(1, 10), k = 9)
-    for v in vals:
+    V = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    shuffle(V)
+
+    for v in V:
         if cell_val_has_no_conflicts(v, Grid, r, c):
             Grid[r][c] = v
             if gen_filled_grid(Grid, cell+1):
-                return True
+                if cell: return True
+                else: return Grid
     Grid[r][c] = 0
     return False
 
@@ -143,71 +161,70 @@ def scramble_puzzle(grid):
     else:  # R == 7
         return [[v[grid1[8-c][8-r]] for c in range(9)] for r in range(9)]
 
-def minimalise_puzzle(G):
-
+def minimalise_puzzle(G, T_H = None):
+    from misc import grid_to_grid_str
     H = []
     for r in range(9):
         for c in range(9):
             if G[r][c] != 0:
-                H.append(r*9 + c)
+                H.append((r, c))
 
+    shuffle(H)
+    if T_H: H = T_H
     G1 = [[G[r][c] for c in range(9)] for r in range(9)]
-    for hdx in sample(H, k = len(H)):
-        r = hdx//9
-        c = hdx%9
+    for r, c in H:
         v = G1[r][c]
         G1[r][c] = 0
-        Soln = {S_FOUND: 0, S_GRID: None}
-        NrFound, Soln, Rsteps = check_puzzle(G1)  # discard Rsteps here
-        if NrFound == 1:
-            G[r][c] = 0
-        else:
-            G1[r][c] = v
+        # Soln = {S_FOUND: 0, S_GRID: None}
+        NrFound, Soln = check_puzzle(G1)  # discard Rsteps here
+        if NrFound == 1: G[r][c] = 0
+        else: G1[r][c] = v
+        # print(f"[{r}][{c}]: {grid_to_grid_str(G)}")
     return G
 
-def create_puzzle(Lvl, Puzzle):
-# def create_puzzle(Soln, Lvl, Sym, Givens, Steps):
-    # Soln:     In:     The solved grid from which to dig holes.
-    # Lvl:      In:     The desired expertise level.
-    # Sym:      In:     Puzzle symmetry.
-    # Givens:   Out:    The created puzzle grid.
-    # Steps:    Out:    The logical steps to solve the puzzle.
-    # Returns:          The actual expertise level <= desired expertise level.
+def create_puzzle(Pzl, T_H = None, T_G = None):
+     # T_H and T_G used for benchmark and other testing to control randomisation.
+    Pzl.Soln = gen_filled_grid()
+    if T_G:
+        Pzl.Soln = T_G
+        CreatePuzzle[Pzl.Sym](Pzl, T_H)
+    else:
+        CreatePuzzle[Pzl.Sym](Pzl)  # returns Pzl.Givens in the Pzl data class (struct)
+        Pzl.Lvl, Pzl.Steps = logic_solve_puzzle(Pzl.Givens)
 
-    Puzzle.Givens = [[Puzzle.Soln[r][c] for c in range(9)] for r in range(9)]
-    return CreatePuzzle[Puzzle.Sym](Lvl, Puzzle)
 
-def _create_random_puzzle(Lvl, Puzzle):
-# def _create_random_puzzle(Grid, Lvl, Steps):
+def create_random_puzzle(Pzl, T_H = None):
 
-    # Puzzle.NrEmpties = 0
+    Pzl.Givens = [[Pzl.Soln[r][c] for c in range(9)] for r in range(9)]
     h = sample(range(81), k = 81)
-    # ActLvl = LVL_BEGINNER
+    # same randomisation for benchmarking.
+    if T_H: h = T_H
+
     for hdx in h:
         r = hdx//9
         c = hdx%9
-        v = Puzzle.Givens[r][c]
-        Puzzle.Givens[r][c] = 0
+        v = Pzl.Givens[r][c]
+        Pzl.Givens[r][c] = 0
 
-        # St = {S_FOUND: 0, S_GRID: None}
-        NrFound, Soln, Rsteps = check_puzzle(Puzzle.Givens)
+        NrFound, Soln = check_puzzle(Pzl.Givens)
         # check_puzzle(Grid, St)  # check_puzzle() returns with unsolved puzzle preserved in Grid1
-        if NrFound == 1:
-            Puzzle.Lvl, Steps = logic_solve_puzzle(Puzzle.Givens)  # logic solving the puzzle does not alter grid.
-            if Lvl >= Puzzle.Lvl:
-                # Puzzle.NrEmpties += 1
-                Puzzle.Steps = Steps
-                Puzzle.Rsteps = Rsteps
-                continue
-        else: Puzzle.Givens[r][c] = v
+        if NrFound != 1:  Pzl.Givens[r][c] = v
+        #
+        # if NrFound == 1:
+        #     Puzzle.Lvl, Steps = logic_solve_puzzle(Puzzle.Givens)  # logic solving the puzzle does not alter grid.
+        #     if Lvl >= Puzzle.Lvl:
+        #         # Puzzle.NrEmpties += 1
+        #         Puzzle.Steps = Steps
+        #         continue
+        # else: Puzzle.Givens[r][c] = v
 
 
-def _create_dihedral_puzzle(grid, nh, ltl, props):
-    # TODO _create_dihedral_puzzle(grid, nh, ltl, props):
+def create_dihedral_puzzle(grid, nh, ltl, props):
+    # TODO create_dihedral_puzzle(grid, nh, ltl, props):
     pass
 
-def _create_square_quad_rotated_puzzle(grid, nh, ltl, props):
-    # TODO: Needs debugging _create_square_quad_rotated_puzzle(grid, nh, ltl, props):
+def create_square_quad_rotated_puzzle(grid, nh, ltl, props):
+    # TODO: Needs debugging create_square_quad_rotated_puzzle(grid, nh, ltl, props):
 
     #  Creates a puzzle with holes where each hole in Q1 is found in the
     #  following consecutive quadrants symmetrically rotated by 90 degs
@@ -258,8 +275,8 @@ def _create_square_quad_rotated_puzzle(grid, nh, ltl, props):
             thcnt += hcnt
     return True
 
-def _create_square_quad_mirrored_puzzle(grid, nh, ltl, props):
-    # TODO: Needs debugging _create_square_quad_mirrored_puzzle
+def create_square_quad_mirrored_puzzle(grid, nh, ltl, props):
+    # TODO: Needs debugging create_square_quad_mirrored_puzzle
 
     #  Creates a puzzle with holes in Q1 mirrored in other quadrants.
     #  Q2 is a horizontal fold  mirror of Q1, Q3 is a vertical fold mirror
@@ -318,16 +335,16 @@ def _create_square_quad_mirrored_puzzle(grid, nh, ltl, props):
             thcnt += hcnt
     return True
 
-def _create_diag_quad_rotated_puzzle(grid, nh, ltl, props):
-    # TODO: _create_diag_quad_rotated_puzzle
+def create_diag_quad_rotated_puzzle(grid, nh, ltl, props):
+    # TODO: create_diag_quad_rotated_puzzle
     pass
 
-def _create_diag_quad_mirrored_puzzle(grid, nh, ltl, props):
-    # TODO: _create_diag_quad_mirrored_puzzle
+def create_diag_quad_mirrored_puzzle(grid, nh, ltl, props):
+    # TODO: create_diag_quad_mirrored_puzzle
     pass
 
-def _create_vert_rotated_puzzle(grid, nh, ltl, steps):
-    # TODO: Needs debugging _create_vert_rotated_puzzle
+def create_vert_rotated_puzzle(grid, nh, ltl, steps):
+    # TODO: Needs debugging create_vert_rotated_puzzle
 
     #  Creates a puzzle where holes in the first 4.5 columns are also found in
     #  symmetric 180 degs vertically rotated positions.  Puzzle is solvable
@@ -364,8 +381,8 @@ def _create_vert_rotated_puzzle(grid, nh, ltl, steps):
             thcnt += hcnt
     return True
 
-def _create_vert_mirrored_puzzle(grid, nh, ltl, props):
-    # TODO: Needs debugging _create_vert_mirrored_puzzle
+def create_vert_mirrored_puzzle(grid, nh, ltl, props):
+    # TODO: Needs debugging create_vert_mirrored_puzzle
 
     #  Creates a puzzle where holes in the first 4 columns are mirrored in the
     #  last 4 four columns, with up to nh holes dug.  Puzzle is solvable using
@@ -402,8 +419,8 @@ def _create_vert_mirrored_puzzle(grid, nh, ltl, props):
             thcnt += hcnt
     return True
 
-def _create_horz_rotated_puzzle(grid, nh, ltl, props):
-    # TODO: Needs debugging _create_horz_rotated_puzzle
+def create_horz_rotated_puzzle(grid, nh, ltl, props):
+    # TODO: Needs debugging create_horz_rotated_puzzle
 
     #  Creates a puzzle where holes in the first 4.5 rows are also found in
     #  symmetric 108 degs horizontally rotated positions.  Puzzle is solvable
@@ -440,8 +457,8 @@ def _create_horz_rotated_puzzle(grid, nh, ltl, props):
             thcnt += hcnt
     return True
 
-def _create_horz_mirrored_puzzle(grid, nh, ltl, props):
-    # TODO: Needs debugging _create_horz_mirrored_puzzle
+def create_horz_mirrored_puzzle(grid, nh, ltl, props):
+    # TODO: Needs debugging create_horz_mirrored_puzzle
 
     #  Creates a puzzle where holes in the first 4 rows are mirrored in the
     #  last 4 four rows.  Puzzle is solvable using the logic techniques in ltl.
@@ -477,37 +494,37 @@ def _create_horz_mirrored_puzzle(grid, nh, ltl, props):
             thcnt += hcnt
     return True
 
-def _create_diag_top_left_rotated_puzzle(grid, nh, ltl, props):
-    # TODO: _create_diag_top_left_rotated_puzzle
+def create_diag_top_left_rotated_puzzle(grid, nh, ltl, props):
+    # TODO: create_diag_top_left_rotated_puzzle
     pass
 
-def _create_diag_top_left_mirrored_puzzle(grid, nh, ltl, props):
-    # TODO: _create_diag_top_left_mirrored_puzzle
+def create_diag_top_left_mirrored_puzzle(grid, nh, ltl, props):
+    # TODO: create_diag_top_left_mirrored_puzzle
     pass
 
-def _create_diag_bot_left_rotated_puzzle(grid, nh, ltl, props):
-    # TODO: _create_diag_bot_left_rotated_puzzle
+def create_diag_bot_left_rotated_puzzle(grid, nh, ltl, props):
+    # TODO: create_diag_bot_left_rotated_puzzle
     pass
 
-def _create_horz_bot_left_mirrored_puzzle(grid, nh, ltl, props):
-    # TODO: _create_diag_bot_left_mirrored_puzzle
+def create_horz_bot_left_mirrored_puzzle(grid, nh, ltl, props):
+    # TODO: create_diag_bot_left_mirrored_puzzle
     pass
 
 # Pointer to function array for generating puzzles with symmetry types
-CreatePuzzle = [_create_random_puzzle,
-                _create_dihedral_puzzle,
-                _create_square_quad_rotated_puzzle,
-                _create_square_quad_mirrored_puzzle,
-                _create_diag_quad_rotated_puzzle,
-                _create_diag_quad_mirrored_puzzle,
-                _create_vert_rotated_puzzle,
-                _create_vert_mirrored_puzzle,
-                _create_horz_rotated_puzzle,
-                _create_horz_mirrored_puzzle,
-                _create_diag_top_left_rotated_puzzle,
-                _create_diag_top_left_mirrored_puzzle,
-                _create_diag_bot_left_rotated_puzzle,
-                _create_horz_bot_left_mirrored_puzzle]
+CreatePuzzle = [create_random_puzzle,
+                create_dihedral_puzzle,
+                create_square_quad_rotated_puzzle,
+                create_square_quad_mirrored_puzzle,
+                create_diag_quad_rotated_puzzle,
+                create_diag_quad_mirrored_puzzle,
+                create_vert_rotated_puzzle,
+                create_vert_mirrored_puzzle,
+                create_horz_rotated_puzzle,
+                create_horz_mirrored_puzzle,
+                create_diag_top_left_rotated_puzzle,
+                create_diag_top_left_mirrored_puzzle,
+                create_diag_bot_left_rotated_puzzle,
+                create_horz_bot_left_mirrored_puzzle]
 
 """
 Not so sure we don't need these functions so I'll hang on to them for the time

@@ -248,16 +248,16 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         for r in range(9):
             for c in range(9):
                 if not G1[r][c]:
-                    Cands = set()
+                    # Cands = set()
                     for Cand in range(1, 10):
                         if not cell_val_has_conflicts(G1, r, c, Cand):
                             Cands.add(Cand)
                     E1[r][c] = Cands - C[r][c]
-        if not save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), G, E1, Step):
-            wx.MessageBox("Could not save puzzle, do not know why . . .\n"
-                          "Please send saved puzzle to developers",
-                          "Warning",
-                          wx.ICON_WARNING | wx.OK)
+        save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), G, E1, Step)
+            # wx.MessageBox("Could not save puzzle, do not know why . . .\n"
+            #               "Please send saved puzzle to developers",
+            #               "Warning",
+            #               wx.ICON_WARNING | wx.OK)
 
     def on_copy_step(self, e):
         P = self.Creator.Puzzle
@@ -322,24 +322,6 @@ class UserGuide(wx.Dialog):
         wx.CallAfter(self.Destroy)
 
 def open_puzzle(Fp, Pzl):
-    # Selects a puzzle with the FileDialog opening in Cwd, and returns a loaded
-    # puzzle in grid G.  Note that the parent of the FileDialog is set to None.
-    #   Grid = [[0 for c in range(9)] for r in range(9)]
-    #   Elim = [[set() for c in range(9)] for r in range(9)]
-    #   Meth = -1
-    #   Pzl = [Grid, Elm, Meth]
-    # Parms:
-    #   Fp:  In:  a tuple containing the default directory and filename                  strings.
-    #   G:   In:  Empty grid.
-    #        Out: Populated grid if returns true, else undefined
-    #             Empty cell is 0
-    #             Given values are 1 to 9
-    #             Placed values are 11 thru 19.  (offset by 10)
-    #  E:    In:  Empty cell grid of cands to eliminate
-    #        Out: Cell grid of cands to eliminate.
-    #  M:    Out:  will return T_UNDEF if method in file is not recognised.
-    # Returns:  None:  Could not load file properly
-    #           (Dir, Fn) Tuple of successfully loaded file.
 
     dlg = wx.FileDialog(None, message = "Open A Puzzle",
                         defaultDir = Fp[0],
@@ -359,46 +341,157 @@ def open_puzzle(Fp, Pzl):
     except (OSError, IOError):
         return None, 0
 
-    Flds = parse_pzl_str(sPzl, Pzl)
-    if Flds: return os.path.split(Fs), Flds
+    NrFlds = pzl_str_to_pzl(sPzl, Pzl)
+    if NrFlds: return os.path.split(Fs), NrFlds
     else: return None, 0
 
-def parse_pzl_str(sPzl, Pzl):
+def save_puzzle(Fp, oPzl):
+
+    sG = pzl_to_pzl_str(oPzl)
+
+    dlg = wx.FileDialog(None, message = "Save A Puzzle",
+                        defaultDir = Fp[0],
+                        defaultFile = Fp[1],
+                        wildcard = FILE_WILDCARDS,
+                        style = wx.FD_SAVE | wx.FD_CHANGE_DIR | wx.FD_OVERWRITE_PROMPT)
+    if dlg.ShowModal() != wx.ID_OK:
+        dlg.Destroy()
+        return None
+
+    Fs = dlg.GetPath()
+    dlg.Destroy()
+
+    try:
+        with open(Fs, "wt") as f:
+            f.write(sG)
+    except (IOError, OSError):
+        wx.MessageBox("Error writing file",
+                      "Warning",
+                      wx.ICON_WARNING | wx.OK)
+        return None
+    return os.path.split(Fs)
+
+def copy_puzzle_to_clipboard(oPzl):
+
+    sG = pzl_to_pzl_str(oPzl)
+
+    if wx.TheClipboard.Open():
+        wx.TheClipboard.SetData(wx.TextDataObject(sG))
+        wx.TheClipboard.Close()
+        return True
+    return False
+
+def copy_clipboard_to_pzl(oPzl):
+
+    TDO = wx.TextDataObject()
+    if wx.TheClipboard.Open():
+        wx.TheClipboard.GetData(TDO)
+        wx.TheClipboard.Close()
+        sG = TDO.GetText()
+        return pzl_str_to_pzl(TDO.GetText(), oPzl)
+    return 0
+
+def pzl_str_to_pzl(sPzl, Pzl):
 
     lG = sPzl.replace("\n", "").split("|")
     lenlG = len(lG)
-    Pzl[PZL_GRID] = [[0 for c in range(9)] for r in range(9)]
-    Pzl[PZL_ELIMS] = [[set() for c in range(9)] for r in range(9)]
-    if not grid_str_to_grid(lG[0], Pzl[PZL_GRID]):
-        wx.MessageBox("Invalid Sudoku value puzzle spec format - grid.",
-                      "Warning",
-                      wx.ICON_WARNING | wx.OK)
+    Pzl.Grid   = [[0 for c in range(9)] for r in range(9)]
+    Pzl.Givens = [[0 for c in range(9)] for r in range(9)]
+    if not grid_str_to_grid(lG[0], Pzl.Grid, Pzl.Givens):
+        PgmMsg("Invalid Sudoku value puzzle spec format - grid.",
+               "Warning",
+               wx.ICON_WARNING | wx.OK)
         return 0
     if lenlG >= 2 and lG[1]:
+        Pzl.Elims = [[set() for c in range(9)] for r in range(9)]
         for sE in lG[1].split(";"):
             r, c, op, Cands = parse_ccell_phrase(sE)
             if r < 0 or op != OP_ELIM:
-                wx.MessageBox("Invalid Sudoku value puzzle spec format - elims.",
-                              "Warning",
-                              wx.ICON_WARNING | wx.OK)
+                PgmMsg("Invalid Sudoku value puzzle spec format - elims.",
+                       "Warning",
+                       wx.ICON_WARNING | wx.OK)
                 return 0
-            Pzl[PZL_ELIMS][r][c] |= Cands
+            Pzl.Elims[r][c] |= Cands
     if lenlG >= 3 and lG[2]:
-
         for Tx in T:  # m in range(len(T):
             if T[Tx][T_TXT] == lG[2]:
-                Pzl[PZL_METH] = Tx
+                Pzl.Method = Tx
                 break
         else:
-            m = T_UNDEF
+            PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
+                   "Warning",
+                   wx.ICON_WARNING | wx.OK)
+            Pzl.Method = T_UNDEF
+    else: Pzl.Method = T_UNDEF
+    if lenlG == 5:
+        Pzl.Pattern = lG[3]
+        Pzl.Outcome = lG[4]
+    return lenlG
+
+def pzl_to_pzl_str(oPzl):
+
+    sG = grid_to_grid_str(oPzl.Grid, oPzl.Givens)
+    if oPzl.Elims:
+        sE = ""
+        for r in range(9):
+            for c in range(9):
+                if oPzl.Elims[r][c]:
+                    if sE: sE += ";"
+                    sE += f"r{r+1}c{c+1}-="
+                    for v in sorted(oPzl.Elims[r][c]):
+                        sE += f"{v}"
+        sG += f"|{sE}"
+    if oPzl.Method != T_UNDEF:
+        sG += f"|{T[oPzl.Method[P_TECH]][T_TXT]}"
+        sG += f"|{tkns_to_str(oPzl.Pattern)}|{tkns_to_str(oPzl.Outcome)}\n".replace(" ", "").replace(".", "")
+    return sG
+
+def parse_pzl_str_depreciated(sPzl, Pzl):
+    print("parse_pzl_str_depreciated()")
+    lG = sPzl.replace("\n", "").split("|")
+    lenlG = len(lG)
+    Pzl.Grid   = [[0 for c in range(9)] for r in range(9)]
+    Pzl.Givens = [[0 for c in range(9)] for r in range(9)]
+    if not grid_str_to_grid(lG[0], Pzl.Grid, Pzl.Givens):
+        PgmMsg("Invalid Sudoku value puzzle spec format - grid.",
+               "Warning",
+               wx.ICON_WARNING | wx.OK)
+        # wx.MessageBox("Invalid Sudoku value puzzle spec format - grid.",
+        #               "Warning",
+        #               wx.ICON_WARNING | wx.OK)
+        return 0
+    if lenlG >= 2 and lG[1]:
+        Pzl.Elims = [[set() for c in range(9)] for r in range(9)]
+        for sE in lG[1].split(";"):
+            r, c, op, Cands = parse_ccell_phrase(sE)
+            if r < 0 or op != OP_ELIM:
+                PgmMsg("Invalid Sudoku value puzzle spec format - elims.",
+                       "Warning",
+                       wx.ICON_WARNING | wx.OK)
+                # wx.MessageBox("Invalid Sudoku value puzzle spec format - elims.",
+                #               "Warning",
+                #               wx.ICON_WARNING | wx.OK)
+
+                return 0
+            Pzl.Elims[r][c] |= Cands
+    if lenlG >= 3 and lG[2]:
+        for Tx in T:  # m in range(len(T):
+            if T[Tx][T_TXT] == lG[2]:
+                Pzl.Method = Tx
+                break
+        else:
+            PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
+                   "Warning",
+                   wx.ICON_WARNING | wx.OK)
             # wx.MessageBox(f"Invalid Sudoku value puzzle spec format - unrecognised method.",
             #               "Warning",
             #               wx.ICON_WARNING | wx.OK)
             # return 0
-    else: Pzl[PZL_METH] = T_UNDEF
+            Pzl.Method = T_UNDEF
+    else: Pzl.Method = T_UNDEF
     if lenlG == 5:
-        Pzl[PZL_PTRN] = lG[3]
-        Pzl[PZL_OUTC] = lG[4]
+        Pzl.Pattern = lG[3]
+        Pzl.Outcome = lG[4]
     return lenlG
 
 
@@ -421,105 +514,71 @@ def parse_ccell_phrase(St):
     if len(Cands) > 1 and op == OP_ASNV: return -1, -1, -1, -1
     return r, c, op, Cands
 
+def grid_str_to_grid(sG, Grid, Givens = None):
+    # String is unpacked and values placed in passed empty grid array.  If an empty Givens
+    # array is passed, the Givens are placed in that.
 
-def grid_str_to_grid(sG, G, Placed = True, GivensOnly = False):
-    # Placed = True - differentiate between placed and givens, else all as givens
-    # GivensOnly = True - only fill givens and ignore placed (digits prefixed by '+'
     i = rc = 0
     while i < len(sG):
-        if rc >= 81:
+        if rc >= 81: return False
+        r = rc//9; c = rc%9
+        if sG[i] in ["0", ".", "-"]:
+            Grid[r][c] = 0
+            if Givens: Givens[r][c] = 0
+            i += 1; rc += 1
+        elif sG[i] == " ": i += 1
+        elif sG[i] == "+":
+            if Givens: Givens[r][c] = 0
+            Grid[r][c] = int(sG[i+1])
+            i += 2; rc += 1
+        elif (sG[i]).isdigit():
+            if Givens: Givens[r][c] = Grid[r][c] = int(sG[i])
+            else: Grid[r][c] = int(sG[i])
+            i += 1; rc += 1
+        else:
             return False
-        G[rc//9][rc%9] = 0; v = sG[i]
-        if v in ["0", ".", "-"]: i += 1; rc += 1; continue
-        if v == " ": i += 1; continue
-        if v == "+":
-            if GivensOnly: i += 2; rc += 2; continue
-            if Placed: G[rc//9][rc%9] = 10
-            i += 1; v = sG[i]
-        if v.isdigit(): G[rc//9][rc%9] += int(v); i +=1; rc += 1; continue
-        return False  # error parsing the grid string.
     return True if rc == 81 else False
 
-def grid_to_grid_str(G, sG = None):
+# def grid_str_to_grid_depreciated(sG, G, Placed = True, GivensOnly = False):
+#     # Placed = True - differentiate between placed and givens, else all as givens
+#     # GivensOnly = True - only fill givens and ignore placed (digits prefixed by '+'
+#     print("grid_str_to_grid_dpreciated()")
+#     i = rc = 0
+#     while i < len(sG):
+#         if rc >= 81:
+#             return False
+#         G[rc//9][rc%9] = 0; v = sG[i]
+#         if v in ["0", ".", "-"]: i += 1; rc += 1; continue
+#         if v == " ": i += 1; continue
+#         if v == "+":
+#             if GivensOnly: i += 2; rc += 2; continue
+#             if Placed: G[rc//9][rc%9] = 10
+#             i += 1; v = sG[i]
+#         if v.isdigit(): G[rc//9][rc%9] += int(v); i +=1; rc += 1; continue
+#         return False  # error parsing the grid string.
+#     return True if rc == 81 else False
 
+def grid_to_grid_str(Grid, Givens = None):
+
+    sG = ""
+    for r in range(9):
+        for c in range(9):
+            if Grid[r][c]:
+                if Givens is None: sG += f"{Grid[r][c]}"
+                elif Givens[r][c]: sG += f"{Grid[r][c]}"
+                else: sG += f"+{Grid[r][c]}"
+            else: sG += "0"
+    return sG
+
+def grid_to_grid_str_depreciated(G, sG = None):
+
+    print("grid_to_grid_str_depreciated()")
     if sG is None: sG = ""
     for r in range(9):
         for c in range(9):
             if G[r][c] > 10: sG += "+"; G[r][c] %= 10
             sG += f"{G[r][c]}"
     return sG
-
-def copy_puzzle_to_clipboard(G, ElimCands = None, Step = None):
-
-    sG = ""
-    sG = grid_to_grid_str(G, sG)
-    sE = ""
-    if ElimCands:
-        for r in range(9):
-            for c in range(9):
-                if ElimCands[r][c]:
-                    if sE: sE += ";"
-                    sE += f"r{r+1}c{c+1}-="
-                    for v in sorted(ElimCands[r][c]):
-                        sE += f"{v}"
-        sG += f"|{sE}"
-    if Step:
-        sG += f"|{T[Step[P_TECH]][T_TXT]}"
-        sG += f"|{tkns_to_str(Step[P_PTRN])}|{tkns_to_str(Step[P_OUTC])}\n".replace(" ", "").replace(".", "")
-    if wx.TheClipboard.Open():
-        wx.TheClipboard.SetData(wx.TextDataObject(sG))
-        wx.TheClipboard.Close()
-        return True
-    return False
-
-def save_puzzle(Fp, G, ElimCands = None, Step = None):
-    # Selects a puzzle filename with the save FileDialog in Cwd, and returns
-    # after saving the sudoku values in the grid G.  Note that the parent of
-    # the FileDialog is set to None.
-    #
-    # Parms:
-    #   Fp:  In:  Tuple containing default directory and filename                  strings.
-    #   G:   In:  Grid containing values to save.
-    #        Out: Populated grid if returns true, else undefined
-    # Returns:  None: Could not save selected file.
-    #           Tuple containing directory and filename of saved file.
-
-    sG = ""
-    sG = grid_to_grid_str(G, sG)
-    sE = ""
-    if ElimCands:
-        for r in range(9):
-            for c in range(9):
-                if ElimCands[r][c]:
-                    if sE: sE += ";"
-                    sE += f"r{r+1}c{c+1}-="
-                    for v in sorted(ElimCands[r][c]):
-                        sE += f"{v}"
-        sG += f"|{sE}"
-    if Step:
-        sG += f"|{T[Step[P_TECH]][T_TXT]}"
-        sG += f"|{tkns_to_str(Step[P_PTRN])}|{tkns_to_str(Step[P_OUTC])}\n".replace(" ", "").replace(".", "")
-    dlg = wx.FileDialog(None, message = "Save A Puzzle",
-                        defaultDir = Fp[0],
-                        defaultFile = Fp[1],
-                        wildcard = FILE_WILDCARDS,
-                        style = wx.FD_SAVE | wx.FD_CHANGE_DIR | wx.FD_OVERWRITE_PROMPT)
-    if dlg.ShowModal() != wx.ID_OK:
-        dlg.Destroy()
-        return None
-
-    Fs = dlg.GetPath()
-    dlg.Destroy()
-
-    try:
-        with open(Fs, "wt") as f:
-            f.write(sG)
-    except (IOError, OSError):
-        wx.MessageBox("Error writing file",
-                      "Warning",
-                      wx.ICON_WARNING | wx.OK)
-        return None
-    return os.path.split(Fs)
 
 def tkns_to_str(Tkns):
 
@@ -563,6 +622,16 @@ def tkns_to_str(Tkns):
         elif Tkn[0] == P_END:
             St += "."
     return St
+
+def PgmMsg(Type, Msg, Flags = 4):  # wx.OK = 4 if not provided.
+    # Wrapper that will put up a MessageBox if running under wx or
+    # prints the message to console.  Only necessary to wrap messages
+    # in modules/functions that run in both environments.
+
+    from importlib.util import find_spec
+    if find_spec("wx"): return wx.MessageBox(Type, Msg, Flags)
+    else: print(f"{Type}: {Msg}"); return 4
+
 
 # def flist(hl):
 #     fl = []  # list()
