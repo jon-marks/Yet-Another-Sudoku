@@ -4,7 +4,7 @@ import os
 #import csv
 
 from globals import *
-from misc import grid_str_to_grid, tkns_to_str, parse_ccell_phrase
+from misc import tkns_to_str, parse_ccell_phrase
 from solve import solve_next_step
 from solve_utils import *
 

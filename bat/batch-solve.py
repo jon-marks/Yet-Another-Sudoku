@@ -2,8 +2,8 @@ from time import perf_counter
 import os
 
 from globals import *
-from misc import grid_str_to_grid, grid_to_grid_str
-from generate import check_puzzle
+# from misc import grid_str_to_grid, grid_to_grid_str_depreciated
+from generate1 import check_puzzle
 from solve import logic_solve_puzzle
 from solve_utils import T, T_DIFF
 

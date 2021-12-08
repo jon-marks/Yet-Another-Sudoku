@@ -349,6 +349,8 @@ class Board:
         MainWindow.Centre(wx.BOTH)
         self.FrmWin.Show()
 
+
+
     def resize(self, CellSz):
         self.BrdSz = 2*(BOARD_BDR+BLOCK_BDR)+6*CELL_BDR+18*CELL_FRM_BDR+9*CellSz
         self.FrmWin.Hide()

@@ -210,68 +210,68 @@ class MainMenubar(wx.MenuBar):
         self.mOptions = wx.Menu()
         self.Append(self.mOptions, "&Options")
 
-        self.smOptionLvl = wx.Menu()
-        self.mOptions.AppendSubMenu(self.smOptionLvl, "Generate Expertise &Level Request")
-
-        self.miOptionLvlBeginner = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Beginner",
-                                               "Beginner level of expertise", wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlBeginner)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_BEGINNER: self.on_option_level(e, lvl),
-                    self.miOptionLvlBeginner)
-        if LVL_DEFAULT == LVL_BEGINNER:
-            self.miOptionLvlBeginner.Check(True)
-
-        self.miOptionLvlNovice = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Novice",
-                                             "Novice level of expertise", wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlNovice)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_NOVICE: self.on_option_level(e, lvl),
-                    self.miOptionLvlNovice)
-        if LVL_DEFAULT == LVL_NOVICE:
-            self.miOptionLvlNovice.Check(True)
-
-        self.miOptionLvlIntermediate = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Intermediate",
-                                                   "Intermediate level of expertise",
-                                                   wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlIntermediate)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_INTERMEDIATE: self.on_option_level(e, lvl),
-                    self.miOptionLvlIntermediate)
-        if LVL_DEFAULT == LVL_INTERMEDIATE:
-            self.miOptionLvlIntemediate.Check(True)
-
-        self.miOptionLvlProficient = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Proficient",
-                                                 "Proficient level of expertise",
-                                                 wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlProficient)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_PROFICIENT: self.on_option_level(e, lvl),
-                    self.miOptionLvlProficient)
-        if LVL_DEFAULT == LVL_PROFICIENT:
-            self.miOptionLvlProficient.Check(True)
-
-        self.miOptionLvlAccomplished = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Accomplished",
-                                                   "Accomplished level of expertise",
-                                                   wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlAccomplished)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_ACCOMPLISHED: self.on_option_level(e, lvl),
-                    self.miOptionLvlAccomplished)
-        if LVL_DEFAULT == LVL_ACCOMPLISHED:
-            self.miOptionLvlAccomplished.Check(True)
-
-        self.miOptionLvlExpert = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Expert",
-                                             "Expert level of expertise",
-                                             wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlExpert)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_EXPERT: self.on_option_level(e, lvl),
-                    self.miOptionLvlExpert)
-        if LVL_DEFAULT == LVL_EXPERT:
-            self.miOptionLvlExpert.Check(True)
-
-        self.miOptionLvlGuru = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Guru",
-                                           "Guru level of expertise", wx.ITEM_RADIO)
-        self.smOptionLvl.Append(self.miOptionLvlGuru)
-        parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_GURU: self.on_option_level(e, lvl),
-                    self.miOptionLvlGuru)
-        if LVL_DEFAULT == LVL_GURU:
-            self.miOptionLvlGuru.Check(True)
+        # self.smOptionLvl = wx.Menu()
+        # self.mOptions.AppendSubMenu(self.smOptionLvl, "Generate Expertise &Level Request")
+        #
+        # self.miOptionLvlBeginner = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Beginner",
+        #                                        "Beginner level of expertise", wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlBeginner)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_BEGINNER: self.on_option_level(e, lvl),
+        #             self.miOptionLvlBeginner)
+        # if LVL_DEFAULT == LVL_BEGINNER:
+        #     self.miOptionLvlBeginner.Check(True)
+        #
+        # self.miOptionLvlNovice = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Novice",
+        #                                      "Novice level of expertise", wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlNovice)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_NOVICE: self.on_option_level(e, lvl),
+        #             self.miOptionLvlNovice)
+        # if LVL_DEFAULT == LVL_NOVICE:
+        #     self.miOptionLvlNovice.Check(True)
+        #
+        # self.miOptionLvlIntermediate = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Intermediate",
+        #                                            "Intermediate level of expertise",
+        #                                            wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlIntermediate)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_INTERMEDIATE: self.on_option_level(e, lvl),
+        #             self.miOptionLvlIntermediate)
+        # if LVL_DEFAULT == LVL_INTERMEDIATE:
+        #     self.miOptionLvlIntemediate.Check(True)
+        #
+        # self.miOptionLvlProficient = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Proficient",
+        #                                          "Proficient level of expertise",
+        #                                          wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlProficient)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_PROFICIENT: self.on_option_level(e, lvl),
+        #             self.miOptionLvlProficient)
+        # if LVL_DEFAULT == LVL_PROFICIENT:
+        #     self.miOptionLvlProficient.Check(True)
+        #
+        # self.miOptionLvlAccomplished = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Accomplished",
+        #                                            "Accomplished level of expertise",
+        #                                            wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlAccomplished)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_ACCOMPLISHED: self.on_option_level(e, lvl),
+        #             self.miOptionLvlAccomplished)
+        # if LVL_DEFAULT == LVL_ACCOMPLISHED:
+        #     self.miOptionLvlAccomplished.Check(True)
+        #
+        # self.miOptionLvlExpert = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Expert",
+        #                                      "Expert level of expertise",
+        #                                      wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlExpert)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_EXPERT: self.on_option_level(e, lvl),
+        #             self.miOptionLvlExpert)
+        # if LVL_DEFAULT == LVL_EXPERT:
+        #     self.miOptionLvlExpert.Check(True)
+        #
+        # self.miOptionLvlGuru = wx.MenuItem(self.smOptionLvl, wx.ID_ANY, "&Guru",
+        #                                    "Guru level of expertise", wx.ITEM_RADIO)
+        # self.smOptionLvl.Append(self.miOptionLvlGuru)
+        # parent.Bind(wx.EVT_MENU, lambda e, lvl = LVL_GURU: self.on_option_level(e, lvl),
+        #             self.miOptionLvlGuru)
+        # if LVL_DEFAULT == LVL_GURU:
+        #     self.miOptionLvlGuru.Check(True)
 
         self.smOptionSym = wx.Menu()
         self.mOptions.AppendSubMenu(self.smOptionSym, "Grid &Symmetry")
@@ -516,14 +516,14 @@ class MainMenubar(wx.MenuBar):
                     self.miViewZoomNormal:        [True,  True,  True,  False],
                     self.miViewZoomLarge:         [True,  True,  True,  False],
                     self.miViewZoomXLarge:        [True,  True,  True,  False],
-                    self.miViewCandsUnselVis:     [False, False, True,  False],
-                    self.miOptionLvlBeginner:     [True,  False, False, False],
-                    self.miOptionLvlNovice:       [True,  False, False, False],
-                    self.miOptionLvlIntermediate: [True,  False, False, False],
-                    self.miOptionLvlProficient:   [True,  False, False, False],
-                    self.miOptionLvlAccomplished: [True,  False, False, False],
-                    self.miOptionLvlExpert:       [True,  False, False, False],
-                    self.miOptionLvlGuru:         [True,  False, False, False],
+                    self.miViewCandsUnselVis:     [True, True,  True,  False],
+                    # self.miOptionLvlBeginner:     [True,  False, False, False],
+                    # self.miOptionLvlNovice:       [True,  False, False, False],
+                    # self.miOptionLvlIntermediate: [True,  False, False, False],
+                    # self.miOptionLvlProficient:   [True,  False, False, False],
+                    # self.miOptionLvlAccomplished: [True,  False, False, False],
+                    # self.miOptionLvlExpert:       [True,  False, False, False],
+                    # self.miOptionLvlGuru:         [True,  False, False, False],
                     self.miOptionSymRand:         [True,  False, False, False],
                     self.miOptionSymDihedral:     [True,  False, False, False],
                     self.miOptionSymSqQuadRot:    [True,  False, False, False],
@@ -558,7 +558,7 @@ class MainMenubar(wx.MenuBar):
         if self.miPuzzleEnter.IsChecked():
             self.Parent.Sudoku.gen_event(EV_SC_ENT, True)
         else:
-            self.Parent.Sudoku.gen_event(EV_SC_VLD)
+            self.Parent.Sudoku.gen_event(EV_SC_VLD, None)
 
     def on_puzzle_open(self, e):
         self.Parent.Sudoku.gen_event(EV_SC_LD)
@@ -600,13 +600,13 @@ class MainMenubar(wx.MenuBar):
         self.Parent.on_exit(e)
 
     def on_view_zoom(self, e, sz):
-        self.Parent.Board.resize(sz)
+        self.Parent.Sudoku.Board.resize(sz)
 
     def on_view_cands_unsel_vis(self, e):
-        self.Parent.Board.unsel_cands_visibility(self.miViewCandsUnselVis.IsChecked())
+        self.Parent.Sudoku.Board.unsel_cands_visibility(self.miViewCandsUnselVis.IsChecked())
 
-    def on_option_level(self, e, lvl):
-        self.Parent.Sudoku.set_expertise_req_lvl(lvl)
+    # def on_option_level(self, e, lvl):
+    #     self.Parent.Sudoku.set_expertise_req_lvl(lvl)
 
     def on_option_symmetry(self, e, sym):
         self.Parent.Sudoku.set_symmetry(sym)

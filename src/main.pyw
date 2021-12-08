@@ -90,6 +90,7 @@ Notes on programming style used here:
 
 """
 import os
+from sys import argv
 import wx
 
 # Local Imports
@@ -152,7 +153,7 @@ class MainWindow(wx.Frame):
                           size = wx.DefaultSize,
                           style = wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MINIMIZE_BOX ^ wx.MAXIMIZE_BOX)
         self.Hide()
-        self.CWD = os.getcwd()
+        self.CWD = os.path.dirname(os.getcwd())
         Icon = wx.Icon()
         Icon.CopyFromBitmap(wx.Bitmap(os.path.join(self.CWD, IMG_DIR, "sudoku.ico"), wx.BITMAP_TYPE_ANY))
         self.SetIcon(Icon)
@@ -169,6 +170,9 @@ class MainWindow(wx.Frame):
         wx.CallAfter(self.Destroy)
 
 def main():
+    with open('cython.py', 'wt') as f:
+        if len(argv) > 1 and argv[1] == "Cython": f.write("CYTHON = True\n")
+        else: f.write("CYTHON = False\n")
     App = wx.App(False)
     Frame = MainWindow()
     App.SetTopWindow(Frame)

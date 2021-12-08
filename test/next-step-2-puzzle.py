@@ -1,11 +1,15 @@
 
+from globals import *
+from misc import *
+from solve import *
+from solve_utils import *
 
 
 def next_step_to_puzzle():
     with open("test-data/next-step-1.0-in.txt", "rt") as f:
         with open ("../bat/bat-data/puzzle-1.0-in.txt", "wt") as f1:
-            f1.write ("# Puzzle\n")
-            oPzls = []
+            f1.write("# Puzzle\n")
+            lPzls = []
             while 1:
                 Line = f.readline()
                 if not Line: break
@@ -15,9 +19,14 @@ def next_step_to_puzzle():
                     if Line[i] == "+": Pzl += "0"; i += 2
                     elif Line[i] == ".": Pzl += "0"; i += 1
                     else: Pzl += (Line[i]); i += 1
-                if Pzl in oPzls: continue
-                oPzls.append(Pzl)
-                f1.write(Pzl+"\n")
+
+                oPzl = {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
+                Flds = parse_pzl_str_depreciated(Line, Opzl)
+                if not Flds: continue
+                mPzl = grid_to_grid_str_depreciated(minimalise_puzzle(Opzl[PZL_GRID]))
+                if mPzl and mPzl in lPzls: continue
+                oPzls.append(mPzl)
+                f1.write(mPzl+"\n")
 
 if __name__ == "__main__":
     next_step_to_puzzle()

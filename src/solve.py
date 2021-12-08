@@ -11,8 +11,6 @@ from solve_x_chains import *
 from solve_xy_chains import *
 from solve_ai_chains import *
 
-
-
 # Note that the order in which techniques are attempted influences the outcomes:
 # * the holy grail is to solve the puzzle with the simplest techniques possible.
 #     which is often not achieved because a more complex technique could
@@ -28,7 +26,6 @@ from solve_ai_chains import *
 #   is that some techniques are able to resolve more than one pattern.
 # * _kraken_ refers to the technique using an AIC chain as a strong or weak link.
 # * ..._gl refers to the technique using group links in its chains.
-
 
 Techniques = [tech_exposed_singles,
               tech_hidden_singles,
@@ -75,7 +72,6 @@ Techniques = [tech_exposed_singles,
               # tech_gl_kraken_w_wings,
               ]
 
-
 def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
 
     # Solve the puzzle passed in grid, returning the ordered list of logic
@@ -84,28 +80,23 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     # If the first method is not T_UNDEF and the first step cannot be solved
     # with the the specified method, then try to solve without the method
     # constraint
-    #
-    # Parms:
-    #  Grid: In:   Contains the puzzle to grade, needs to be a valid puzzle.
 
-    #  Steps: Out:   The ordered list of logic techniques solution path that the
-    #  Cands: In Cands starting state.
-    #  Meth:  Suggested starting method, will start from first technique if unsuccess.
-    # Returns: The Maximum Expertise Level required to solve the puzzle
-
-    NrEmpties = 0
     Steps = []
+    NrEmpties, C = determine_cands(Grid, Elims)
     G = [[Grid[r][c] for c in range(9)] for r in range(9)]
-    C = [[set() for c in range(9)] for r in range(9)]
-    for r in range(9):
-        for c in range(9):
-            if not G[r][c]:
-                NrEmpties += 1
-                for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-                    if cell_val_has_no_conflicts(Cand, G, r, c):
-                        C[r][c].add(Cand)
-                if Elims: C[r][c] -= Elims[r][c]
 
+    # C = [[set() for c in range(9)] for r in range(9)]
+    # # use determine_cands() instead of next 8 lines of code.
+    # for r in range(9):
+    #     for c in range(9):
+    #         if not G[r][c]:
+    #             NrEmpties += 1
+    #             for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+    #                 if cell_val_has_no_conflicts(Cand, G, r, c):
+    #                     C[r][c].add(Cand)
+    #             if Elims: C[r][c] -= Elims[r][c]
+
+#TODO: Convert Step to a data class.
     MaxLvl = 0
     if Meth != T_UNDEF and NrEmpties > 0:
         Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0, P_GRID: deepcopy(G), P_CAND: deepcopy(C)}
@@ -151,7 +142,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
             break
         else:
             if not _tech_brute_force(G, Step, C):
-                # An error occured - bug in program
+                # An error occurred - bug in program
                 return UNDEF, Steps
             NrEmpties -= 1
             Steps.append(Step)
@@ -168,38 +159,27 @@ def solve_next_step(Grid, Step, Elims, Method = T_UNDEF):
     # puzzle is correct if interactive error checking is disabled and will still
     # attempt to find a solution.
     #
-    # Parms:
-    #  Grid: In: The puzzle grid from which to find the next step.
-    #  Step: Out: The next found step as a dict.
-    #       P_TECH:  The enumeration of the logic technique, eg T_*
-    #       P_DESC:  Text describing identification of logic technique
-    #       P_SLVD:  list of solved cells in dict object:
-    #           P_VAL:  Cell value
-    #           P_ROW:  Row coord of cell
-    #           P_COL:  Col coord of cell
-    #       P_ELIM:  List of values a cell cannot assume - eliminated cands.
-    #           P_VAL:  Candidate value to be eliminated
-    #           P_ROW:  Row coord of cell where candidate is eliminated
-    #           P_COL:  Col coord of cell where candidate is eliminated.
-    #       P_SUBS:  Ordered list of sub-steps as a recursion of Steps.
-    #  ElimCands: I/O: 9x9 array of sets containing eliminated candidates. It is
-    #             necessary for the caller to maintain this structure for
-    #             subsequent calls to this function to prevent the same hints
-    #             being given.
-    # Returns:  True:  A solution found.
-    #           False: Can't solve next step - either invalid puzzle or bug in program.
 
-    C = [[set() for c in range(9)] for r in range(9)]
-    for r in range(9):
-        for c in range(9):
-            if not Grid[r][c]:
-                for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-                    if cell_val_has_no_conflicts(Cand, Grid, r, c):
-                        C[r][c].add(Cand)
-                C[r][c] -= Elims[r][c]
+    NrEmpties, C = determine_cands(Grid, Elims)
+
+    # C = [[set() for c in range(9)] for r in range(9)]
+    # for r in range(9):
+    #     for c in range(9):
+    #         if not Grid[r][c]:
+    #             for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+    #                 if cell_val_has_no_conflicts(Cand, Grid, r, c):
+    #                     C[r][c].add(Cand)
+    #             C[r][c] -= Elims[r][c]
+# TODO Change Step to a class
+    if Method != T_UNDEF:  # looking to solve next step with a specific technique
+        for tech in Techniques:
+            res = tech(Grid, Step, C, Method = Method)
+            if res == -2: continue  # method not in that technique, look in next technique
+            if res == -1: break  # method failed to find solution, search for solution
+            return True  # solution found.
 
     for tech in Techniques:
-        if tech(Grid, Step, C, Method = Method) >= 0:
+        if tech(Grid, Step, C, Method = T_UNDEF) >= 0:
             return True
 
     if Method == T_UNDEF or Method == T_BRUTE_FORCE:

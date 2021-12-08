@@ -15,6 +15,7 @@ import wx
 
 # DEBUG   = True
 DEBUG   = True
+CYTHON = False
 
 TITLE   = 'Yet Another Sudoku App'
 BLURB   = '*  Feature rich\n' \
@@ -94,7 +95,7 @@ LT_YELLOW   = wx.Colour(255, 255, 168)
 ORANGE      = wx.Colour(255, 128,   0)
 RED         = wx.Colour(255,   0,   0)
 VLT_BLUE    = wx.Colour(240, 250, 255)
-VLT_GREY    = wx.Colour(200, 200, 200)
+VLT_GREY    = wx.Colour(232, 232, 232)
 WHITE       = wx.Colour(255, 255, 255)
 YELLOW      = wx.Colour(255, 255,   0)
 
@@ -225,7 +226,7 @@ PZL_OUTC    = 4  # the resulting placement of eliminations
 
 # Puzzle Class instantiate instructions
 PZL_GEN     = 10  # Generate a puzzle according to Lvl and Sym setting.
-PZL_LOAD    = 11  # Load a file spec, either pasted with [ctrl]V or from a file
+PZL_VAL     = 11  # Validate a existing puzzle (entered, loaded or pasted [ctrl]V)
 
 # Names of patterns (conditions) in a puzzle that can be recognised by YAS.
 # Note:  that a solving technique (method) may be able to recognise and solve for more than
@@ -395,3 +396,31 @@ class BVCELL:  # Bi-value cell
 class NODE:  # Node in a chain with link type to partner on right.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
+
+# used as a general data structure for accumulating and transferring Puzzle
+# information to through the program and to initialise a Puzzle instance.
+class PZL:
+    def __init__(self,
+                 Soln = None,       # Puzzle solution, int[9][9]
+                 Givens = None,     # Puzzle givens, int[9][9]
+                 Steps = None,      # Sequence of steps to solve puzzle, [Step1, Step2, ...]
+                 Lvl = UNDEF,       # level of expertise enum.
+                 Sym = UNDEF,       # Symetry pattern enum
+                 Grid = None,       # Givens and placed - placed offset by 10 int[9][9]
+                 Elims = None,      # Solved eliminations.
+                 Cands = None,      # Only used when Sudoku.AssistCands = False
+                 Method = T_UNDEF,  # Next step method enum
+                 Pattern = None,    # Next step pattern string
+                 Outcome = None     # Mext step Outcome string
+                 ):
+        self.Soln = Soln
+        self.Givens = Givens
+        self.Steps = Steps if Steps else []
+        self.Lvl = Lvl
+        self.Sym = Sym
+        self.Grid = Grid
+        self.Elims = Elims
+        self.Cands = Cands
+        self.Method = Method
+        self.Pattern = Pattern if Pattern else []
+        self.Outcome = Outcome if Outcome else []

@@ -1,9 +1,8 @@
-#import pytest
 from copy import copy
 from time import perf_counter
 
 from globals import *
-from misc import parse_pzl_str, parse_ccell_phrase, tkns_to_str
+from misc import *
 from solve import *
 from solve_utils import *
 
@@ -26,7 +25,7 @@ def next_step():
                     f1.flush()
                     continue
                 oPzl = {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
-                Flds = parse_pzl_str(Line, oPzl)
+                Flds = parse_pzl_str_depreciated(Line, oPzl)
                 if not Flds: continue
 
                 TGrid = [[oPzl[PZL_GRID][r][c] %10 for c in range(9)] for r in range(9)]
