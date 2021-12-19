@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Adaptation of setup_yas.py to follow YAS's directory enviroment nates: Appendix A in the Sudoku.odt
 # document and the changes to get mingw64 gcc to work in appendix C
 # NOTE:
