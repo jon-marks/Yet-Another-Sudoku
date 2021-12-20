@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
- Name:  main.pyw
+ Name:  main.py
 
 Description:
     Yet another Soduko program to create and solve puzzles as well as teach
@@ -37,7 +37,7 @@ Notes on programming style used here:
     Board: This is the man machine Interface class responsible for drawing the
     grid, receiving user input and displaying puzzle information
 
-    Puzzle: handles all the data associated with a puzzle and the the inputting
+    Puzzle: handles all the data associated with a puzzle and the inputting
     / creation of puzzle and holding interim state through progressions of validating
     and/or solving puzzles.
 
@@ -65,7 +65,7 @@ Notes on programming style used here:
     complexity and improved readability attained by using (data) classes.  In this
     regard the code lacks consistency with earlier work using enumerated dict and lists
     and later work using classes.  The classes approach is preferred and encouraged
-    going forward.  (Anyone wishing to clean up the the earlier inconsist code to
+    going forward.  (Anyone wishing to clean up the earlier inconsist code to
     improve maintainability and readability, please feel free).
     https://stackoverflow.com/questions/35988/c-like-structures-in-python.
 
@@ -89,27 +89,25 @@ Notes on programming style used here:
         2021-04-xx  jm  Initial entry
 
 """
-import os
-from sys import argv
-import wx
 
 # Local Imports
-from globals import *
+from globals import *  # globals imports os and wx.
+from trc import TRCX
 from menus import *
 from sudoku import *
 
-if DEBUG:
-    import logging as log
-
-    log.basicConfig(filename = '../sudoku.log',
-                    filemode = 'w',
-                    level = log.DEBUG,
-                    format = '%(asctime)s: %(message)s')
+# if DEBUG:
+#     import logging as log
+#
+#     log.basicConfig(filename = '../sudoku.log',
+#                     filemode = 'w',
+#                     level = log.DEBUG,
+#                     format = '%(asctime)s: %(message)s')
 
 class MainStatusBar(wx.StatusBar):
     def __init__(self, Parent):
         wx.StatusBar.__init__(self, Parent, id = wx.ID_ANY,
-                              style = wx.BORDER_SUNKEN|wx.STB_DEFAULT_STYLE)
+                              style = wx.BORDER_SUNKEN | wx.STB_DEFAULT_STYLE)
         self.SetFieldsCount(5)
         self.F1w = wx.Size.GetWidth(self.GetTextExtent(GE[ST_DEFAULT][SB]))
         self.F2w = wx.Size.GetWidth(self.GetTextExtent(AST_LVLS[AST_DEFAULT]))
@@ -153,7 +151,8 @@ class MainWindow(wx.Frame):
                           size = wx.DefaultSize,
                           style = wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MINIMIZE_BOX ^ wx.MAXIMIZE_BOX)
         self.Hide()
-        self.CWD = os.path.dirname(os.getcwd())
+        self.CWD = os.getcwd()
+        self.Title = TITLE
         Icon = wx.Icon()
         Icon.CopyFromBitmap(wx.Bitmap(os.path.join(self.CWD, IMG_DIR, "sudoku.ico"), wx.BITMAP_TYPE_ANY))
         self.SetIcon(Icon)
@@ -161,6 +160,7 @@ class MainWindow(wx.Frame):
         self.SetStatusBar(MainStatusBar(self))
         self.Sudoku = Sudoku(self, self.MenuBar, self.StatusBar)  # Instantiate the single instance Sudoku class.
         self.Bind(wx.EVT_CLOSE, self.on_exit)
+        TRCX("Main window initialised")
 
     def on_exit(self, e):
         self.Sudoku.on_close(e)
@@ -169,15 +169,16 @@ class MainWindow(wx.Frame):
         self.Hide()
         wx.CallAfter(self.Destroy)
 
-def main():
-    with open('cython.py', 'wt') as f:
-        if len(argv) > 1 and argv[1] == "Cython": f.write("CYTHON = True\n")
-        else: f.write("CYTHON = False\n")
+def main(sRun = ""):
+    global TITLE
+
+    TITLE += sRun
     App = wx.App(False)
     Frame = MainWindow()
     App.SetTopWindow(Frame)
     Frame.Show()
+    TRCX("Got here")
     App.MainLoop()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

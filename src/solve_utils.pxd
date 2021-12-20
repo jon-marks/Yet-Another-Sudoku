@@ -1,4 +1,4 @@
-from ctypedefs_x cimport *
+from ctypedefs cimport *
 
 cdef CHAIN* pchain_2_cchain(list PChain)
 cdef list cchain_2_pchain(CHAIN* CChain)

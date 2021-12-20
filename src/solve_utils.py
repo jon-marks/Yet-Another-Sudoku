@@ -155,7 +155,6 @@ def cell_val_has_no_conflicts(v, grid, r, c):
     #  grid:  IN:  grid to test value
     #  r, c   IN:  row and column in grid for test.
     # Check that val not in row
-
     if not (v in grid[r]):
         # Check that not in col
         if not (v in [grid[0][c], grid[1][c], grid[2][c],
@@ -170,24 +169,24 @@ def cell_val_has_no_conflicts(v, grid, r, c):
                 return True
     return False
 
-def cell_val_has_no_conflicts1(v, grid, r, c):
-    #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
-    #  v:     IN:  value to test in the grid
-    #  grid:  IN:  grid to test value
-    #  r, c   IN:  row and column in grid for test.
-    # Check that val not in row
-    # cdef int br, bc, r1, c1
-
-    br = (r//3)*3; bc = (c//3)*3
-    for i in range(9):
-        if v == grid[r][i]: return False
-        if v == grid[i][c]: return False
-        r1 = br + i//3; c1 = bc + i%3
-        if v == grid[r1][c1]: return False
-    # for r1 in range(br, br+3):
-    #     for c1 in range(bc, bc+3):
-    #         if v == grid[r1][c1]: return False
-    return True
+# def cell_val_has_conflicts1(grid, r, c):
+#     #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
+#     #  v:     IN:  value to test in the grid
+#     #  grid:  IN:  grid to test value
+#     #  r, c   IN:  row and column in grid for test.
+#     # Check that val not in row
+#     # cdef int br, bc, r1, c1
+#
+#     v = grid[r][c]; grid[r][c] = 0
+#     for i in range(9):
+#         if v == grid[r][i]: grid[r][c] = v; return True
+#         if v == grid[i][c]: grid[r][c] = v; return True
+#     br = (r//3)*3; bc = (c//3)*3
+#     for r1 in range(br, br+3):
+#         for c1 in range(bc, bc+3):
+#             if v == grid[r1][c1]: grid[r][c] = v; return True
+#     grid[r][c] = v
+#     return False
 
 
 def cell_val_has_conflicts(grid, r, c, val = 0):
@@ -217,8 +216,9 @@ def cell_val_has_conflicts(grid, r, c, val = 0):
     return True
 
 def determine_cands(Grid, Elims = None):
-    # Cands is passed in as an empty 9x9 2D list of set().
-
+    # Returns 9x9 matrix of of non-conflicted candidates less the Elims.
+    # non conflicted cands found by scanning grid.
+    # Can also be used to determine Elims by passing puzzle being solved cands in place of elims.
     NrEmpties = 0
     Cands = [[set() for c in range(9)] for r in range(9)]
     for r in range(9):
@@ -231,6 +231,8 @@ def determine_cands(Grid, Elims = None):
                     if cell_val_has_no_conflicts(Cand, Grid, r, c):
                         Cands[r][c].add(Cand)
     return NrEmpties, Cands
+
+
 
 def link_house(r0, c0, r1, c1, GrpLks = False):
     # ccells must be linked else erroneous LK_BOX cand be returned.

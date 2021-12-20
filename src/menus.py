@@ -26,6 +26,7 @@ class MainMenubar(wx.MenuBar):
         wx.MenuBar.__init__(self)
 
         # Puzzle Menu
+        self.parent = parent
         self.mPuzzle = wx.Menu()
         self.Append(self.mPuzzle, "&Puzzle")
 
@@ -605,9 +606,6 @@ class MainMenubar(wx.MenuBar):
     def on_view_cands_unsel_vis(self, e):
         self.Parent.Sudoku.Board.unsel_cands_visibility(self.miViewCandsUnselVis.IsChecked())
 
-    # def on_option_level(self, e, lvl):
-    #     self.Parent.Sudoku.set_expertise_req_lvl(lvl)
-
     def on_option_symmetry(self, e, sym):
         self.Parent.Sudoku.set_symmetry(sym)
 
@@ -622,5 +620,5 @@ class MainMenubar(wx.MenuBar):
         wx.MessageBox(TITLE+"\n\n"+ BLURB + "\n\n" + VERSION, " Help About", wx.OK)
 
     def on_help_guide(self, e):
-        dlgUserGuide = UserGuide(self)
+        dlgUserGuide = UserGuide(self.parent.Title)
         dlgUserGuide.Show()

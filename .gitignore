@@ -1,6 +1,7 @@
 .idea/*
 build/*
 lib/*
+libd/*
 puzzles/*
 tmp/*
 venv/*
@@ -19,4 +20,3 @@ bat/bat-data/sudoku-db.txt
 /test/test-data/tr.txt
 /test/test-data/tr1.txt
 /test/tj1.py
-/cython.py

@@ -48,13 +48,13 @@ class Build(build_ext):
 
 setup(
       cmdclass = {'build_ext': Build},
-      name ='Yet Another Sudoku',
+      name ='TRCX',
       version = "0.0.0",
       author = "Jonathan Marks",
       license = "Mozilla Public Licence 2.0",
       ext_modules = cythonize(TmpFile,
                               compiler_directives = {'language_level': 3,
-                                                     'boundscheck': False,  # for faster code with less checking
+                                                     'boundscheck': False,
                                                      'wraparound': False,
                                                      },
                               annotate = True,

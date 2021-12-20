@@ -926,7 +926,7 @@
 0+3+8709+400+94+7+1+5+3+62+800080+4+3+7+90+800+701+34300+4+80+96+770+430+60+8000003+870+6+86+304+70000+75+60080+3|r1c1-=15;r3c1-=26;r4c1-=2;r4c3-=2;r4c4-=5;r5c6-=2;r6c2-=25;r6c5-=2;r7c4-=9;r7c8-=19;r8c4-=2;r8c8-=5;r8c9-=5;r9c1-=1;r9c5-=2;r9c8-=1|Bent Exposed Quad|15==r3c1,56==r4c1,19==r6c2,69==r4c3|r3c2-=1
 
 
-# Chains and Loops  (Group linked Chains and loops handled lower down.
+# Chains and Loops  Group linked Chains and loops handled lower down.
 # 3 link X-Chains
 #  Skyscrapers
 +1+6+328+9754+79.4.38.+1+4+8.+1.....+6397+1+428+584+7+5....3+25+1..+8+47.+5+28.+41.9+7+9+7+4+8.5..23+16+9..+5+4+8||Skyscraper
@@ -1348,6 +1348,7 @@
 3....876....9..+3287..3...54.4....2.+72...8...5..7..+3.4.41+2.+39..683...6..+2.768....3|r3c3-=9;r4c3-=1;r4c3-=5;r4c3-=9;r4c4-=5;r4c5-=5;r4c5-=6;r4c8-=1;r4c8-=9;r5c4-=1;r5c4-=6;r5c6-=1;r5c8-=9;r6c2-=9;r6c4-=5;r6c5-=6;r6c7-=9;r8c7-=9;r9c5-=5;r9c6-=5;r9c7-=9|Group Linked Two String Kite|1r5c3=1r5c78-1r6c9=1r1c9|r1c3-=1
 
 # Group Linked Turbot Fish, are possible, just have not found any yet.
+
 
 # Group linked X-Chains
 .5...16..3.6..2.....93..2.4..453.182...8.4...8.512.4..6.1..53.....6..9.1..721..46|r5c9-=7;r6c9-=7|Group Linked X-Chain|7(r12c4=r7c4-r8c56=r8c8-r6c8=r5c78-r5c5=r46c6)|r3c6-=7

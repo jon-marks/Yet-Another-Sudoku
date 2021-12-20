@@ -24,16 +24,19 @@ def next_step():
                     f1.write(Line)
                     f1.flush()
                     continue
-                oPzl = {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
-                Flds = parse_pzl_str_depreciated(Line, oPzl)
+                oPzl = PZL()  # {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
+                Flds = pzl_str_to_pzl(Line, oPzl)  # parse_pzl_str_depreciated(Line, Opzl)
                 if not Flds: continue
+                # oPzl = {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
+                # Flds = parse_pzl_str_depreciated(Line, oPzl)
+                # if not Flds: continue
 
-                TGrid = [[oPzl[PZL_GRID][r][c] %10 for c in range(9)] for r in range(9)]
+                TGrid = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
                 Test += 1
                 TStep = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0}
-                if not solve_next_step(TGrid, TStep, oPzl[PZL_ELIMS], oPzl[PZL_METH]):
+                if not solve_next_step(TGrid, TStep, oPzl.Elims, oPzl.Method):
                     TStep = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0}
-                    if not solve_next_step(TGrid, TStep, oPzl[PZL_ELIMS], T_UNDEF):
+                    if not solve_next_step(TGrid, TStep, oPzl.Elims, T_UNDEF):
                         f1.write(f"# Warning: Cannot solve next step on line: {Line}\n")
                         continue
 
@@ -41,7 +44,7 @@ def next_step():
                 sCond = tkns_to_str(TStep[P_PTRN]).replace(" ", "").replace(".", "")
                 sOutc = tkns_to_str(TStep[P_OUTC]).replace(" ", "").replace(".", "")
                 TD = Line.rstrip(" \n").split("|", 3)
-                if oPzl[PZL_METH] != TStep[P_TECH]:
+                if oPzl.Method != TStep[P_TECH]:
                     if len(TD) == 2: TD.append("")
                     f1.write(f"# Info: Expected: {TD[2]}; Actual: {sMeth}, line: {Line}")
                 f1.write(f"{TD[0]}|{TD[1]}|{sMeth}|{sCond}|{sOutc}\n")

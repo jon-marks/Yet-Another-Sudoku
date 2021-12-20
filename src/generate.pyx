@@ -1,15 +1,16 @@
 # # for optimization - need to eliminate these imports.
 # from copy import copy, deepcopy
 from random import randint, shuffle, seed
-
-
-from ctypedefs_x cimport SOLN_T
-
-from generate_x cimport *
-from solve_utils_x cimport *
+from sys import path
+from ctypedefs cimport SOLN_T
+from generate cimport *
+from solve_utils cimport *
 
 from globals import *
 from solve import *
+from trc import TRCX
+
+TRC = True if path[len(path)-1] == ".trc_true" else False
 
 cdef extern from "stdlib.h":
     void   srand (unsigned int)
@@ -20,7 +21,7 @@ cdef extern from "time.h":
 
 TRCX("SADFSDF")
 
-if DEBUG:
+if TRC:
 #    import logging as log
     seed(0)
     srand(0)

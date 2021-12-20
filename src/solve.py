@@ -2,6 +2,7 @@ from random import sample
 from copy import copy, deepcopy
 
 from globals import *
+
 from solve_utils import *
 from solve_singles import *
 from solve_subsets import *

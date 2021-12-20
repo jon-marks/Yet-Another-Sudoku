@@ -3,11 +3,6 @@
 import os, shutil, sys
 from timeit import timeit
 
-if not os.getenv("PYCHARM_HOSTED"):
-    cwd = os.getcwd()
-    sys.path.insert(0, os.path.join(cwd, "src"))
-    sys.path.insert(0, os.path.join(cwd, "lib"))
-
 NTESTS = 10
 Ntimeits = 500
 Cols = 3
@@ -16,7 +11,7 @@ b = [[0.0 for j in range(Cols)] for i in range(NTESTS)]
 Min = [0.0] * Cols
 Avg = [0.0] * Cols
 print("Col 1: gen_filled_grid() from generate.py - interpreted")
-print("Col 2: gen_filled_grid() from generate_x.pyx - compiled")
+print("Col 2: gen_filled_grid() from generate.pyx - compiled")
 print(f"timeit()'s number: {Ntimeits}")
 print("Runs, Col 1,     Col 2")  # ,      Col 3")
 for i in range(NTESTS):

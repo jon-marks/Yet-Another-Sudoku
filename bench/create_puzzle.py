@@ -3,10 +3,6 @@
 import os, shutil, sys
 from timeit import timeit
 
-if not os.getenv("PYCHARM_HOSTED"):
-    cwd = os.getcwd()
-    extns =  [os.path.join(cwd, "src"),os.path.join(cwd, "lib")]  # list in reverse order lib/ before src/.
-    for p in extns: sys.path.insert(0, p)  # lib directory before source directory.
 
 from globals import *
 from misc import grid_str_to_grid
@@ -28,7 +24,7 @@ b = [[0.0 for j in range(Cols)] for i in range(NTESTS)]
 Min = [0.0] * Cols
 Avg = [0.0] * Cols
 print("Col 1: create_puzzle() from generate.py - interpreted")
-print("Col 2: create_puzzle() from generate_x.pyx - compiled")
+print("Col 2: create_puzzle() from generate.pyx - compiled")
 print(f"timeit()'s number: {Ntimeits}")
 print("Runs, Col 1,     Col 2")
 for i in range(NTESTS):

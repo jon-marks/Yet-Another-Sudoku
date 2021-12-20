@@ -1,25 +1,15 @@
 from copy import copy, deepcopy
-from random import randint, randrange, sample, shuffle, seed
-import os, sys
-if not os.getenv("PYCHARM_HOSTED"):
-    cwd = os.getcwd()
-    sys.path.insert(0, os.path.join(cwd, "src"))
-    sys.path.insert(0, os.path.join(cwd, "lib"))
+# from random import randint, randrange, sample, shuffle, seed
+from random import randint, randrange, shuffle, seed
+import sys
 
-if os.getenv("CYTHON"):
-    CYTHON = True
-    from solve_utils_x import cell_val_has_no_conflicts  # import solve_utils_x as sux
-else:
-    CYTHON = False
-    from solve_utils import cell_val_has_no_conflicts  #import solve_utils as su
-
-from globals import *
+from globals import *  # globals imports os and wx.
 from solve import *
+from solve_utils import cell_val_has_no_conflicts
 
 # from solve_utils import cell_val_has_no_conflicts, cell_val_has_no_conflicts1
 
-
-if DEBUG: seed(0)
+if sys.path[-1] == ".trc_true": seed(0)
 else: seed()
 
 def check_puzzle(Grid):
@@ -113,11 +103,13 @@ def scramble_puzzle(grid):
     grid1 = [[] for r in range(9)]
     # Shuffle the rows in bands of 3:   grid  ==> grid1, refs
     for bi in [0, 3, 6]:  # In each band
-        for dri, sri in enumerate(sample([0, 1, 2], k = 3)):
+        RI = [0, 1, 2]; shuffle(RI)
+        for dri, sri in enumerate(RI):
             grid1[bi+dri] = grid[bi+sri]
 
     # Shuffle the bands:  grid1 ==> grid, refs
-    for dbi, sbi in enumerate(sample([0, 3, 6], k = 3)):  # sbi | dbi source | dest band idx,
+    BI = [0, 3, 6]; shuffle(BI)
+    for dbi, sbi in enumerate(BI):  # sbi | dbi source | dest band idx,
         dbi1 = dbi*3
         grid[dbi1] = grid1[sbi]
         grid[dbi1+1] = grid1[sbi+1]
@@ -129,17 +121,19 @@ def scramble_puzzle(grid):
 
     # shuffle transposed rows in bands of 3:   grid1 ==> grid, refs
     for bi in [0, 3, 6]:  # In each band
-        for dri, sri in enumerate(sample([0, 1, 2], k = 3)):  # sri | dri: source | row idx,
+        RI = [0, 1, 2]; shuffle(RI)
+        for dri, sri in enumerate(RI):  # sri | dri: source | row idx,
             grid[bi+dri] = grid1[bi+sri]
 
     # Shuffle the bands:  grid  ==> grid1, refs
-    for dbi, sbi in enumerate(sample([0, 3, 6], k = 3)):
+    BI = [0, 3, 6]; shuffle(BI)
+    for dbi, sbi in enumerate(BI):
         dbi1 = dbi*3
         grid1[dbi1] = grid[sbi]
         grid1[dbi1+1] = grid[sbi+1]
         grid1[dbi1+2] = grid[sbi+2]
 
-    v = sample(range(1, 10), k = 9)  # randomize the 9 digits
+    v = [1, 2, 3, 4, 5, 6, 7, 8, 9]; shuffle(v)  # randomize the 9 digits
     v.insert(0, 0)
 
     # one of 8 ways of transposition.
@@ -183,7 +177,7 @@ def minimalise_puzzle(G, T_H = None):
     return G
 
 def create_puzzle(Pzl, T_H = None, T_G = None):
-     # T_H and T_G used for benchmark and other testing to control randomisation.
+    # T_H and T_G used for benchmark and other testing to control randomisation.
     Pzl.Soln = gen_filled_grid()
     if T_G:
         Pzl.Soln = T_G

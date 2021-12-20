@@ -4,22 +4,6 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
-# def tech_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_W_WING: return -2
-#     return _w_wings(Grid, Step, Cands, AIC = 1)
-#
-# def tech_gl_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_GL_W_WING: return -2
-#     return _w_wings(Grid, Step, Cands, AIC = 1, GrpLks = True)
-#
-# def tech_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_W_WING: return -2
-#     return _w_wings(Grid, Step, Cands, AIC = 2)
-#
-# def tech_gl_kraken_w_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_GL_W_WING: return -2
-#     return _w_wings(Grid, Step, Cands, AIC = 2, GrpLks = True)
-
 def tech_y_wings(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and Method != T_Y_WING: return -2
     return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_Y_WING)

@@ -13,10 +13,10 @@
 # functions, and this mem is accounted for within the Python environment.
 from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
 
-from ctypedefs_x cimport *
+from ctypedefs cimport *
 from globals import *
 
-from solve_utils_x cimport *
+from solve_utils cimport *
 
 # Link strength enumerations.
 # LK_ERR  = 0x1000
@@ -163,7 +163,7 @@ cdef CHAIN* pchain_2_cchain(list PChain):
     cdef CHAIN      *CChain = <CHAIN *>PyMem_Malloc(sizeof(CHAIN))
     cdef NODEC *N
     cdef i
-    print("---- In pchain_2_cchain() ----", file=stderr)
+    # print("---- In pchain_2_cchain() ----", file=stderr)
     if not PChain or CChain == NULL: return NULL
 
     N = <NODEC *>PyMem_Malloc(sizeof(NODEC))

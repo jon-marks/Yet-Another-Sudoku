@@ -13,12 +13,8 @@ Audit:
 
 import wx
 
-# DEBUG   = True
-DEBUG   = True
-CYTHON = False
-
-TITLE   = 'Yet Another Sudoku App'
-BLURB   = '*  Feature rich\n' \
+TITLE   = 'Yet Another Sudoku'
+BLURB   = '*  Feature rich, with a\n'\
           '*  Simple and minimal user interface'
 
 VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
@@ -306,14 +302,8 @@ T_GL_STRONG_AI_LOOP         = T_STRONG_AI_LOOP + T_GRPLK
 T_GL_KRAKEN_X_WING          = T_KRAKEN_X_WING + T_GRPLK
 T_GL_KRAKEN_SWORDFISH       = T_KRAKEN_SWORDFISH + T_GRPLK
 T_GL_KRAKEN_JELLYFISH       = T_KRAKEN_JELLYFISH + T_GRPLK
-# T_GL_KRAKEN_W_WING          = T_KRAKEN_W_WING + T_GRPLK
 
-# T_CONTINOUS_LOOP            = 35
 T_BRUTE_FORCE               = 0x00008000
-
-# # Technique Extensions:
-# T_KRAKEN                    = 0x80000000
-# T_GRPLK                     = 0x40000000
 
 # Technique attribute field enums
 TA_TXT  = 0
@@ -424,3 +414,25 @@ class PZL:
         self.Method = Method
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
+
+# if DEBUG:
+#     # printing to stderr for debugging:
+#     # Still have not got this to work for Cython code which was the intended purpose.
+#     # https://groups.google.com/g/cython-users/c/OwHQUtsJKlQ
+#     #refs:
+#     # https://docs.python.org/3.9/library/inspect.html#the-interpreter-stack
+#     # https://stackoverflow.com/questions/5574702/how-to-print-to-stderr-in-python
+#     # https://stackoverflow.com/questions/24438976/debugging-get-filename-and-line-number-from-which-a-function-is-called
+#     # https://docs.python.org/3/library/functions.html#print
+#     from inspect import getframeinfo, stack
+#     from sys import stderr
+#
+#     def TRCX(*args, **kwargs):
+#         caller = getframeinfo(stack()[1][0])
+#         print(f":{os.path.basename(caller.filename)}:{caller.lineno}:{caller.function}():", *args, file=stderr, flush=True, **kwargs)
+#
+#     class TRACEX:
+#         def __init__(self, FileName = "", line = -1, Function = ""):
+#             self.FileName = FileName, self.Line = line, self.Function = Function
+#
+#     TraceX = TRACEX()

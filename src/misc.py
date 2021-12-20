@@ -1,8 +1,7 @@
 """
 A brown bag of small classes and functions that do not fit in the functional
 context of other files.  Includes functions that handle files, some dialogs and
-some non modal windows eg:eg list solution and user guide.
-
+some non-modal windows eg: list solution and user guide.
 """
 import os
 
@@ -10,6 +9,7 @@ import wx.html
 import wx.lib.mixins.listctrl as lcmi  # list control mix in
 from wx.lib.embeddedimage import PyEmbeddedImage
 
+from globals import *
 from solve_utils import *
 
 OP = ["" for i in range(OP_NR_OPS)]
@@ -55,10 +55,8 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
     # Statistics List Control
 
     def __init__(self, Parent):
-        if Parent.PzlFn != "":
-            sT = "Yet Another Sudoku Solution" + " - " + Parent.PzlFn
-        else:
-            sT = "Yet Another Sudoku Solution"
+        sT = Parent.MainWindow.Title + ": Solution"
+        # if Parent.PzlFn: sT +=  f" - {Parent.PzlFn}"
         wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = sT,
                            pos = wx.DefaultPosition,
                            size = LIST_SOLN_DLG_SZ,
@@ -155,7 +153,6 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         self.StatLC.InsertColumn(4, "Difficulty", wx.LIST_FORMAT_RIGHT, -1)
         self.StatLC.InsertColumn(5, "Score", wx.LIST_FORMAT_RIGHT, -1)
         DM = self.itemDataMap = {}  # self.itemDataMap dict rqd by column sorter mixin
-#        H = sorted(Props[PR_STEPS_HISTO], key=lambda a: a[3])
         H = Props[PR_STEPS_HISTO]
         for i, HT in enumerate(H):
             Row = [f"{i+1:3d}",
@@ -165,7 +162,6 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
                    f"{H[HT][HT_DIFF]:6d}",
                    f"{H[HT][HT_ADIFF]:6d}"]
             DM[i] = Row
-            # self.StatLC.Append(Row)
             self.StatLC.InsertItem(i, Row[0], -1)
             self.StatLC.SetItem(i, 1, Row[1])
             self.StatLC.SetItem(i, 2, Row[2])
@@ -239,42 +235,24 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         self.BtnCopyStep.Enable()
 
     def on_save_step(self, e):
-        P = self.Creator.Puzzle
         Step = self.Creator.Puzzle.Steps[self.ToStep]
-        G1 = Step[P_GRID]
-        G  = [[G1[r][c] if not G1[r][c] or P.Givens[r][c] else G1[r][c]+10 for c in range(9)] for r in range(9)]
-        C  = Step[P_CAND]  # self.Creator.Puzzle.Cands
-        E1 = [[set() for c in range(9)] for r in range(9)]
-        for r in range(9):
-            for c in range(9):
-                if not G1[r][c]:
-                    # Cands = set()
-                    for Cand in range(1, 10):
-                        if not cell_val_has_conflicts(G1, r, c, Cand):
-                            Cands.add(Cand)
-                    E1[r][c] = Cands - C[r][c]
-        save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), G, E1, Step)
-            # wx.MessageBox("Could not save puzzle, do not know why . . .\n"
-            #               "Please send saved puzzle to developers",
-            #               "Warning",
-            #               wx.ICON_WARNING | wx.OK)
+        NrEmpties, Elims = determine_cands(Step[P_GRID], Step[P_CAND])
+        save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), PZL(Grid    = Step[P_GRID],
+                                                                   Givens  = self.Creator.Puzzle.Givens,
+                                                                   Elims   = Elims,
+                                                                   Method  = Step[P_TECH],
+                                                                   Pattern = Step[P_PTRN],
+                                                                   Outcome = Step[P_OUTC]))
 
     def on_copy_step(self, e):
-        P = self.Creator.Puzzle
         Step = self.Creator.Puzzle.Steps[self.ToStep]
-        G1 = Step[P_GRID]
-        G  = [[G1[r][c] if not G1[r][c] or P.Givens[r][c] else G1[r][c]+10 for c in range(9)] for r in range(9)]
-        C  = Step[P_CAND]  # self.Creator.Puzzle.Cands
-        E1 = [[set() for c in range(9)] for r in range(9)]
-        for r in range(9):
-            for c in range(9):
-                if not G1[r][c]:
-                    Cands = set()
-                    for Cand in range(1, 10):
-                        if not cell_val_has_conflicts(G1, r, c, Cand):
-                            Cands.add(Cand)
-                    E1[r][c] = Cands - C[r][c]
-        copy_puzzle_to_clipboard(G, E1, Step)
+        NrEmpties, Elims = determine_cands(Step[P_GRID], Step[P_CAND])
+        copy_puzzle_to_clipboard(PZL(Grid    = Step[P_GRID],
+                                     Givens  = self.Creator.Puzzle.Givens,
+                                     Elims   = Elims,
+                                     Method  = Step[P_TECH],
+                                     Pattern = Step[P_PTRN],
+                                     Outcome = Step[P_OUTC]))
 
     def on_solve_to(self, e):
         if self.ToStep > self.FromStep:
@@ -285,9 +263,6 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
                           "Information",
                           wx.ICON_INFORMATION | wx.OK)
 
-    # ColumnSorterMixin callbacks.
-    # noinspection PyPep8Naming
-
     def GetListCtrl(self):
         return self.StatLC
 
@@ -295,13 +270,12 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         return self.SmlDnIdx, self.SmlUpIdx
 
 class UserGuide(wx.Dialog):
-
     # Simple class to display the user guide written in simple html when created
     # and destroy itself when close is selected.  User guide pops up as a
-    # non modal window.
+    # non-modal window.
 
-    def __init__(self, parent):
-        wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = "User Guide",
+    def __init__(self, Title):  # , parent):
+        wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = Title + ": User Guide",
                            pos = wx.DefaultPosition,
                            size = USER_GUIDE_DLG_SZ,
                            style = wx.DEFAULT_DIALOG_STYLE | wx.DIALOG_NO_PARENT | wx.RESIZE_BORDER)
@@ -442,58 +416,9 @@ def pzl_to_pzl_str(oPzl):
                         sE += f"{v}"
         sG += f"|{sE}"
     if oPzl.Method != T_UNDEF:
-        sG += f"|{T[oPzl.Method[P_TECH]][T_TXT]}"
+        sG += f"|{T[oPzl.Method][T_TXT]}"
         sG += f"|{tkns_to_str(oPzl.Pattern)}|{tkns_to_str(oPzl.Outcome)}\n".replace(" ", "").replace(".", "")
     return sG
-
-def parse_pzl_str_depreciated(sPzl, Pzl):
-    print("parse_pzl_str_depreciated()")
-    lG = sPzl.replace("\n", "").split("|")
-    lenlG = len(lG)
-    Pzl.Grid   = [[0 for c in range(9)] for r in range(9)]
-    Pzl.Givens = [[0 for c in range(9)] for r in range(9)]
-    if not grid_str_to_grid(lG[0], Pzl.Grid, Pzl.Givens):
-        PgmMsg("Invalid Sudoku value puzzle spec format - grid.",
-               "Warning",
-               wx.ICON_WARNING | wx.OK)
-        # wx.MessageBox("Invalid Sudoku value puzzle spec format - grid.",
-        #               "Warning",
-        #               wx.ICON_WARNING | wx.OK)
-        return 0
-    if lenlG >= 2 and lG[1]:
-        Pzl.Elims = [[set() for c in range(9)] for r in range(9)]
-        for sE in lG[1].split(";"):
-            r, c, op, Cands = parse_ccell_phrase(sE)
-            if r < 0 or op != OP_ELIM:
-                PgmMsg("Invalid Sudoku value puzzle spec format - elims.",
-                       "Warning",
-                       wx.ICON_WARNING | wx.OK)
-                # wx.MessageBox("Invalid Sudoku value puzzle spec format - elims.",
-                #               "Warning",
-                #               wx.ICON_WARNING | wx.OK)
-
-                return 0
-            Pzl.Elims[r][c] |= Cands
-    if lenlG >= 3 and lG[2]:
-        for Tx in T:  # m in range(len(T):
-            if T[Tx][T_TXT] == lG[2]:
-                Pzl.Method = Tx
-                break
-        else:
-            PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
-                   "Warning",
-                   wx.ICON_WARNING | wx.OK)
-            # wx.MessageBox(f"Invalid Sudoku value puzzle spec format - unrecognised method.",
-            #               "Warning",
-            #               wx.ICON_WARNING | wx.OK)
-            # return 0
-            Pzl.Method = T_UNDEF
-    else: Pzl.Method = T_UNDEF
-    if lenlG == 5:
-        Pzl.Pattern = lG[3]
-        Pzl.Outcome = lG[4]
-    return lenlG
-
 
 def parse_ccell_phrase(St):
     # only knows how to parse rycx-=digits, and rycx:=digit
@@ -539,25 +464,6 @@ def grid_str_to_grid(sG, Grid, Givens = None):
             return False
     return True if rc == 81 else False
 
-# def grid_str_to_grid_depreciated(sG, G, Placed = True, GivensOnly = False):
-#     # Placed = True - differentiate between placed and givens, else all as givens
-#     # GivensOnly = True - only fill givens and ignore placed (digits prefixed by '+'
-#     print("grid_str_to_grid_dpreciated()")
-#     i = rc = 0
-#     while i < len(sG):
-#         if rc >= 81:
-#             return False
-#         G[rc//9][rc%9] = 0; v = sG[i]
-#         if v in ["0", ".", "-"]: i += 1; rc += 1; continue
-#         if v == " ": i += 1; continue
-#         if v == "+":
-#             if GivensOnly: i += 2; rc += 2; continue
-#             if Placed: G[rc//9][rc%9] = 10
-#             i += 1; v = sG[i]
-#         if v.isdigit(): G[rc//9][rc%9] += int(v); i +=1; rc += 1; continue
-#         return False  # error parsing the grid string.
-#     return True if rc == 81 else False
-
 def grid_to_grid_str(Grid, Givens = None):
 
     sG = ""
@@ -568,16 +474,6 @@ def grid_to_grid_str(Grid, Givens = None):
                 elif Givens[r][c]: sG += f"{Grid[r][c]}"
                 else: sG += f"+{Grid[r][c]}"
             else: sG += "0"
-    return sG
-
-def grid_to_grid_str_depreciated(G, sG = None):
-
-    print("grid_to_grid_str_depreciated()")
-    if sG is None: sG = ""
-    for r in range(9):
-        for c in range(9):
-            if G[r][c] > 10: sG += "+"; G[r][c] %= 10
-            sG += f"{G[r][c]}"
     return sG
 
 def tkns_to_str(Tkns):

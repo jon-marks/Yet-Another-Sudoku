@@ -3,11 +3,6 @@
 import os, shutil, sys
 from timeit import timeit
 
-if not os.getenv("PYCHARM_HOSTED"):
-    cwd = os.getcwd()
-    sys.path.insert(0, os.path.join(cwd, "src"))
-    sys.path.insert(0, os.path.join(cwd, "lib"))
-
 from misc import grid_str_to_grid
 import generate as gen
 import generate_x as genx
@@ -15,6 +10,8 @@ import generate_x as genx
 NTESTS = 10
 Ntimeits = 1
 Cols = 2
+
+# remember to fix syspath settings
 
 sG = "1.......2.9.4...5...6...7...5.9.3.......7.......85..4.7.....6...3...9.8...2.....1"
 # This puzzle requires just under 720K recursion steps to check. This is a very large amount
@@ -27,7 +24,7 @@ b = [[0.0 for j in range(Cols)] for i in range(NTESTS)]
 Min = [0.0] * Cols
 Avg = [0.0] * Cols
 print("Col 1: check_puzzle() from generate.py - interpreted")
-print("Col 2: check_puzzle() from generate_x.pyx - compiled")
+print("Col 2: check_puzzle() from generate.pyx - compiled")
 print(f"timeit()'s number: {Ntimeits}")
 print("Runs, Col 1,     Col 2")
 for i in range(NTESTS):

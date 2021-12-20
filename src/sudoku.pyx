@@ -21,7 +21,7 @@ import wx
 # Local imports
 from globals import *
 
-from generate_x import *
+from generate import *
 # does not call any Cython/C functions in generate.pyx, no cimport.
 from solve import *
 from timer import *

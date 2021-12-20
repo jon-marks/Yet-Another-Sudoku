@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Adaptation of setup_yas.py to follow YAS's directory enviroment nates: Appendix A in the Sudoku.odt
-# document and the changes to get mingw64 gcc to work in appendix C
+# Adaptation of setup_yas.py to follow YAS's directory environment nates: Appendix A
+# in the Sudoku.odt # document and the changes to get mingw64 gcc to work in appendix C
 # NOTE:
 # 1.  I would like to find a way to specify the locations of the Cython *.c and *.html
 #     targets individually.  (--build-lib on the command line works for *.pyd files).
@@ -11,12 +11,15 @@
 from setuptools import setup
 from Cython.Build import cythonize
 from setuptools.command.build_ext import build_ext
-import os
+
+from sys import argv, path
+from os import makedirs, remove, getenv  # , putenv,
+from os.path import dirname, join, split, exists, getmtime
 from shutil import copy2
 from glob import glob
 from pathlib import Path
 
-DEV = bool(os.getenv('BLD', 'DEV') == 'DEV')
+Dev = bool(getenv('BLD', 'DEV') == 'DEV')
 
 # Start of User configurable stuff.  However still tread cautiously when making changes.
 # Setup Parameters
@@ -26,21 +29,23 @@ Author = "Jonathan Marks",
 License = "Mozilla Public Licence 2.0",
 
 # Directories off the project root.
+LibDir   = "lib"
+LibdDir  = "libd"
 SetupDir = "setup"
-SrcDir = "src"
-
-TgtDir = "libd" if DEV else "lib"
-TmpDir = "tmp"
-SrcExt = ".pyx"
+SrcDir   = "src"
+TgtDir   = LibdDir if Dev else LibDir
+TmpDir   = "tmp"
+TrcDir   = "trc"
+SrcExt   = ".pyx"
 
 # Additional GCC parameters:
 Defs = [  # translates to -D options on the gcc command lile.
         ]
-if DEV: Defs.extend([('CYTHON_TRACE_NOGIL', '1')])
+if Dev: Defs.extend([('CYTHON_TRACE_NOGIL', '1')])
 
 CompArgs = ['-Wall',       # all warnings
             ]
-if DEV: CompArgs.extend(['-O0', '-ggdb'])  # no optimisation (fast compile)and full debug info.
+if Dev: CompArgs.extend(['-O0', '-ggdb'])  # no optimisation (fast compile)and full debug info.
 else: CompArgs.extend(['-O3', '-g0'])  # highy optimised (slow compile) and no debug info
 
 LinkArgs = ['-static-libgcc',
@@ -51,7 +56,7 @@ LinkArgs = ['-static-libgcc',
             ]
 
 # Cythonize compiler directives
-if DEV:
+if Dev:
     CythonDirectives = {
                         'language_level': 3,
                         'linetrace': True,
@@ -64,21 +69,26 @@ else:
                         }
 # End of user configurable stuff.
 
-NwrSetup = os.path.join(TmpDir, ".newersetup_yas")
-Setup = os.path.join(SetupDir, "setup_yas.py")
+Root = dirname(dirname(argv[0]))
+path.insert(0, f"{join(Root, TrcDir)}")
+path.insert(0, f"{join(Root, SrcDir)}")
+if Dev: print(f"sys.path = {path}")
 
-SrcPaths = glob(os.path.join(SrcDir, "*" + SrcExt))
+NwrSetup = join(TmpDir, ".newersetup_yas")
+Setup = join(SetupDir, "setup_yas.py")
 
-if not os.path.exists(TgtDir): os.makedirs(TgtDir)
-if not os.path.exists(TmpDir): os.makedirs(TmpDir)
-if (not os.path.exists(NwrSetup)) or os.path.getmtime(NwrSetup) < os.path.getmtime(Setup):
+SrcPaths = glob(join(SrcDir, "*" + SrcExt))
+
+if not exists(TgtDir): makedirs(TgtDir)
+if not exists(TmpDir): makedirs(TmpDir)
+if (not exists(NwrSetup)) or getmtime(NwrSetup) < getmtime(Setup):
     for path in [*SrcPaths, *[NwrSetup]]: Path(path).touch()
 
 TmpPaths = []
 for SrcPath in SrcPaths:
-    SrcDir, SrcFile = os.path.split(SrcPath)
-    TmpPath = os.path.join(TmpDir, SrcFile)
-    if os.path.exists(TmpPath): os.remove(TmpPath)
+    SrcDir, SrcFile = split(SrcPath)
+    TmpPath = join(TmpDir, SrcFile)
+    if exists(TmpPath): remove(TmpPath)
     copy2(SrcPath, TmpPath)
     TmpPaths.append(TmpPath)
 
@@ -103,10 +113,3 @@ setup(
                               ),
       zip_safe = False,
      )
-
-# NOTE for line tracing add the following compilier dierctives 'profile': True, 'linetrace': True"
-# also add CYTHON_TRACE_NOGIL=1 to the setup_yas.py run configuration.
-# also try 'binding': True compiler directive. instead of 'profile': True see second ref.
-# Refs:
-# https://cython.readthedocs.io/en/latest/src/tutorial/profiling_tutorial.html#profiling-tutorial
-# https://stackoverflow.com/questions/28301931/how-to-profile-cython-functions-line-by-line

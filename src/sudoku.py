@@ -13,31 +13,17 @@ Audit:
     2021-04-xx  jm  Initial Entry
 
 """
-import os
+import os, sys
 from copy import copy, deepcopy
 
 import wx
 
-if not os.getenv("PYCHARM_HOSTED"):
-    cwd = os.getcwd()
-    sys.path.insert(0, os.path.join(cwd, "src"))
-    sys.path.insert(0, os.path.join(cwd, "lib"))
-
-if os.getenv("CYTHON"):
-    CYTHON = True
-    from generate_x import check_puzzle, gen_filled_grid, scramble_puzzle, minimalise_puzzle, create_puzzle
-    from solve_utils_x import determine_cands
-else:
-    CYTHON = False
-    from generate import  check_puzzle, gen_filled_grid, scramble_puzzle, minimalise_puzzle, create_puzzle
-    from solve_utils import determine_cands
-
-# Local imports
 from globals import *
 from misc import open_puzzle, save_puzzle, ListSolnWindow, tkns_to_str
-# if os.getenv("NOCYTHON"): from generate import *
-# else: from generate_x import *
-# from generate import *
+
+# Local imports
+from generate import check_puzzle, gen_filled_grid, scramble_puzzle, minimalise_puzzle, create_puzzle
+from solve_utils import determine_cands
 from solve import *
 from timer import *
 from board import *
@@ -147,8 +133,8 @@ class Sudoku:
         self.Puzzle     = None
 
         # instance data
-        self.Grid        = None
-        self.Givens      = None
+        self.Grid        = [[0 for c in range(9)] for r in range(9)]
+        self.Givens      = [[0 for c in range(9)] for r in range(9)]
         self.Cands       = [[set() for c in range(9)] for r in range(9)]  # only used when self.AssistCands = False.
         self.SelList     = []  # deque(())  # list of (r,c) tuples of selected cells
         self.History     = []         # History list (undo buffer) for Entry and Solve
@@ -272,28 +258,6 @@ class Sudoku:
         self.gen_event(EV_SC_VLD, oPzl)
 
 
-#         self.Grid   = [[Pzl.Givens[r][c] for c in range(9)] for r in range(9)]
-#         self.Givens = [[Pzl.Givens[r][c] for c in range(9)] for r in range(9)]
-#         Pzl.Elims   = [[0 for c in range(9)] for r in range(9)]
-# # instantiate puzzle in on_validation_state        # if self.Puzzle: del self.Puzzle
-#         # self.Puzzle = Puzzle(PZL_GEN, self.Sym)
-#         for r in range(9):
-#             for c in range(9):
-#                 if self.Puzzle.Grid[r][c]: self.Board.write_cell_value(self.Puzzle.Grid[r][c], r, c, CVS_ENTER)
-#                 else:
-#                     if self.ShowCands:
-#                         Cands = set()
-#                         for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-#                             if cell_val_has_no_conflicts(v, self.Puzzle.Grid, r, c):
-#                                 Cands.add(Cand)
-#                         self.Board.write_cell_value(0, r, c, CVS_CANDS, Cands)
-#                     else: self.Board.write_cell_value(0, r, c, CVS_CANDS)
-#         self.gen_event(EV_SC_VLD)  # go through validation state to slv.  Validation state grades the puzzle.
-#         # self.StatusBar.update_level(LVLS[self.Puzzle.Lvl])
-#         # self.GameTimer.start()
-#         # self.gen_event(EV_SC_SLV)
-
-
     def on_load_state(self, e):
         # Can only (but not necessarily) transition to this state from the
         # Enter state if the UNSAVED_CHANGES flag is set.
@@ -318,11 +282,11 @@ class Sudoku:
         (self.PzlDir, self.PzlFn) = Fp
         self.update_board(ST_ENT, oPzl)
         if NrFlds > 1:  # if only givens and placed values read, in enter mode, else transition to validation
-            self.MainWindow.SetTitle(TITLE+" - "+Fp[1])
+            self.MainWindow.SetTitle(self.MainWindow.Title + " - "+Fp[1])
             self.MenuBar.miPuzzleEnter.Check(False)
             self.gen_event(EV_SC_VLD, oPzl)
         else:  # only givens and placed provided, only enter the givens and remain in enter mode.
-            self.MainWindow.SetTitle(TITLE)
+            self.MainWindow.SetTitle(self.MainWindow.Title)
             self.MenuBar.miPuzzleEnter.Check()
             self.Grid   = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
             self.Givens = [[oPzl.Givens[r][c] for c in range(9)] for r in range(9)]
@@ -367,7 +331,7 @@ class Sudoku:
         Fp = save_puzzle((self.PzlDir, self.PzlFn), PZL(Grid = self.Grid, Givens = self.Givens))
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
-            self.MainWindow.SetTitle(TITLE + " - " + self.PzlFn)
+            self.MainWindow.SetTitle(self.MainWindow.Title + " - " + self.PzlFn)
         self.gen_event(EV_SC_ENT, False)
 
     def on_entry_mouse_state(self, e, Type, r, c, KbdMods):
@@ -415,11 +379,11 @@ class Sudoku:
             NrFlds = copy_clipboard_to_pzl(oPzl)
             if NrFlds: self.update_board(ST_ENT, oPzl)
             if NrFlds > 1:  # if only givens and placed values read, in enter mode, else transition to validation
-                self.MainWindow.SetTitle(TITLE+" - "+Fp[1])
+                # self.MainWindow.SetTitle(TITLE+" - "+Fp[1])
                 self.MenuBar.miPuzzleEnter.Check(False)
                 self.gen_event(EV_SC_VLD, oPzl)
             else:  # only givens and placed provided, only enter the givens and remain in enter mode.
-                self.MainWindow.SetTitle(TITLE)
+                # self.MainWindow.SetTitle(TITLE)
                 self.MenuBar.miPuzzleEnter.Check()
                 self.Grid = oPzl.Grid
                 self.Givens = oPzl.Givens
@@ -530,7 +494,7 @@ class Sudoku:
         #    With Elims specified, Elims are taken from Cands before grading puzzle.
         #    With Method specified, that method is tried as first step, if it fails proceeds as if no method specified.
 
-        if oPzl == None: oPzl = PZL(Grid = self.Grid, Givens = self.Givens)
+        if not oPzl: oPzl = PZL(Grid = self.Grid, Givens = self.Givens)
         if not oPzl.Soln:  # validate puzzle by finding a solution
             # Some pre-checks first
             Gvns = 0
@@ -750,7 +714,7 @@ class Sudoku:
                           wx.ICON_INFORMATION | wx.OK)
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
-            self.MainWindow.SetTitle(TITLE+" - "+self.PzlFn)
+            self.MainWindow.SetTitle(self.MainWindow.Title+" - "+self.PzlFn)
         self.gen_event(EV_SC_SLV)
         # self.gen_event(EV_SC_SLV)
         # G1 = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
@@ -1018,10 +982,10 @@ class Sudoku:
             if NrFound != 1 and not grid_compare(Soln, self.Puzzle.Soln):
                 wx.MessageBox("Givens do not form a valid puzzle\n"
                               "Information", wx.ICON_INFORMATION | wx.OK)
-                self.reset()
-                self.Board.clear_board()
+                # self.reset()
+                # self.Board.clear_board()
                 self.Puzzle = None
-                self.gen_event(EV_SC_FIN)
+                self.gen_event(EV_SC_FIN, True)
                 return
 
             self.StatusBar.update_0("Regrading Puzzle, may take some time. . .")
@@ -1074,7 +1038,6 @@ class Sudoku:
 
 
     # Below are supporting functions for the Sudoku Control state machine actions
-
     def update_status_histo(self, Grid):
         H = [0, 0, 0, 0, 0, 0, 0, 0, 0]; G = 0
         for r in range(9):
@@ -1315,7 +1278,7 @@ class Sudoku:
     def set_assist_cands(self, tf):
         # can discard NrEmpties here as nothing has happened to change its value
         self.AssistCands = tf
-        if AssistCands:
+        if tf:
             NrEmpties = self.update_board(ST_SLV, PZL(
                     Grid = self.Puzzle.Grid,
                     Givens = self.Puzzle.Givens,

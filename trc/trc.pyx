@@ -20,7 +20,7 @@
 #   2.  The gcc warns because of the incorrect Cython generated C code from Cython which had no
 #       consequence here and can be ignored.
 
-from sys import stderr
+from sys import stderr, path
 from time import perf_counter
 from inspect import getframeinfo
 from os.path import basename
@@ -28,7 +28,8 @@ from os.path import basename
 from cpython.pystate cimport PyFrameObject, Py_tracefunc
 from cpython cimport PyObject
 
-from globals import TRC
+# Hack using the end of sys.path to carry truly global vars across modules.
+TRC = True if path[len(path)-1] == ".trc_true" else False
 
 cdef extern from "frameobject.h":
     pass
@@ -41,11 +42,12 @@ cdef int linetrace_cb(PyObject* o, PyFrameObject* frame, int what, PyObject* arg
     global pPFO
     pPFO = frame
 
-if TRC:
-    PyEval_SetTrace(linetrace_cb, None)
-    def TRCX(*args, **kwargs):
+if TRC: PyEval_SetTrace(linetrace_cb, None)
+
+def TRCX(*args, **kwargs):
+    global TRC
+    if TRC:
         Fi = getframeinfo(<object>pPFO)
         print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:", *args, file = stderr, flush = True, **kwargs)
-else:
-    def TRCX(*args, **kwargs):
+    else:
         pass

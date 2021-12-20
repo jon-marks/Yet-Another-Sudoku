@@ -1,8 +1,8 @@
-import Cython as cy
+
 
 from globals import *
 from misc import *
-from generate import *
+# from generate import *
 from solve import *
 
 # # used as a data structure for transferring information to an from the Puzzle class.
@@ -21,7 +21,7 @@ class Puzzle:
 
         self.Grid           = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
         self.InitGrid       = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
-        if oPzl.Elims: self.Elims = [[copy(oPzl.Elim[r][c]) for c in range(9)] for r in range(9)]
+        if oPzl.Elims: self.Elims = [[copy(oPzl.Elims[r][c]) for c in range(9)] for r in range(9)]
         else: self.Elims    = [[set() for c in range(9)] for r in range(9)]
         self.InitElims      = [[copy(self.Elims[r][c]) for c in range(9)] for r in range(9)]
         self.Soln           = [[oPzl.Soln[r][c] for c in range(9)] for r in range(9)]
