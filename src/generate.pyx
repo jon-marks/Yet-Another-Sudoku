@@ -5,6 +5,7 @@ from sys import path
 from ctypedefs cimport SOLN_T
 from generate cimport *
 from solve_utils cimport *
+# from libd.solve_utils import *
 
 from globals import *
 from solve import *
@@ -18,8 +19,6 @@ cdef extern from "stdlib.h":
 
 cdef extern from "time.h":
     long int time(int)
-
-TRCX("SADFSDF")
 
 if TRC:
 #    import logging as log
@@ -202,7 +201,7 @@ def minimalise_puzzle(G, T_H = None):
             if G[r][c] != 0:
                 H.append((r, c))
 
-    shuffle(H)
+    if H: shuffle(H)
     if T_H:  H = T_H
     G1 = [[G[r][c] for c in range(9)] for r in range(9)]
     for r, c in H:
@@ -217,10 +216,6 @@ def minimalise_puzzle(G, T_H = None):
 def create_puzzle(Pzl, T_H = None, T_G = None):
     # T_H and T_G used for benchmark and other testing to control randomisation.
 
-    print("Testing Prefix: ")
-    print(PREFIX())
-# if DEBUG: DBG("This is a test!!!")
-    # print("Create puzzle start")
     Pzl.Soln = gen_filled_grid()
     if T_G: Pzl.Soln = T_G
     CreatePuzzle[Pzl.Sym](Pzl, T_H)  # returns Pzl.Givens in the Pzl data class (struct)

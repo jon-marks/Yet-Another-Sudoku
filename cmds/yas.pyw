@@ -13,13 +13,14 @@ LibdDir  = "libd"
 SrcDir   = "src"
 TrcDir   = "trc"
 
+sRun = ""
 Trc = False
-Run = "prod"
+Mods = "prod"
 nArgs = min(3, len(argv))
 for i in range(1, nArgs):
-    if argv[i] in ["INT", "Int", "int"]: Run = INT
-    if argv[i] in ["PROD", "Prod", "Prod"]: Run = INT | PROD
-    if argv[i] in ["DEV", "Dev", "dev"]: Run = INT | PROD | DEV
+    if argv[i] in ["INT", "Int", "int"]: Mods = INT; sRun = " - Interpreted Only"
+    if argv[i] in ["PROD", "Prod", "Prod"]: Mods = INT | PROD; sRun = ""
+    if argv[i] in ["DEV", "Dev", "dev"]: Mods = INT | PROD | DEV; sRun = " - Development Build"
     if argv[i] in ["t", "T", "-t", "/t"]: Trc = True
     if argv[i] in ["h", "H", "-h", "?", "-?", "/?"]:
         print("Incorrect syntax!\n"
@@ -34,24 +35,21 @@ for i in range(1, nArgs):
         exit()
 
 Root  = dirname(dirname(argv[0]))
-if Run & INT:
+if Mods & INT:
     path.insert(0, f"{join(Root, TrcDir)}")
     path.insert(0, f"{join(Root, SrcDir)}")
-if Run & PROD:
+if Mods & PROD:
     path.insert(0, f"{join(Root, LibDir)}")
-if Run & DEV:
+if Mods & DEV:
     path.insert(0, f"{join(Root, LibdDir)}")
 
-sRun = ""
-if Run == INT: sRun = " - Interpreted Only"
-elif Run == DEV: sRun = " - Development Build"
 if Trc:
     sRun += " + TRCX"
     # Hack using the end of sys.path to store truly global vars.
     path.append(".trc_true")
 else:
     path.append(".trc_false")
-if Run & (INT | DEV): print (f"sys.path = {path}")
+if Mods & (INT | DEV): print (f"sys.path = {path}")
 chdir(Root)
 from main import main
 main(sRun)

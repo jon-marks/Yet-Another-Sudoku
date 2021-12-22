@@ -1,43 +1,46 @@
 #!/usr/bin/env python
-
-import os, shutil, sys
+from os.path import dirname, join
+from sys import argv, path, modules
 from timeit import timeit
-
-from misc import grid_str_to_grid
-import generate as gen
-import generate_x as genx
-
-
 
 NTESTS = 10
 Ntimeits = 10000
-Cols = 2
-
 sG = ".5267.3.8.3...562767..325.128...61.5.6....2.4714523869827314956.9.267483346958712"
 
+spinner = ["|", "/", "-", "\\"]
+Root = dirname(dirname(argv[0]))
+path.insert(0, join(Root, "src"))
+
+from globals import *
+from misc import grid_str_to_grid
+from generate import scramble_puzzle
+
+# prep params for create_puzzle.
 G = [[0 for c in range(9)] for r in range(9)]
 grid_str_to_grid(sG, G)
 
-b = [[0.0 for j in range(Cols)] for i in range(NTESTS)]
-Min = [0.0] * Cols
-Avg = [0.0] * Cols
-print("Col 1: scramble_puzzle() from generate.py - interpreted")
-print("Col 2: scramble_puzzle() from generate.pyx - compiled")
-print(f"timeit()'s number: {Ntimeits}")
-print("Runs, Col 1,     Col 2")
+print(f"Benchmark scramble_puzzle(), best of {NTESTS}, Ntimeits: {Ntimeits}")
+print(f"Interpreted code: {spinner[3]}", end="", flush = True)
+Times = []; M0 = 99999.0
 for i in range(NTESTS):
-    b[i][0] = timeit(lambda: gen.scramble_puzzle(G), number = Ntimeits)
-    b[i][1] = timeit(lambda: genx.scramble_puzzle(G), number = Ntimeits)
-    print(f"{i+1: 4d}, {b[i][0]:9.7f}, {b[i][1]:9.7f}")
-for j in range(Cols):
-    A = 0.0
-    M = 999999.0
-    for i in range(NTESTS):
-        A += b[i][j]
-        M = min(M, b[i][j])
-    Avg[j] = A/NTESTS
-    Min[j] = M
+    Times.append(timeit(lambda: scramble_puzzle(G), number = Ntimeits))
+    print(f"\b{spinner[i%4]}", end = "", flush = True)
+    M0 = min(M0, Times[-1])
+M0T = M0 * 1000.0; M0E = M0T / Ntimeits
+print(f"\bT:{M0T:9.4f} ms, Ea:{M0E:9.4f} ms")
 
-print(f" Avg, {Avg[0]:9.7f}, {Avg[1]:9.7f}")
-print(f" Min, {Min[0]:9.7f}, {Min[1]:9.7f}")
-print(f" Imp,            {(Min[0]/Min[1]): 8.2f}x")
+# unload src modules so that lib modules load.
+modules.pop('generate')
+modules.pop('solve_utils')  # loaded by generate
+
+path.insert(0, join(Root, "lib"))
+from generate import scramble_puzzle
+print(f"Compiled Code:    {spinner[3]}", end ="", flush = True)
+Times = []; M1 = 99999.0
+for i in range(NTESTS):
+    Times.append(timeit(lambda: scramble_puzzle(G), number = Ntimeits))
+    print(f"\b{spinner[i%4]}", end = "", flush = True)
+    M1 = min(M1, Times[-1])
+M1T = M1 * 1000.0; M1E = M1T / Ntimeits
+print(f"\bT:{M1T:9.4f} ms, Ea:{M1E:9.4f} ms")
+print(f"Improvement:      {(M0/M1):9.7f} times ")
