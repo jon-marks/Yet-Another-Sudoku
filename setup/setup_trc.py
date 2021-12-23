@@ -57,6 +57,7 @@ setup(
                                                      'boundscheck': False,
                                                      'wraparound': False,
                                                      },
+                              # show_all_warnings = True,
                               annotate = True,
                               ),
       zip_safe = False,

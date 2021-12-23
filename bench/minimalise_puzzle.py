@@ -20,9 +20,41 @@ T_H45  = [(5, 2), (8, 0), (6, 8), (3, 0), (2, 6), (8, 3), (5, 1), (0, 6), (5, 8)
 T_H115 = [(2, 1), (5, 8), (5, 4), (6, 2), (7, 3), (6, 8), (7, 6), (0, 8), (1, 5), (8, 0), (8, 5), (8, 7), (4, 6), (5, 2), (5, 3), (8, 8), (0, 1), (0, 2), (6, 7), (6, 4), (2, 5), (2, 6), (8, 1), (7, 5), (3, 6), (6, 1), (1, 8), (7, 4), (2, 0), (0, 4), (3, 0), (8, 6), (3, 8), (0, 6), (6, 6), (7, 8), (1, 7), (6, 0), (8, 3), (6, 5), (1, 1), (7, 1), (3, 1), (1, 6), (8, 2), (2, 4), (6, 3), (4, 1), (5, 5), (3, 5), (5, 0), (5, 6), (5, 7), (2, 8), (0, 3), (5, 1), (7, 7), (4, 8), (8, 4)]
 T_H540 = [(2, 6), (8, 7), (8, 4), (2, 0), (3, 8), (3, 5), (3, 6), (5, 7), (6, 2), (5, 5), (7, 8), (4, 6), (4, 8), (5, 2), (8, 3), (0, 6), (6, 5), (5, 1), (2, 4), (5, 4), (8, 6), (7, 6), (6, 1), (0, 4), (1, 8), (7, 5), (1, 7), (1, 6), (6, 4), (7, 3), (8, 2), (8, 8), (2, 1), (3, 1), (4, 1), (7, 4), (1, 1), (5, 3), (6, 7), (6, 3), (5, 8), (8, 1), (2, 8), (0, 1), (0, 3), (6, 8), (8, 0), (1, 5), (0, 2), (6, 6), (3, 0), (5, 0), (8, 5), (6, 0), (2, 5), (7, 7), (5, 6), (7, 1), (0, 8)]
 T_H = T_H5
+
+
+PROD = 0x02
+DEV  = 0x04
+
+LibDir   = "lib"
+LibdDir  = "libd"
+SrcDir   = "src"
+TrcDir   = "trc"
+
+Trc = False
+Mods = PROD
+nArgs = min(3, len(argv))
+for i in range(1, nArgs):
+    # if argv[i] in ["INT", "Int", "int"]: Mods = INT; sRun = " - Interpreted Only"
+    if argv[i] in ["PROD", "Prod", "Prod"]: Mods = PROD
+    elif argv[i] in ["DEV", "Dev", "dev"]: Mods = DEV | PROD
+    elif argv[i] in ["t", "T", "-t", "/t"]: Trc = True
+    else:
+        print("Incorrect syntax!\n"
+              "Syntax: yas [<type>] [t]\n"
+              "     <type>: (optional) one of DEV or PROD - Defaults to PROD.\n"
+              "     t:      (optional) activated TRCX functionality.\n"
+              "                 DEV:  use existing development Cython compiled binaries instead\n"
+              "                       of interpreted code (unoptimised and line trace support).\n"
+              "                 PROD: use existing production Cython compiled binaries instead of\n"
+              "                       interpreted code (optimised and no line trace support).")
+        exit()
+
 spinner = ["|", "/", "-", "\\"]
 Root = dirname(dirname(argv[0]))
-path.insert(0, join(Root, "src"))
+path.insert(0, join(Root, TrcDir))
+path.insert(0, join(Root, SrcDir))
+if Trc: path.append(".trc_true")
+else: path.append(".trc_false")
 
 from globals import *
 from misc import grid_str_to_grid
@@ -45,8 +77,11 @@ print(f"\bT:{M0T:11.4f} ms, Ea:{M0E:11.4f} ms")
 # unload src modules so that lib modules load.
 modules.pop('generate')
 modules.pop('solve_utils')  # loaded by generate
+if Mods & PROD:
+    path.insert(0, f"{join(Root, LibDir)}")
+if Mods & DEV:
+    path.insert(0, f"{join(Root, LibdDir)}")
 
-path.insert(0, join(Root, "lib"))
 from generate import minimalise_puzzle
 print(f"Compiled Code:    {spinner[3]}", end ="", flush = True)
 Times = []; M1 = 9999999.0

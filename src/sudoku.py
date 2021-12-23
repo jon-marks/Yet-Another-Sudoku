@@ -714,7 +714,7 @@ class Sudoku:
                           wx.ICON_INFORMATION | wx.OK)
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
-            self.MainWindow.SetTitle(self.MainWindow.Title+" - "+self.PzlFn)
+            self.MainWindow.SetTitle(self.MainWindow.Title + " - "+self.PzlFn)
         self.gen_event(EV_SC_SLV)
         # self.gen_event(EV_SC_SLV)
         # G1 = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
@@ -869,7 +869,7 @@ class Sudoku:
             copy_puzzle_to_clipboard(PZL(
                     Grid = self.Puzzle.Grid,
                     Givens = self.Puzzle.Givens,
-                    Elims = self.puzzle.Elims,
+                    Elims = self.Puzzle.Elims,
                     Method = self.Puzzle.Try1st,
                     Pattern = self.Puzzle.Try1stPattern,
                     Outcome = self.Puzzle.Try1stOutcome))

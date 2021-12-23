@@ -19,10 +19,10 @@ Mods = "prod"
 nArgs = min(3, len(argv))
 for i in range(1, nArgs):
     if argv[i] in ["INT", "Int", "int"]: Mods = INT; sRun = " - Interpreted Only"
-    if argv[i] in ["PROD", "Prod", "Prod"]: Mods = INT | PROD; sRun = ""
-    if argv[i] in ["DEV", "Dev", "dev"]: Mods = INT | PROD | DEV; sRun = " - Development Build"
-    if argv[i] in ["t", "T", "-t", "/t"]: Trc = True
-    if argv[i] in ["h", "H", "-h", "?", "-?", "/?"]:
+    elif argv[i] in ["PROD", "Prod", "Prod"]: Mods = INT | PROD; sRun = ""
+    elif argv[i] in ["DEV", "Dev", "dev"]: Mods = INT | PROD | DEV; sRun = " - Development Build"
+    elif argv[i] in ["t", "T", "-t", "/t"]: Trc = True
+    else:
         print("Incorrect syntax!\n"
               "Syntax: yas [<type>] [t]\n"
               "     <type>: (optional) one of INT, DEV or PROD - Defaults to PROD.\n"
@@ -49,7 +49,7 @@ if Trc:
     path.append(".trc_true")
 else:
     path.append(".trc_false")
-if Mods & (INT | DEV): print (f"sys.path = {path}")
+if sRun: print (f"sys.path = {path}")   # sRun is empty for Prod builds with no tracing
 chdir(Root)
 from main import main
 main(sRun)

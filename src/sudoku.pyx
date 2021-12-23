@@ -301,11 +301,11 @@ class Sudoku:
         (self.PzlDir, self.PzlFn) = Fp
         self.update_board(ST_ENT, oPzl)
         if NrFlds > 1:  # if only givens and placed values read, in enter mode, else transition to validation
-            self.MainWindow.SetTitle(TITLE+" - "+Fp[1])
+            self.MainWindow.SetTitle(self.MainWindow.Title + " - "+Fp[1])
             self.MenuBar.miPuzzleEnter.Check(False)
             self.gen_event(EV_SC_VLD, oPzl)
         else:  # only givens and placed provided, only enter the givens and remain in enter mode.
-            self.MainWindow.SetTitle(TITLE)
+            self.MainWindow.SetTitle(self.MainWindow.Title)
             self.MenuBar.miPuzzleEnter.Check()
             self.Grid   = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
             self.Givens = [[oPzl.Givens[r][c] for c in range(9)] for r in range(9)]
@@ -350,7 +350,7 @@ class Sudoku:
         Fp = save_puzzle((self.PzlDir, self.PzlFn), PZL(Grid = self.Grid, Givens = self.Givens))
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
-            self.MainWindow.SetTitle(TITLE + " - " + self.PzlFn)
+            self.MainWindow.SetTitle(self.MainWindow.Title + " - " + self.PzlFn)
         self.gen_event(EV_SC_ENT, False)
 
     def on_entry_mouse_state(self, e, Type, r, c, KbdMods):
@@ -397,11 +397,11 @@ class Sudoku:
             NrFlds = copy_clipboard_to_pzl(oPzl)
             if NrFlds: self.update_board(ST_ENT, oPzl)
             if NrFlds > 1:  # if only givens and placed values read, in enter mode, else transition to validation
-                self.MainWindow.SetTitle(TITLE+" - "+Fp[1])
+                # self.MainWindow.SetTitle(TITLE+" - "+Fp[1])
                 self.MenuBar.miPuzzleEnter.Check(False)
                 self.gen_event(EV_SC_VLD, oPzl)
             else:  # only givens and placed provided, only enter the givens and remain in enter mode.
-                self.MainWindow.SetTitle(TITLE)
+                # self.MainWindow.SetTitle(TITLE)
                 self.MenuBar.miPuzzleEnter.Check()
                 self.Grid = oPzl.Grid
                 self.Givens = oPzl.Givens
@@ -732,7 +732,7 @@ class Sudoku:
                           wx.ICON_INFORMATION | wx.OK)
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
-            self.MainWindow.SetTitle(TITLE+" - "+self.PzlFn)
+            self.MainWindow.SetTitle(self.MainWindw.Title + " - "+self.PzlFn)
         self.gen_event(EV_SC_SLV)
         # self.gen_event(EV_SC_SLV)
         # G1 = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
@@ -887,7 +887,7 @@ class Sudoku:
             copy_puzzle_to_clipboard(PZL(
                     Grid = self.Puzzle.Grid,
                     Givens = self.Puzzle.Givens,
-                    Elims = self.puzzle.Elims,
+                    Elims = self.Puzzle.Elims,
                     Method = self.Puzzle.Try1st,
                     Pattern = self.Puzzle.Try1stPattern,
                     Outcome = self.Puzzle.Try1stOutcome))

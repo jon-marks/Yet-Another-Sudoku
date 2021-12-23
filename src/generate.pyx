@@ -5,23 +5,21 @@ from sys import path
 from ctypedefs cimport SOLN_T
 from generate cimport *
 from solve_utils cimport *
-# from libd.solve_utils import *
 
 from globals import *
-from solve import *
 from trc import TRCX
 
-TRC = True if path[len(path)-1] == ".trc_true" else False
-
-cdef extern from "stdlib.h":
+cdef extern from "stdlib.h" nogil:
     void   srand (unsigned int)
     int    rand()
 
-cdef extern from "time.h":
+cdef extern from "time.h" nogil:
     long int time(int)
 
+cdef extern from "string.h" nogil:
+    void * memset (void *, int, size_t)
+
 if TRC:
-#    import logging as log
     seed(0)
     srand(0)
 else:
@@ -30,8 +28,7 @@ else:
 
 def check_puzzle(Grid):
     # Python wrapper to Cython/C check_puzzle_c
-    cdef SOLN_T Soln,
-    cdef SOLN_T *pSoln = &Soln
+    cdef SOLN_T Soln
     cdef int G[9][9]
     cdef r, c
 
@@ -92,12 +89,9 @@ cdef bint check_puzzle_c(int G[9][9], SOLN_T* pSoln, int cell):
 def gen_filled_grid():
     # Python wrapper for Cython gen_filled_grid
     cdef int G[9][9]
-    cdef int r, c, cell = 0
+    cdef int cell = 0
 
-   # TRC("Another trc test")
-    for r in range(9):
-        G[r][:] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-
+    memset(G, 0, sizeof(G))
     gen_filled_grid_c(G, cell)
     return [[G[r][c] for c in range(9)] for r in range(9)]
 
@@ -126,7 +120,7 @@ cdef bint gen_filled_grid_c(int G[9][9], int cell):
         t = vals[l]
         vals[l] = vals[rrand]
         vals[rrand] = t
-    # TRC("Testing trace\n")
+
     for v in vals:
         if cell_val_has_no_conflicts_c(v, G, r, c):
             G[r][c] = v
@@ -143,7 +137,7 @@ def scramble_puzzle(grid):
 
     # No need to optimize, compiled version executes in ~30uSec - plenty fast enough.
 
-    grid1 = [[] for r in range(9)]
+    grid1 = [[]] * 9
     # Shuffle the rows in bands of 3:   grid  ==> grid1, refs
     for bi in [0, 3, 6]:  # In each band
         RI = [0, 1, 2]; shuffle(RI)
@@ -191,26 +185,43 @@ def scramble_puzzle(grid):
     else:  return [[v[grid1[8-c][8-r]] for c in range(9)] for r in range(9)]
 
 def minimalise_puzzle(G, T_H = None):
-    # sufficient optimisation using the python wrapper check_puzzle, no need to make this
-    # code a wrapper for using check_puzzle.
-    from misc import grid_to_grid_str
+    # T_H passes a pre-shuffled array for benchmarking and unit testing.
+    cdef int H[81][2]
+    cdef int G1[9][9]
+    cdef int i, r, c, v, rr, l, lenH
+    cdef SOLN_T Soln
 
-    H = []
+    # Collect the Grid coords of cells with values in H
+    lenH = 0
     for r in range(9):
         for c in range(9):
-            if G[r][c] != 0:
-                H.append((r, c))
+            G1[r][c] = G[r][c]
+            if G1[r][c] != 0:
+                H[lenH][0] = r; H[lenH][1] = c
+                lenH += 1
 
-    if H: shuffle(H)
-    if T_H:  H = T_H
-    G1 = [[G[r][c] for c in range(9)] for r in range(9)]
-    for r, c in H:
+    # Fisher Yates shuffle of coords in H
+    l = lenH
+    while l:
+        rr = rand() % l
+        l -= 1
+        r = H[l][0]; c = H[l][1]
+        H[l][0] = H[rr][0]; H[l][1] = H[rr][1]
+        H[rr][0] = r; H[rr][1] = c
+
+    if T_H:  # if T_H is passed write it into the H array.
+        lenH = len(T_H)
+        for i in range(len(T_H)):
+            H[i][0] = T_H[i][0]; H[i][1] = T_H[i][1]
+
+    for i in range(lenH):
+        r = H[i][0]; c = H[i][1]
         v = G1[r][c]
         G1[r][c] = 0
-        NrFound, Soln = check_puzzle(G1)
-        if NrFound == 1: G[r][c] = 0
+        Soln.Found = 0
+        check_puzzle_c(G1, &Soln, 0)
+        if Soln.Found == 1: G[r][c] = 0
         else: G1[r][c] = v
-        # print(f"[{r}][{c}]: {grid_to_grid_str(G)}")
     return G
 
 def create_puzzle(Pzl, T_H = None, T_G = None):
@@ -219,16 +230,13 @@ def create_puzzle(Pzl, T_H = None, T_G = None):
     Pzl.Soln = gen_filled_grid()
     if T_G: Pzl.Soln = T_G
     CreatePuzzle[Pzl.Sym](Pzl, T_H)  # returns Pzl.Givens in the Pzl data class (struct)
-#    else:
-#        CreatePuzzle[Pzl.Sym](Pzl)  # returns Pzl.Givens in the Pzl data class (struct)
-#  Moving this to sudoku.py       Pzl.Lvl, Pzl.Steps = logic_solve_puzzle(Pzl.Givens)
 
 def create_random_puzzle(Pzl, T_H = None):
     cdef int G[9][9]
     cdef int H[81]
     cdef SOLN_T Soln
     cdef int r, c, v, Hr, Hlen = 81
-    # print("Create random puzzle start")
+
     # Give G the solution from which to dig holes..
     for r in range(9):
         for c in range(9):
@@ -254,13 +262,14 @@ def create_random_puzzle(Pzl, T_H = None):
         if Soln.Found != 1: G[r][c] = v
     Pzl.Givens = [[G[r][c] for c in range(9)] for r in range(9)]
 
-def create_dihedral_puzzle(grid, nh, ltl, props):
+def create_dihedral_puzzle(Pzl = None, T_H = None):
     # TODO create_dihedral_puzzle(grid, nh, ltl, props):
-    pass
+    Pzl = T_H; T_H = Pzl
 
-def create_square_quad_rotated_puzzle(grid, nh, ltl, props):
+
+def create_square_quad_rotated_puzzle(Pzl = None, T_H = None):
     # TODO: Needs debugging create_square_quad_rotated_puzzle(grid, nh, ltl, props):
-    pass
+    Pzl = T_H; T_H = Pzl
     #  Creates a puzzle with holes where each hole in Q1 is found in the
     #  following consecutive quadrants symmetrically rotated by 90 degs
     #  Q1, Q2
@@ -310,9 +319,9 @@ def create_square_quad_rotated_puzzle(grid, nh, ltl, props):
 #            thcnt += hcnt
 #    return True
 
-def create_square_quad_mirrored_puzzle(grid, nh, ltl, props):
+def create_square_quad_mirrored_puzzle(Pzl = None, T_H = None):
     # TODO: Needs debugging create_square_quad_mirrored_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
     #  Creates a puzzle with holes in Q1 mirrored in other quadrants.
     #  Q2 is a horizontal fold  mirror of Q1, Q3 is a vertical fold mirror
     #  of Q1 and Q4 is a diagonal fold mirror of Q1
@@ -370,17 +379,17 @@ def create_square_quad_mirrored_puzzle(grid, nh, ltl, props):
 #            thcnt += hcnt
 #    return True
 
-def create_diag_quad_rotated_puzzle(grid, nh, ltl, props):
+def create_diag_quad_rotated_puzzle(Pzl = None, T_H = None):
     # TODO: create_diag_quad_rotated_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
 
-def create_diag_quad_mirrored_puzzle(grid, nh, ltl, props):
+def create_diag_quad_mirrored_puzzle(Pzl = None, T_H = None):
     # TODO: create_diag_quad_mirrored_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
 
-def create_vert_rotated_puzzle(grid, nh, ltl, steps):
+def create_vert_rotated_puzzle(Pzl = None, T_H = None):
     # TODO: Needs debugging create_vert_rotated_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
     #  Creates a puzzle where holes in the first 4.5 columns are also found in
     #  symmetric 180 degs vertically rotated positions.  Puzzle is solvable
     #  using the logic techniques in ltl.
@@ -416,9 +425,9 @@ def create_vert_rotated_puzzle(grid, nh, ltl, steps):
 #            thcnt += hcnt
 #    return True
 
-def create_vert_mirrored_puzzle(grid, nh, ltl, props):
+def create_vert_mirrored_puzzle(Pzl = None, T_H = None):
     # TODO: Needs debugging create_vert_mirrored_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
     #  Creates a puzzle where holes in the first 4 columns are mirrored in the
     #  last 4 four columns, with up to nh holes dug.  Puzzle is solvable using
     #  the logic techniques in ltl.
@@ -454,9 +463,9 @@ def create_vert_mirrored_puzzle(grid, nh, ltl, props):
 #            thcnt += hcnt
 #    return True
 
-def create_horz_rotated_puzzle(grid, nh, ltl, props):
+def create_horz_rotated_puzzle(Pzl = None, T_H = None):
     # TODO: Needs debugging create_horz_rotated_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
     #  Creates a puzzle where holes in the first 4.5 rows are also found in
     #  symmetric 108 degs horizontally rotated positions.  Puzzle is solvable
     #  using the logic techniques in ltl.
@@ -492,9 +501,9 @@ def create_horz_rotated_puzzle(grid, nh, ltl, props):
 #            thcnt += hcnt
 #    return True
 
-def create_horz_mirrored_puzzle(grid, nh, ltl, props):
+def create_horz_mirrored_puzzle(Pzl = None, T_H = None):
     # TODO: Needs debugging create_horz_mirrored_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
     #  Creates a puzzle where holes in the first 4 rows are mirrored in the
     #  last 4 four rows.  Puzzle is solvable using the logic techniques in ltl.
     #  grid:    In:  A fully populated grid (board) that obeys Sudoku rules
@@ -529,21 +538,21 @@ def create_horz_mirrored_puzzle(grid, nh, ltl, props):
 #            thcnt += hcnt
 #    return True
 
-def create_diag_top_left_rotated_puzzle(grid, nh, ltl, props):
+def create_diag_top_left_rotated_puzzle(Pzl = None, T_H = None):
     # TODO: create_diag_top_left_rotated_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
 
-def create_diag_top_left_mirrored_puzzle(grid, nh, ltl, props):
+def create_diag_top_left_mirrored_puzzle(Pzl = None, T_H = None):
     # TODO: create_diag_top_left_mirrored_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
 
-def create_diag_bot_left_rotated_puzzle(grid, nh, ltl, props):
+def create_diag_bot_left_rotated_puzzle(Pzl = None, T_H = None):
     # TODO: create_diag_bot_left_rotated_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
 
-def create_horz_bot_left_mirrored_puzzle(grid, nh, ltl, props):
+def create_horz_bot_left_mirrored_puzzle(Pzl = None, T_H = None):
     # TODO: create_diag_bot_left_mirrored_puzzle
-    pass
+    Pzl = T_H; T_H = Pzl
 
 # Pointer to function array for generating puzzles with symmetry types
 CreatePuzzle = [create_random_puzzle,

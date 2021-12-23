@@ -8,6 +8,7 @@ Ntimeits = 500
 
 spinner = ["|", "/", "-", "\\"]
 Root = dirname(dirname(argv[0]))
+path.insert(0, join(Root, "trc"))
 path.insert(0, join(Root, "src"))
 
 from globals import *

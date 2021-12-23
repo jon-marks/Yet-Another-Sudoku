@@ -4,24 +4,25 @@ from random import randint, randrange, shuffle, seed
 import sys
 
 from globals import *  # globals imports os and wx.
-from solve import *
+from trc import TRCX
+
 from solve_utils import cell_val_has_no_conflicts
 
-# from solve_utils import cell_val_has_no_conflicts, cell_val_has_no_conflicts1
+class SOLN:
+    def __init__(self, Found = 0, SlvdG = None):
+        self.Found = Found; self.SlvdG = SlvdG
 
-if sys.path[-1] == ".trc_true": seed(0)
+if TRC: seed(0)
 else: seed()
 
 def check_puzzle(Grid):
     # This function wraps the recursive check_puzzle_rcs, because the callers
     # want St returned, rather than passed, and that interferes with the the
     # returning true or false through the recursion.
-    # TODO: Change St from Dict to data class/struct.
-    # THIS WRAPPING IS NOT TO BE CONFUSED WITH CYWRAP
 
-    St = {S_FOUND: 0, S_GRID: None}
+    St = SOLN()
     check_puzzle_rcs(Grid, St)
-    return St[S_FOUND], St[S_GRID]
+    return St.Found, St.SlvdG
 
 def check_puzzle_rcs(Grid, Soln, cell = 0):
     #  Recursive backtracking function to solve a Sudoku puzzle as a check.
@@ -50,12 +51,12 @@ def check_puzzle_rcs(Grid, Soln, cell = 0):
         else:
             break
     else:  # cell = 81:- All cells successfully filled
-        Soln[S_FOUND] += 1
-        if Soln[S_FOUND] == 1:  # This is the first solution
-            Soln[S_GRID] = [[Grid[r][c] for c in range(9)] for r in range(9)]
+        Soln.Found += 1
+        if Soln.Found == 1:  # This is the first solution
+            Soln.SlvdG = [[Grid[r][c] for c in range(9)] for r in range(9)]
             return False  # Continue looking for a second solution
         else:  # a second solution found - this is an invalid puzzle
-            Soln[S_GRID] = None
+            Soln.SlvdG = None
             return True  # 2nd soln found pop back out of the stack.
 
     for v in range(1, 10):
@@ -100,7 +101,8 @@ def scramble_puzzle(grid):
     #        Out: a partially scrambled puzzle.
     # Returns: The scrambled puzzle.
 
-    grid1 = [[] for r in range(9)]
+    grid1 = [[]] * 9
+    # grid1 = [[] for r in range(9)]
     # Shuffle the rows in bands of 3:   grid  ==> grid1, refs
     for bi in [0, 3, 6]:  # In each band
         RI = [0, 1, 2]; shuffle(RI)
@@ -156,7 +158,8 @@ def scramble_puzzle(grid):
         return [[v[grid1[8-c][8-r]] for c in range(9)] for r in range(9)]
 
 def minimalise_puzzle(G, T_H = None):
-    from misc import grid_to_grid_str
+    # T_H passes a pre-shuffled array for benchmarking and unit testig.
+
     H = []
     for r in range(9):
         for c in range(9):
@@ -169,31 +172,25 @@ def minimalise_puzzle(G, T_H = None):
     for r, c in H:
         v = G1[r][c]
         G1[r][c] = 0
-        # Soln = {S_FOUND: 0, S_GRID: None}
-        NrFound, Soln = check_puzzle(G1)  # discard Rsteps here
+        NrFound, Soln = check_puzzle(G1)
         if NrFound == 1: G[r][c] = 0
         else: G1[r][c] = v
-        # print(f"[{r}][{c}]: {grid_to_grid_str(G)}")
     return G
 
 def create_puzzle(Pzl, T_H = None, T_G = None):
     # T_H and T_G used for benchmark and other testing to control randomisation.
     Pzl.Soln = gen_filled_grid()
-    if T_G:
-        Pzl.Soln = T_G
-        CreatePuzzle[Pzl.Sym](Pzl, T_H)
-    else:
-        CreatePuzzle[Pzl.Sym](Pzl)  # returns Pzl.Givens in the Pzl data class (struct)
-        Pzl.Lvl, Pzl.Steps = logic_solve_puzzle(Pzl.Givens)
-
+    if T_G: Pzl.Soln = T_G
+    CreatePuzzle[Pzl.Sym](Pzl, T_H)
 
 def create_random_puzzle(Pzl, T_H = None):
+    # T_H is for passing a preshuffled index array for benchmarking and unit testing.
 
     Pzl.Givens = [[Pzl.Soln[r][c] for c in range(9)] for r in range(9)]
-    h = sample(range(81), k = 81)
+    h = [i for i in range(81)]
+    shuffle(h)  # h = sample(range(81), k = 81)
     # same randomisation for benchmarking.
-    if T_H: h = T_H
-
+    if T_H: h = T_H  # if T_H is not null assign it to the h array.
     for hdx in h:
         r = hdx//9
         c = hdx%9
@@ -201,17 +198,7 @@ def create_random_puzzle(Pzl, T_H = None):
         Pzl.Givens[r][c] = 0
 
         NrFound, Soln = check_puzzle(Pzl.Givens)
-        # check_puzzle(Grid, St)  # check_puzzle() returns with unsolved puzzle preserved in Grid1
         if NrFound != 1:  Pzl.Givens[r][c] = v
-        #
-        # if NrFound == 1:
-        #     Puzzle.Lvl, Steps = logic_solve_puzzle(Puzzle.Givens)  # logic solving the puzzle does not alter grid.
-        #     if Lvl >= Puzzle.Lvl:
-        #         # Puzzle.NrEmpties += 1
-        #         Puzzle.Steps = Steps
-        #         continue
-        # else: Puzzle.Givens[r][c] = v
-
 
 def create_dihedral_puzzle(grid, nh, ltl, props):
     # TODO create_dihedral_puzzle(grid, nh, ltl, props):

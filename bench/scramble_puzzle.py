@@ -9,6 +9,7 @@ sG = ".5267.3.8.3...562767..325.128...61.5.6....2.4714523869827314956.9.26748334
 
 spinner = ["|", "/", "-", "\\"]
 Root = dirname(dirname(argv[0]))
+path.insert(0, join(Root, "trc"))
 path.insert(0, join(Root, "src"))
 
 from globals import *

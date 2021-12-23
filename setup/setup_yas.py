@@ -60,12 +60,19 @@ if Dev:
     CythonDirectives = {
                         'language_level': 3,
                         'linetrace': True,
+                        'overflowcheck': True,
+                        'warn.maybe_uninitialized': True,
+                        'warn.unused': True,
+                        'warn.unused_arg': True,
+                        'warn.unused_result': True,  # shows many false warnings
+                        # 'optimize.unpack_method_calls': False
                         }
 else:
     CythonDirectives = {
                         'language_level': 3,
                         'boundscheck': False,  # for faster code with less checking
                         'wraparound': False,
+                        'cdivision': True
                         }
 # End of user configurable stuff.
 
@@ -109,6 +116,7 @@ setup(
       cmdclass = {'build_ext': Build},
       ext_modules = cythonize(TmpPaths,
                               compiler_directives = CythonDirectives,
+                              # show_all_warnings = True,
                               annotate = True,
                               ),
       zip_safe = False,

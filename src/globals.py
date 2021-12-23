@@ -11,6 +11,8 @@ Audit:
 
 """
 
+import sys
+
 import wx
 
 TITLE   = 'Yet Another Sudoku'
@@ -370,6 +372,7 @@ PR_STEPS_HISTO = 5  # Solution steps histogram
 PR_DIFF        = 6  # The difficulty of the puzzle.
 PR_NR_GVNS     = 7  # Grid containing only givens
 
+TRC = True if sys.path[-1] == ".trc_true" else False
 
 class CELL:
     def __init__(self, r = -1, c = -1):

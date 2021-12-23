@@ -11,6 +11,7 @@ H = [50, 46, 0, 57, 25, 24, 41, 30, 45, 80, 13, 3, 77, 44, 23, 68, 67, 78, 54, 3
 
 spinner = ["|", "/", "-", "\\"]
 Root = dirname(dirname(argv[0]))
+path.insert(0, join(Root, "trc"))
 path.insert(0, join(Root, "src"))
 
 from globals import *
