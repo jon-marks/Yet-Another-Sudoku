@@ -1,18 +1,10 @@
-
+from copy import copy
 
 from globals import *
-from misc import *
+# from misc import *
 # from generate import *
-from solve import *
+from solve import Tech, LK_DIFF, GRP_LK_DIFF
 
-# # used as a data structure for transferring information to an from the Puzzle class.
-# class PZL:
-#     def __init__(self, Soln = None, Givens = None, Steps = None, Lvl = None, Sym = None):
-#         self.Soln = Soln
-#         self.Givens = Givens
-#         self.Steps = Steps
-#         self.Lvl = Lvl
-#         self.Sym = Sym
 
 class Puzzle:
 
@@ -107,29 +99,25 @@ class Puzzle:
                 if not self.Grid[r][c]: self.NrEmpties += 1
 
     def get_props(self):
-        StepsHisto = {Tx: {HT_NR:    0,
-                           HT_TXT:   T[Tx][T_TXT],
-                           HT_LVL:   T[Tx][T_LVL],
-                           HT_DIFF:  T[Tx][T_DIFF],
-                           HT_ADIFF: 0} for Tx in T}
-        Diff = 0
-        for S in self.Steps:
-            if not S[P_DIFF]: S[P_DIFF] = T[S[P_TECH]][T_DIFF]
-            Diff += S[P_DIFF]
-            H = StepsHisto[S[P_TECH]]
-            H[HT_NR] += 1
-            H[HT_ADIFF]  += S[P_DIFF]
+        StepsHisto = {Mthd: {HT_NR:    0,           # This is a 2d dict comprehension
+                             HT_ADIFF: 0} for Mthd in Tech}
+        Difficulty = 0
+        for Step in self.Steps:
+            Step.Difficulty                     = Tech[Step.Method].Difficulty + (Step.NrLks - Step.NrGrpLks) * LK_DIFF + Step.NrGrpLks * GRP_LK_DIFF
+            Difficulty                        += Step.Difficulty
+            StepsHisto[Step.Method][HT_NR]    += 1
+            StepsHisto[Step.Method][HT_ADIFF] += Step.Difficulty
 
         GvnsHisto = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         for r in range(9):
             for c in range(9):
                 if self.Givens[r][c]:
                     GvnsHisto[self.Givens[r][c]-1] += 1
-# TODO: Change props to a class from dict.
-        Props = {PR_LVL:         self.Lvl,
-                 PR_NR_GVNS:     self.NrGivens,
-                 PR_GVNS_HISTO:  GvnsHisto,
-                 PR_STEPS:       self.Steps,
-                 PR_STEPS_HISTO: StepsHisto,
-                 PR_DIFF:        Diff}
+        Props = PZL_PROPS(Expertise   = self.Lvl,
+                          NrGivens    = self.NrGivens,
+                          GivensHisto = GvnsHisto,
+                          Steps       = self.Steps,
+                          StepsHisto  = StepsHisto,
+                          Difficulty  = Difficulty
+                          )
         return Props

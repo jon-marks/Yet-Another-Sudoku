@@ -13,17 +13,13 @@ Audit:
     2021-04-xx  jm  Initial Entry
 
 """
-import os, sys
-from copy import copy, deepcopy
-
-import wx
+from os.path import join
 
 from globals import *
-from misc import open_puzzle, save_puzzle, ListSolnWindow, tkns_to_str
-
-# Local imports
+from trc import *
+from misc import open_puzzle, save_puzzle, ListSolnWindow, tkns_to_str, copy_clipboard_to_pzl, copy_puzzle_to_clipboard
 from generate import check_puzzle, gen_filled_grid, scramble_puzzle, minimalise_puzzle, create_puzzle
-from solve_utils import determine_cands
+from solve_utils import determine_cands, cell_val_has_conflicts, cell_val_has_no_conflicts
 from solve import *
 from timer import *
 from board import *
@@ -133,13 +129,12 @@ class Sudoku:
         self.Puzzle     = None
 
         # instance data
-        self.Grid        = [[0 for c in range(9)] for r in range(9)]
-        self.Givens      = [[0 for c in range(9)] for r in range(9)]
+        self.Grid        = None
+        self.Givens      = None
         self.Cands       = [[set() for c in range(9)] for r in range(9)]  # only used when self.AssistCands = False.
         self.SelList     = []  # deque(())  # list of (r,c) tuples of selected cells
         self.History     = []         # History list (undo buffer) for Entry and Solve
         self.HL          = ()  # Highlighting
-        # self.Lvl         = LVL_DEFAULT  # TODO: depreciated eliminate requested level (Menu/Options/Expertise Level selection
         self.Sym         = SYM_DEFAULT  # requested symmetry (Menu/Option/Symmetry selection
         self.Assist      = AST_DEFAULT
         self.AssistCands = AST_CANDS_DEFAULT
@@ -151,7 +146,7 @@ class Sudoku:
         self.OldGO       = False     # persistent variable used only in on_restart_state.
         self.Rsteps      = 0
 
-        self.PzlDir = os.path.join(MainWindow.CWD, PUZZLES_DIR)  # where the puzzles are stored
+        self.PzlDir = join(MainWindow.CWD, PUZZLES_DIR)  # where the puzzles are stored
         self.PzlFn  = ""
 
         self.MenuBar.enable_menuitems(EMI_IDLE)
@@ -292,30 +287,6 @@ class Sudoku:
             self.Givens = [[oPzl.Givens[r][c] for c in range(9)] for r in range(9)]
             self.gen_event(EV_SC_ENT, False)
 
-        # # enter the givens and placed values on the board.  Givens are in entered state.
-        # Cvs = 0
-        # self.Givens = [[oPzl.Givens[r][c] if oPzl.Grid[r][c] < 10 else 0 for c in range(9)] for r in range(9)]
-        # self.Grid   = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
-        # # G           = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
-        # # G1          = [[self.Grid[r][c]%10 for r in range(9)] for c in range(9)]
-        # for r in range(9):
-        #     for c in range(9):
-        #         if self.Grid[r][c] == 0: Cvs = CVS_EMPTY
-        #         else:
-        #             Cvs = CVS_CNFLT if cell_val_has_conflicts(self.Grid, r, c) else 0
-        #             if self.Givens[r][c]: Cvs |= CVS_ENTER
-        #             else: Cvs |= CVS_PLACE
-        #         self.Board.write_cell_value(self.Grid[r][c]%10, r, c, Cvs)
-        # if not (Cvs & CVS_CNFLT) or Flds > 1:
-        #     self.MainWindow.SetTitle(TITLE + " - " + Fp[1])
-        #     self.MenuBar.miPuzzleEnter.Check(False)
-        #     self.gen_event(EV_SC_VLD, oPzl)
-        # else:  # only givens and placed provided, only enter the givens and remain in enter mode.
-        #     self.MainWindow.SetTitle(TITLE)
-        #     # G = oPzl[PZL_GRID]
-        #     self.MenuBar.miPuzzleEnter.Check()
-        #     self.gen_event(EV_SC_ENT, False)
-
     def on_entry_state(self, e, Cleanup = False):
         if Cleanup:
             self.reset()
@@ -355,23 +326,9 @@ class Sudoku:
         if Key == wx.WXK_DELETE or Key == wx.WXK_CONTROL_H:  # ^H: Backspace
             for r, c in self.SelList:
                 self.Grid[r][c] = self.Givens[r][c] = 0
-            # oPzl = PZL(Grid = self.Grid, Givens = self.Givens)
             self.update_board(ST_ENT, PZL(Grid = self.Grid, Givens = self.Givens))
             self.gen_event(EV_SC_ENT, False)
             return
-            # self.Board.write_cell_value(0, r, c, CVS_EMPTY)
-            # Cvs = 0
-            # G = [[self.Grid[r][c]%10 for c in range(9)] for r in range(9)]
-            # for r in range(9):
-            #     for c in range(9):
-            #         if self.Grid[r][c] == 0: Cvs = CVS_EMPTY
-            #         else:
-            #             Cvs = CVS_CNFLT if cell_val_has_conflicts(G, r, c) else 0
-            #             if self.Grid[r][c] < 10: Cvs |= CVS_ENTER
-            #             else: Cvs |= CVS_PLACE
-            #         self.Board.write_cell_value(G[r][c]%10, r, c, Cvs)
-            # self.gen_event(EV_SC_ENT, False)
-            # return
 
         if Key == wx.WXK_CONTROL_V:  # paste a puzzle spec from the clipboard
             # overwrites existing entries, and treated as if the spec was loaded from a file.
@@ -389,34 +346,6 @@ class Sudoku:
                 self.Givens = oPzl.Givens
                 self.gen_event(EV_SC_ENT, False)
             return
-            #
-            # TDO = wx.TextDataObject()
-            # if wx.TheClipboard.Open():
-            #     wx.TheClipboard.GetData(TDO)
-            #     sG = TDO.GetText()
-            #     oPzl = PZL()  # {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
-            #     NrFlds = parse_pzl_str_depreciated(sG, oPzl)
-            #     if NrFlds:
-            #         oPzl.Givens = [[oPzl.Grid[r][c] if oPzl.Grid[r][c] < 10 else 0 for c in range(9)] for r in range(9)]
-            #         self.Grid = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
-            #         # G           = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
-            #         G1 = [[self.Grid[r][c]%10 for r in range(9)] for c in range(9)]
-            #         Cvs = 0
-            #         for r in range(9):
-            #             for c in range(9):
-            #                 if self.Grid[r][c] == 0: Cvs = CVS_EMPTY
-            #                 else:
-            #                     Cvs = CVS_CNFLT if cell_val_has_conflicts(G1, r, c) else 0
-            #                     if self.Grid[r][c] < 10: Cvs |= CVS_ENTER
-            #                     else: Cvs |= CVS_PLACE
-            #                 self.Board.write_cell_value(G1[r][c], r, c, Cvs)
-            #         self.MainWindow.SetTitle(TITLE)
-            #         if not (Cvs & CVS_CNFLT or Flds == 1):  # Continue to edit placed and givens.
-            #             self.MenuBar.miPuzzleEnter.Check(False)
-            #             self.gen_event(EV_SC_VLD, oPzl)
-            #             return
-            # self.gen_event(EV_SC_ENT, False)
-            # return
 
         if Key == wx.WXK_CONTROL_C:
             # oPzl = PZL(Grid = self.Grid, Givens = self.Givens)
@@ -434,20 +363,6 @@ class Sudoku:
             # oPzl = PZL(Grid = self.Grid, Givens = self.Givens)
             self.update_board(ST_ENT, PZL(Grid = self.Grid, Givens = self.Givens))
             self.gen_event(EV_SC_ENT, False)
-        # if Val != 0:
-        #     for r, c in self.SelList:
-        #         self.Grid[r][c] = Val
-        #     Cvs = 0
-        #     G = [[self.Grid[r][c]%10 for c in range(9)] for r in range(9)]
-        #     for r in range(9):
-        #         for c in range(9):
-        #             if self.Grid[r][c] == 0: Cvs = CVS_EMPTY
-        #             else:
-        #                 Cvs = CVS_CNFLT if cell_val_has_conflicts(G, r, c) else 0
-        #                 if self.Grid[r][c] < 10: Cvs |= CVS_ENTER
-        #                 else: Cvs |= CVS_PLACE
-        #             self.Board.write_cell_value(G[r][c]%10, r, c, Cvs)
-        # self.gen_event(EV_SC_ENT, False)
 
     def on_scramble_state(self, e):
         #  Only given/entered values are scrambled, placed values will be lost.
@@ -458,13 +373,6 @@ class Sudoku:
             r, c = self.SelList.pop()
             self.Board.select_cell(r, c, False)
         self.gen_event(EV_SC_ENT, False)
-        # for r in range(9):
-        #     for c in range(9):
-        #         if G[r][c]: Cvs = CVS_ENTER
-        #         else: Cvs = CVS_EMPTY
-        #         self.Board.write_cell_value(G[r][c], r, c, Cvs)
-        # self.SelList.clear()
-        # self.gen_event(EV_SC_ENT, False)
 
     def on_minimalise_state(self, e):
         #  Minimalises the combination of givens and placed.
@@ -476,16 +384,6 @@ class Sudoku:
             self.Board.select_cell(r, c, False)
         self.update_board(ST_ENT, PZL(Grid = self.Grid, Givens = self.Givens))
         self.gen_event(EV_SC_ENT, False)
-        # G = [[self.Grid[r][c] if self.Grid[r][c] < 10 else 0 for c in range(9)] for r in range(9)]
-        # self.Grid = minimalise_puzzle(G)
-        # # self.NrConflicts = self.NrGivens = 0
-        # for r in range(9):
-        #     for c in range(9):
-        #         if G[r][c]: Cvs = CVS_ENTER
-        #         else: Cvs = CVS_EMPTY
-        #         self.Board.write_cell_value(G[r][c], r, c, Cvs)
-        # self.SelList.clear()
-        # self.gen_event(EV_SC_ENT, False)
 
     def on_validate_state(self, e, oPzl):
         # From Generate with Givens, Grid, and Soln. (no need to validate)
@@ -540,9 +438,11 @@ class Sudoku:
 
         self.StatusBar.update_0("Grading Puzzle, may take some time. . .")
         self.update_board(ST_SLV, oPzl)  # Change board colouring from Enter mode to Solve mode
-        oPzl.Lvl, oPzl.Steps = logic_solve_puzzle(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln)
+        TRCX("Begin Solve")
+        oPzl.Lvl, oPzl.Steps, Err = logic_solve_puzzle(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln)
+        TRCX("End Solve")
         if oPzl.Lvl < 0:
-            wx.MessageBox("Cannot solve puzzle\n"
+            wx.MessageBox(f"Cannot solve puzzle: {Err}\n"
                           "Please save puzzle and send to developers",
                           "Information",
                           wx.ICON_INFORMATION | wx.OK)
@@ -559,71 +459,9 @@ class Sudoku:
         self.Puzzle = Puzzle(oPzl)
         #  Ready to transition to solve state
         self.GameTimer.start()
-        self.StatusBar.update_level(LVLS[self.Puzzle.Lvl])
+        self.StatusBar.update_level(EXPS[self.Puzzle.Lvl])
         self.reset()
         self.gen_event(EV_SC_SLV)
-        #
-        # NrEmpties, oPzl.Cands = determine_cands(oPzl.Grid, oPzl.Elims)
-        #
-        # for r in range(9):
-        #     for c in range(9):
-        #         if oPzl.Grid[r][c]:
-        #             Cvs = CVS_GIVEN if oPzl.Givens[r][c] else CVS_PLACE Cvs = CVS_GIVEN else
-        #             if oPzl.Givens[r][c]: Cvs = CVS_GIVEN
-        #             else: Cvs = CVS_PLACE
-        #             self.Board.write_cell_value(oPzl.Grid[r][c]%10, r, c, Cvs)
-        #         else:
-        #             if oPzl.Elims is not None and oPzl.Soln[r][c] in oPzl.Elims[r][c]:
-        #                 wx.MessageBox(f"Invalid Candidate Elimination: r{r+1}c{c+1}-={self.Puzzle.Soln[r][c]}.",
-        #                               "Information",
-        #                               wx.ICON_INFORMATION | wx.OK)
-        #                 oPzl = None
-        #                 self.gen_event(EV_SC_ENT, False)
-        #                 return
-        #             if self.ShowCands:
-        #                 Cands = set()
-        #                 G1 = [[self.Grid[r][c]%10 for r in range(9)] for c in range(9)]
-        #                 for Cand in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-        #                     if cell_val_has_no_conflicts(Cand, G1, r, c):
-        #                         Cands.add(Cand)
-        #                 self.Board.write_cell_value(0, r, c, CVS_CANDS, Cands)
-        #             else: self.Board.write_cell_value(0, r, c, CVS_CANDS)
-        #
-        #     self.StatusBar.update_0("Grading Puzzle, may take some time. . .")
-        #     oPzl.Lvl, oPzl.Steps = logic_solve_puzzle(self.Puzzle.Grid, self.Puzzle.Elims, self.Puzzle.TryFirst, self.Puzzle.Soln)
-        #     if self.Puzzle.Lvl < 0:
-        #         wx.MessageBox("Cannot solve puzzle\n"
-        #                       "Please save puzzle and send to developers",
-        #                       "Information",
-        #                       wx.ICON_INFORMATION | wx.OK)
-        #         self.gen_event(EV_SC_SLV)
-        #         return
-        #
-        #     # Clear any selected cells
-        #     while len(self.SelList):
-        #         r, c = self.SelList.popleft()
-        #         self.Board.select_cell(r, c, False)
-        #     #  Ditch the history
-        #     self.History.clear()
-        #     #  Ready to transition to solve state
-        #     self.GameTimer.start()
-        #     self.StatusBar.update_level(LVLS[self.Puzzle.Lvl])
-        #     self.reset()
-        #     self.gen_event(EV_SC_SLV)
-        # else:  # puzzle validation error:
-        #     # self.StatusBar.update_0("")
-        #     # St = "Invalid Puzzle!  "
-        #     # St += "No Solution.\n" if NrFound == 0 else "Multiple Solutions.\n"
-        #     # St += "Do you want to correct instead of starting over"
-        #     # if wx.MessageBox(St, "Warning", wx.YES_NO | wx.ICON_WARNING) == wx.YES:
-        #     #     self.MenuBar.miPuzzleEnter.Check()
-        #     #     self.gen_event(EV_SC_ENT, False)
-        #     # else:
-        #     #     self.reset()
-        #     #     self.Board.clear_board()
-        #     #     del self.Puzzle; self.Puzzle = None
-        #     #     self.gen_event(EV_SC_FIN)
-        # return
 
     def on_solve_state(self, e):
         # Entering Pause state (can only occur from Solve state) will hide the
@@ -689,52 +527,31 @@ class Sudoku:
                 self.gen_event(EV_SC_RST)
             elif Ans == wx.CANCEL:
                 self.gen_event(EV_SC_FIN, True)  # True to clear existing puzzle
-            else:  # Ans = wx.YES
-                self.Puzzle.Grid[r][c] = 0
-                self.Puzzle.NrEmpties -= 1
+            # else:  # Ans = wx.YES and simply stay in solve state.
 
     def on_solve_save_state(self, e):
 
+        Fp = None
         G = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
         E = [[copy(self.Puzzle.Elims[r][c]) for c in range(9)] for r in range(9)]
-        # TODO: change Step to Class from Dict.
-        Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: []}
-        Res = solve_next_step(G, Step, E)
-        Fp = save_puzzle((self.PzlDir, self.PzlFn), PZL(
-                Grid    = self.Puzzle.Grid,
-                Givens  = self.Puzzle.Givens,
-                Elims   = self.Puzzle.Elims,
-                Method  = Step[P_TECH],
-                Pattern = Step[P_PTRN],
-                Outcome = Step[P_OUTC]))
-        if Res < 0:
-            wx.MessageBox("Bug in program!  Cannot solve next step\n"
+        Step, Err = solve_next_step(G, E)
+        if Err:
+            wx.MessageBox(f"Bug in program!  {Err}\n"
                           "Please send saved puzzle to developers",
                           "Information",
                           wx.ICON_INFORMATION | wx.OK)
+        else:
+            Fp = save_puzzle((self.PzlDir, self.PzlFn), PZL(
+                    Grid    = self.Puzzle.Grid,
+                    Givens  = self.Puzzle.Givens,
+                    Elims   = self.Puzzle.Elims,
+                    Method  = Step.Method,
+                    Pattern = Step.Pattern,
+                    Outcome = Step.Outcome))
         if Fp is not None:
             self.PzlDir, self.PzlFn = Fp
             self.MainWindow.SetTitle(self.MainWindow.Title + " - "+self.PzlFn)
         self.gen_event(EV_SC_SLV)
-        # self.gen_event(EV_SC_SLV)
-        # G1 = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
-        # G  = [[G1[r][c] if (not G1[r][c]) or self.Puzzle.Givens[r][c] else G1[r][c]+10 for c in range(9)] for r in range(9)]
-        # E1 = [[copy(self.Puzzle.Elims[r][c]) for c in range(9)] for r in range(9)]
-        # E  = deepcopy(E1)
-        # Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: 0}
-        # if solve_next_step(G1, Step, E1) >= 0:
-        #     Fp = save_puzzle((self.PzlDir, self.PzlFn), G, E, Step)
-        # else:
-        #     Fp = save_puzzle((self.PzlDir, self.PzlFn), G, E)
-        #     wx.MessageBox("Bug in program!  Cannot solve next step\n"
-        #                   "Please send saved puzzle to developers",
-        #                   "Information",
-        #                   wx.ICON_INFORMATION | wx.OK)
-        #
-        # if Fp is not None:
-        #     self.PzlDir, self.PzlFn = Fp
-        #     self.MainWindow.SetTitle(TITLE + " - " + self.PzlFn)
-        # self.gen_event(EV_SC_SLV)
 
     def on_solve_mouse_state(self, e, Type, r, c, KbdMods):
         if Type == wx.EVT_LEFT_DOWN:
@@ -880,7 +697,6 @@ class Sudoku:
                 if not self.Puzzle.Givens[r][c]:
                     self.Puzzle.Grid[r][c] = v
                     # Do not update Elims and Cands rather fall back to their state if val placed in cell is deleted.
-        # oPzl = PZL(Grid = self.Puzzle.Grid, Givens = self.Puzzle.Givens, Elims = self.Puzzle.Elims, Cands = self.Puzzle.Cands, Soln = self.Puzzle.Soln)
         self.Puzzle.NrEmpties = self.update_board(ST_SLV, PZL(
                 Grid = self.Puzzle.Grid,
                 Givens = self.Puzzle.Givens,
@@ -904,13 +720,18 @@ class Sudoku:
                     self.gen_event(EV_SC_SLV)
                     return
 
-        G = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
-        E = [[copy(self.Puzzle.Elims[r][c]) for c in range(9)] for r in range(9)]
-        Step = {P_TECH: T_UNDEF, P_PTRN: [], P_OUTC: [], P_DIFF: []}
-        if solve_next_step(G, Step, E):
+        # G = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
+        # E = [[copy(self.Puzzle.Elims[r][c]) for c in range(9)] for r in range(9)]
+        Step, Err = solve_next_step(self.Puzzle.Grid, self.Puzzle.Elims)
+        if Err:
+            wx.MessageBox(f"Bug in program!  {Err}\n"
+                          "Please send saved puzzle to developers",
+                          "Information",
+                          wx.ICON_INFORMATION | wx.OK)
+        elif Step:
             if h == H_VAGUE:
                 Ans = wx.MessageBox(f"Vague Hint:\n"
-                                    f"Technique: {T[Step[P_TECH]][T_TXT]}.\n"
+                                    f"Technique: {Tech[Step.Method].Text}.\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
                                     "Vague Hint",
@@ -918,8 +739,8 @@ class Sudoku:
                 self.VagueHints += 1
             elif h == H_CLEARER:
                 Ans = wx.MessageBox(f"Clearer Hint:\n"
-                                    f"Technique: {T[Step[P_TECH]][T_TXT]}.\n"
-                                    f"Condition:  {tkns_to_str(Step[P_PTRN])}\n"
+                                    f"Technique: {Tech[Step.Method].Text}.\n"
+                                    f"Condition:  {tkns_to_str(Step.Pattern)}\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
                                     "Clearer Hint",
@@ -927,16 +748,16 @@ class Sudoku:
                 self.ClearerHints += 1
             else:  # H_CLEAREST
                 Ans = wx.MessageBox(f"Clearest Hint:\n"
-                                    f"Technique:  {T[Step[P_TECH]][T_TXT]}.\n"
-                                    f"Condition:  {tkns_to_str(Step[P_PTRN])}\n"
-                                    f"Outcome:    {tkns_to_str(Step[P_OUTC])}\n"
+                                    f"Technique:  {Tech[Step.Method].Text}.\n"
+                                    f"Condition:  {tkns_to_str(Step.Pattern)}\n"
+                                    f"Outcome:    {tkns_to_str(Step.Outcome)}\n"
                                     f"\nThis hint will repeat until accepted.\n"
                                     f"\nAccept hint?",
                                     "Clearest Hint",
                                     wx.ICON_INFORMATION | wx.YES_NO)
                 self.ClearestHints += 1
             if Ans == wx.YES:
-                self.process_step_outcome(Step[P_OUTC])
+                self.process_step_outcome(Step.Outcome)
         else:
             wx.MessageBox("Bug in program!  Cannot solve next step\n"
                           "Please save puzzle and send to developers",
@@ -946,7 +767,7 @@ class Sudoku:
 
     def on_auto_solve_state(self, e, FromStep, ToStep):
         for i in range(FromStep, ToStep):
-            self.process_step_outcome(self.Puzzle.Steps[i][P_OUTC])
+            self.process_step_outcome(self.Puzzle.Steps[i].Outcome)
         self.gen_event(EV_SC_SLV)
 
 
@@ -967,7 +788,6 @@ class Sudoku:
             self.LSW.on_close(0)
             self.LSW = None
 
-
         if GO:
             self.Puzzle.Grid = [[self.Puzzle.Givens[r][c] for c in range(9)] for r in range(9)]
             self.Puzzle.Elims = [[set() for c in range(9)] for r in range(9)]
@@ -982,28 +802,22 @@ class Sudoku:
             if NrFound != 1 and not grid_compare(Soln, self.Puzzle.Soln):
                 wx.MessageBox("Givens do not form a valid puzzle\n"
                               "Information", wx.ICON_INFORMATION | wx.OK)
-                # self.reset()
-                # self.Board.clear_board()
                 self.Puzzle = None
                 self.gen_event(EV_SC_FIN, True)
                 return
 
             self.StatusBar.update_0("Regrading Puzzle, may take some time. . .")
             self.update_board(ST_SLV, PZL(Grid = self.Puzzle.Grid, Givens = self.Puzzle.Givens))
-            self.Puzzle.Lvl, self.Puzzle.Steps = logic_solve_puzzle(self.Puzzle.Grid, Soln = Soln)
+            self.Puzzle.Lvl, self.Puzzle.Steps, Err = logic_solve_puzzle(self.Puzzle.Grid, Soln = Soln)
             if self.Puzzle.Lvl < 0:
-                wx.MessageBox("Cannot solve puzzle\n"
+                wx.MessageBox(f"Cannot solve puzzle: {Err}\n"
                               "Please save puzzle and send to developers",
                               "Information",
                               wx.ICON_INFORMATION | wx.OK)
-                # Go to solve state so it is possible to get the incorrect elim or assignment and save puzzle.
-                # self.gen_event(EV_SC_SLV)
-                # return
-            #  Ready to transition to solve state
         else:
             self.Puzzle.NrEmpties = self.update_board(ST_SLV, PZL(Grid = self.Puzzle.Grid, Givens = self.Puzzle.Givens))
         self.GameTimer.start()
-        self.StatusBar.update_level(LVLS[self.Puzzle.Lvl])
+        self.StatusBar.update_level(EXPS[self.Puzzle.Lvl])
         self.reset()
         self.OldGO = GO
         self.gen_event(EV_SC_SLV)
@@ -1038,6 +852,7 @@ class Sudoku:
 
 
     # Below are supporting functions for the Sudoku Control state machine actions
+
     def update_status_histo(self, Grid):
         H = [0, 0, 0, 0, 0, 0, 0, 0, 0]; G = 0
         for r in range(9):
@@ -1045,29 +860,6 @@ class Sudoku:
                 if Grid[r][c]: H[Grid[r][c]-1] += 1; G += 1
         self.StatusBar.update_0(f"1►{H[0]}, 2►{H[1]}, 3►{H[2]}, 4►{H[3]}, 5►{H[4]}, "
                                 f"6►{H[5]}, 7►{H[6]}, 8►{H[7]}, 9►{H[8]}, |{G}|")
-
-
-    # def update_cands(self, v, r, c, Grid, Cands):
-    #     # v > 0: update cands after adding a value v from cell
-    #     # v < 0: update cands after removing value v from cell
-    #     if v > 0:
-    #         for i in range(9):
-    #             Cands[r][i].discard(v)  # remember discard is silent if v not present.
-    #             Cands[i][c].discard(v)
-    #         br = (r//3)*3; bc = (c//3)*3
-    #         for r1 in range(br, br+3):
-    #             for c1 in range(bc, bc+3):
-    #                 Cands[r1][c1].discard(v)
-    #     else: #v < 0
-    #         Peers = set()  # use set to automagically remove duplicates.
-    #         for i in range(9): Peers |= {(r, i), (i, c)}
-    #         br = (r//3)*3; bc = (c//3)*3
-    #         for r1 in range(br, br+3):
-    #             for c1 in range(bc, bc+3):
-    #                 Peers |= {(r1, c1)}
-    #         for r1, c1 in Peers:
-    #             if cell_val_has_no_conficts(-v, Grid, r, c): Cands[r][c].add(-v)
-
 
     def process_step_outcome(self, S):
         # Assumes cell outcome phrases between separators are of the
@@ -1155,72 +947,6 @@ class Sudoku:
                         else: C = set()
                         self.Board.write_cell_value(0, r, c, CVS_CANDS, C)
         return NrEmpties
-        #                 if oPzl.Grid[r][c]:
-        #                     Cvs = 0
-        #                     if self.Assist == AST_CNFLTS and cell_val_has_conflicts(oPzl.Grid, r, c): Cvs = CVS_CNFLT
-        #                     if self.Assist == AST_ERRORS if oPzl.Soln and oPzl.Grid[r][c] != oPzl.Soln.Soln[r][c]: Cvs = CVS_ERROR
-        #                     self.Board.write_cell_value(self.Puzzle.Grid[r][c], r, c, CVS_PLACE | Cvs)
-        #                     if self.AssistCands and Cvs == 0:
-        #                         self.Puzzle.Elims[r][c] = set()
-        #                         self.update_board_peer_cands(r, c)
-        #             else:  # self.Puzzle.Grid[r][c] == 0
-        #
-        #     Cvs0 = CVS_ENTER
-        # else:
-        #
-        #
-        #
-        #     Cvs0 = CVS_GIVEN
-        # #     pass
-        # # else:  # mode == ST_SLV
-        # NrEmpties = 0
-        # for r in range(9):
-        #     for c in range(9):
-        #         if oPzl.Grid[r][c]:
-        #             if oPzl.Givens[r][c]:
-        #                 self.Board.write_cell_value(oPzl.Grid[r][c], r, c, Cvs0)
-        #             elif oPzl.Grid[r][c]:
-        #                 Cvs = 0
-        #                 if self.Assist == AST_CNFLTS and cell_val_has_conflicts(oPzl.Grid, r, c): Cvs = CVS_CNFLT
-        #                 if self.Assist == AST_ERRORS if oPzl.Soln and oPzl.Grid[r][c] != oPzl.Soln.Soln[r][c]: Cvs = CVS_ERROR
-        #                 self.Board.write_cell_value(self.Puzzle.Grid[r][c], r, c, CVS_PLACE | Cvs)
-        #                 if self.AssistCands and Cvs == 0:
-        #                     self.Puzzle.Elims[r][c] = set()
-        #                     self.update_board_peer_cands(r, c)
-        #         else:  # self.Puzzle.Grid[r][c] == 0
-        #             self.Puzzle.NrEmpties += 1
-        #             if self.AssistCands and self.ShowCands:
-        #                 self.Puzzle.Cands[r][c] = set()
-        #                 for Cand in range(1, 10):
-        #                     if cell_val_has_no_conflicts(Cand, self.Puzzle.Grid, r, c):
-        #                         self.Puzzle.Cands[r][c].add(Cand)
-        #                 self.Puzzle.Cands[r][c] -= self.Puzzle.Elims[r][c]
-        #             self.Board.write_cell_value(0, r, c, CVS_CANDS, self.Puzzle.Cands[r][c])
-
-    # def update_board_peer_cands(self, r, c):
-    #     # Hide shown candidates in peer cells of values placed in selected
-    #     # cells that are in CVS_PLACE state.
-    #     v = self.Puzzle.Grid[r][c]
-    #     if v:
-    #         vr = (v-1)//3; vc = (v-1)%3
-    #         # First the row.
-    #         for r1 in range(9):
-    #             if v in self.Puzzle.Cands[r1][c]:
-    #                 self.Puzzle.Cands[r1][c].discard(v)
-    #                 self.Board.set_cand_value(r1, c, vr, vc, False)
-    #         # then the col.
-    #         for c1 in range(9):
-    #             if v in self.Puzzle.Cands[r][c1]:
-    #                 self.Puzzle.Cands[r][c1].discard(v)
-    #                 self.Board.set_cand_value(r, c1, vr, vc, False)
-    #         # then the block.
-    #         br = (r//3)*3
-    #         bc = (c//3)*3
-    #         for r1 in range(br, br+3):
-    #             for c1 in range(bc, bc+3):
-    #                 if self.Puzzle.Cands[r1][c1]:
-    #                     self.Puzzle.Cands[r1][c1].discard(v)
-    #                     self.Board.set_cand_value(r1, c1, vr, vc, False)
 
     def process_cell_selection(self, r, c, KbdMods):
 
@@ -1290,7 +1016,6 @@ class Sudoku:
                     Givens = self.Puzzle.Givens,
                     Cands  = self.Puzzle.Cands))
 
-
 def key_to_val(Key):
     # Returns T/F, Val.  True if Shift key pressed, else false.
     if Key in range(0x31, 0x3a): return False, Key-0x30
@@ -1305,5 +1030,3 @@ def grid_compare(g0, g1):
         for c in range(9):
             if g0[r][c] != g1[r][c]: return False
     return True
-
-

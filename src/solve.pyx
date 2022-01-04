@@ -1,18 +1,27 @@
-from copy import copy
-from collections import namedtuple
+# from cpython.mem cimport PyMem_Calloc, PyMem_Free
 
+# cdef extern from "string.h":
+#     void* memcopy(void *d, void *s, size_t n)
+
+include "globals.pxi"
+from ctypedefs cimport *
 from globals import *
-from trc import TRCX
+from trc cimport *
+from trc import *
 
-# from solve_utils import *  # remove dependency on this file, it should only be imported
-                             # by the tech modules below.
-from solve_singles import *
-from solve_subsets import *
-from solve_fish import *
-from solve_wings import *
-from solve_x_chains import *
-from solve_xy_chains import *
-from solve_ai_chains import *
+# from misc import tkns_to_str
+# # for debugging.
+
+from solve_utils cimport *
+from solve_singles cimport *
+
+# from solve_singles import *
+# from solve_subsets import *
+# from solve_fish import *
+# from solve_wings import *
+# from solve_x_chains import *
+# from solve_xy_chains import *
+# from solve_ai_chains import *
 
 # Note that the order in which techniques are attempted influences the outcomes:
 # * the holy grail is to solve the puzzle with the simplest techniques possible.
@@ -30,10 +39,14 @@ from solve_ai_chains import *
 # * _kraken_ refers to the technique using an AIC chain as a strong or weak link.
 # * ..._gl refers to the technique using group links in its chains.
 
-LK_DIFF     = 20  # per link difficulty premium
-GRP_LK_DIFF = 50  # per group link difficulty premium.
+ctypedef int (*PSLVRFN)(int[9][9], object Step, bint[9][9][9], object Methods)
 
-SLVR = namedtuple('SLVR', ['pFn', 'Mthds'])
+ctypedef struct SLVR_C:
+    PSLVRFN pFn
+    int     Techs[SLVR_TECHS]
+
+LK_DIFF     = 20  # per Kraken link
+GRP_LK_DIFF = 50  # per group link
 
 class TECH_T:
     def __init__(self, Enabled=False, Text=None, Expertise=UNDEF, Difficulty=UNDEF):
@@ -99,55 +112,34 @@ Tech = {
         T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
         }
 
-Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
-           SLVR(tech_hidden_singles,      [T_HIDDEN_SINGLE]),
-           SLVR(tech_locked_singles,      [T_CLAIMING_LOCKED_SINGLE, T_POINTING_LOCKED_SINGLE]),
-           # SLVR(tech_exposed_pairs,       [T_EXPOSED_PAIR, T_LOCKED_EXPOSED_PAIR]),
-           # SLVR(tech_hidden_pairs,        [T_HIDDEN_PAIR]),
-           # SLVR(tech_exposed_triples,     [T_EXPOSED_TRIPLE, T_LOCKED_EXPOSED_TRIPLE]),
-           # SLVR(tech_hidden_triples,      [T_HIDDEN_TRIPLE]),
-           # SLVR(tech_exposed_quads,       [T_EXPOSED_QUAD]),
-           # SLVR(tech_hidden_quads,        [T_HIDDEN_QUAD]),
-           # SLVR(tech_x_wings,             [T_X_WING]),
-           # SLVR(tech_swordfish,           [T_SWORDFISH]),
-           # SLVR(tech_jellyfish,           [T_JELLYFISH]),
-           # SLVR(tech_bent_exposed_triples, [T_Y_WING, T_XYZ_WING]),
-           # SLVR(tech_three_link_x_chains, [T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH]),
-           SLVR(tech_empty_rects,         [T_EMPTY_RECT]),
-           # SLVR(tech_finned_x_wings,      [T_FINNED_X_WING]),  # finned fish never before ordinary fish
-           # SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH]),
-           # SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH]),
-           # SLVR(tech_bent_exposed_quads,  [T_WXYZ_WING, T_BENT_EXPOSED_QUAD]),
-           # SLVR(tech_other_x_chains,      [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
-           # SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
-           # SLVR(tech_xy_chains,           [T_XY_CHAIN]),
-           # SLVR(tech_xy_loops,            [T_XY_LOOP]),
-           # SLVR(tech_ai_chains,           [T_W_WING, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP]),
-           # SLVR(tech_gl_three_link_x_chains, [T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH]),
-           # SLVR(tech_gl_other_x_chains,   [T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP]), # and loops, never before three link xchains
-           # SLVR(tech_gl_ai_chains,        [T_GL_W_WING, T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP]),
-           # SLVR(tech_kraken_x_wings,      [T_KRAKEN_X_WING]),  # kraken fish never before finned fish
-           # SLVR(tech_kraken_swordfish,    [T_KRAKEN_SWORDFISH]),
-           # SLVR(tech_kraken_jellyfish,    [T_KRAKEN_JELLYFISH]),
-           # SLVR(tech_gl_kraken_x_wings,   [T_GL_KRAKEN_X_WING]),
-           # SLVR(tech_gl_kraken_swordfish, [T_GL_KRAKEN_SWORDFISH]),
-           # SLVR(tech_gl_kraken_jellyfish, [T_GL_KRAKEN_JELLYFISH]),
-           SLVR(tech_brute_force,         [T_BRUTE_FORCE])
-           ]
+cdef SLVR_C Solvers[6]
+Solvers[0].pFn = tech_exposed_singles_c; Solvers[0].Techs = [T_EXPOSED_SINGLE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[1].pFn = tech_hidden_singles_c;  Solvers[1].Techs = [T_HIDDEN_SINGLE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[2].pFn = tech_locked_singles_c;  Solvers[2].Techs = [T_CLAIMING_LOCKED_SINGLE, T_POINTING_LOCKED_SINGLE, -1, -1, -1, -1, -1, -1]
+Solvers[3].pFn = tech_empty_rects_c;     Solvers[3].Techs = [T_EMPTY_RECT, -1, -1, -1, -1, -1, -1, -1]
+Solvers[4].pFn = tech_brute_force_c;     Solvers[4].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[5].pFn = NULL;                   Solvers[5].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
 
-def method_solver(Tech):
+
+cdef PSLVRFN method_solver(int Tech):
+    cdef SLVR_C Slvr
+    cdef int T
+
     for Slvr in Solvers:
-        if Tech in Slvr.Mthds: return Slvr.pFn
-    else: return None
+        if not Slvr.pFn: return NULL
+        for T in Slvr.Techs:
+            if T == Tech: return Slvr.pFn
+            if T == -1: break
+    return NULL
 
-def check_puzzle_step(Grid, Cands, Soln):
+cdef check_puzzle_step(int GridC[9][9], bint CandsC[9][9][9], Soln):
     for r in range(9):
         for c in range(9):
-            if Grid[r][c] > 0:
-                if Grid[r][c] != Soln[r][c]:
+            if GridC[r][c] > 0:
+                if GridC[r][c] != Soln[r][c]:
                     return f"Invalid Assignment: r{r+1}c{c+1}:={Soln[r][c]}."
             else:
-                if Soln[r][c] not in Cands[r][c]:
+                if not CandsC[r][c][Soln[r][c]-1]:  # not in Cands[r][c]:
                     return f"Invalid Elimination: r{r+1}c{c+1}-={Soln[r][c]}."
     return None
 
@@ -159,43 +151,57 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     # with the the specified method, then try to solve without the method
     # constraint
 
-    NrEmpties, Cands = determine_cands(Grid, Elims)
-    Grid1 = [[Grid[r][c] for c in range(9)] for r in range(9)]
+    # Returns Expertise Level and Steps to solve, unless an error is encountered, and in which
+    # case returns UNDEF (-1) and a possible text error message in place of Steps.
+
+    cdef int GridC[9][9]
+    cdef bint ElimsC[9][9][9]
+    cdef bint CandsC[9][9][9]
+
+    pgrid_2_cgrid(Grid, GridC)
+    if Elims:
+        pcands_2_ccands(Elims, ElimsC)
+        NrEmpties = determine_cands_c(GridC, ElimsC, CandsC)
+    else:
+        NrEmpties = determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
 
     Steps = []
     MaxLvl = 0
     if Meth != T_UNDEF and NrEmpties > 0:
-        Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
-                    Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
+        Step = STEP(Grid = [[Grid[r][c] for c in range(9)] for r in range(9)],
+                    Cands = ccands_2_pcands(CandsC))  # [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
         pFn = method_solver(Meth)
-        if pFn: NrSlvd = pFn(Grid1, Step, Cands, Method = [Meth])
+        if pFn: NrSlvd = pFn(GridC, Step, CandsC, [Meth])
         else: return UNDEF, [], f"Unknown Method: 0x{Meth:16x}"
         if NrSlvd >= 0:
             Steps.append(Step)
             if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
             NrEmpties -= NrSlvd
             if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
+                Err = check_puzzle_step(GridC, CandsC, Soln)
                 if Err: return UNDEF, Steps, Err
 
     while NrEmpties > 0:
-        Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
-                    Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
+        Step = STEP(Grid = [[GridC[r][c] for c in range(9)] for r in range(9)],
+                    Cands = ccands_2_pcands(CandsC))  #, [[set() for c in range(9)] for r in range(9)]))
         for Slvr in Solvers:
             EnMthd = []; NrSlvd = -1
-            for Mthd in Slvr.Mthds:
+            for Mthd in Slvr.Techs:
+                if Mthd == -1: break
                 if Tech[Mthd].Enabled: EnMthd.append(Mthd)
-            if EnMthd:  NrSlvd = Slvr.pFn(Grid1, Step, Cands, Method = EnMthd)
+            if EnMthd:  NrSlvd = Slvr.pFn(GridC, Step, CandsC, Methods = EnMthd)
+            if NrSlvd == -2: return UNDEF, Steps, "DEBUG STOP"
             if NrSlvd >= 0:
                 Steps.append(Step)
+                # TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
                 if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
                 NrEmpties -= NrSlvd
                 if Soln:
-                    Err = check_puzzle_step(Grid1, Cands, Soln)
+                    Err = check_puzzle_step(GridC, CandsC, Soln)
                     if Err: return UNDEF, Steps, Err
                 break
         else:
-            return UNDEF, Steps, "Could not solve step"
+            return UNDEF, Steps, "Can't solve step"
     return MaxLvl, Steps, ""
 
 def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
@@ -207,27 +213,40 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     # puzzle is correct if interactive error checking is disabled and will still
     # attempt to find a solution.
 
-    NrEmpties, Cands = determine_cands(Grid, Elims)
-    Grid1 = [[Grid[r][c] for c in range(9)] for r in range(9)]
+    cdef int GridC[9][9]
+    cdef bint ElimsC[9][9][9]
+    cdef bint CandsC[9][9][9]
+
+    pgrid_2_cgrid(Grid, GridC)
+    if Elims:
+        pcands_2_ccands(Elims, ElimsC)
+        determine_cands_c(GridC, ElimsC, CandsC)
+        # NrEmpties = determine_cands_c(GridC, ElimsC, CandsC)
+    else:
+        determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
+        # NrEmpties = determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
+
     Step = STEP()
     if Meth != T_UNDEF:
-        pFn = method_solver(Meth)
-        if pFn: NrSlvd = pFn(Grid1, Step, Cands, Method = [Meth])
+        # TRCX(f"Meth:{Meth}")
+        pFn  = method_solver(Meth)
+        if pFn: NrSlvd = pFn(GridC, Step, CandsC, [Meth])
         else: return Step, f"Unknown Method: 0x{Meth:16x}"
+        # TRCX(f"NrSlvd:{NrSlvd}, Step.Method:{Step.Method}")
         if NrSlvd >= 0:
             if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
-                if Err: return Step, Err,
+                Err = check_puzzle_step(GridC, CandsC, Soln)
+                if Err: return Step, Err
             return Step, ""
     for Slvr in Solvers:
-        EnMthd = []; NrSlvd = -1
-        for Mthd in Slvr.Mthds:
-            if Tech[Mthd].Enabled: EnMthd.append(Mthd)
-        if EnMthd: NrSlvd = Slvr.pFn(Grid1, Step, Cands, Method = EnMthd)
+        EnMthds = []; NrSlvd = -1
+        for Mthd in Slvr.Techs:
+            if Mthd == -1: break
+            if Tech[Mthd].Enabled: EnMthds.append(Mthd)
+        if EnMthds: NrSlvd = Slvr.pFn(GridC, Step, CandsC, EnMthds)
         if NrSlvd >= 0:
             if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
+                Err = check_puzzle_step(GridC, CandsC, Soln)
                 if Err: return Step, Err
             return Step, ""
     else: return Step, "Can't solve step"
-

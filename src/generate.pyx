@@ -17,7 +17,7 @@ cdef extern from "time.h" nogil:
     long int time(int)
 
 cdef extern from "string.h" nogil:
-    void * memset (void *, int, size_t)
+    void * memset(void *, int, size_t)
 
 if TRC:
     seed(0)

@@ -89,12 +89,14 @@ Notes on programming style used here:
         2021-04-xx  jm  Initial entry
 
 """
+from os import getcwd
+from os.path import join
 
 # Local Imports
 from globals import *  # globals imports os and wx.
 from trc import TRCX
 from menus import *
-from sudoku import *
+from sudoku import Sudoku, GE, ST_DEFAULT, SB
 
 # if DEBUG:
 #     import logging as log
@@ -111,12 +113,12 @@ class MainStatusBar(wx.StatusBar):
         self.SetFieldsCount(5)
         self.F1w = wx.Size.GetWidth(self.GetTextExtent(GE[ST_DEFAULT][SB]))
         self.F2w = wx.Size.GetWidth(self.GetTextExtent(AST_LVLS[AST_DEFAULT]))
-        self.F3w = wx.Size.GetWidth(self.GetTextExtent(LVLS[LVL_NONE]))
+        self.F3w = wx.Size.GetWidth(self.GetTextExtent(EXPS[EXP_NONE]))
         self.F4w = wx.Size.GetWidth(self.GetTextExtent("00:00:00"))-19
         self.SetStatusWidths([-1, self.F1w, self.F2w, self.F3w, self.F4w])
         self.SetStatusText(GE[ST_DEFAULT][SB], 1)
         self.SetStatusText(AST_LVLS[AST_DEFAULT], 2)
-        self.SetStatusText(LVLS[LVL_NONE], 3)
+        self.SetStatusText(EXPS[EXP_NONE], 3)
         self.SetStatusText("00:00:00", 4)
 
     def update_0(self, Value):
@@ -151,16 +153,15 @@ class MainWindow(wx.Frame):
                           size = wx.DefaultSize,
                           style = wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER ^ wx.MINIMIZE_BOX ^ wx.MAXIMIZE_BOX)
         self.Hide()
-        self.CWD = os.getcwd()
+        self.CWD = getcwd()
         self.Title = TITLE
         Icon = wx.Icon()
-        Icon.CopyFromBitmap(wx.Bitmap(os.path.join(self.CWD, IMG_DIR, "sudoku.ico"), wx.BITMAP_TYPE_ANY))
+        Icon.CopyFromBitmap(wx.Bitmap(join(self.CWD, IMG_DIR, "sudoku.ico"), wx.BITMAP_TYPE_ANY))
         self.SetIcon(Icon)
         self.SetMenuBar(MainMenubar(self))
         self.SetStatusBar(MainStatusBar(self))
         self.Sudoku = Sudoku(self, self.MenuBar, self.StatusBar)  # Instantiate the single instance Sudoku class.
         self.Bind(wx.EVT_CLOSE, self.on_exit)
-        TRCX("Main window initialised")
 
     def on_exit(self, e):
         self.Sudoku.on_close(e)
@@ -177,7 +178,6 @@ def main(sRun = ""):
     Frame = MainWindow()
     App.SetTopWindow(Frame)
     Frame.Show()
-    TRCX("Got here")
     App.MainLoop()
 
 # if __name__ == "__main__":

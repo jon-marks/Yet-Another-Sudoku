@@ -20,6 +20,7 @@ from glob import glob
 from pathlib import Path
 
 Dev = bool(getenv('BLD', 'DEV') == 'DEV')
+Asm = getenv('ASM')
 
 # Start of User configurable stuff.  However still tread cautiously when making changes.
 # Setup Parameters
@@ -33,10 +34,12 @@ LibDir   = "lib"
 LibdDir  = "libd"
 SetupDir = "setup"
 SrcDir   = "src"
+IncDir   = "src"
 TgtDir   = LibdDir if Dev else LibDir
 TmpDir   = "tmp"
 TrcDir   = "trc"
-SrcExt   = ".pyx"
+SrcExts  = [".pyx"]
+IncExts  = [".pxi"]
 
 # Additional GCC parameters:
 Defs = [  # translates to -D options on the gcc command lile.
@@ -77,14 +80,19 @@ else:
 # End of user configurable stuff.
 
 Root = dirname(dirname(argv[0]))
-path.insert(0, f"{join(Root, TrcDir)}")
 path.insert(0, f"{join(Root, SrcDir)}")
+path.insert(0, f"{join(Root, TrcDir)}")
 if Dev: print(f"sys.path = {path}")
 
 NwrSetup = join(TmpDir, ".newersetup_yas")
 Setup = join(SetupDir, "setup_yas.py")
 
-SrcPaths = glob(join(SrcDir, "*" + SrcExt))
+SrcPaths = []
+for SrcExt in SrcExts:
+    SrcPaths.extend(glob(join(SrcDir, "*" + SrcExt)))
+IncPaths = []
+for IncExt in IncExts:
+    IncPaths.extend(glob(join(IncDir, "*" + IncExt)))
 
 if not exists(TgtDir): makedirs(TgtDir)
 if not exists(TmpDir): makedirs(TmpDir)
@@ -99,6 +107,13 @@ for SrcPath in SrcPaths:
     copy2(SrcPath, TmpPath)
     TmpPaths.append(TmpPath)
 
+for IncPath in IncPaths:
+    IncDir, IncFile = split(IncPath)
+    TmpPath = join(TmpDir, IncFile)
+    if exists(TmpPath): remove(TmpPath)
+    copy2(IncPath, TmpPath)
+# do not add inc files to the sources to cythoinize in TmpPaths
+
 class Build(build_ext):
     def build_extensions(self):
         if self.compiler.compiler_type == 'mingw32':
@@ -106,6 +121,7 @@ class Build(build_ext):
                 e.define_macros = Defs
                 e.extra_compile_args = CompArgs
                 e.extra_link_args = LinkArgs
+                # e.include_dirs = [join(Root, TrcDir)]
         super(Build, self).build_extensions()
 
 setup(

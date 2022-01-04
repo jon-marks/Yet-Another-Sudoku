@@ -30,77 +30,11 @@ LK_BOX  = 0x0040
 LK_CELL = 0x0080
 # LK_ANY_depreciated  = 0x0070
 
-# T enumerations
-T_TXT  = 0  # Textual description
-T_LVL  = 1  # Expertise level of technique
-T_DIFF = 2  # Difficulty of technique
 
 # The use of weak or strong ended AIC's to search for patterns where ccell's see
 # each other, for example in covers seeing fins in finned fish or W wings, etc,
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
-KRAKEN_LK_DIFF = 20  # per Kraken link
-GRP_LK_DIFF    = 50  # per group link
-
-T = {T_EXPOSED_SINGLE:              ["Exposed Single", LVL_BEGINNER, 5],
-     T_HIDDEN_SINGLE:               ["Hidden Single", LVL_BEGINNER, 10],
-     T_CLAIMING_LOCKED_SINGLE:      ["Claiming Locked Single", LVL_NOVICE, 15],
-     T_POINTING_LOCKED_SINGLE:      ["Pointing Locked Single", LVL_NOVICE, 15],
-     T_EXPOSED_PAIR:                ["Exposed Pair", LVL_INTERMEDIATE, 15],
-     T_LOCKED_EXPOSED_PAIR:         ["Locked Exposed Pair", LVL_INTERMEDIATE, 20],
-     T_HIDDEN_PAIR:                 ["Hidden Pair", LVL_INTERMEDIATE, 20],
-     T_EXPOSED_TRIPLE:              ["Exposed Triple", LVL_INTERMEDIATE, 20],
-     T_LOCKED_EXPOSED_TRIPLE:       ["Locked Exposed Triple", LVL_INTERMEDIATE, 25],
-     T_HIDDEN_TRIPLE:               ["Hidden Triple", LVL_INTERMEDIATE, 30],
-     T_EXPOSED_QUAD:                ["Exposed Quad", LVL_INTERMEDIATE, 35],
-     T_HIDDEN_QUAD:                 ["Hidden Quad", LVL_INTERMEDIATE, 40],
-     T_X_WING:                      ["X-Wing", LVL_PROFICIENT, 45],
-     T_SWORDFISH:                   ["Swordfish", LVL_PROFICIENT, 50],
-     T_JELLYFISH:                   ["Jellyfish", LVL_PROFICIENT, 55],
-     T_FINNED_X_WING:               ["Finned X-Wing", LVL_PROFICIENT, 60],
-     T_FINNED_SWORDFISH:            ["Finned Swordfish", LVL_PROFICIENT, 65],
-     T_FINNED_JELLYFISH:            ["Finned Jellyfish", LVL_PROFICIENT, 70],
-     T_SKYSCRAPER:                  ["Skyscraper", LVL_PROFICIENT, 45],
-     T_TWO_STRING_KITE:             ["Two String Kite", LVL_PROFICIENT, 45],
-     T_TURBOT_FISH:                 ["Turbot Fish", LVL_PROFICIENT, 50],
-     T_EMPTY_RECT:                  ["Empty Rectangle", LVL_PROFICIENT, 45],
-     T_Y_WING:                      ["Y-Wing", LVL_INTERMEDIATE, 50],
-     T_W_WING:                      ["W-Wing", LVL_PROFICIENT, 55],
-     T_XYZ_WING:                    ["XYZ-Wing", LVL_PROFICIENT, 60],
-     T_WXYZ_WING:                   ["WXYZ-Wing", LVL_ACCOMPLISHED, 100],
-     T_BENT_EXPOSED_QUAD:           ["Bent Exposed Quad", LVL_ACCOMPLISHED, 110],
-     T_X_CHAIN:                     ["X-Chain", LVL_PROFICIENT, 70],
-     T_EVEN_X_LOOP:                 ["Even X-Loop", LVL_PROFICIENT, 70],
-     T_STRONG_X_LOOP:               ["Strong X-Loop", LVL_PROFICIENT, 70],
-     T_REMOTE_PAIR:                 ["Remote Pair", LVL_ACCOMPLISHED, 80],
-     T_XY_CHAIN:                    ["XY-Chain", LVL_ACCOMPLISHED, 80],
-     T_XY_LOOP:                     ["XY-Loop", LVL_ACCOMPLISHED, 80],
-     T_SC_AI_CHAIN:                 ["Same End Candidate AI-Chain", LVL_PROFICIENT, 70],
-     T_DC_AI_CHAIN:                 ["Different End Candidate AI-Chain", LVL_ACCOMPLISHED, 80],
-     T_EVEN_AI_LOOP:                ["Even AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_STRONG_AI_LOOP:              ["Strong AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_KRAKEN_X_WING:               ["Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
-     T_KRAKEN_SWORDFISH:            ["Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
-     T_KRAKEN_JELLYFISH:            ["Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
-     T_KRAKEN_W_WING:               ["Kraken W-Wing", LVL_PROFICIENT, 95],
-     T_GL_W_WING:                   ["Group Linked W-Wing", LVL_PROFICIENT, 45],
-     T_GL_SKYSCRAPER:               ["Group Linked Skyscraper", LVL_PROFICIENT, 45],
-     T_GL_TWO_STRING_KITE:          ["Group Linked Two String Kite", LVL_PROFICIENT, 45],
-     T_GL_TURBOT_FISH:              ["Group Linked Turbot Fish", LVL_PROFICIENT, 50],
-     T_GL_X_CHAIN:                  ["Group Linked X-Chain", LVL_PROFICIENT, 70],
-     T_GL_EVEN_X_LOOP:              ["Group Linked Even X-Loop", LVL_PROFICIENT, 70],
-     T_GL_STRONG_X_LOOP:            ["Group Linked Strong X-Loop", LVL_PROFICIENT, 70],
-     T_GL_XY_CHAIN:                 ["Group Linked XY-Chain", LVL_PROFICIENT, 70],
-     T_GL_SC_AI_CHAIN:              ["Group Linked Same End Candidates AI-Chain", LVL_PROFICIENT, 70],
-     T_GL_DC_AI_CHAIN:              ["Group Linked Different End Candidates AI-Chain", LVL_ACCOMPLISHED, 80],
-     T_GL_EVEN_AI_LOOP:             ["Group Linked Even AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_GL_STRONG_AI_LOOP:           ["Group Linked Strong AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_GL_KRAKEN_X_WING:            ["Group Linked Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
-     T_GL_KRAKEN_SWORDFISH:         ["Group Linked Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
-     T_GL_KRAKEN_JELLYFISH:         ["Group Linked Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
-     # T_GL_KRAKEN_W_WING:            ["Group Linked Kraken W-Wing", LVL_PROFICIENT, 95],
-
-     T_BRUTE_FORCE:                 ["Brute Force", LVL_EXPERT, 1000]}
 
 class TNODE:
     # This is the tree node (branch) structure used in constructing AI chains.
@@ -118,36 +52,6 @@ class STATUS:
         self.Tech = Tech
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
-
-def walk_ai_trees(Orchards, path):
-    # Walks an orchard of AI trees printing out the nodes and their branches.
-    # Trees is list of orchards, one per candidate.  The next level up is the list of trees in the
-    # orchard for that candidate.  The following level up is the first level of branches per tree
-    # which is the start of chains.
-    Lvl = 0
-    with open(path, "wt") as f:
-        for i, Trees in enumerate(Orchards):
-            f.write(f"Candidate {i+1} Orchard\n")
-            for Tree in Trees: traverse_branch(Tree, Lvl, f)
-
-def traverse_branch(B, Lvl, f):
-    sLk = ""
-    sL = ""
-    for i in range(Lvl): sL += "| "
-    sL += f"+{ascii_lk(B.Lk)}{B.Cand}r{B.r+1}c{B.c+1}"
-    if B.Chain:
-        sL += f", Chain: "
-        for r, c, Cand, Lk in B.Chain:
-            sL += f"{Cand}r{r+1}c{c+1}{ascii_lk(Lk)}"
-    if B.Parent: sL += f", Parent: {B.Parent.Cand}r{B.Parent.r+1}c{B.Parent.c+1}"
-    f.write(sL + "\n")
-    for SB in B.Children: traverse_branch(SB, Lvl+1, f)
-
-def ascii_lk(Lk):
-    if Lk == LK_WEAK: return "-"
-    elif Lk == LK_STRG or Lk == LK_STWK: return "="
-    elif Lk == LK_WKST: return "~"
-    else: return "*"
 
 def cell_val_has_no_conflicts(v, grid, r, c):
     #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
@@ -168,26 +72,6 @@ def cell_val_has_no_conflicts(v, grid, r, c):
                           +grid[br+2][bc:bc+3])):
                 return True
     return False
-
-# def cell_val_has_conflicts1(grid, r, c):
-#     #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix
-#     #  v:     IN:  value to test in the grid
-#     #  grid:  IN:  grid to test value
-#     #  r, c   IN:  row and column in grid for test.
-#     # Check that val not in row
-#     # cdef int br, bc, r1, c1
-#
-#     v = grid[r][c]; grid[r][c] = 0
-#     for i in range(9):
-#         if v == grid[r][i]: grid[r][c] = v; return True
-#         if v == grid[i][c]: grid[r][c] = v; return True
-#     br = (r//3)*3; bc = (c//3)*3
-#     for r1 in range(br, br+3):
-#         for c1 in range(bc, bc+3):
-#             if v == grid[r1][c1]: grid[r][c] = v; return True
-#     grid[r][c] = v
-#     return False
-
 
 def cell_val_has_conflicts(grid, r, c, val = 0):
     # if val != 0 then grid[r][c] is zero, else caller made a mistake.
@@ -254,10 +138,9 @@ def token_link(Lk):
     return -1
 
 def discard_cand_from_peers(Cand, r, c, Cands):
-    for r1 in range(9):
-        Cands[r1][c].discard(Cand)
-    for c1 in range(9):
-        Cands[r][c1].discard(Cand)
+    for i in range(9):
+        Cands[i][c].discard(Cand)
+        Cands[r][i].discard(Cand)
     br = (r//3)*3; bc = (c//3)*3
     for r1 in range(br, br+3):
         for c1 in range(bc, bc+3):
@@ -508,7 +391,7 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
         if r0 == r1 and c0 == c1:
             if Cand0 == Cand1: return LK_NONE, LK_NONE  # ccells cannot link on themselves
             if len(Cands[r0][c0]) == 2: return LK_STWK, LK_CELL
-            return LK_WEAK, CELL
+            return LK_WEAK, LK_CELL
         # different cells, therefore linked by same candidate
         if Cand0 != Cand1: return LK_NONE, LK_NONE
         if r0 == r1:  # house is a row
@@ -717,3 +600,38 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
             # if ((ra, ca), (rb, cb)) in Lks1 or ((rb, cb), (ra, ca)) in Lks: continue
             Lks1.append(((ra, ca, Candb), (rb, cb, Candb)))
     return Lks1
+
+
+# diagnostic code for walking tree nodes - not used for a while, may have bitrot.
+
+def walk_ai_trees(Orchards, path):
+    # Walks an orchard of AI trees printing out the nodes and their branches.
+    # Trees is list of orchards, one per candidate.  The next level up is the list of trees in the
+    # orchard for that candidate.  The following level up is the first level of branches per tree
+    # which is the start of chains.
+    Lvl = 0
+    with open(path, "wt") as f:
+        for i, Trees in enumerate(Orchards):
+            f.write(f"Candidate {i+1} Orchard\n")
+            for Tree in Trees: traverse_branch(Tree, Lvl, f)
+
+
+def traverse_branch(B, Lvl, f):
+    sLk = ""
+    sL = ""
+    for i in range(Lvl): sL += "| "
+    sL += f"+{ascii_lk(B.Lk)}{B.Cand}r{B.r+1}c{B.c+1}"
+    if B.Chain:
+        sL += f", Chain: "
+        for r, c, Cand, Lk in B.Chain:
+            sL += f"{Cand}r{r+1}c{c+1}{ascii_lk(Lk)}"
+    if B.Parent: sL += f", Parent: {B.Parent.Cand}r{B.Parent.r+1}c{B.Parent.c+1}"
+    f.write(sL + "\n")
+    for SB in B.Children: traverse_branch(SB, Lvl+1, f)
+
+def ascii_lk(Lk):
+    if Lk == LK_WEAK: return "-"
+    elif Lk == LK_STRG or Lk == LK_STWK: return "="
+    elif Lk == LK_WKST: return "~"
+    else: return "*"
+

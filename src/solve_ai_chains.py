@@ -2,7 +2,8 @@
 from globals import *
 from solve_utils import *
 
-def tech_w_wings(Grid, Step, Cands, Method = T_UNDEF):
+# TODO merge W_WINGS into ai_chains.
+def tech_w_wings(Grid, Step, Cands, Method):
     if Method not in {T_UNDEF, T_W_WING}: return -2
     return _ai_chains(Grid, Step, Cands, T_W_WING)
 
@@ -229,7 +230,7 @@ def _ai_chain_elims(S, Grid, Cands, Step):
         if not isinstance(c, int) and len(c) > 1: NGrpLks += 1
         if Lk == LK_NONE: Step[P_PTRN].extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_END, ]])
         else: Step[P_PTRN].extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
-    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + (NLks - NGrpLks) * KRAKEN_LK_DIFF + NGrpLks * GRP_LK_DIFF
+    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + (NLks - NGrpLks) * LK_DIFF + NGrpLks * GRP_LK_DIFF
     if S.Tech in {T_STRONG_AI_LOOP, T_GL_STRONG_AI_LOOP}:
         r, c, Cand = S.Outcome[0]
         Grid[r][c] = Cand

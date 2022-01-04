@@ -11,7 +11,7 @@ Audit:
 
 """
 
-import sys
+from sys import path
 
 import wx
 
@@ -133,17 +133,17 @@ CVS_CLRS = {CVS_EMPTY: BLACK,
             CVS_SVSHL: ORANGE}
 
 # Puzzle difficulty levels:
-LVL_BEGINNER     = LVL_0 = 0
-LVL_NOVICE       = LVL_1 = 1
-LVL_INTERMEDIATE = LVL_2 = 2
-LVL_PROFICIENT   = LVL_3 = 3
-LVL_ACCOMPLISHED = LVL_4 = 4
-LVL_EXPERT       = LVL_5 = 5
-LVL_GURU         = LVL_6 = 6
-LVL_NONE         = LVL_7 = 7  # This level only valid during user entry of
+EXP_BEGINNER     = LVL_0 = 0
+EXP_NOVICE       = LVL_1 = 1
+EXP_INTERMEDIATE = LVL_2 = 2
+EXP_PROFICIENT   = LVL_3 = 3
+EXP_ACCOMPLISHED = LVL_4 = 4
+EXP_EXPERT       = LVL_5 = 5
+EXP_GURU         = LVL_6 = 6
+EXP_NONE         = LVL_7 = 7  # This level only valid during user entry of
 # puzzles, before it is assessed.
-LVL_DEFAULT = LVL_PROFICIENT
-LVLS = ["Beginner",
+EXP_DEFAULT = EXP_PROFICIENT
+EXPS = ["Beginner",
         "Novice",
         "Intermediate",
         "Proficient",
@@ -241,8 +241,8 @@ PZL_VAL     = 11  # Validate a existing puzzle (entered, loaded or pasted [ctrl]
 # more complex techniques to solve a puzzle when simpler methods can be used.
 
 # Technique Extensions:
-T_KRAKEN                    = 0x80000000
-T_GRPLK                     = 0x40000000
+T_KRAKEN                    = 0x00000100
+T_GRPLK                     = 0x00000200
 
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
@@ -286,7 +286,6 @@ T_STRONG_AI_LOOP            = 36
 T_KRAKEN_X_WING             = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_SWORDFISH          = T_FINNED_SWORDFISH + T_KRAKEN
 T_KRAKEN_JELLYFISH          = T_FINNED_JELLYFISH + T_KRAKEN
-T_KRAKEN_W_WING             = T_W_WING + T_KRAKEN
 
 T_GL_W_WING                 = T_W_WING + T_GRPLK
 T_GL_SKYSCRAPER             = T_SKYSCRAPER + T_GRPLK
@@ -305,12 +304,7 @@ T_GL_KRAKEN_X_WING          = T_KRAKEN_X_WING + T_GRPLK
 T_GL_KRAKEN_SWORDFISH       = T_KRAKEN_SWORDFISH + T_GRPLK
 T_GL_KRAKEN_JELLYFISH       = T_KRAKEN_JELLYFISH + T_GRPLK
 
-T_BRUTE_FORCE               = 0x00008000
-
-# Technique attribute field enums
-TA_TXT  = 0
-TA_LVL  = 1
-TA_DIFF = 2
+T_BRUTE_FORCE               = 0x000000FF  # 255
 
 # Logic Technique Step Attributes
 P_TECH = 0  # The logic technique used
@@ -372,7 +366,7 @@ PR_STEPS_HISTO = 5  # Solution steps histogram
 PR_DIFF        = 6  # The difficulty of the puzzle.
 PR_NR_GVNS     = 7  # Grid containing only givens
 
-TRC = True if sys.path[-1] == ".trc_true" else False
+TRC = True if path[-1] == ".trc_true" else False
 
 class CELL:
     def __init__(self, r = -1, c = -1):
@@ -418,24 +412,38 @@ class PZL:
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
 
-# if DEBUG:
-#     # printing to stderr for debugging:
-#     # Still have not got this to work for Cython code which was the intended purpose.
-#     # https://groups.google.com/g/cython-users/c/OwHQUtsJKlQ
-#     #refs:
-#     # https://docs.python.org/3.9/library/inspect.html#the-interpreter-stack
-#     # https://stackoverflow.com/questions/5574702/how-to-print-to-stderr-in-python
-#     # https://stackoverflow.com/questions/24438976/debugging-get-filename-and-line-number-from-which-a-function-is-called
-#     # https://docs.python.org/3/library/functions.html#print
-#     from inspect import getframeinfo, stack
-#     from sys import stderr
-#
-#     def TRCX(*args, **kwargs):
-#         caller = getframeinfo(stack()[1][0])
-#         print(f":{os.path.basename(caller.filename)}:{caller.lineno}:{caller.function}():", *args, file=stderr, flush=True, **kwargs)
-#
-#     class TRACEX:
-#         def __init__(self, FileName = "", line = -1, Function = ""):
-#             self.FileName = FileName, self.Line = line, self.Function = Function
-#
-#     TraceX = TRACEX()
+class STEP:
+    def __init__(self,
+                 Method     = T_UNDEF,
+                 Pattern    = None,
+                 Outcome    = None,
+                 Grid       = None,
+                 Cands      = None,
+                 NrLks      = 0,
+                 NrGrpLks   = 0,
+                 Difficulty = 0
+                 ):
+        self.Method     = Method
+        self.Pattern    = Pattern if Pattern else []
+        self.Outcome    = Outcome if Outcome else []
+        self.Grid       = Grid if Grid else []
+        self.Cands      = Cands if Cands else []
+        self.NrLks      = NrLks
+        self.NrGrpLks   = NrGrpLks
+        self.Difficulty = Difficulty
+
+class PZL_PROPS:
+    def __init__(self,
+                 Expertise   = UNDEF,
+                 NrGivens    = UNDEF,
+                 GivensHisto = None,
+                 Steps       = None,
+                 StepsHisto  = None,
+                 Difficulty  = UNDEF
+                 ):
+        self.Expertise   = Expertise
+        self.NrGivens    = NrGivens
+        self.GivensHisto = GivensHisto if GivensHisto else []
+        self.Steps       = Steps if Steps else []
+        self.StepsHisto  = StepsHisto if StepsHisto else []
+        self.Difficulty  = Difficulty

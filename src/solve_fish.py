@@ -507,7 +507,7 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method, Kraken
                 if Lk == LK_NONE: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c]])
                 else: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
         Step[P_PTRN].extend(Chains); Step[P_PTRN].append([P_END, ])
-        Step[P_DIFF] = T[Step[P_TECH]][T_DIFF]+(NLks-NGrpLks)*KRAKEN_LK_DIFF+NGrpLks*GRP_LK_DIFF
+        Step[P_DIFF] = T[Step[P_TECH]][T_DIFF]+(NLks-NGrpLks)*LK_DIFF+NGrpLks*GRP_LK_DIFF
         for r, c, Cand in S.Outcome:
             Cands[r][c].discard(Cand)
             if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])

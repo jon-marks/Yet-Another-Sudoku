@@ -43,7 +43,7 @@ def batch_solve():
                 sTChk = f"{int(ta//60):02d}:{ta%60:06.3f}"
                 sTVal = f"{int(ta//3600):02d}:{int((tb%3600)//60):02d}:{tb%60:06.3f}"
 
-                f1.write(f"{sPzl[:81]} {sSoln} {sTChk} {sTVal} {Diff: 5d} {LVLS[Lvl]:12s} {Rsteps: 9}\n")
+                f1.write(f"{sPzl[:81]} {sSoln} {sTChk} {sTVal} {Diff: 5d} {EXPS[Lvl]:12s} {Rsteps: 9}\n")
                 f1.flush()
 
 if __name__ == "__main__":

@@ -250,7 +250,7 @@ def _xy_chain_elims(X, Cands, Step):
         Step[P_OUTC].extend([[P_ROW, Cc.r], [P_COL, Cc.c], [P_OP, OP_ELIM], [P_VAL, Cc.Cand]])
     Step[P_OUTC].append([P_END, ])
     Step[P_TECH] = T_Y_WING if len(X.XY) == 6 else T_XY_CHAIN
-    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * KRAKEN_LK_DIFF
+    Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * LK_DIFF
     i = 0
     while 1:
         Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],
@@ -290,7 +290,7 @@ def _xy_loop_elims(X, Cands, Step):
     if Step[P_OUTC]:
         Step[P_OUTC].append([P_END, ])
         Step[P_TECH] = T_XY_LOOP
-        Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * KRAKEN_LK_DIFF
+        Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * LK_DIFF
         i = 0
         while 1:
             Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],

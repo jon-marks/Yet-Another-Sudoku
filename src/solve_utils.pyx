@@ -7,19 +7,22 @@
 #  pattern searches using group links is required and and passing all (r, c) parameters as
 #  sets.  That is when GrpLKS is set, r and c are set objects, when GrpLks is False,
 #  r and c are scalars.
-#
 
-# These functions are generally faster for small mem allocations than calling the native c
+# PyMem C_API functions are generally faster for small mem allocations than the native c
 # functions, and this mem is accounted for within the Python environment.
-from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 
+cdef extern from "string.h" nogil:
+    void * memset(void *, int, size_t)
+
+include "globals.pxi"
 from ctypedefs cimport *
 from globals import *
-
+from trc cimport *
+from trc import *
 from solve_utils cimport *
 
 # Link strength enumerations.
-# LK_ERR  = 0x1000
 LK_NONE = 0x0000   # must be 0, code relies on this.
 LK_WEAK = 0x0001
 LK_STRG = 0x0002
@@ -34,77 +37,11 @@ LK_BOX  = 0x0040
 LK_CELL = 0x0080
 # LK_ANY_depreciated  = 0x0070
 
-# T enumerations
-T_TXT  = 0  # Textual description
-T_LVL  = 1  # Expertise level of technique
-T_DIFF = 2  # Difficulty of technique
 
 # The use of weak or strong ended AIC's to search for patterns where ccell's see
 # each other, for example in covers seeing fins in finned fish or W wings, etc,
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
-KRAKEN_LK_DIFF = 20  # per Kraken link
-GRP_LK_DIFF    = 50  # per group link
-
-T = {T_EXPOSED_SINGLE:              ["Exposed Single", LVL_BEGINNER, 5],
-     T_HIDDEN_SINGLE:               ["Hidden Single", LVL_BEGINNER, 10],
-     T_CLAIMING_LOCKED_SINGLE:      ["Claiming Locked Single", LVL_NOVICE, 15],
-     T_POINTING_LOCKED_SINGLE:      ["Pointing Locked Single", LVL_NOVICE, 15],
-     T_EXPOSED_PAIR:                ["Exposed Pair", LVL_INTERMEDIATE, 15],
-     T_LOCKED_EXPOSED_PAIR:         ["Locked Exposed Pair", LVL_INTERMEDIATE, 20],
-     T_HIDDEN_PAIR:                 ["Hidden Pair", LVL_INTERMEDIATE, 20],
-     T_EXPOSED_TRIPLE:              ["Exposed Triple", LVL_INTERMEDIATE, 20],
-     T_LOCKED_EXPOSED_TRIPLE:       ["Locked Exposed Triple", LVL_INTERMEDIATE, 25],
-     T_HIDDEN_TRIPLE:               ["Hidden Triple", LVL_INTERMEDIATE, 30],
-     T_EXPOSED_QUAD:                ["Exposed Quad", LVL_INTERMEDIATE, 35],
-     T_HIDDEN_QUAD:                 ["Hidden Quad", LVL_INTERMEDIATE, 40],
-     T_X_WING:                      ["X-Wing", LVL_PROFICIENT, 45],
-     T_SWORDFISH:                   ["Swordfish", LVL_PROFICIENT, 50],
-     T_JELLYFISH:                   ["Jellyfish", LVL_PROFICIENT, 55],
-     T_FINNED_X_WING:               ["Finned X-Wing", LVL_PROFICIENT, 60],
-     T_FINNED_SWORDFISH:            ["Finned Swordfish", LVL_PROFICIENT, 65],
-     T_FINNED_JELLYFISH:            ["Finned Jellyfish", LVL_PROFICIENT, 70],
-     T_SKYSCRAPER:                  ["Skyscraper", LVL_PROFICIENT, 45],
-     T_TWO_STRING_KITE:             ["Two String Kite", LVL_PROFICIENT, 45],
-     T_TURBOT_FISH:                 ["Turbot Fish", LVL_PROFICIENT, 50],
-     T_EMPTY_RECT:                  ["Empty Rectangle", LVL_PROFICIENT, 45],
-     T_Y_WING:                      ["Y-Wing", LVL_INTERMEDIATE, 50],
-     T_W_WING:                      ["W-Wing", LVL_PROFICIENT, 55],
-     T_XYZ_WING:                    ["XYZ-Wing", LVL_PROFICIENT, 60],
-     T_WXYZ_WING:                   ["WXYZ-Wing", LVL_ACCOMPLISHED, 100],
-     T_BENT_EXPOSED_QUAD:           ["Bent Exposed Quad", LVL_ACCOMPLISHED, 110],
-     T_X_CHAIN:                     ["X-Chain", LVL_PROFICIENT, 70],
-     T_EVEN_X_LOOP:                 ["Even X-Loop", LVL_PROFICIENT, 70],
-     T_STRONG_X_LOOP:               ["Strong X-Loop", LVL_PROFICIENT, 70],
-     T_REMOTE_PAIR:                 ["Remote Pair", LVL_ACCOMPLISHED, 80],
-     T_XY_CHAIN:                    ["XY-Chain", LVL_ACCOMPLISHED, 80],
-     T_XY_LOOP:                     ["XY-Loop", LVL_ACCOMPLISHED, 80],
-     T_SC_AI_CHAIN:                 ["Same End Candidate AI-Chain", LVL_PROFICIENT, 70],
-     T_DC_AI_CHAIN:                 ["Different End Candidate AI-Chain", LVL_ACCOMPLISHED, 80],
-     T_EVEN_AI_LOOP:                ["Even AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_STRONG_AI_LOOP:              ["Strong AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_KRAKEN_X_WING:               ["Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
-     T_KRAKEN_SWORDFISH:            ["Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
-     T_KRAKEN_JELLYFISH:            ["Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
-     T_KRAKEN_W_WING:               ["Kraken W-Wing", LVL_PROFICIENT, 95],
-     T_GL_W_WING:                   ["Group Linked W-Wing", LVL_PROFICIENT, 45],
-     T_GL_SKYSCRAPER:               ["Group Linked Skyscraper", LVL_PROFICIENT, 45],
-     T_GL_TWO_STRING_KITE:          ["Group Linked Two String Kite", LVL_PROFICIENT, 45],
-     T_GL_TURBOT_FISH:              ["Group Linked Turbot Fish", LVL_PROFICIENT, 50],
-     T_GL_X_CHAIN:                  ["Group Linked X-Chain", LVL_PROFICIENT, 70],
-     T_GL_EVEN_X_LOOP:              ["Group Linked Even X-Loop", LVL_PROFICIENT, 70],
-     T_GL_STRONG_X_LOOP:            ["Group Linked Strong X-Loop", LVL_PROFICIENT, 70],
-     T_GL_XY_CHAIN:                 ["Group Linked XY-Chain", LVL_PROFICIENT, 70],
-     T_GL_SC_AI_CHAIN:              ["Group Linked Same End Candidates AI-Chain", LVL_PROFICIENT, 70],
-     T_GL_DC_AI_CHAIN:              ["Group Linked Different End Candidates AI-Chain", LVL_ACCOMPLISHED, 80],
-     T_GL_EVEN_AI_LOOP:             ["Group Linked Even AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_GL_STRONG_AI_LOOP:           ["Group Linked Strong AI-Loop", LVL_ACCOMPLISHED, 80],
-     T_GL_KRAKEN_X_WING:            ["Group Linked Kraken Finned X-Wing", LVL_ACCOMPLISHED, 100],
-     T_GL_KRAKEN_SWORDFISH:         ["Group Linked Kraken Finned Swordfish", LVL_ACCOMPLISHED, 100],
-     T_GL_KRAKEN_JELLYFISH:         ["Group Linked Kraken Finned Jellyfish", LVL_ACCOMPLISHED, 100],
-     # T_GL_KRAKEN_W_WING:            ["Group Linked Kraken W-Wing", LVL_PROFICIENT, 95],
-
-     T_BRUTE_FORCE:                 ["Brute Force", LVL_EXPERT, 1000]}
 
 class TNODE:
     # This is the tree node (branch) structure used in constructing AI chains.
@@ -122,36 +59,6 @@ class STATUS:
         self.Tech = Tech
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
-
-def walk_ai_trees(Orchards, path):
-    # Walks an orchard of AI trees printing out the nodes and their branches.
-    # Trees is list of orchards, one per candidate.  The next level up is the list of trees in the
-    # orchard for that candidate.  The following level up is the first level of branches per tree
-    # which is the start of chains.
-    Lvl = 0
-    with open(path, "wt") as f:
-        for i, Trees in enumerate(Orchards):
-            f.write(f"Candidate {i+1} Orchard\n")
-            for Tree in Trees: traverse_branch(Tree, Lvl, f)
-
-def traverse_branch(B, Lvl, f):
-    sLk = ""
-    sL = ""
-    for i in range(Lvl): sL += "| "
-    sL += f"+{ascii_lk(B.Lk)}{B.Cand}r{B.r+1}c{B.c+1}"
-    if B.Chain:
-        sL += f", Chain: "
-        for r, c, Cand, Lk in B.Chain:
-            sL += f"{Cand}r{r+1}c{c+1}{ascii_lk(Lk)}"
-    if B.Parent: sL += f", Parent: {B.Parent.Cand}r{B.Parent.r+1}c{B.Parent.c+1}"
-    f.write(sL + "\n")
-    for SB in B.Children: traverse_branch(SB, Lvl+1, f)
-
-def ascii_lk(Lk):
-    if Lk == LK_WEAK: return "-"
-    elif Lk == LK_STRG or Lk == LK_STWK: return "="
-    elif Lk == LK_WKST: return "~"
-    else: return "*"
 
 # Python <==> Cython conversion functions, neccessary while port to Cython code, will
 # eventually be depreciated with the the python structures when all the code is in Cython.
@@ -269,60 +176,61 @@ cdef list cchain_2_pchain_gl(CHAIN_GL* CChain):
     PyMem_Free(CChain); CChain = NULL
     return PChain
 
-cdef inline void pgrid_2_cgrid(list pG, int cG[9][9]):
+cdef inline pGRIDC pgrid_2_cgrid(pG, int cG[9][9]):
     cdef int r, c
 
     for r in range(9):
         for c in range(9):
             cG[r][c] = pG[r][c]
+    return cG
 
-cdef inline void cgrid_2_pgrid(int cG[9][9], list pG):
-    cdef int r, c
 
-    for r in range(9):
-        for c in range(9):
-            pG[r][c] = cG[r][c]
+# cdef inline cgrid_2_pgrid(int cG[9][9], pG):
+# just do the following list comprehension instead.
+# pG = [[cG[r][c] for c in range(9)] for r in range(9)]
 
-cdef inline void pcands_2_ccands(list pCands, bint cCands[9][9][9]):
+cdef inline pCANDSC pcands_2_ccands(list pCands, bint cCands[9][9][9]):
     cdef int r, c, d, Cand
 
+    memset(<void *>cCands, False, SIZEOF_CANDS)
     for r in range(9):
         for c in range(9):
-            for d in range(9): cCands[r][c][d] = False
+            # for d in range(9): cCands[r][c][d] = False
             for Cand in pCands[r][c]: cCands[r][c][Cand-1] = True
+    return cCands
 
-cdef inline void ccands_2_pcands(bint cCands[9][9][9], list pCands):
+cdef inline list ccands_2_pcands(bint cCands[9][9][9]):  # , list pCands):
     cdef int r, c, d
 
+    pCands = [[set() for c in range(9)] for r in range(9)]
     for r in range(9):
         for c in range(9):
-            pCands[r][c] = set()
             for d in range(9):
                 if cCands[r][c][d]: pCands[r][c].add(d+1)
+    return pCands
 
-cdef inline void pset_2_cset3(set pSet, SET3 cCset):
+cdef inline SET3* pset_2_cset3(set SetP, SET3* pSetC):
     cdef int i, x
 
-    for i, x in enumerate(pSet): cSet.v[i] = x
-    cSet.l = len(pSet)
-    for i in range(cSet.l, 3): cSet.v[i] = 0
+    for i, x in enumerate(SetP): pSetC[0].v[i] = x
+    pSetC[0].l = len(pSet)
+    for i in range(pSetC[0].l, 3): cSet[0].v[i] = 0
+    return pSetC
 
-cdef inline set cset3_2_pset(SET3 cSet):
+cdef inline set cset3_2_pset(SET3* pSetC):
     cdef i
 
-    pSet = set()
-    for i in range(cSet.l):
-        pSet.add(cSet.v[i])
+    SetP = set()
+    for i in range(pSetC[0].l):
+        SetP.add(pSetC[0].v[i])
+    return SetP
 
 def cell_val_has_no_conflicts(v, grid, r, c):
+    # Cython wrapper function
     cdef int G[9][9]
     cdef int v1, r1, c1
 
     pgrid_2_cgrid(grid, G)
-    # for r1 in range(9):
-    #     for c1 in range(9):
-    #         G[r1][c1] = grid[r1][c1]
-    # v1 = v; r1 = r; c1 = c
     return cell_val_has_no_conflicts_c(v, G, r, c)
 
 cdef bint cell_val_has_no_conflicts_c(int v, int grid[9][9], int r, int c):
@@ -332,7 +240,6 @@ cdef bint cell_val_has_no_conflicts_c(int v, int grid[9][9], int r, int c):
     #  r, c   IN:  row and column in grid for test.
     # Check that val not in row
     cdef int br, bc, r1, c1, i
-
 
     for i in range(9):
         if v == grid[r][i]: return False
@@ -349,10 +256,6 @@ def cell_val_has_conflicts(grid, r, c):
     cdef r1, c1
 
     pgrid_2_cgrid(grid, G)
-    # for r1 in range(9):
-    #     for c1 in range(9):
-    #         G[r1][c1] = grid[r1][c1]
-    # r1 = r; c1 = c
     return cell_val_has_conflicts_c(G, r, c)
 
 cdef bint cell_val_has_conflicts_c(int G[9][9], int r, int c):
@@ -371,6 +274,7 @@ cdef bint cell_val_has_conflicts_c(int G[9][9], int r, int c):
     return False
 
 def determine_cands(Grid, Elims = None):
+    # Cython wrapper function
     cdef int cGrid[9][9]
     cdef bint cElims[9][9][9]
     cdef bint cCands[9][9][9]
@@ -384,50 +288,42 @@ def determine_cands(Grid, Elims = None):
                     cElims[r][c][d] = cCands[r][c][d] = False
                 for Cand in Elims[r][c]:
                     cElims[r][c][Cand-1] = True
+        NrEmpties = determine_cands_c(cGrid, cElims, cCands)
+    else:
+        NrEmpties = determine_cands_c(cGrid, <pCANDSC>NULL, cCands)
+    return NrEmpties, ccands_2_pcands(cCands)
+
+cdef int determine_cands_c(int Grid[9][9], bint Elims[9][9][9], bint Cands[9][9][9]):
+    # No Elims if set to NULL.
+    cdef int r, c, d, NrEmpties = 0
+
+    memset(<void *>Cands, False, SIZEOF_CANDS)
+    if Elims:
+        for r in range(9):
+            for c in range(9):
+                if not Grid[r][c]:
+                    NrEmpties += 1
+                    for d in range(9):
+                        if not Elims[r][c][d] and cell_val_has_no_conflicts_c(d+1, Grid, r, c):
+                            Cands[r][c][d] = True
     else:
         for r in range(9):
             for c in range(9):
-                cGrid[r][c] = Grid[r][c]
-                for d in range(9):
-                    cElims[r][c][d] = cCands[r][c][d] = False
-    NrEmpties = determine_cands_c(cGrid, cElims, cCands)
-    pCands = [[set() for c in range(9)] for r in range(9)]
-    # for r in range(9):
-    #     for c in range(9):
-    #         for d in range(9):
-    #             if cCands[r][c][d]: Cands[r][c].add(d+1)
-    ccands_2_pcands(cCands, pCands)
-    return NrEmpties, pCands
-
-cdef int determine_cands_c(int Grid[9][9], bint Elims[9][9][9], bint Cands[9][9][9]):
-    cdef int r, c, d, NrEmpties = 0
-
-    for r in range(9):
-        for c in range(9):
-            if not Grid[r][c]:
-                NrEmpties += 1
-                for d in range(9):
-                    if not Elims[r][c][d] and cell_val_has_no_conflicts_c(d+1, Grid, r, c):
-                        Cands[r][c][d] = True
+                if not Grid[r][c]:
+                    NrEmpties += 1
+                    for d in range(9):
+                        if cell_val_has_no_conflicts_c(d+1, Grid, r, c):
+                            Cands[r][c][d] = True
     return NrEmpties
 
 def link_house(r0, c0, r1, c1, GrpLks = False):
     # wrapper for Cython C functions.
     # ccells must be linked else erroneous LK_BOX cand be returned.
     cdef SET3 r0s, c0s, r1s, c1s
-    # cdef int x, i = 0
 
     if GrpLks:
-        pset_2_cset3(r0, r0s); pset_2_cset3(c0, c1s)
-        pset_2_cset3(r1, r1s); pset_2_cset3(c1, c1s)
-        # for i, x in enumerate(r0): r0s.v[i] = x
-        # r0s.l = len(r0)
-        # for i, x in enumerate(c0): c0s.v[i] = x
-        # c0s.l = len(c0)
-        # for i, x in enumerate(r1): r1s.v[i] = x
-        # r1s.l = len(r1)
-        # for i, x in enumerate(c1): c1s.v[i] = x
-        # c1s.l = len(c1)
+        pset_2_cset3(r0, &r0s); pset_2_cset3(c0, &c0s)
+        pset_2_cset3(r1, &r1s); pset_2_cset3(c1, &c1s)
         return link_house_gl_c(r0s, c0s, r1s, c1s)
     else:
         return link_house_c(r0, c0, r1, c1)
@@ -498,7 +394,7 @@ def is_in_chain(r, c, Cand, PChain, GrpLks):
 
     if GrpLks:
         if DEBUG: print(f"is_in_chain(): GrpLks, r:{r}, c:{c}, Cand:{Cand}, PChain:{PChain}")
-        pset_2_cset3(r, r_gl); pset_2_cset3(c, c_gl)
+        pset_2_cset3(r, &r_gl); pset_2_cset3(c, &c_gl)
         # for i, x in enumerate(r): r_gl.v[i] = x
         # for i in range(len(r),3): r_gl.v[i] = 0
         # r_gl.l = len(r)
@@ -559,11 +455,11 @@ cdef inline bint set3_intersect(SET3 a, SET3 b):
             if a.v[i] == b.v[j]: return True
     return False
 
-cdef NODEC* list_ccells_linked_to_c(int r, int c, bint Cands[9][9][9], LK_STR Type):
+cdef NODEC* list_ccells_linked_to_c(int r, int c, bint Cands[9][9][9], int Type):
     # returns a singly linked list of ccell nodes
     return <NODEC *>void
 
-cdef NODE_GL *list_ccells_linked_to_gl_c(SET3 r, SET3 c, bint Cands[9][9][9], LK_STR Type):
+cdef NODE_GL *list_ccells_linked_to_gl_c(SET3 r, SET3 c, bint Cands[9][9][9], int Type):
     # returns a singly linked list of ccell nodes
     return <NODE_GL *>void
 
@@ -849,6 +745,69 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
             return LK_STWK, LK_BOX
         return LK_NONE, LK_NONE
 
+# cdef inline int cands_in_row_c(int r, int Cand, bint Cands[9][9][9]):
+#     cdef int c, n = 0
+#
+#     for c in range(9):
+#         if Cands[r][c][Cand-1]: n += 1
+#     return n
+#
+# cdef inline int cands_in_col_c(int c, int Cand, bint Cands[9][9][9]):
+#     cdef int r, n = 0
+#
+#     for r in range(9):
+#         if Cands[r][c][Cand-1]: n += 1
+#     return n
+#
+# cdef inline int cands_in_box_c(int b, int Cand, bint Cands[9][9][9]):
+#     cdef int br, bc, r, c, n = 0
+#
+#     br = (b//3)*3; bc = (b%3)*3
+#     for r in range(br, br+3):
+#         for c in range(bc, bc+3):
+#             if Cands[r][c][Cand-1]: n += 1
+#     return n
+
+cdef (int, int) how_ccells_linked_c(int r0, int c0, int Cand0, int r1, int c1, int Cand1, bint Cands[9][9][9]):
+    cdef int LkH, r, c, rb0, cb0, rb1, cb1
+
+    if r0 == r1 and c0 == c1:
+        if Cand0 == Cand1: return LK_NONE_C, LK_NONE_C  # ccells cannot link on themselves
+        if len(Cands[r0][c0]) == 2: return LK_STWK, LK_CELL
+        return LK_WEAK, CELL
+    # different cells, therefore linked by same candidate
+    if Cand0 != Cand1: return LK_NONE, LK_NONE
+    if r0 == r1:  # house is a row
+        LkH = LK_ROW_C
+        if c0//3 == c1//3: LkH |= LK_BOX_C
+        for c in range(9):
+            if c == c0 or c == c1: continue
+            # TRCX(f"{Cand0+1}r{r0+1}c{c+1}=={Cands[r0][c][Cand0]}")
+            if Cands[r0][c][Cand0]: return LK_WEAK_C, LkH
+        return LK_STWK_C, LkH
+    if c0 == c1:  # house is a col
+        LkH = LK_COL_C
+        if r0//3 == r1//3: LkH |= LK_BOX_C
+        for r in range(9):
+            if r == r0 or r == r1: continue
+            # TRCX(f"{Cand0+1}r{r+1}c{c0+1}=={Cands[r][c0][Cand0]}")
+            if Cands[r][c0][Cand0]: return LK_WEAK_C, LkH
+        return LK_STWK_C, LkH
+    rb0 = (r0//3)*3; cb0 = (c0//3)*3; rb1 = (r1//3)*3; cb1 = (c1//3)*3
+    if rb0 == rb1 and cb0 == cb1:  # house is a box
+        for r in range(rb0, rb0+3):
+            for c in range(cb0, cb0+3):
+                if (r == r0 and c == c0) or (r == r1 and c == c1): continue
+                # TRCX(f"{Cand0+1}r{r+1}c{c+1}=={Cands[r][c][Cand0]}")
+                if Cands[r][c][Cand0]: return LK_WEAK_C, LK_BOX_C
+        return LK_STRG_C, LK_BOX_C
+    return LK_NONE_C, LK_NONE_C
+
+cdef (int, int) how_ccells_linked_gl_c(SET3 r0, SET3 c0, int Cand0, SET3 r1, SET3 c1, int Cand1,bint Cands[9][9][9]):
+
+    TRCX("TODO: Stubbed out")
+    return LK_NONE_C, LK_NONE_C
+
 
 def find_all_strong_cand_links(Cand, Cands, GrpLks = False):
     # Finds all the strong links for a candidate and enters makes two entries
@@ -1034,3 +993,49 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
             # if ((ra, ca), (rb, cb)) in Lks1 or ((rb, cb), (ra, ca)) in Lks: continue
             Lks1.append(((ra, ca, Candb), (rb, cb, Candb)))
     return Lks1
+
+# general functions used while solving.
+
+cdef void qd_inplace_sort_c(int* pA, int lenA):
+    # A quick and dirty inplace sort.  Efficient for small sized (<64) arrays of ints.  Uses a bubble sort variation
+    cdef int i, j, k
+
+    for i in range(lenA-1):
+        for j in range(lenA-i):
+            if pA[j] > pA[j+1]:
+                k = pA[j]; pA[j] = pA[j+1]; pA[j+1] = k
+
+
+
+# diagnostic code for walking tree nodes - not used for a while, may have bitrot.
+
+def walk_ai_trees(Orchards, path):
+    # Walks an orchard of AI trees printing out the nodes and their branches.
+    # Trees is list of orchards, one per candidate.  The next level up is the list of trees in the
+    # orchard for that candidate.  The following level up is the first level of branches per tree
+    # which is the start of chains.
+    Lvl = 0
+    with open(path, "wt") as f:
+        for i, Trees in enumerate(Orchards):
+            f.write(f"Candidate {i+1} Orchard\n")
+            for Tree in Trees: traverse_branch(Tree, Lvl, f)
+
+def traverse_branch(B, Lvl, f):
+    sLk = ""
+    sL = ""
+    for i in range(Lvl): sL += "| "
+    sL += f"+{ascii_lk(B.Lk)}{B.Cand}r{B.r+1}c{B.c+1}"
+    if B.Chain:
+        sL += f", Chain: "
+        for r, c, Cand, Lk in B.Chain:
+            sL += f"{Cand}r{r+1}c{c+1}{ascii_lk(Lk)}"
+    if B.Parent: sL += f", Parent: {B.Parent.Cand}r{B.Parent.r+1}c{B.Parent.c+1}"
+    f.write(sL + "\n")
+    for SB in B.Children: traverse_branch(SB, Lvl+1, f)
+
+def ascii_lk(Lk):
+    if Lk == LK_WEAK: return "-"
+    elif Lk == LK_STRG or Lk == LK_STWK: return "="
+    elif Lk == LK_WKST: return "~"
+    else: return "*"
+

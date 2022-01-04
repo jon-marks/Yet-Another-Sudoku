@@ -10,7 +10,8 @@ import wx.lib.mixins.listctrl as lcmi  # list control mix in
 from wx.lib.embeddedimage import PyEmbeddedImage
 
 from globals import *
-from solve_utils import *
+from solve import Tech
+from solve_utils import determine_cands
 
 OP = ["" for i in range(OP_NR_OPS)]
 OP[OP_POS]  = "?-"  # Possibility, perhaps something to try
@@ -56,7 +57,6 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
     def __init__(self, Parent):
         sT = Parent.MainWindow.Title + ": Solution"
-        # if Parent.PzlFn: sT +=  f" - {Parent.PzlFn}"
         wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = sT,
                            pos = wx.DefaultPosition,
                            size = LIST_SOLN_DLG_SZ,
@@ -127,13 +127,13 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
         Props = self.Creator.Puzzle.get_props()
         #  Write the summary.
-        G = Props[PR_GVNS_HISTO]
+        G = Props.GivensHisto  # [PR_GVNS_HISTO]
         self.SumLC.InsertColumn(0, "Attribute", wx.LIST_FORMAT_LEFT, -1)
         self.SumLC.InsertColumn(1, "Value", wx.LIST_FORMAT_RIGHT, -1)
         self.SumLC.InsertColumn(2, "Comment", wx.LIST_FORMAT_LEFT, -1)
-        self.SumLC.Append(["Expertise Level:", LVLS[Props[PR_LVL]], "Highest expertise level required to solve"])
-        self.SumLC.Append(["Difficulty:", str(Props[PR_DIFF]), "Accumulated difficulty of all steps"])
-        self.SumLC.Append(["Givens:", str(Props[PR_NR_GVNS]),
+        self.SumLC.Append(["Expertise Level:", EXPS[Props.Expertise], "Highest expertise level required to solve"])
+        self.SumLC.Append(["Difficulty:", str(Props.Difficulty), "Accumulated difficulty of all steps"])
+        self.SumLC.Append(["Givens:", str(Props.NrGivens),
                            f"[1]={G[0]}, [2]={G[1]}, [3]={G[2]}, [4]={G[3]}, [5]={G[4]},"
                            f"[6]={G[5]}, [7]={G[6]}, [8]={G[7]}, [9]={G[8]}"])
         self.SumLC.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -153,14 +153,15 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         self.StatLC.InsertColumn(4, "Difficulty", wx.LIST_FORMAT_RIGHT, -1)
         self.StatLC.InsertColumn(5, "Score", wx.LIST_FORMAT_RIGHT, -1)
         DM = self.itemDataMap = {}  # self.itemDataMap dict rqd by column sorter mixin
-        H = Props[PR_STEPS_HISTO]
-        for i, HT in enumerate(H):
+
+        for i, (Method, HistoStep) in enumerate(Props.StepsHisto.items()):
             Row = [f"{i+1:3d}",
-                   f"{H[HT][HT_NR]:3d}",
-                   H[HT][HT_TXT],
-                   LVLS[H[HT][HT_LVL]],
-                   f"{H[HT][HT_DIFF]:6d}",
-                   f"{H[HT][HT_ADIFF]:6d}"]
+                   f"{HistoStep[HT_NR]:3d}",
+                   Tech[Method].Text,
+                   EXPS[Tech[Method].Expertise],
+                   f"{Tech[Method].Difficulty:6d}",  # HistoStep[HT_DIFF]:6d}",
+                   f"{HistoStep[HT_ADIFF]:6d}"
+                   ]
             DM[i] = Row
             self.StatLC.InsertItem(i, Row[0], -1)
             self.StatLC.SetItem(i, 1, Row[1])
@@ -193,12 +194,13 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         self.SolnLC.InsertColumn(3, "Pattern", wx.LIST_FORMAT_LEFT, -1)
         self.SolnLC.InsertColumn(4, "Outcome", wx.LIST_FORMAT_LEFT, -1)
 
-        for j, Step in enumerate(Props[PR_STEPS]):
+        for j, Step in enumerate(Props.Steps):  # [PR_STEPS]):
             self.SolnLC.Append([f"{(j+1):d}",
-                                H[Step[P_TECH]][HT_TXT],
-                                f"{Step[P_DIFF]:d}",
-                                tkns_to_str(Step[P_PTRN]),
-                                tkns_to_str(Step[P_OUTC])])
+                                Tech[Step.Method].Text,
+                                f"{Step.Difficulty:6d}",
+                                tkns_to_str(Step.Pattern),
+                                tkns_to_str(Step.Outcome),
+                                ])
 
         self.SolnLC.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)
         self.SolnLC.SetColumnWidth(1, wx.LIST_AUTOSIZE)
@@ -236,23 +238,25 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
 
     def on_save_step(self, e):
         Step = self.Creator.Puzzle.Steps[self.ToStep]
-        NrEmpties, Elims = determine_cands(Step[P_GRID], Step[P_CAND])
-        save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), PZL(Grid    = Step[P_GRID],
+        NrEmpties, Elims = determine_cands(Step.Grid, Step.Cands)
+        save_puzzle((self.Creator.PzlDir, self.Creator.PzlFn), PZL(Grid    = Step.Grid,
                                                                    Givens  = self.Creator.Puzzle.Givens,
                                                                    Elims   = Elims,
-                                                                   Method  = Step[P_TECH],
-                                                                   Pattern = Step[P_PTRN],
-                                                                   Outcome = Step[P_OUTC]))
+                                                                   Method  = Step.Method,
+                                                                   Pattern = Step.Pattern,
+                                                                   Outcome = Step.Outcome
+                                                                   ))
 
     def on_copy_step(self, e):
         Step = self.Creator.Puzzle.Steps[self.ToStep]
-        NrEmpties, Elims = determine_cands(Step[P_GRID], Step[P_CAND])
-        copy_puzzle_to_clipboard(PZL(Grid    = Step[P_GRID],
+        NrEmpties, Elims = determine_cands(Step.Grid, Step.Cands)
+        copy_puzzle_to_clipboard(PZL(Grid    = Step.Grid,
                                      Givens  = self.Creator.Puzzle.Givens,
                                      Elims   = Elims,
-                                     Method  = Step[P_TECH],
-                                     Pattern = Step[P_PTRN],
-                                     Outcome = Step[P_OUTC]))
+                                     Method  = Step.Method,
+                                     Pattern = Step.Pattern,
+                                     Outcome = Step.Outcome
+                                     ))
 
     def on_solve_to(self, e):
         if self.ToStep > self.FromStep:
@@ -387,15 +391,15 @@ def pzl_str_to_pzl(sPzl, Pzl):
                 return 0
             Pzl.Elims[r][c] |= Cands
     if lenlG >= 3 and lG[2]:
-        for Tx in T:  # m in range(len(T):
-            if T[Tx][T_TXT] == lG[2]:
-                Pzl.Method = Tx
+        for Meth, TInfo in Tech.items():  # m in range(len(T):
+            if TInfo.Text == lG[2]:  # Tech[Tx][T_TXT] == lG[2]:
+                Pzl.Method = Meth
                 break
-        else:
-            PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
-                   "Warning",
-                   wx.ICON_WARNING | wx.OK)
-            Pzl.Method = T_UNDEF
+        # else:
+        #     PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
+        #            "Warning",
+        #            wx.ICON_WARNING | wx.OK)
+        #     Pzl.Method = T_UNDEF
     else: Pzl.Method = T_UNDEF
     if lenlG == 5:
         Pzl.Pattern = lG[3]
@@ -416,7 +420,7 @@ def pzl_to_pzl_str(oPzl):
                         sE += f"{v}"
         sG += f"|{sE}"
     if oPzl.Method != T_UNDEF:
-        sG += f"|{T[oPzl.Method][T_TXT]}"
+        sG += f"|{Tech[oPzl.Method].Text}"
         sG += f"|{tkns_to_str(oPzl.Pattern)}|{tkns_to_str(oPzl.Outcome)}\n".replace(" ", "").replace(".", "")
     return sG
 

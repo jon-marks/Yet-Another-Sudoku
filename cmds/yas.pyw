@@ -2,7 +2,7 @@
 from os.path import dirname, join
 from os import chdir
 from sys import argv, exit, path
-from pathlib import Path
+# from pathlib import Path
 
 INT  = 0x01
 PROD = 0x02
@@ -15,16 +15,16 @@ TrcDir   = "trc"
 
 sRun = ""
 Trc = False
-Mods = "prod"
+Mods = INT | PROD
 nArgs = min(3, len(argv))
 for i in range(1, nArgs):
     if argv[i] in ["INT", "Int", "int"]: Mods = INT; sRun = " - Interpreted Only"
-    elif argv[i] in ["PROD", "Prod", "Prod"]: Mods = INT | PROD; sRun = ""
+    elif argv[i] in ["PROD", "Prod", "prod"]: Mods = INT | PROD; sRun = ""
     elif argv[i] in ["DEV", "Dev", "dev"]: Mods = INT | PROD | DEV; sRun = " - Development Build"
     elif argv[i] in ["t", "T", "-t", "/t"]: Trc = True
     else:
         print("Incorrect syntax!\n"
-              "Syntax: yas [<type>] [t]\n"
+              "Syntax: yas.py  [<type>] [t]\n"
               "     <type>: (optional) one of INT, DEV or PROD - Defaults to PROD.\n"
               "     t:      (optional) activated TRCX functionality.\n"
               "                 INT:  use only interpreted Python code.\n"
@@ -47,9 +47,11 @@ if Trc:
     sRun += " + TRCX"
     # Hack using the end of sys.path to store truly global vars.
     path.append(".trc_true")
+    from trc import TRCX
+    TRCX(f"sys.path = {path}")  # sRun is empty for Prod builds with no tracing
 else:
     path.append(".trc_false")
-if sRun: print (f"sys.path = {path}")   # sRun is empty for Prod builds with no tracing
+
 chdir(Root)
 from main import main
 main(sRun)

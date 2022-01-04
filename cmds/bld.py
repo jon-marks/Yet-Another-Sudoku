@@ -7,6 +7,7 @@ from pathlib import Path
 Force   = False
 Bld     = "DEV"
 LibTgt  = "lib"
+Asm     = ""
 Tgt     = ""
 Root    = dirname(dirname(argv[0]))
 nArgs = min(4, len(argv))
@@ -24,6 +25,7 @@ for i in range(1, nArgs):
               "     f:      (optional) overrides dependencies forcing complete build.")
         exit()
 
+if Asm: putenv("ASM", "1")
 putenv("BLD", Bld)
 if Tgt != "trc" and Bld == "DEV": LibTgt = "libd"
 Parms  = f"build_ext --build-lib {LibTgt}"

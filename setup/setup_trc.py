@@ -28,22 +28,27 @@ link_args = ['-static-libgcc',
 NwrSetup = os.path.join(TmpDir, ".newersetup_trc")
 Setup = os.path.join(SetupDir, "setup_trc.py")
 SrcFile = os.path.join(SrcDir, "trc.pyx")
-TmpFile = os.path.join(TmpDir, "trc.pyx")
+IncFile = os.path.join(SrcDir, "trc.pxd")
+TmpSrcFile = os.path.join(TmpDir, "trc.pyx")
+TmpIncFile = os.path.join(TmpDir, "trc.pxd")
 
 if not os.path.exists(TgtDir): os.makedirs(TgtDir)
 if not os.path.exists(TmpDir): os.makedirs(TmpDir)
 if (not os.path.exists(NwrSetup)) or os.path.getmtime(NwrSetup) < os.path.getmtime(Setup):
     Path(SrcFile).touch(); Path(NwrSetup).touch()
 
-if os.path.exists(TmpFile): os.remove(TmpFile)
-copy2(SrcFile, TmpFile)
+if os.path.exists(TmpSrcFile): os.remove(TmpSrcFile)
+copy2(SrcFile, TmpSrcFile)
+if os.path.exists(TmpIncFile): os.remove(TmpIncFile)
+copy2(IncFile, TmpIncFile)
+
 
 class Build(build_ext):
     def build_extensions(self):
         if self.compiler.compiler_type == 'mingw32':
             for e in self.extensions:
-                if link_args: e.extra_link_args = link_args
-                if compile_args: e.extra_compile_args = compile_args
+                e.extra_link_args = link_args
+                e.extra_compile_args = compile_args
         super(Build, self).build_extensions()
 
 setup(
@@ -52,7 +57,7 @@ setup(
       version = "0.0.0",
       author = "Jonathan Marks",
       license = "Mozilla Public Licence 2.0",
-      ext_modules = cythonize(TmpFile,
+      ext_modules = cythonize(TmpSrcFile,
                               compiler_directives = {'language_level': 3,
                                                      'boundscheck': False,
                                                      'wraparound': False,
