@@ -54,7 +54,7 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
     # In the interpreted code for each cell, it's row, column and box are scanned looking
     # for a unique candidate.
 
-    cdef int r, c, d, b, br, bc, NrCand, r1, c1
+    cdef int r, c, d, b, br, bc, NrCand, r1, c1, b1
 
     for r in range(9):  # Scan each row
         for d in range(9):  # for each candidate
@@ -93,11 +93,14 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                                 [P_CON, ], [P_ROW, r1], [P_COL, c], [P_END, ]]
                 Step.Outcome = [[P_ROW, r1], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, d+1], [P_END, ]]
                 return 1
-    for b in range(9):        # scan the block.
+    for b in range(9):        # scan the blocks.
         br = (b//3)*3; bc = (b%3)*3
         for d in range(9):
             NrCand = 0
-            for r, c in [(br, bc), (br, bc+1), (br, bc+2), (br+1, bc), (br+1, bc+1), (br+1, bc+2), (br+2, bc), (br+2, bc+1), (br+2, bc+2)]:
+            # scan the cells in blocks/box.
+            for b1 in range(9):
+                r = br + b1//3; c = bc + b1%3
+            # for r, c in [(br, bc), (br, bc+1), (br, bc+2), (br+1, bc), (br+1, bc+1), (br+1, bc+2), (br+2, bc), (br+2, bc+1), (br+2, bc+2)]:
                 if Grid[r][c] == d+1: break
                 if Grid[r][c]: continue
                 if Cands[r][c][d]:

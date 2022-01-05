@@ -83,7 +83,7 @@ def next_step():
                 Flds = pzl_str_to_pzl(Line, oPzl)
                 if not Flds: continue
                 Test += 1
-                # TRCX(f"Line {i}, Test: {Test}, Method: {sMeth1}")
+                TRCX(f"Line {i}, Test: {Test}, Method: {sMeth1}")
                 Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method)
                 if Err:
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF)

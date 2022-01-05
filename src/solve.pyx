@@ -14,6 +14,7 @@ from trc import *
 
 from solve_utils cimport *
 from solve_singles cimport *
+from solve_subsets cimport *
 
 # from solve_singles import *
 # from solve_subsets import *
@@ -60,7 +61,7 @@ Tech = {
         T_HIDDEN_SINGLE:            TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
         T_CLAIMING_LOCKED_SINGLE:   TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
         T_POINTING_LOCKED_SINGLE:   TECH_T(True, "Pointing Locked Single",    EXP_NOVICE,             15),
-        T_EXPOSED_PAIR:             TECH_T(False, "Exposed Pair",              EXP_INTERMEDIATE,       15),
+        T_EXPOSED_PAIR:             TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
         T_LOCKED_EXPOSED_PAIR:      TECH_T(False, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
         T_HIDDEN_PAIR:              TECH_T(False, "Hidden Pair",               EXP_INTERMEDIATE,       20),
         T_EXPOSED_TRIPLE:           TECH_T(False, "Exposed Triple",            EXP_INTERMEDIATE,       20),
@@ -112,13 +113,15 @@ Tech = {
         T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
         }
 
-cdef SLVR_C Solvers[6]
+cdef SLVR_C Solvers[8]
 Solvers[0].pFn = tech_exposed_singles_c; Solvers[0].Techs = [T_EXPOSED_SINGLE, -1, -1, -1, -1, -1, -1, -1]
 Solvers[1].pFn = tech_hidden_singles_c;  Solvers[1].Techs = [T_HIDDEN_SINGLE, -1, -1, -1, -1, -1, -1, -1]
 Solvers[2].pFn = tech_locked_singles_c;  Solvers[2].Techs = [T_CLAIMING_LOCKED_SINGLE, T_POINTING_LOCKED_SINGLE, -1, -1, -1, -1, -1, -1]
 Solvers[3].pFn = tech_empty_rects_c;     Solvers[3].Techs = [T_EMPTY_RECT, -1, -1, -1, -1, -1, -1, -1]
-Solvers[4].pFn = tech_brute_force_c;     Solvers[4].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
-Solvers[5].pFn = NULL;                   Solvers[5].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
+Solvers[4].pFn = tech_exposed_pairs_c;   Solvers[4].Techs = [T_EXPOSED_PAIR, T_LOCKED_EXPOSED_PAIR, -1, -1, -1, -1, -1, -1]
+Solvers[5].pFn = tech_hidden_pairs_c;    Solvers[5].Techs = [T_HIDDEN_PAIR, -1, -1, -1, -1, -1, -1, -1]
+Solvers[5].pFn = tech_brute_force_c;     Solvers[5].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[6].pFn = NULL;                   Solvers[6].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
 
 
 cdef PSLVRFN method_solver(int Tech):

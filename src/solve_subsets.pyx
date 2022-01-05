@@ -1,110 +1,209 @@
-from copy import copy
 
+include "globals.pxi"
+from ctypedefs cimport *
 from globals import *
-from solve_utils import *
+from trc cimport *
+from trc import *
 
-def tech_exposed_pairs(Grid, Step, Cands, Method):
+from solve_subsets cimport *
+from solve_utils cimport *
+
+# ctypedef struct PAIR_T:
+#     int r, c
+#     int d[2]
+
+cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
     # In any group (row, col or box), if any two cells have only the same two
     # candidates then we have found an exposed pair.  These candidates can be
     # eliminated from the balance of cells in that group.  If these two cell are
     # in the intersection of a box and a row or column, the we have a locked
     # exposed pair and the these candidates can be eliminated from the balance
     # of cells in the box and row/col.
-
+    cdef int r0, c0, d, r1, c1, r2, c2, n, br, bc, or1, or2, oc1, oc2, t, rc0, rc1, rc2
+    cdef int p[2]
+    # TRCX(f"Cands: {trc_cands(Cands)}")
     # Scan the rows first.
-    for r in range(9):
-        for c in range(8):
-            if len(Cands[r][c]) != 2: continue
-            for c1 in range(c+1, 9):
-                if Cands[r][c] != Cands[r][c1]: continue
-                # Found an exposed pair in the row. Could it perhaps
-                # be a locked pair too?
-                if (c//3) == (c1//3):  # both cells in same blk
-                    # Yes, it is a locked pair too.
-                    br = (r//3)*3; bc = (c//3)*3
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0: continue
-                            if (r2 == r and c2 == c) or (r2 == r and c2 == c1): continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
+    for r0 in range(9):
+        for c0 in range(8):
+            if Grid[r0][c0]: continue
+            n = 0
+            for d in range(9):
+                # TRCX(f"Cell 1 Cands[{r0+1}][{c0+1}][{d+1}] = {Cands[r0][c0][d]}")
+                if Cands[r0][c0][d]:
+                    if n == 2: break
+                    p[n] = d; n += 1
+                    # TRCX(f"p: {p[0]},{p[1]}, n: {n}")
+            else:
+                # TRCX(f"Loop d: {d}, Else n:{n}")
+                if n != 2: continue
+                # Found a cell with only two candidates, continue scanning row for another
+                # TRCX(f"First cell with only 2 cands: {p[0]+1}{p[1]+1}r{r0+1}c{c0+1}")
+                for c1 in range(c0+1, 9):
+                    if Grid[r0][c1]: continue
+                    # TRCX(f"c1: {c1}, Looking for second cell with 2 cands")
+                    n = 0
+                    for d in range(9):
+                        # TRCX(f"Cell 2 Cands[{r0+1}][{c1+1}][{d+1}] = {Cands[r0][c1][d]}")
+                        if Cands[r0][c1][d]:
+                            if n == 2: break
+                            # TRCX(f"p: {p[0]+1},{p[1]+1}, n: {n}")
+                            if d != p[n]: break
+                            if d == p[n]: n += 1
+                    else:
+                        if n != 2: continue
+                        # Found an exposed pair in a row, could it be a locked pair
+                        # TRCX(f"Second cell with only 2 cands: {p[0]+1}{p[1]+1}r{r0+1}c{c1+1}")
+                        if c0//3 == c1//3:
+                            # yes, it is a locked pair too
+                            br = (r0//3)*3; bc = (c0//3)*3
+                            or1 = br + (r0+1)%3; or2 = br + (r0+2)%3
+                            if or1 > or2: t = or1; or1 = or2; or2 = t
+                            for c2 in range(bc, bc+3):
+                                if Cands[or1][c2][p[0]]:
+                                    Cands[or1][c2][p[0]] = False
                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                else: Step.Method = T_EXPOSED_PAIR
-                for c2 in set(range(9)) - {c, c1}:
-                    if len(Cands[r][c2]) == 0: continue
-                    for Cand in Cands[r][c]:
-                        if Cand in Cands[r][c2]:
-                            Cands[r][c2].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                            Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome:  # Candidates were eliminated
-                    Step.Outcome.append([P_END, ])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END, ]]
-                    return 0
+                                    Step.Outcome.extend([[P_ROW, or1], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                if Cands[or1][c2][p[1]]:
+                                    Cands[or1][c2][p[1]] = False
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, or1], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                                if Cands[or2][c2][p[0]]:
+                                    Cands[or2][c2][p[0]] = False
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                if Cands[or2][c2][p[1]]:
+                                    Cands[or2][c2][p[1]] = False
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                        if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
+                        else: Step.Method = T_EXPOSED_PAIR
+                        # what can be eliminated along the row?
+                        for c2 in range(9):
+                            if c2 == c0 or c2 == c1: continue
+                            if Cands[r0][c2][p[0]]:
+                                Cands[r0][c2][p[0]] = False
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                            if Cands[r0][c2][p[1]]:
+                                Cands[r0][c2][p[1]] = False
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                        if Step.Outcome:  # candidates were eliminated
+                            Step.Outcome.append([P_END, ])
+                            Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0, c1], [P_END, ]]
+                            return 0
     # then scan the cols.
-    for c in range(9):
-        for r in range(8):
-            if len(Cands[r][c]) != 2: continue
-            for r1 in range(r+1, 9):
-                if Cands[r][c] != Cands[r1][c]: continue
-                # Found an exposed pair in the col. Could it perhaps
-                # be a locked pair too?
-                if (r//3) == (r1//3):  # both cells in same blk
-                    # Yes, it is a locked pair too.
-                    br = (r//3)*3; bc = (c//3)*3
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0: continue
-                            if (r2 == r and c2 == c) or (r2 == r1 and c2 == c): continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                else: Step.Method = T_EXPOSED_PAIR
-                for r2 in set(range(9)) - {r, r1}:
-                    if len(Cands[r2][c]) == 0: continue
-                    if (r2 != r1) and (r2 != r):
-                        for Cand in Cands[r][c]:
-                            if Cand in Cands[r2][c]:
-                                Cands[r2][c].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome:  # Candidates were eliminated
-                    Step.Outcome.append([P_END, ])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END, ]]
-                    return 0
+    for c0 in range(9):
+        for r0 in range(8):
+            if Grid[r0][c0]: continue
+            n = 0
+            for d in range(9):
+                # TRCX(f"Cell 1 Cands[{r0+1}][{c0+1}][{d+1}] = {Cands[r0][c0][d]}")
+                if Cands[r0][c0][d]:
+                    if n == 2: break
+                    p[n] = d; n +=1
+                    # TRCX(f"p: {p[0]},{p[1]}, n: {n}")
+            else:
+                if n != 2: continue
+                # Found a cell with only 2 cands, continue to scan the col for another
+                # TRCX(f"First cell with only 2 cands: {p[0]+1}{p[1]+1}r{r0+1}c{c0+1}")
+                for r1 in range(r0+1, 9):
+                    if Grid[r1][c0]: continue
+                    n = 0
+                    for d in range(9):
+                        # TRCX(f"Cell 2 Cands[{r1+1}][{c0+1}][{d+1}] = {Cands[r1][c0][d]}")
+                        if Cands [r1][c0][d]:
+                            if n == 2: break
+                            if d != p[n]: break
+                            if d == p[n]: n += 1
+                    else:
+                        if n != 2: continue
+                        # Found an exposed pair in a row, could it be a locked pair?
+                        # TRCX(f"Second cell with only 2 cands: {p[0]+1}{p[1]+1}r{r1+1}c{c0+1}")
+                        if r0//3 == r1//3:
+                            # yes, it is a locked pair too.
+                            br = (r0//3)*3; bc = (c0//3)*3
+                            oc1 = bc + (c0+1)%3; oc2 = bc + (c0+2)%3
+                            if oc1 > oc2: t = oc1; oc1 = oc2; oc2 = t
+                            for r2 in range(br, br+3):
+                                if Cands[r2][oc1][p[0]]:
+                                    Cands[r2][oc1][p[0]] = False
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, oc1], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                if Cands[r2][oc1][p[1]]:
+                                     Cands[r2][oc1][p[1]] = False
+                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, oc1], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                                if Cands[r2][oc2][p[0]]:
+                                     Cands[r2][oc2][p[0]] = False
+                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                if Cands[r2][oc2][p[1]]:
+                                     Cands[r2][oc2][p[1]] = False
+                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                        if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
+                        else: Step.Method = T_EXPOSED_PAIR
+                        # what can be eliminated along the row?
+                        for r2 in range(9):
+                            if r2 == r0 or r2 == r1: continue
+                            if Cands[r2][c0][p[0]]:
+                                Cands[r2][c0][p[0]] = False
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                            if Cands[r2][c0][p[1]]:
+                                Cands[r2][c0][p[1]] = False
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                        if Step.Outcome:  # candidates were eliminated
+                            Step.Outcome.append([P_END, ])
+                            Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0, r1], [P_COL, c0], [P_END, ]]
+                            return 0
     # and finally scan the blocks.
     for br in range(0, 9, 3):
         for bc in range(0, 9, 3):
-            for rc in range(8):
-                r = br+(rc//3); c = bc+(rc%3)
-                if len(Cands[r][c]) != 2: continue
-                for rc1 in range(rc+1, 9):
-                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                    if Cands[r][c] != Cands[r1][c1]: continue
-                    # Found an exposed pair in a box, discard matching
-                    # candidates from remaining cells in the box.
-                    for rc2 in set(range(9)) - {rc, rc1}:
-                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                        if len(Cands[r2][c2]) == 0: continue
-                        for Cand in Cands[r][c]:
-                            if Cand in Cands[r2][c2]:
-                                Cands[r2][c2].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                    if Step.Outcome:
-                        Step.Method = T_EXPOSED_PAIR
-                        Step.Outcome.append([P_END, ])
-                        Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
-                        return 0
+            for rc0 in range(8):
+                r0 = br + (rc0//3); c0 = bc + (rc0%3)
+                if Grid[r0][c0]: continue
+                n = 0
+                for d in range(9):
+                    if Cands[r0][c0][d]:
+                        if n == 2: break
+                        p[n] = d; n += 1
+                else:
+                    if n != 2: continue
+                    # Found a cell with only 2 cands, continue to scan box for another
+                    for rc1 in range(rc0+1, 9):
+                        r1 = br + (rc1//3); c1 = bc + (rc1%3)
+                        if Grid[r1][c1]: continue
+                        n = 0
+                        for d in range(9):
+                            if Cands[r1][c1][d]:
+                                if n == 2: break
+                                if d != p[n]: break
+                                if d == p[n]: n += 1
+                        else:
+                            if n != 2: continue
+                            # found an exposed pair in a box, discard matching cands from remaining cells in box
+                            for rc2 in range(9):
+                                r2 = br + (rc2//3); c2 = bc + (rc2%3)
+                                if (r2 == r0 and c2 == c0) or (r2 == r1 and c2 == c1): continue
+                                if Cands[r2][c2][p[0]]:
+                                    Cands[r2][c2][p[0]] = False
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                if Cands[r2][c2][p[1]]:
+                                    Cands[r2][c2][p[1]] = False
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                            if Step.Outcome:  # candidates were eliminated
+                                Step.Method = T_EXPOSED_PAIR
+                                Step.Outcome.append([P_END, ])
+                                Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0, r1], [P_COL, c0, c1], [P_END, ]]
+                                return 0
     return -1
 
-def tech_hidden_pairs(Grid, Step, Cands, Method = T_UNDEF):
+cdef int tech_hidden_pairs_c(int Grid[9][9], Step, Cands[9][9][9], Methods):
     # A hidden pair is where two cells in a group share the same two candidates
     # (out of all their candidates), which are not found elsewhere in the group.
     # That is the candidates of those two cells are limited to the pair of
@@ -113,8 +212,6 @@ def tech_hidden_pairs(Grid, Step, Cands, Method = T_UNDEF):
     # in a group and subtract the union of the candidates from the remaining
     # cells from the two selected cells.  If there are the same two remaining
     # candidates in the selected cells, then a hidden pair has been found.
-
-    if Method != T_UNDEF and Method != T_HIDDEN_PAIR: return -2
 
     # scan the rows first.
     for r in range(9):
