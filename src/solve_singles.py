@@ -5,7 +5,7 @@ from random import randint
 from globals import *
 from solve_utils import *  # discard_cand_from_peers, cell_val_has_no_conflicts, how_ccells_linked
 
-def tech_exposed_singles(Grid, Step, Cands, Method):
+def tech_exposed_singles(Grid, Step, Cands, Methods):
 
     for r in range(9):
         for c in range(9):
@@ -18,7 +18,7 @@ def tech_exposed_singles(Grid, Step, Cands, Method):
                 return 1
     return -1
 
-def tech_hidden_singles(Grid, Step, Cands, Method):
+def tech_hidden_singles(Grid, Step, Cands, Methods):
     # For each empty cell in the grid, subtracting all the candidates from its
     # group (either row, col, blk_peers will yield the single if one exists,
     # either hidden or exposed.
@@ -70,7 +70,7 @@ def tech_hidden_singles(Grid, Step, Cands, Method):
                 return 1
     return -1
 
-def tech_locked_singles(Grid, Step, Cands, Method):
+def tech_locked_singles(Grid, Step, Cands, Methods):
     # For pointing in a block if a candidate value is confined to a row or col
     # then none of of the cells in that row or col outside the block can have
     # the candidate value.
@@ -100,7 +100,7 @@ def tech_locked_singles(Grid, Step, Cands, Method):
                         # possibility of locking, check pointing first
                         Rx = sorted((or1, or2))
                         C2 = sorted(set(range(9)) - {bc, bc1, bc2})
-                        if (T_POINTING_LOCKED_SINGLE in Method) or (T_UNDEF in Method):
+                        if (T_POINTING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
                             if Cand not in (Cands[or1][bc] | Cands[or1][bc1] | Cands[or1][bc2]
                                           | Cands[or2][bc] | Cands[or2][bc1] | Cands[or2][bc2]):
                             # Candidate is locked to the row and can be discarded
@@ -120,7 +120,7 @@ def tech_locked_singles(Grid, Step, Cands, Method):
                                                     [P_END, ]]
                                     return 0
                         # else check claiming
-                        if (T_CLAIMING_LOCKED_SINGLE in Method) or (T_UNDEF in Method):
+                        if (T_CLAIMING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
                             U = set()
                             for c in C2:  # set(range(9))-{bc, bc1, bc2}:
                                 U |= Cands[r0][c]
@@ -155,7 +155,7 @@ def tech_locked_singles(Grid, Step, Cands, Method):
                         # possibility of locking, check for pointing first
                         Cx = sorted((oc1, oc2))
                         R2 = sorted(set(range(9)) - {br, br1, br2})
-                        if (T_POINTING_LOCKED_SINGLE in Method) or (T_UNDEF in Method):
+                        if (T_POINTING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
                             if Cand not in (Cands[br][oc1] | Cands[br1][oc1] | Cands[br2][oc1]
                                             | Cands[br][oc2] | Cands[br1][oc2] | Cands[br2][oc2]):
                                 # Candidate is locked to the col, and can be discarded
@@ -175,7 +175,7 @@ def tech_locked_singles(Grid, Step, Cands, Method):
                                                     [P_END, ]]
                                     return 0
                         # else check claiming
-                        if (T_CLAIMING_LOCKED_SINGLE in Method) or (T_UNDEF in Method):
+                        if (T_CLAIMING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
                             U = set()
                             for r in R2:  # set(range(9)) - {br, br1, br2}:
                                 U |= Cands[r][c0]
@@ -198,7 +198,7 @@ def tech_locked_singles(Grid, Step, Cands, Method):
                                     return 0
     return -1
 
-def tech_empty_rects(Grid, Step, Cands, Method):
+def tech_empty_rects(Grid, Step, Cands, Methods):
     # Covers the occurrence of 3 to 5 occurrences of the same candidate value
     # in a box that only describe a row and column in that box.  Occurrences of
     # less than three same candidate values are simply potential X-Chains and
@@ -264,7 +264,7 @@ def tech_empty_rects(Grid, Step, Cands, Method):
                                     return 0
     return -1
 
-def tech_brute_force(Grid, Step, Cands, Method):
+def tech_brute_force(Grid, Step, Cands, Methods):
 
     # Randomly find an empty cell
     while 1:

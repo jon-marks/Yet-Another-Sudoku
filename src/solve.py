@@ -42,7 +42,7 @@ class TECH_T:
         self.Expertise  = Expertise
         self.Difficulty = Difficulty
 
-Tech = {
+Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UNDEF                   -1),
         T_EXPOSED_SINGLE:           TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
         T_HIDDEN_SINGLE:            TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
         T_CLAIMING_LOCKED_SINGLE:   TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
@@ -168,34 +168,35 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
         Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
                     Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
         pFn = method_solver(Meth)
-        if pFn: NrSlvd = pFn(Grid1, Step, Cands, Method = [Meth])
-        else: return UNDEF, [], f"Unknown Method: 0x{Meth:16x}"
-        if NrSlvd >= 0:
-            Steps.append(Step)
-            if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
-            NrEmpties -= NrSlvd
-            if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
-                if Err: return UNDEF, Steps, Err
+        if pFn:
+            NrSlvd = pFn(Grid1, Step, Cands, [Meth])
+            if NrSlvd >= 0:
+                Steps.append(Step)
+                if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
+                NrEmpties -= NrSlvd
+                if Soln:
+                    Err = check_puzzle_step(Grid1, Cands, Soln)
+                    if Err: return UNDEF, Steps, Err
 
     while NrEmpties > 0:
         Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
                     Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
         for Slvr in Solvers:
-            EnMthd = []; NrSlvd = -1
+            EnMthds = []; NrSlvd = -1
             for Mthd in Slvr.Mthds:
-                if Tech[Mthd].Enabled: EnMthd.append(Mthd)
-            if EnMthd:  NrSlvd = Slvr.pFn(Grid1, Step, Cands, Method = EnMthd)
-            if NrSlvd >= 0:
-                Steps.append(Step)
-                if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
-                NrEmpties -= NrSlvd
-                if Soln:
-                    Err = check_puzzle_step(Grid1, Cands, Soln)
-                    if Err: return UNDEF, Steps, Err
-                break
+                if Tech[Mthd].Enabled: EnMthds.append(Mthd)
+            if EnMthds:
+                NrSlvd = Slvr.pFn(Grid1, Step, Cands, EnMthds)
+                if NrSlvd >= 0:
+                    Steps.append(Step)
+                    if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
+                    NrEmpties -= NrSlvd
+                    if Soln:
+                        Err = check_puzzle_step(Grid1, Cands, Soln)
+                        if Err: return UNDEF, Steps, Err
+                    break
         else:
-            return UNDEF, Steps, "Could not solve step"
+            return UNDEF, Steps, "Can't solve step"
     return MaxLvl, Steps, ""
 
 def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
@@ -212,7 +213,7 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     Step = STEP()
     if Meth != T_UNDEF:
         pFn = method_solver(Meth)
-        if pFn: NrSlvd = pFn(Grid1, Step, Cands, Method = [Meth])
+        if pFn: NrSlvd = pFn(Grid1, Step, Cands, [Meth])
         else: return Step, f"Unknown Method: 0x{Meth:16x}"
         if NrSlvd >= 0:
             if Soln:
@@ -220,10 +221,10 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
                 if Err: return Step, Err,
             return Step, ""
     for Slvr in Solvers:
-        EnMthd = []; NrSlvd = -1
+        EnMthds = []; NrSlvd = -1
         for Mthd in Slvr.Mthds:
-            if Tech[Mthd].Enabled: EnMthd.append(Mthd)
-        if EnMthd: NrSlvd = Slvr.pFn(Grid1, Step, Cands, Method = EnMthd)
+            if Tech[Mthd].Enabled: EnMthds.append(Mthd)
+        if EnMthds: NrSlvd = Slvr.pFn(Grid1, Step, Cands, EnMthds)
         if NrSlvd >= 0:
             if Soln:
                 Err = check_puzzle_step(Grid1, Cands, Soln)

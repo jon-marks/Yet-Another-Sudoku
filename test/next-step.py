@@ -76,33 +76,36 @@ def next_step():
                     f1.write(Line)
                     f1.flush()
                     continue
-                TD = Line.rstrip(" \n").split("|")
-                if len(TD) > 2 and TD[2]: sMeth1 = TD[2]
-                else: sMeth1 = "Unspecified"
                 oPzl = PZL()
                 Flds = pzl_str_to_pzl(Line, oPzl)
                 if not Flds: continue
+                TD = Line.rstrip(" \n").split("|")
+                # if len(TD) > 2 and TD[2]: sMeth1 = TD[2]
+                # else: sMeth1 = "Unspecified"
                 Test += 1
-                TRCX(f"Line {i}, Test: {Test}, Method: {sMeth1}")
                 Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method)
                 if Err:
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF)
                     if Err:
                         f1.write(f"# Warning: Cannot solve next step on line: {Err}: {Line}\n")
+                        TRCX(f"Line {i}, Test: {Test}, Expected: {sMeth1}, Err: {Err}")
                         continue
 
-                sMeth = Tech[Step.Method].Text
+                sExpMeth = Tech[oPzl.Method].Text
+                sActMeth = Tech[Step.Method].Text
                 sCond = tkns_to_str(Step.Pattern).replace(" ", "").replace(".", "")
                 sOutc = tkns_to_str(Step.Outcome).replace(" ", "").replace(".", "")
-                TD = Line.rstrip(" \n").split("|", 3)
+                TD = Line.rstrip(" \n").split("|")
+                if len(TD) >= 2: sElims = TD[1]
+                else: sElims = ""
                 sGr = TD[0].replace("0", ".")
                 if oPzl.Method != Step.Method:
                     if len(TD) == 2: TD.append("")
-                    f1.write(f"# Info: Expected: {TD[2]}; Actual: {sMeth}, line: {Line}")
-                    f1.write(f"# New: {sGr}|{TD[1]}|{sMeth}|{sCond}|{sOutc}\n")
-                else: f1.write(f"{sGr}|{TD[1]}|{sMeth}|{sCond}|{sOutc}\n")
+                    f1.write(f"# Info: Expected: {sExpMeth}; Actual: {sActMeth}, line: {Line}")
+                    f1.write(f"# New: {sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}\n")
+                else: f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}\n")
                 f1.flush()
-                TRC = False
+                TRCX(f"Line {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {sActMeth}")
     TRCX(f"End Run, Lines: {i}, Tests: {Test}")
 
 

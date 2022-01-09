@@ -3,7 +3,7 @@ from copy import copy
 from globals import *
 from solve_utils import *
 
-def tech_exposed_pairs(Grid, Step, Cands, Method):
+def tech_exposed_pairs(Grid, Step, Cands, Methods):
     # In any group (row, col or box), if any two cells have only the same two
     # candidates then we have found an exposed pair.  These candidates can be
     # eliminated from the balance of cells in that group.  If these two cell are
@@ -104,7 +104,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Method):
                         return 0
     return -1
 
-def tech_hidden_pairs(Grid, Step, Cands, Method = T_UNDEF):
+def tech_hidden_pairs(Grid, Step, Cands, Methods):
     # A hidden pair is where two cells in a group share the same two candidates
     # (out of all their candidates), which are not found elsewhere in the group.
     # That is the candidates of those two cells are limited to the pair of
@@ -114,57 +114,44 @@ def tech_hidden_pairs(Grid, Step, Cands, Method = T_UNDEF):
     # cells from the two selected cells.  If there are the same two remaining
     # candidates in the selected cells, then a hidden pair has been found.
 
-    if Method != T_UNDEF and Method != T_HIDDEN_PAIR: return -2
-
     # scan the rows first.
     for r in range(9):
         for c in range(8):
-            if len(Cands[r][c]) < 2:
-                continue
+            if len(Cands[r][c]) < 2: continue
             for c1 in range(c+1, 9):
-                if len(Cands[r][c1]) < 2:
-                    continue
+                if len(Cands[r][c1]) < 2: continue
                 D1 = copy(Cands[r][c])
                 D2 = copy(Cands[r][c1])
                 for c2 in set(range(9)) - {c, c1}:
                     D1 -= Cands[r][c2]
                     D2 -= Cands[r][c2]
-                    if len(D1) < 2 or len(D2) < 2:
-                        break
+                    if len(D1) < 2 or len(D2) < 2: break
                 else:
-                    if D1 == D2:
-                        # Found a hidden pair
-                        # Step[P_TECH] = T_HIDDEN_PAIR
+                    if D1 == D2: # Found a hidden pair
                         for c3 in [c, c1]:
                             for Cand in copy(Cands[r][c3]):
                                 if Cand not in D1:
                                     Cands[r][c3].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r], [P_COL, c3],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                        if Step[P_OUTC]:
-                            D3 = sorted(D1)
-                            Step[P_TECH] = T_HIDDEN_PAIR
-                            Step[P_OUTC].append([P_END, ])
-                            Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_ROW, r],
-                                            [P_COL, c, c1], [P_END, ]]
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        if Step.Outcome:
+                            # D3 = sorted(D1)
+                            Step.Method = T_HIDDEN_PAIR
+                            Step.Outcome.append([P_END, ])
+                            Step.Pattern = [[P_VAL, sorted(D1)], [P_OP, OP_CNT, 2], [P_ROW, r], [P_COL, c, c1], [P_END, ]]
                             return 0
     # then scan the cols
     for c in range(9):
         for r in range(8):
-            if len(Cands[r][c]) < 2:
-                continue
+            if len(Cands[r][c]) < 2: continue
             for r1 in range(r+1, 9):
-                if len(Cands[r1][c]) < 2:
-                    continue
+                if len(Cands[r1][c]) < 2: continue
                 D1 = copy(Cands[r][c])
                 D2 = copy(Cands[r1][c])
                 for r2 in set(range(9)) - {r, r1}:
                     D1 -= Cands[r2][c]
                     D2 -= Cands[r2][c]
-                    if len(D1) < 2 or len(D2) < 2:
-                        break
+                    if len(D1) < 2 or len(D2) < 2: break
                 else:
                     if D1 == D2:
                         # Found a hidden pair
@@ -172,63 +159,49 @@ def tech_hidden_pairs(Grid, Step, Cands, Method = T_UNDEF):
                             for Cand in copy(Cands[r3][c]):
                                 if Cand not in D1:
                                     Cands[r3][c].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                        if Step[P_OUTC]:
-                            D3 = sorted(D1)
-                            Step[P_TECH] = T_HIDDEN_PAIR
-                            Step[P_OUTC].append([P_END, ])
-                            Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2],
-                                            [P_ROW, r, r1], [P_COL, c], [P_END, ]]
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        if Step.Outcome:
+                            # D3 = sorted(D1)
+                            Step.Method = T_HIDDEN_PAIR
+                            Step.Outcome.append([P_END, ])
+                            Step.Pattern = [[P_VAL, sorted(D1)], [P_OP, OP_CNT, 2], [P_ROW, r, r1], [P_COL, c], [P_END, ]]
                             return 0
     # then scan the blocks
-    for br in [0, 3, 6]:
-        for bc in [0, 3, 6]:
+    for br in range(0, 9, 3):
+        for bc in range(0, 9, 3):
             for rc in range(8):
-                r = br+(rc//3)
-                c = bc+(rc%3)
-                if len(Cands[r][c]) < 2:
-                    continue
+                r = br+(rc//3);  c = bc+(rc%3)
+                if len(Cands[r][c]) < 2: continue
                 for rc1 in range(rc+1, 9):
-                    r1 = br+(rc1//3)
-                    c1 = bc+(rc1%3)
-                    if len(Cands[r1][c1]) < 2:
-                        continue
+                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
+                    if len(Cands[r1][c1]) < 2: continue
                     D1 = copy(Cands[r][c])
                     D2 = copy(Cands[r1][c1])
                     for rc2 in set(range(9)) - {rc, rc1}:
-                        r2 = br+(rc2//3)
-                        c2 = bc+(rc2%3)
+                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
                         D1 -= Cands[r2][c2]
                         D2 -= Cands[r2][c2]
-                        if len(D1) < 2 or len(D2) < 2:
-                            break
+                        if len(D1) < 2 or len(D2) < 2: break
                     else:
                         if D1 == D2:
                             # Found a hidden pair
-                            # Step[P_TECH] = T_HIDDEN_PAIR
                             for r3, c3 in [(r, c), (r1, c1)]:
                                 for Cand in copy(Cands[r3][c3]):
                                     if Cand not in D1:
                                         Cands[r3][c3].discard(Cand)
-                                        if Step[P_OUTC]:
-                                            Step[P_OUTC].append([P_SEP, ])
-                                        Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
-                                                             [P_OP, OP_ELIM], [P_VAL, Cand]])
-                            if Step[P_OUTC]:
-                                D3 = sorted(D1)
-                                Step[P_TECH] = T_HIDDEN_PAIR
-                                Step[P_OUTC].append([P_END, ])
-                                Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_BOX, (r//3)*3+c//3],
-                                                [P_CON, ], [P_ROW, r], [P_COL, c],
-                                                [P_CON, ], [P_ROW, r1], [P_COL, c1],
-                                                [P_END, ]]
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            if Step.Outcome:
+                                # D3 = sorted(D1)
+                                Step.Method = T_HIDDEN_PAIR
+                                Step.Outcome.append([P_END, ])
+                                Step.Pattern = [[P_VAL, sorted(D1)], [P_OP, OP_CNT, 2], [P_BOX, (r//3)*3+c//3], [P_CON, ],
+                                                [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
                                 return 0
     return -1
 
-def tech_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
+def tech_exposed_triples(Grid, Step, Cands, Methods):
     # In any group (row, col or box) if any three empty cells have any
     # combination of only the same 3 candidates, then we have found an exposed
     # triple, and these three candidates can be eliminated from other cells.
@@ -236,19 +209,14 @@ def tech_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
     # and a row/col, this is a locked exposed triple and the candidates can be
     # eliminated from the other cells in that box too.
 
-    if Method != T_UNDEF and Method != T_EXPOSED_TRIPLE and Method != T_LOCKED_EXPOSED_TRIPLE: return -2
-
     # Scan the rows first
     for r in range(9):
         for c in range(7):
-            if not 2 <= len(Cands[r][c]) <= 3:
-                continue
+            if not 2 <= len(Cands[r][c]) <= 3: continue
             for c1 in range(c+1, 8):
-                if not 2 <= len(Cands[r][c1]) <= 3:
-                    continue
+                if not 2 <= len(Cands[r][c1]) <= 3: continue
                 for c2 in range(c1+1, 9):
-                    if not 2 <= len(Cands[r][c2]) <= 3:
-                        continue
+                    if not 2 <= len(Cands[r][c2]) <= 3: continue
                     D = Cands[r][c] | Cands[r][c1] | Cands[r][c2]
                     if len(D) == 3:
                         # An exposed triple is found, is it a locked triple?

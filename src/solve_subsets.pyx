@@ -8,10 +8,6 @@ from trc import *
 from solve_subsets cimport *
 from solve_utils cimport *
 
-# ctypedef struct PAIR_T:
-#     int r, c
-#     int d[2]
-
 cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
     # In any group (row, col or box), if any two cells have only the same two
     # candidates then we have found an exposed pair.  These candidates can be
@@ -21,6 +17,7 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
     # of cells in the box and row/col.
     cdef int r0, c0, d, r1, c1, r2, c2, n, br, bc, or1, or2, oc1, oc2, t, rc0, rc1, rc2
     cdef int p[2]
+
     # TRCX(f"Cands: {trc_cands(Cands)}")
     # Scan the rows first.
     for r0 in range(9):
@@ -53,28 +50,29 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                         if n != 2: continue
                         # Found an exposed pair in a row, could it be a locked pair
                         # TRCX(f"Second cell with only 2 cands: {p[0]+1}{p[1]+1}r{r0+1}c{c1+1}")
-                        if c0//3 == c1//3:
-                            # yes, it is a locked pair too
-                            br = (r0//3)*3; bc = (c0//3)*3
-                            or1 = br + (r0+1)%3; or2 = br + (r0+2)%3
-                            if or1 > or2: t = or1; or1 = or2; or2 = t
-                            for c2 in range(bc, bc+3):
-                                if Cands[or1][c2][p[0]]:
-                                    Cands[or1][c2][p[0]] = False
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, or1], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
-                                if Cands[or1][c2][p[1]]:
-                                    Cands[or1][c2][p[1]] = False
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, or1], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
-                                if Cands[or2][c2][p[0]]:
-                                    Cands[or2][c2][p[0]] = False
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
-                                if Cands[or2][c2][p[1]]:
-                                    Cands[or2][c2][p[1]] = False
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                        if T_LOCKED_EXPOSED_PAIR in Methods:
+                            if c0//3 == c1//3:
+                                # yes, it is a locked pair too
+                                br = (r0//3)*3; bc = (c0//3)*3
+                                or1 = br + (r0+1)%3; or2 = br + (r0+2)%3
+                                if or1 > or2: t = or1; or1 = or2; or2 = t
+                                for c2 in range(bc, bc+3):
+                                    if Cands[or1][c2][p[0]]:
+                                        Cands[or1][c2][p[0]] = False
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, or1], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                    if Cands[or1][c2][p[1]]:
+                                        Cands[or1][c2][p[1]] = False
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, or1], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                                    if Cands[or2][c2][p[0]]:
+                                        Cands[or2][c2][p[0]] = False
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                    if Cands[or2][c2][p[1]]:
+                                        Cands[or2][c2][p[1]] = False
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
                         if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
                         else: Step.Method = T_EXPOSED_PAIR
                         # what can be eliminated along the row?
@@ -120,28 +118,29 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                         if n != 2: continue
                         # Found an exposed pair in a row, could it be a locked pair?
                         # TRCX(f"Second cell with only 2 cands: {p[0]+1}{p[1]+1}r{r1+1}c{c0+1}")
-                        if r0//3 == r1//3:
-                            # yes, it is a locked pair too.
-                            br = (r0//3)*3; bc = (c0//3)*3
-                            oc1 = bc + (c0+1)%3; oc2 = bc + (c0+2)%3
-                            if oc1 > oc2: t = oc1; oc1 = oc2; oc2 = t
-                            for r2 in range(br, br+3):
-                                if Cands[r2][oc1][p[0]]:
-                                    Cands[r2][oc1][p[0]] = False
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, oc1], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
-                                if Cands[r2][oc1][p[1]]:
-                                     Cands[r2][oc1][p[1]] = False
-                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, oc1], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
-                                if Cands[r2][oc2][p[0]]:
-                                     Cands[r2][oc2][p[0]] = False
-                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
-                                if Cands[r2][oc2][p[1]]:
-                                     Cands[r2][oc2][p[1]] = False
-                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                        if T_LOCKED_EXPOSED_PAIR in Methods:
+                            if r0//3 == r1//3:
+                                # yes, it is a locked pair too.
+                                br = (r0//3)*3; bc = (c0//3)*3
+                                oc1 = bc + (c0+1)%3; oc2 = bc + (c0+2)%3
+                                if oc1 > oc2: t = oc1; oc1 = oc2; oc2 = t
+                                for r2 in range(br, br+3):
+                                    if Cands[r2][oc1][p[0]]:
+                                        Cands[r2][oc1][p[0]] = False
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, r2], [P_COL, oc1], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                    if Cands[r2][oc1][p[1]]:
+                                         Cands[r2][oc1][p[1]] = False
+                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                         Step.Outcome.extend([[P_ROW, r2], [P_COL, oc1], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
+                                    if Cands[r2][oc2][p[0]]:
+                                         Cands[r2][oc2][p[0]] = False
+                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                         Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[0]+1]])
+                                    if Cands[r2][oc2][p[1]]:
+                                         Cands[r2][oc2][p[1]] = False
+                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                         Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
                         if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
                         else: Step.Method = T_EXPOSED_PAIR
                         # what can be eliminated along the row?
@@ -203,127 +202,221 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                 return 0
     return -1
 
-cdef int tech_hidden_pairs_c(int Grid[9][9], Step, Cands[9][9][9], Methods):
+cdef int tech_hidden_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
     # A hidden pair is where two cells in a group share the same two candidates
     # (out of all their candidates), which are not found elsewhere in the group.
     # That is the candidates of those two cells are limited to the pair of
     # candidates they share.  All other candidates in those two cells can be
-    # eliminated, thereby exposing the pair.  Algorithmically, select two cells
-    # in a group and subtract the union of the candidates from the remaining
-    # cells from the two selected cells.  If there are the same two remaining
-    # candidates in the selected cells, then a hidden pair has been found.
+    # eliminated, thereby exposing the pair.  Algorithmically, find two cands
+    # in a cell and check if this pair of cands only occur twice in the group.
+    cdef int r0, c0, r1, c1, r2, c2, d0, d1, d2, br, bc, b0, b1, n0, n1, n2
+    cdef int or1, or2, oc1, oc2
+    cdef int p[2]
 
-    # scan the rows first.
-    for r in range(9):
-        for c in range(8):
-            if len(Cands[r][c]) < 2:
-                continue
-            for c1 in range(c+1, 9):
-                if len(Cands[r][c1]) < 2:
-                    continue
-                D1 = copy(Cands[r][c])
-                D2 = copy(Cands[r][c1])
-                for c2 in set(range(9)) - {c, c1}:
-                    D1 -= Cands[r][c2]
-                    D2 -= Cands[r][c2]
-                    if len(D1) < 2 or len(D2) < 2:
-                        break
+    # TRCX(f"Cands: {trc_cands(Cands)}")
+    for d0 in range(8):
+        for d1 in range(d0+1, 9):
+            # scan rows:
+            for r0 in range(9):
+                n0 = 0
+                for c0 in range(9):
+                    if Grid[r0][c0]: continue
+                    if Cands[r0][c0][d0] != Cands[r0][c0][d1]: break
+                    if Cands[r0][c0][d0] and Cands[r0][c0][d1]:
+                        if n0 > 1: break
+                        p[n0] = c0; n0 += 1
                 else:
-                    if D1 == D2:
-                        # Found a hidden pair
-                        # Step[P_TECH] = T_HIDDEN_PAIR
-                        for c3 in [c, c1]:
-                            for Cand in copy(Cands[r][c3]):
-                                if Cand not in D1:
-                                    Cands[r][c3].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r], [P_COL, c3],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                        if Step[P_OUTC]:
-                            D3 = sorted(D1)
-                            Step[P_TECH] = T_HIDDEN_PAIR
-                            Step[P_OUTC].append([P_END, ])
-                            Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_ROW, r],
-                                            [P_COL, c, c1], [P_END, ]]
-                            return 0
-    # then scan the cols
-    for c in range(9):
-        for r in range(8):
-            if len(Cands[r][c]) < 2:
-                continue
-            for r1 in range(r+1, 9):
-                if len(Cands[r1][c]) < 2:
-                    continue
-                D1 = copy(Cands[r][c])
-                D2 = copy(Cands[r1][c])
-                for r2 in set(range(9)) - {r, r1}:
-                    D1 -= Cands[r2][c]
-                    D2 -= Cands[r2][c]
-                    if len(D1) < 2 or len(D2) < 2:
-                        break
+                    if n0 != 2: continue
+                    # hidden pair found along r0
+                    c0 = p[0]; c1 = p[1]
+                    # TRCX(f"Hidden Pair: {d0+1}{d1+1}r{r0+1}c{c0+1}{c1+1}")
+                    for d2 in range(9):
+                        if d2 == d0 or d2 == d1: continue
+                        if Cands[r0][c0][d2]:
+                            Cands[r0][c0][d2] = False
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                        if Cands[r0][c1][d2]:
+                            Cands[r0][c1][d2] = False
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c1], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                    if Step.Outcome:
+                        Step.Outcome.append([P_END, ])
+                        Step.Method = T_HIDDEN_PAIR
+                        Step.Pattern = [[P_VAL, d0+1, d1+1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, c0, c1], [P_END, ]]
+                        return 0
+            #scan cols
+            for c0 in range(9):
+                n0 = 0
+                for r0 in range(9):
+                    if Grid[r0][c0]: continue
+                    if Cands[r0][c0][d0] != Cands[r0][c0][d1]: break
+                    if Cands[r0][c0][d0] and Cands[r0][c0][d1]:
+                        if n0 > 1: break
+                        p[n0] = r0; n0 += 1
                 else:
-                    if D1 == D2:
-                        # Found a hidden pair
-                        for r3 in [r, r1]:
-                            for Cand in copy(Cands[r3][c]):
-                                if Cand not in D1:
-                                    Cands[r3][c].discard(Cand)
-                                    if Step[P_OUTC]:
-                                        Step[P_OUTC].append([P_SEP, ])
-                                    Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c],
-                                                         [P_OP, OP_ELIM], [P_VAL, Cand]])
-                        if Step[P_OUTC]:
-                            D3 = sorted(D1)
-                            Step[P_TECH] = T_HIDDEN_PAIR
-                            Step[P_OUTC].append([P_END, ])
-                            Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2],
-                                            [P_ROW, r, r1], [P_COL, c], [P_END, ]]
-                            return 0
-    # then scan the blocks
-    for br in [0, 3, 6]:
-        for bc in [0, 3, 6]:
-            for rc in range(8):
-                r = br+(rc//3)
-                c = bc+(rc%3)
-                if len(Cands[r][c]) < 2:
-                    continue
-                for rc1 in range(rc+1, 9):
-                    r1 = br+(rc1//3)
-                    c1 = bc+(rc1%3)
-                    if len(Cands[r1][c1]) < 2:
-                        continue
-                    D1 = copy(Cands[r][c])
-                    D2 = copy(Cands[r1][c1])
-                    for rc2 in set(range(9)) - {rc, rc1}:
-                        r2 = br+(rc2//3)
-                        c2 = bc+(rc2%3)
-                        D1 -= Cands[r2][c2]
-                        D2 -= Cands[r2][c2]
-                        if len(D1) < 2 or len(D2) < 2:
-                            break
+                    if n0 != 2: continue
+                    # hidden pair found along c0
+                    r0 = p[0]; r1 = p[1]
+                    for d2 in range(9):
+                        if d2 == d0 or d2 == d1: continue
+                        if Cands[r0][c0][d2]:
+                            Cands[r0][c0][d2] = False
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                        if Cands[r1][c0][d2]:
+                            Cands[r1][c0][d2] = False
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r1], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                    if Step.Outcome:
+                        Step.Outcome.append([P_END, ])
+                        Step.Method = T_HIDDEN_PAIR
+                        Step.Pattern = [[P_VAL, d0+1, d1+1], [P_OP, OP_CNT, 2], [P_ROW, r0, r1], [P_COL, c0], [P_END, ]]
+                        return 0
+             #scan blocks
+            for br in range(0, 9, 3):
+                for bc in range(0, 9, 3):
+                    n0 = 0
+                    for b0 in range(9):
+                        r0 = br+(b0//3); c0 = bc+(b0%3)
+                        if Grid[r0][c0]: continue
+                        if Cands[r0][c0][d0] != Cands[r0][c0][d1]: break
+                        if Cands[r0][c0][d0] and Cands[r0][c0][d1]:
+                            if n0 > 1: break
+                            p[n0] = b0; n0 += 1
                     else:
-                        if D1 == D2:
-                            # Found a hidden pair
-                            # Step[P_TECH] = T_HIDDEN_PAIR
-                            for r3, c3 in [(r, c), (r1, c1)]:
-                                for Cand in copy(Cands[r3][c3]):
-                                    if Cand not in D1:
-                                        Cands[r3][c3].discard(Cand)
-                                        if Step[P_OUTC]:
-                                            Step[P_OUTC].append([P_SEP, ])
-                                        Step[P_OUTC].extend([[P_ROW, r3], [P_COL, c3],
-                                                             [P_OP, OP_ELIM], [P_VAL, Cand]])
-                            if Step[P_OUTC]:
-                                D3 = sorted(D1)
-                                Step[P_TECH] = T_HIDDEN_PAIR
-                                Step[P_OUTC].append([P_END, ])
-                                Step[P_PTRN] = [[P_VAL, D3], [P_OP, OP_CNT, 2], [P_BOX, (r//3)*3+c//3],
-                                                [P_CON, ], [P_ROW, r], [P_COL, c],
-                                                [P_CON, ], [P_ROW, r1], [P_COL, c1],
-                                                [P_END, ]]
-                                return 0
+                        if n0 != 2: continue
+                        r0 = br+(p[0]//3); c0 = bc+(p[0]%3)
+                        r1 = br+(p[1]//3); c1 = bc+(p[1]%3)
+                        # A pair subset has been found - what type is it.
+                        for d2 in range(9):
+                            if d2 == d0 or d2 == d1: continue
+                            if Cands[r0][c0][d2]:
+                                Cands[r0][c0][d2] = False
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                            if Cands[r1][c1][d2]:
+                                Cands[r1][c1][d2] = False
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r1], [P_COL, c1], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                        if Step.Outcome:
+                            Step.Outcome.append([P_END, ])
+                            Step.Method = T_HIDDEN_PAIR
+                            Step.Pattern = [[P_VAL, d0+1, d1+1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, c0],
+                                            [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
+                            return 0
     return -1
+    # # scan rows
+    # p[0] = p[1] = -1
+    # for r0 in range(9):
+    #
+    #     for c0 in range(8):
+    #         if Grid[r0][c0]: continue
+    #         n0 = 0
+    #         for d0 in range(9):
+    #             if Cands[r0][c0][d0]:
+    #                 p[n0] = d0; n0 += 1
+    #                 TRCX(f"Cands[{r0+1}][[{c0+1}][{d0+1} = {Cands[r0][c0][d0]}, p[{n0-1}] = {p[n0-1]}")
+    #                 if n0 >= 2: # there are at least two cands in this cell.
+    #                     TRCX(f"Cands[{r0+1}][[{c0+1}][{d0+1} = {Cands[r0][c0][d0]}")
+    #                     TRCX(f"Potential first hidden pair cell: {p[0]+1}{p[1]+1}r{r0+1}c{c0+1}")
+    #                     n1 = n2 = 0; c2 = -1
+    #                     for c1 in range(c0+1, 9):
+    #                         if Grid[r0][c1]: continue
+    #                         TRCX(f"Checking r{r0+1}c{c1+1}")
+    #                         if n1: break  # more than two occurrences of this subset of cands.
+    #                         if Cands[r0][c1][p[0]]: n1 += 1
+    #                         if Cands[r0][c1][p[1]]: n2 += 1
+    #                         if n1 != n2: break  # potential candidates cannot occur separately for hidden subsets
+    #                         c2 = c1
+    #                         TRCX(f"Potential first hidden pair cell: {p[0]+1}{p[1]+1}r{r0+1}c{c1+1}")
+    #                     else:  # hidden pair found, all other cands in these two cells can be eliminated, exposing the pair.
+    #                         for d1 in range(9):
+    #                             TRCX(f"Hidden Pair found:  {p[0]+1}{p[1]+1}r{r0+1}c{c0+1}{c1+1}")
+    #                             if d1 == p[0] or d1 == p[1]: continue
+    #                             if Cands[r0][c0][d1]:
+    #                                 Cands[r0][c0][d1] = False
+    #                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #                                 Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d1+1]])
+    #                             if Cands[r0][c2][d1]:
+    #                                 Cands[r0][c2][d1] = False
+    #                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #                                 Step.Outcome.extend([[P_ROW, r0], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, d1+1]])
+    #                         if Step.Outcome:
+    #                             Step.Outcome.append([P_END, ])
+    #                             Step.Method = T_HIDDEN_PAIR
+    #                             Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, c0, c2], [P_END, ]]
+    #                             return 0
+    # # scan columns
+    # for c0 in range(9):
+    #     for r0 in range(8):
+    #         if Grid[r0][c0]: continue
+    #         n0 = 0
+    #         for d0 in range(9):
+    #             if Cands[r0][c0][d0]:
+    #                 if n0 < 1: p[n0] = d0; n0 += 1
+    #                 else:  # there are at least two cands in this cell.
+    #                     n1 = n2 = 0; r2 = -1
+    #                     for r1 in range(r0+1, 9):
+    #                         if Grid[r1][c0]: continue
+    #                         if n1: break  # more than two occurrences of this subset of cands
+    #                         if Cands[r1][c0][p[0]]: n1 += 1
+    #                         if Cands[r1][c0][p[0]]: n2 += 1
+    #                         if n1 != n2: break  # potential candidates cannot occur separately for hidden subsets
+    #                         r2 = r1
+    #                     else:  # hidden subset found, all other candidates in the subset cells can be eliminated
+    #                         for d1 in range(9):
+    #                             if d1 == p[0] or d1 == p[1]: continue
+    #                             if Cands[r0][c0][d1]:
+    #                                 Cands[r0][c0][d1] = False
+    #                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #                                 Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d1+1]])
+    #                             if Cands[r2][c0][d1]:
+    #                                 Cands[r2][c0][d1] = False
+    #                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #                                 Step.Outcome.extend([[P_ROW, r2], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d1+1]])
+    #                         if Step.Outcome:
+    #                             Step.Outcome.append([P_END, ])
+    #                             Step.Method = T_HIDDEN_PAIR
+    #                             Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_CNT, 2], [P_ROW, r0, r2], [P_COL, c0], [P_END, ]]
+    #                             return 0
+    # # scan blocks
+    # for br in range(0, 9, 3):
+    #     for bc in range(0, 9, 3):
+    #         for b0 in range(8):
+    #             r0 = br+(b0//3); c0 = bc+(b0%3)
+    #             if Grid[r0][c0]: continue
+    #             n0 = 0
+    #             for d0 in range(9):
+    #                 if Cands[r0][c0][d0]:
+    #                     if n0 < 1: p[n0] = d0; n0 += 1
+    #                 else: # there are at least two cands in this cell
+    #                     n1 = n2 = 0; r2 = c2 = -1
+    #                     for b1 in range(b0+1, 9):
+    #                         r1 = br+(b1//3); c1 = bc+(b1%3)
+    #                         if Grid[r1][c1]: continue
+    #                         if n1: break # more than two occurrences of this subset of cands
+    #                         if Cands[r1][c1][p[0]]: n1 += 1
+    #                         if Cands[r1][c1][p[0]]: n2 += 1
+    #                         if n1 != n2: break  # potential candidates cannot occur separately for hidden subsets
+    #                         r2 = r1; c2 = c1
+    #                     else:  # hidden subset found, all other candidates in the subset cells can be eliminated
+    #                         for d1 in range(9):
+    #                             if d1 == p[0] or d1 == p[1]: continue
+    #                             if Cands[r0][c0][d1]:
+    #                                 Cands[r0][c0][d1] = False
+    #                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #                                 Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d1+1]])
+    #                             if Cands[r2][c2][d1]:
+    #                                 Cands[r2][c2][d1] = False
+    #                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #                                 Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, d1+1]])
+    #                         if Step.Outcome:
+    #                             Step.Outcome.append([P_END, ])
+    #                             Step.Method = T_HIDDEN_PAIR
+    #                             Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_CNT, 2], [P_ROW, r0, r2], [P_COL, c0, c2], [P_END, ]]
+    #                             return 0
+    # return -1
 
 def tech_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
     # In any group (row, col or box) if any three empty cells have any

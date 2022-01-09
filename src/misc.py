@@ -392,7 +392,7 @@ def pzl_str_to_pzl(sPzl, Pzl):
             Pzl.Elims[r][c] |= Cands
     if lenlG >= 3 and lG[2]:
         for Meth, TInfo in Tech.items():  # m in range(len(T):
-            if TInfo.Text == lG[2]:  # Tech[Tx][T_TXT] == lG[2]:
+            if TInfo.Text == lG[2]:
                 Pzl.Method = Meth
                 break
         # else:
@@ -477,7 +477,7 @@ def grid_to_grid_str(Grid, Givens = None):
                 if Givens is None: sG += f"{Grid[r][c]}"
                 elif Givens[r][c]: sG += f"{Grid[r][c]}"
                 else: sG += f"+{Grid[r][c]}"
-            else: sG += "0"
+            else: sG += "."
     return sG
 
 def tkns_to_str(Tkns):

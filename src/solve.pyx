@@ -56,14 +56,14 @@ class TECH_T:
         self.Expertise  = Expertise
         self.Difficulty = Difficulty
 
-Tech = {
+Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UNDEF                   -1),
         T_EXPOSED_SINGLE:           TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
         T_HIDDEN_SINGLE:            TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
         T_CLAIMING_LOCKED_SINGLE:   TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
         T_POINTING_LOCKED_SINGLE:   TECH_T(True, "Pointing Locked Single",    EXP_NOVICE,             15),
         T_EXPOSED_PAIR:             TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
-        T_LOCKED_EXPOSED_PAIR:      TECH_T(False, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
-        T_HIDDEN_PAIR:              TECH_T(False, "Hidden Pair",               EXP_INTERMEDIATE,       20),
+        T_LOCKED_EXPOSED_PAIR:      TECH_T(True, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
+        T_HIDDEN_PAIR:              TECH_T(True, "Hidden Pair",               EXP_INTERMEDIATE,       20),
         T_EXPOSED_TRIPLE:           TECH_T(False, "Exposed Triple",            EXP_INTERMEDIATE,       20),
         T_LOCKED_EXPOSED_TRIPLE:    TECH_T(False, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
         T_HIDDEN_TRIPLE:            TECH_T(False, "Hidden Triple",             EXP_INTERMEDIATE,       30),
@@ -120,8 +120,8 @@ Solvers[2].pFn = tech_locked_singles_c;  Solvers[2].Techs = [T_CLAIMING_LOCKED_S
 Solvers[3].pFn = tech_empty_rects_c;     Solvers[3].Techs = [T_EMPTY_RECT, -1, -1, -1, -1, -1, -1, -1]
 Solvers[4].pFn = tech_exposed_pairs_c;   Solvers[4].Techs = [T_EXPOSED_PAIR, T_LOCKED_EXPOSED_PAIR, -1, -1, -1, -1, -1, -1]
 Solvers[5].pFn = tech_hidden_pairs_c;    Solvers[5].Techs = [T_HIDDEN_PAIR, -1, -1, -1, -1, -1, -1, -1]
-Solvers[5].pFn = tech_brute_force_c;     Solvers[5].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
-Solvers[6].pFn = NULL;                   Solvers[6].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
+Solvers[6].pFn = tech_brute_force_c;     Solvers[6].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[7].pFn = NULL;                   Solvers[7].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
 
 
 cdef PSLVRFN method_solver(int Tech):
@@ -168,41 +168,49 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     else:
         NrEmpties = determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
 
+    # TRCX(f"Solving puzzle: First try Method: {Tech[Meth].Text}")
     Steps = []
     MaxLvl = 0
     if Meth != T_UNDEF and NrEmpties > 0:
         Step = STEP(Grid = [[Grid[r][c] for c in range(9)] for r in range(9)],
-                    Cands = ccands_2_pcands(CandsC))  # [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
+                    Cands = ccands_2_pcands(CandsC))
         pFn = method_solver(Meth)
-        if pFn: NrSlvd = pFn(GridC, Step, CandsC, [Meth])
-        else: return UNDEF, [], f"Unknown Method: 0x{Meth:16x}"
-        if NrSlvd >= 0:
-            Steps.append(Step)
-            if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
-            NrEmpties -= NrSlvd
-            if Soln:
-                Err = check_puzzle_step(GridC, CandsC, Soln)
-                if Err: return UNDEF, Steps, Err
-
-    while NrEmpties > 0:
-        Step = STEP(Grid = [[GridC[r][c] for c in range(9)] for r in range(9)],
-                    Cands = ccands_2_pcands(CandsC))  #, [[set() for c in range(9)] for r in range(9)]))
-        for Slvr in Solvers:
-            EnMthd = []; NrSlvd = -1
-            for Mthd in Slvr.Techs:
-                if Mthd == -1: break
-                if Tech[Mthd].Enabled: EnMthd.append(Mthd)
-            if EnMthd:  NrSlvd = Slvr.pFn(GridC, Step, CandsC, Methods = EnMthd)
-            if NrSlvd == -2: return UNDEF, Steps, "DEBUG STOP"
+        if pFn:
+            NrSlvd = pFn(GridC, Step, CandsC, [Meth])
             if NrSlvd >= 0:
                 Steps.append(Step)
                 # TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
-                if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
+                if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
                 NrEmpties -= NrSlvd
                 if Soln:
                     Err = check_puzzle_step(GridC, CandsC, Soln)
                     if Err: return UNDEF, Steps, Err
-                break
+
+    while NrEmpties > 0:
+        Step = STEP(Grid = [[GridC[r][c] for c in range(9)] for r in range(9)],
+                    Cands = ccands_2_pcands(CandsC))
+        for Slvr in Solvers:
+            EnMthds = []
+            # St = "" ####TRCX
+            for Mthd in Slvr.Techs:
+                if Mthd == -1: break
+                if Tech[Mthd].Enabled:
+                    EnMthds.append(Mthd)
+                    # if St: St += ", "   ####TRCX
+                    # St += Tech[Mthd].Text   ####TRCX
+            if EnMthds:
+                # TRCX(f"Solving for methods: {St}")
+                NrSlvd = Slvr.pFn(GridC, Step, CandsC, EnMthds)
+                if NrSlvd == -2: return UNDEF, Steps, "DEBUG STOP"
+                if NrSlvd >= 0:
+                    Steps.append(Step)
+                    # TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
+                    if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
+                    NrEmpties -= NrSlvd
+                    if Soln:
+                        Err = check_puzzle_step(GridC, CandsC, Soln)
+                        if Err: return UNDEF, Steps, Err
+                    break
         else:
             return UNDEF, Steps, "Can't solve step"
     return MaxLvl, Steps, ""
@@ -234,7 +242,7 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
         # TRCX(f"Meth:{Meth}")
         pFn  = method_solver(Meth)
         if pFn: NrSlvd = pFn(GridC, Step, CandsC, [Meth])
-        else: return Step, f"Unknown Method: 0x{Meth:16x}"
+        else: return Step, f"Unknown Method: 0x{Meth:04x}"
         # TRCX(f"NrSlvd:{NrSlvd}, Step.Method:{Step.Method}")
         if NrSlvd >= 0:
             if Soln:

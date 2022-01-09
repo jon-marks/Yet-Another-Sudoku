@@ -67,6 +67,7 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                     if NrCand > 0: break
                     NrCand += 1; c1 = c
             else:
+                if c1 < 0: continue
                 Step.Method  = T_HIDDEN_SINGLE
                 Grid[r][c1]  = d+1
                 memset(<void *>&Cands[r][c1][0], False, 36)  # 9 x 4bytes = 36
@@ -85,6 +86,7 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                     if NrCand > 0: break
                     NrCand += 1; r1 = r
             else:
+                if r1 < 0: continue
                 Step.Method = T_HIDDEN_SINGLE
                 Grid[r1][c] = d+1
                 memset(<void *>&Cands[r1][c][0], False, 36)  # 9 x 4bytes = 36
@@ -96,7 +98,7 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
     for b in range(9):        # scan the blocks.
         br = (b//3)*3; bc = (b%3)*3
         for d in range(9):
-            NrCand = 0
+            NrCand = 0; r1 = c1 = -1
             # scan the cells in blocks/box.
             for b1 in range(9):
                 r = br + b1//3; c = bc + b1%3
@@ -107,6 +109,7 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                     if NrCand > 0: break
                     NrCand += 1; r1 = r; c1 = c
             else:
+                if r1 == c1 == -1: continue
                 Step.Method = T_HIDDEN_SINGLE
                 Grid[r1][c1] = d+1
                 memset(<void *>&Cands[r1][c1][0], False, 36)  # 9 x 4bytes = 36
@@ -288,7 +291,6 @@ cdef int tech_empty_rects_c(int Grid[9][9], Step, bint Cands[9][9][9], Method):
     cdef int    Rx[6]
     cdef int    Cx[6]
 
-    # TRCX("Got here")
     # TRCX(f"Cands: {trc_cands(Cands)}")
     for Cand in range(9):
         for row in range(9):
