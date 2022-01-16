@@ -1,2 +1,6 @@
 cdef int tech_exposed_pairs_c(int Grid[9][9], object Step, bint Cands[9][9][9], object Methods)
 cdef int tech_hidden_pairs_c(int Grid[9][9], object Step, bint Cands[9][9][9], object Methods)
+cdef int tech_exposed_triples_c(int Grid[9][9], object Step, bint Cands[9][9][9], object Methods)
+cdef int tech_hidden_triples_c(int Grid[9][9], object Step, bint Cands[9][9][9], object Methods)
+cdef int tech_exposed_quads_c(int Grid[9][9], object Step, bint Cands[9][9][9], object Methods)
+cdef int tech_hidden_quads_c(int Grid[9][9], object Step, bint Cands[9][9][9], object Methods)

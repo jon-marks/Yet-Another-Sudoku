@@ -228,7 +228,6 @@ cdef inline set cset3_2_pset(SET3* pSetC):
 def cell_val_has_no_conflicts(v, grid, r, c):
     # Cython wrapper function
     cdef int G[9][9]
-    cdef int v1, r1, c1
 
     pgrid_2_cgrid(grid, G)
     return cell_val_has_no_conflicts_c(v, G, r, c)
@@ -253,7 +252,6 @@ cdef bint cell_val_has_no_conflicts_c(int v, int grid[9][9], int r, int c):
 def cell_val_has_conflicts(grid, r, c):
     # Cython wrapper function
     cdef int G[9][9]
-    cdef r1, c1
 
     pgrid_2_cgrid(grid, G)
     return cell_val_has_conflicts_c(G, r, c)
@@ -354,7 +352,7 @@ cdef int token_link_c(int Lk):
 def discard_cand_from_peers(Cand, r, c, Cands):
     #wrapper for discard_cand_from_peers_c.
     cdef bint Cands_c[9][9][9]
-    cdef int r1, c1, d1, Cand1
+    cdef int r1, c1, d1
 
     pcands_2_ccands(Cands, Cands_c)
     # for r1 in range(9):
@@ -384,7 +382,7 @@ cdef void discard_cand_from_peers_c(int Cand, int r, int c, bint Cands[9][9][9])
             Cands[i][j][Cand-1] = False
 
 def is_in_chain(r, c, Cand, PChain, GrpLks):
-    # wrapper for is_in_chain_c() and is_in_chain_gl_C()
+    # wrapper for is_in_chain_c() and is_in_chain_gl_c()
     cdef SET3 r_gl, c_gl
     # cdef int i, x, res
     cdef int res

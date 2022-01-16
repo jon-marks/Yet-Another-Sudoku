@@ -64,14 +64,14 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_EXPOSED_PAIR:             TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
         T_LOCKED_EXPOSED_PAIR:      TECH_T(True, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
         T_HIDDEN_PAIR:              TECH_T(True, "Hidden Pair",               EXP_INTERMEDIATE,       20),
-        T_EXPOSED_TRIPLE:           TECH_T(False, "Exposed Triple",            EXP_INTERMEDIATE,       20),
-        T_LOCKED_EXPOSED_TRIPLE:    TECH_T(False, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
-        T_HIDDEN_TRIPLE:            TECH_T(False, "Hidden Triple",             EXP_INTERMEDIATE,       30),
-        T_EXPOSED_QUAD:             TECH_T(False, "Exposed Quad",              EXP_INTERMEDIATE,       35),
-        T_HIDDEN_QUAD:              TECH_T(False, "Hidden Quad",               EXP_INTERMEDIATE,       40),
-        T_X_WING:                   TECH_T(False, "X-Wing",                    EXP_PROFICIENT,         45),
-        T_SWORDFISH:                TECH_T(False, "Swordfish",                 EXP_PROFICIENT,         50),
-        T_JELLYFISH:                TECH_T(False, "Jellyfish",                 EXP_PROFICIENT,         55),
+        T_EXPOSED_TRIPLE:           TECH_T(True, "Exposed Triple",            EXP_INTERMEDIATE,       20),
+        T_LOCKED_EXPOSED_TRIPLE:    TECH_T(True, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
+        T_HIDDEN_TRIPLE:            TECH_T(True, "Hidden Triple",             EXP_INTERMEDIATE,       30),
+        T_EXPOSED_QUAD:             TECH_T(True, "Exposed Quad",              EXP_INTERMEDIATE,       35),
+        T_HIDDEN_QUAD:              TECH_T(True, "Hidden Quad",               EXP_INTERMEDIATE,       40),
+        T_X_WING:                   TECH_T(True, "X-Wing",                    EXP_PROFICIENT,         45),
+        T_SWORDFISH:                TECH_T(True, "Swordfish",                 EXP_PROFICIENT,         50),
+        T_JELLYFISH:                TECH_T(True, "Jellyfish",                 EXP_PROFICIENT,         55),
         T_FINNED_X_WING:            TECH_T(False, "Finned X-Wing",             EXP_PROFICIENT,         60),
         T_FINNED_SWORDFISH:         TECH_T(False, "Finned Swordfish",          EXP_PROFICIENT,         65),
         T_FINNED_JELLYFISH:         TECH_T(False, "Finned Jellyfish",          EXP_PROFICIENT,         70),
@@ -113,15 +113,22 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
         }
 
-cdef SLVR_C Solvers[8]
-Solvers[0].pFn = tech_exposed_singles_c; Solvers[0].Techs = [T_EXPOSED_SINGLE, -1, -1, -1, -1, -1, -1, -1]
-Solvers[1].pFn = tech_hidden_singles_c;  Solvers[1].Techs = [T_HIDDEN_SINGLE, -1, -1, -1, -1, -1, -1, -1]
-Solvers[2].pFn = tech_locked_singles_c;  Solvers[2].Techs = [T_CLAIMING_LOCKED_SINGLE, T_POINTING_LOCKED_SINGLE, -1, -1, -1, -1, -1, -1]
-Solvers[3].pFn = tech_empty_rects_c;     Solvers[3].Techs = [T_EMPTY_RECT, -1, -1, -1, -1, -1, -1, -1]
-Solvers[4].pFn = tech_exposed_pairs_c;   Solvers[4].Techs = [T_EXPOSED_PAIR, T_LOCKED_EXPOSED_PAIR, -1, -1, -1, -1, -1, -1]
-Solvers[5].pFn = tech_hidden_pairs_c;    Solvers[5].Techs = [T_HIDDEN_PAIR, -1, -1, -1, -1, -1, -1, -1]
-Solvers[6].pFn = tech_brute_force_c;     Solvers[6].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
-Solvers[7].pFn = NULL;                   Solvers[7].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
+cdef SLVR_C Solvers[15]
+Solvers[0].pFn = tech_exposed_singles_c; Solvers[0].Techs  = [T_EXPOSED_SINGLE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[1].pFn = tech_hidden_singles_c;  Solvers[1].Techs  = [T_HIDDEN_SINGLE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[2].pFn = tech_locked_singles_c;  Solvers[2].Techs  = [T_CLAIMING_LOCKED_SINGLE, T_POINTING_LOCKED_SINGLE, -1, -1, -1, -1, -1, -1]
+Solvers[3].pFn = tech_exposed_pairs_c;   Solvers[3].Techs  = [T_EXPOSED_PAIR, T_LOCKED_EXPOSED_PAIR, -1, -1, -1, -1, -1, -1]
+Solvers[4].pFn = tech_hidden_pairs_c;    Solvers[4].Techs  = [T_HIDDEN_PAIR, -1, -1, -1, -1, -1, -1, -1]
+Solvers[5].pFn = tech_exposed_triples_c; Solvers[5].Techs  = [T_EXPOSED_TRIPLE, T_LOCKED_EXPOSED_TRIPLE, -1, -1, -1, -1, -1, -1]
+Solvers[6].pFn = tech_hidden_triples_c;  Solvers[6].Techs  = [T_HIDDEN_TRIPLE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[7].pFn = tech_exposed_quads_c;   Solvers[7].Techs  = [T_EXPOSED_QUAD, -1, -1, -1, -1, -1, -1, -1]
+Solvers[8].pFn = tech_hidden_quads_c;    Solvers[8].Techs  = [T_HIDDEN_QUAD, -1, -1, -1, -1, -1, -1, -1]
+Solvers[9].pFn = tech_empty_rects_c;     Solvers[9].Techs  = [T_EMPTY_RECT, -1, -1, -1, -1, -1, -1, -1]
+Solvers[10].pFn = tech_x_wings_c;        Solvers[10].Techs  = [T_X_WING, -1, -1, -1, -1, -1, -1, -1]
+Solvers[11].pFn = tech_swordfish_c;      Solvers[11].Techs  = [T_SWORDFISH, -1, -1, -1, -1, -1, -1, -1]
+Solvers[12].pFn = tech_jellyfish_c;      Solvers[12].Techs  = [T_JELLYFISH, -1, -1, -1, -1, -1, -1, -1]
+Solvers[13].pFn = tech_brute_force_c;    Solvers[13].Techs = [T_BRUTE_FORCE, -1, -1, -1, -1, -1, -1, -1]
+Solvers[14].pFn = NULL;                  Solvers[14].Techs = [-1, -1, -1, -1, -1, -1, -1, -1]
 
 
 cdef PSLVRFN method_solver(int Tech):
@@ -160,7 +167,8 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     cdef int GridC[9][9]
     cdef bint ElimsC[9][9][9]
     cdef bint CandsC[9][9][9]
-
+    cdef int NrEmpties, NrSlvd
+    
     pgrid_2_cgrid(Grid, GridC)
     if Elims:
         pcands_2_ccands(Elims, ElimsC)
@@ -168,7 +176,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     else:
         NrEmpties = determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
 
-    # TRCX(f"Solving puzzle: First try Method: {Tech[Meth].Text}")
+    TRCX(f"Solving puzzle: First try Method: {Tech[Meth].Text}")
     Steps = []
     MaxLvl = 0
     if Meth != T_UNDEF and NrEmpties > 0:
@@ -179,7 +187,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
             NrSlvd = pFn(GridC, Step, CandsC, [Meth])
             if NrSlvd >= 0:
                 Steps.append(Step)
-                # TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
+                TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
                 if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
                 NrEmpties -= NrSlvd
                 if Soln:
@@ -191,20 +199,20 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
                     Cands = ccands_2_pcands(CandsC))
         for Slvr in Solvers:
             EnMthds = []
-            # St = "" ####TRCX
+            St = "" ####TRCX
             for Mthd in Slvr.Techs:
                 if Mthd == -1: break
                 if Tech[Mthd].Enabled:
                     EnMthds.append(Mthd)
-                    # if St: St += ", "   ####TRCX
-                    # St += Tech[Mthd].Text   ####TRCX
+                    if St: St += ", "   ####TRCX
+                    St += Tech[Mthd].Text   ####TRCX
             if EnMthds:
-                # TRCX(f"Solving for methods: {St}")
+                TRCX(f"Solving for methods: {St}")
                 NrSlvd = Slvr.pFn(GridC, Step, CandsC, EnMthds)
                 if NrSlvd == -2: return UNDEF, Steps, "DEBUG STOP"
                 if NrSlvd >= 0:
                     Steps.append(Step)
-                    # TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
+                    TRCX(f"Step: {Tech[Step.Method].Text}: {Step.Outcome}")
                     if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
                     NrEmpties -= NrSlvd
                     if Soln:
@@ -232,10 +240,8 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     if Elims:
         pcands_2_ccands(Elims, ElimsC)
         determine_cands_c(GridC, ElimsC, CandsC)
-        # NrEmpties = determine_cands_c(GridC, ElimsC, CandsC)
     else:
         determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
-        # NrEmpties = determine_cands_c(GridC, <pCANDSC>NULL, CandsC)
 
     Step = STEP()
     if Meth != T_UNDEF:

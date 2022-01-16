@@ -8,13 +8,6 @@ from trc import *
 
 from solve_singles cimport *
 from solve_utils cimport discard_cand_from_peers_c, cell_val_has_no_conflicts_c, how_ccells_linked_c
-# Tech, discard_cand_from_peers, cell_val_has_no_conflicts, how_ccells_linked
-
-DEF ROW = 0
-DEF COL = 1
-DEF POINTING = 0
-DEF CLAIMING = 1
-
 
 cdef extern from "stdlib.h" nogil:
     int rand()
@@ -285,7 +278,7 @@ cdef int tech_empty_rects_c(int Grid[9][9], Step, bint Cands[9][9][9], Method):
     # is/was a strong link between Cb and Cr, then Cc too can be eliminated.
     #
     cdef int    Cand, row, col, r, c, rb, cb, or1, or2, oc1, oc2, i, n, n1, m, m1
-    cdef int    LKH, LKT
+    cdef int    LkH, LkT
     cdef COORD  BC[5]
     cdef COORD  Elim[2]
     cdef int    Rx[6]
@@ -336,7 +329,8 @@ cdef int tech_empty_rects_c(int Grid[9][9], Step, bint Cands[9][9][9], Method):
                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                         Step.Outcome.extend([[P_ROW, Elim[m1].r], [P_COL, Elim[m1].c], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
                                     Step.Outcome.append([P_END, ])
-                                    Step.Pattern = [[P_VAL, Cand+1], [P_OP, OP_CNT, len(BC)], [P_BOX, (rb//3)*3+cb//3]]
+                                    # Step.Pattern = [[P_VAL, Cand+1], [P_OP, OP_CNT, len(BC)], [P_BOX, (rb//3)*3+cb//3]]
+                                    Step.Pattern = [[P_VAL, Cand+1], [P_OP, OP_CNT, n], [P_BOX, (rb//3)*3+cb//3]]
                                     for n1 in range(n):
                                         Step.Pattern.extend([[P_CON, ], [P_ROW, BC[n1].r], [P_COL, BC[n1].c]])
                                     Step.Pattern.append([P_END, ])

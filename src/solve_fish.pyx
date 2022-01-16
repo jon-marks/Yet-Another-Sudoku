@@ -1,7 +1,18 @@
-from copy import copy
+#from copy import copy
 
+include "globals.pxi"
+from ctypedefs cimport *
 from globals import *
-from solve_utils import *
+from trc cimport *
+from trc import *
+
+from solve_singles cimport *
+
+# from solve_utils import *
+
+cdef extern from "string.h" nogil:
+    # void * memcpy(void *, void *, size_t)
+    void * memset(void *, int, size_t)
 
 def tech_finned_x_wings(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and Method != T_FINNED_X_WING: return -2
@@ -39,7 +50,7 @@ def tech_gl_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
     if Method != T_UNDEF and Method != T_GL_KRAKEN_JELLYFISH: return -2
     return _finned_jellyfish(Grid, Step, Cands, T_GL_KRAKEN_JELLYFISH, Kraken = True, GrpLks = True)
 
-def tech_x_wings(Grid, Step, Cands, Methods):
+cdef int tech_x_wings_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
     # A X-Wing occurs when the same candidate occurs twice each in two separate
     # rows (base sets), and these candidates lie in the same two columns (cover
     # sets).  All occurrences of the candidates in the same 2 columns (cover
@@ -47,9 +58,135 @@ def tech_x_wings(Grid, Step, Cands, Methods):
 
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
+    cdef r0, c0, r1, c1, Base, Cvr, Cand
+    cdef bint BaseCvrs[2][9]
+    cdef int Bases[2]
+    cdef int Cvrs[2]
 
-    for Cand in range(1, 10):
-        # look at rows
+    for Cand in range(9):
+        # look in rows
+        for r0 in range(8):
+            Cvr = 0
+            for c0 in range(9):
+                memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+                if Cands[r0][c0][Cand]:
+                    if Cvr >= 2: break
+                    BaseCvrs[0][c0] = True; Cvr += 1
+            else:
+                if Cvr < 2: continue
+                # first base found with 2 instances of Cand, look for another bases
+                for r1 in range(r0+1, 8):
+                    Cvr = 0
+                    for c0 in range(9):
+                        memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                        if Cands[r1][c0][Cand]:
+                            if Cvr >= 2: break
+                            BaseCvrs[1][c0] = True; Cvr += 1
+                    else:
+                        if Cvr < 2: continue
+                        # found a second base with two instance of cand.
+                        Cvr = 0
+                        for c0 in range(9):
+                            if Cvr >= 2: break
+                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
+                                Cvrs[Cvr] = c0; Cvr += 1
+                        else:
+                            if Cvr != 2: continue
+                            # X-wing pattern found 2 bases with only two cands in the same cols.
+                            Bases[0] = r0, Bases[1] = r1
+                            if elim_cands_in_fish(Cand, <int*> Bases, <int*> Cvrs, ROW, T_X_WING, Cands, Step): return 0
+        # look in cols
+        for c0 in range(8):
+            Cvr = 0
+            for r0 in range(9):
+                memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+                if Cands[r0][c0][Cand]:
+                    if Cvr >= 2: break
+                    BaseCvrs[0][r0] = True; Cvr += 1
+            else:
+                if Cvr < 2: continue
+                # first base found with 2 instances of Cand, look for another bases
+                for c1 in range(r0+1, 8):
+                    Cvr = 0
+                    for r0 in range(9):
+                        memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                        if Cands[r0][c1][Cand]:
+                            if Cvr >= 2: break
+                            BaseCvrs[1][r0] = True; Cvr += 1
+                    else:
+                        if Cvr < 2: continue
+                        # found a second base with two instance of cand.
+                        Cvr = 0
+                        for c0 in range(9):
+                            if Cvr >= 2: break
+                            if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
+                                Cvrs[Cvr] = c0; Cvr += 1
+                        else:
+                            if Cvr != 2: continue
+                            # X-wing pattern found 2 bases with only two cands in the same cols.
+                            Bases[0] = c0, Bases[1] = c1
+                            if elim_cands_in_fish(Cand, <int*> Bases, <int*> Cvrs, COL, T_X_WING, Cands, Step): return 0
+    return -1
+
+
+cdef int tech_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
+    cdef r0, c0, r1, c1, r2, c2, Base, Cvr, Cand
+    cdef bint BaseCvrs[3][9]
+    cdef int Bases[3]
+    cdef int Cvrs[3]
+
+    for Cand in range(9):
+        # Look in rows
+        for r0 in range(7):
+            Cvr = 0
+            for c0 in range(9):
+                memset(<void *>BaseCvrs[0], False, sizeof(int[9]))
+                if Cands[r0][c0][Cand]:
+                  if Cvr >= 3: break
+                  BaseCvrs[0][c0] = True; Cvr += 1
+            else:
+                if Cvr < 2: continue
+                # first base found with 2 or 3 instances of Cand, look for next two bases
+                for r1 in range(r0+1, 8):
+                    Cvr = 0
+                    for c0 in range(9):
+                        memset(<void *>BaseCvrs[1], False, sizeof(int[9]))
+                        if Cands[r1][c0][Cand]:
+                            if Cvr >= 3: break
+                            BaseCvrs[1][c0] = True; Cvr += 1
+                    else:
+                        if Cvr < 2: continue
+                        Cvr = 0
+                        for c0 in range(9):
+                            if Cvr >= 3: break
+                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]: Cvr += 1
+                        else:
+                            if Cvr != 3: continue
+                            # 2 of 3 bases found with 2 or 3 instances of cand, look for third base
+                            for r2 in range(r1+1, 9):
+                                Cvr = 0
+                                for C0 in range(9):
+                                    memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                    if Cands[r2][c0][Cands]:
+                                        if Cvr >= 3: break
+                                        BaseCvrs[2][c0] = True; Cvr += 1
+                                else:
+                                    if Cvr < 2: continue
+                                    Cvr = 0
+                                    for c0 in range(9):
+                                        if Cvr >= 3: break
+                                        if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]:
+                                            Cvrs[Cvr] = c0; Cvr += 1
+                                    else:
+                                        if Cvr != 3: continue
+                                        # Swordfish pattern found, 3 bases with 2 or 3 instances of cand
+                                        Bases[0] = r0; Bases[1] = r1; Bases[2] = r2
+                                        if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, ROW, T_SWORDFISH, Cands, Step): return 0
+
+        for r in range(9)
+
+
+
         BC = [set() for i in range(9)]
         for r in range(9):
             for c in range(9):
@@ -415,7 +552,8 @@ def _finned_jellyfish(Grid, Step, Cands, Method, Kraken = False, GrpLks = False)
 # todo: tech_franken_swordfish
 # todo: tech_franken_jellyfish
 
-def _elim_cands_in_fish(Cand, BS, CS, rc, Cands, Step):
+cdef bint elim_cands_in_fish(int Cand, int *Bases, int * Cvrs, int Orient, Method, bint Cands[9][9][9], Step):
+# def _elim_cands_in_fish(Cand, BS, CS, rc, Cands, Step):
 
     if rc == P_ROW:
         for r in set(range(9)) - set(BS):
