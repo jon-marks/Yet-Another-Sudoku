@@ -15,6 +15,7 @@ from trc import *
 from solve_utils cimport *
 from solve_singles cimport *
 from solve_subsets cimport *
+from solve_fish cimport *
 
 # from solve_singles import *
 # from solve_subsets import *

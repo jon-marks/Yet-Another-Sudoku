@@ -3,6 +3,8 @@
 DEF SIZEOF_GRID = 324  # bytes 9 x 9 x 4
 DEF SIZEOF_CANDS = 2916 # bytes 9 x 9 x 9 x 4
 
+DEF SLVR_TECHS = 8
+
 # Misc readability defines
 DEF ROW = 0
 DEF COL = 1

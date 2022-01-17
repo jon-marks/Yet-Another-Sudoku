@@ -6,7 +6,7 @@ from globals import *
 from trc cimport *
 from trc import *
 
-from solve_singles cimport *
+from solve_fish cimport *
 
 # from solve_utils import *
 
@@ -58,7 +58,7 @@ cdef int tech_x_wings_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
 
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
-    cdef r0, c0, r1, c1, Base, Cvr, Cand
+    cdef int r0, c0, r1, c1, Base, Cvr, Cand
     cdef bint BaseCvrs[2][9]
     cdef int Bases[2]
     cdef int Cvrs[2]
@@ -67,70 +67,88 @@ cdef int tech_x_wings_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
         # look in rows
         for r0 in range(8):
             Cvr = 0
+            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
             for c0 in range(9):
-                memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
                 if Cands[r0][c0][Cand]:
                     if Cvr >= 2: break
                     BaseCvrs[0][c0] = True; Cvr += 1
             else:
                 if Cvr < 2: continue
                 # first base found with 2 instances of Cand, look for another bases
-                for r1 in range(r0+1, 8):
+                # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                for r1 in range(r0+1, 9):
                     Cvr = 0
+                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
                     for c0 in range(9):
-                        memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
                         if Cands[r1][c0][Cand]:
                             if Cvr >= 2: break
                             BaseCvrs[1][c0] = True; Cvr += 1
                     else:
                         if Cvr < 2: continue
                         # found a second base with two instance of cand.
+                        # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         Cvr = 0
                         for c0 in range(9):
-                            if Cvr >= 2: break
                             if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
+                                if Cvr >= 2: break  ##### Made this change moved from above if stmt.
+                                # TRCX(f"Cover {Cvr} found: Col {c0+1}")
                                 Cvrs[Cvr] = c0; Cvr += 1
                         else:
                             if Cvr != 2: continue
                             # X-wing pattern found 2 bases with only two cands in the same cols.
-                            Bases[0] = r0, Bases[1] = r1
-                            if elim_cands_in_fish(Cand, <int*> Bases, <int*> Cvrs, ROW, T_X_WING, Cands, Step): return 0
+                            # TRCX("X-Wing found")
+                            Bases[0] = r0; Bases[1] = r1
+                            if elim_cands_in_fish(Cand, <int*>Bases, <int*>Cvrs, ROW, T_X_WING, Cands, Step): return 0
         # look in cols
         for c0 in range(8):
             Cvr = 0
+            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
             for r0 in range(9):
-                memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
                 if Cands[r0][c0][Cand]:
                     if Cvr >= 2: break
                     BaseCvrs[0][r0] = True; Cvr += 1
             else:
                 if Cvr < 2: continue
                 # first base found with 2 instances of Cand, look for another bases
-                for c1 in range(r0+1, 8):
+                # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                for c1 in range(c0+1, 9):
                     Cvr = 0
+                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
                     for r0 in range(9):
-                        memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
                         if Cands[r0][c1][Cand]:
                             if Cvr >= 2: break
+                            # TRCX(f"Cands[{r0+1}][{c1+1}][{Cand+1}] = {Cands[r0][c0][Cand]}")
                             BaseCvrs[1][r0] = True; Cvr += 1
                     else:
                         if Cvr < 2: continue
                         # found a second base with two instance of cand.
+                        # TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         Cvr = 0
-                        for c0 in range(9):
-                            if Cvr >= 2: break
+                        for r0 in range(9):
                             if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
-                                Cvrs[Cvr] = c0; Cvr += 1
+                                if Cvr >= 2: break
+                                # TRCX(f"Cover {Cvr} found: Row {r0+1}")
+                                Cvrs[Cvr] = r0; Cvr += 1
                         else:
                             if Cvr != 2: continue
                             # X-wing pattern found 2 bases with only two cands in the same cols.
-                            Bases[0] = c0, Bases[1] = c1
-                            if elim_cands_in_fish(Cand, <int*> Bases, <int*> Cvrs, COL, T_X_WING, Cands, Step): return 0
+                            Bases[0] = c0; Bases[1] = c1
+                            if elim_cands_in_fish(Cand, <int*>Bases, <int*>Cvrs, COL, T_X_WING, Cands, Step): return 0
     return -1
 
-
 cdef int tech_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
-    cdef r0, c0, r1, c1, r2, c2, Base, Cvr, Cand
+    # A Swordfish occurs when the same candidate occurs only 2 or 3 times
+    # in three separate rows (base sets)and at least two of the candidates are
+    # aligned in the associated columns (cover sets).  Here the candidate can be
+    # eliminated from other rows along the associated columns.  This algorithm
+    # relies on the union of the cover set being exactly three columns which
+    # defines the Swordfish pattern. In each of the three columns, where the
+    # candidate is present in at least one of the base set rows, the candidate,
+    # if present in the remaining non base set rows can be eliminated.
+    #
+    # Base sets can also be columns and cover sets, rows - to find column wise
+    # Swordfish
+    cdef int r0, c0, r1, c1, r2, c2, Base, Cvr, Cand
     cdef bint BaseCvrs[3][9]
     cdef int Bases[3]
     cdef int Cvrs[3]
@@ -139,18 +157,19 @@ cdef int tech_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
         # Look in rows
         for r0 in range(7):
             Cvr = 0
+            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
             for c0 in range(9):
-                memset(<void *>BaseCvrs[0], False, sizeof(int[9]))
                 if Cands[r0][c0][Cand]:
                   if Cvr >= 3: break
                   BaseCvrs[0][c0] = True; Cvr += 1
             else:
                 if Cvr < 2: continue
                 # first base found with 2 or 3 instances of Cand, look for next two bases
+                # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 8):
                     Cvr = 0
+                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
                     for c0 in range(9):
-                        memset(<void *>BaseCvrs[1], False, sizeof(int[9]))
                         if Cands[r1][c0][Cand]:
                             if Cvr >= 3: break
                             BaseCvrs[1][c0] = True; Cvr += 1
@@ -158,60 +177,243 @@ cdef int tech_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
                         if Cvr < 2: continue
                         Cvr = 0
                         for c0 in range(9):
-                            if Cvr >= 3: break
-                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]: Cvr += 1
+                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
+                                if Cvr >= 3: break
+                                Cvr += 1
                         else:
                             if Cvr != 3: continue
                             # 2 of 3 bases found with 2 or 3 instances of cand, look for third base
+                            # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                             for r2 in range(r1+1, 9):
                                 Cvr = 0
-                                for C0 in range(9):
-                                    memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
-                                    if Cands[r2][c0][Cands]:
+                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                for c0 in range(9):
+                                    # TRCX(f"Seeking third base: Cands[{r2+1}][{c0+1}][{Cand+1}]: {Cands[r2][c0][Cand]}")
+                                    if Cands[r2][c0][Cand]:
                                         if Cvr >= 3: break
+                                        BaseCvrs[2][c0] = True; Cvr += 1
+                                        # TRCX(f"Base 3 Covers {Cvr} found: r{r2+1}c{c0+1}")
+                                else:
+                                    if Cvr < 2: continue
+                                    Cvr = 0
+                                    for c0 in range(9):
+                                        if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]:
+                                            if Cvr >= 3: break
+                                            Cvrs[Cvr] = c0; Cvr += 1
+                                    else:
+                                        if Cvr != 3: continue
+                                        # Swordfish pattern found, 3 bases with 2 or 3 instances of cand
+                                        # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        Bases[0] = r0; Bases[1] = r1; Bases[2] = r2
+                                        # TRCX(f"Swordfish Pattern: {Cand+1}r{Bases[0]+1}{Bases[1]+1}{Bases[2]+2}c{Cvrs[0]+1}{Cvrs[1]+1}{Cvrs[2]+1}")
+                                        if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, ROW, T_SWORDFISH, Cands, Step): return 0
+        # Look in cols
+        for c0 in range(7):
+            Cvr = 0
+            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            for r0 in range(9):
+                if Cands[r0][c0][Cand]:
+                    if Cvr >= 3: break
+                    BaseCvrs[0][r0] = True; Cvr += 1
+            else:
+                if Cvr < 2: continue
+                # first base found with 2 or 3 instances of Cand, look for next two bases
+                for c1 in range(c0+1, 8):
+                    Cvr = 0
+                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    for r0 in range(9):
+                        if Cands[r0][c1][Cand]:
+                            if Cvr >= 3: break
+                            BaseCvrs[1][r0] = True; Cvr += 1
+                    else:
+                        if Cvr < 2: continue
+                        Cvr = 0
+                        for r0 in range(9):
+                            if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
+                                if Cvr >= 3: break
+                                Cvr += 1
+                        else:
+                            if Cvr != 3: continue
+                            # 2 of 3 bases found with 2 or 3 instances of cand, look for third base
+                            for c2 in range(c1+1, 9):
+                                Cvr = 0
+                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                for r0 in range(9):
+                                    if Cands[r0][c2][Cand]:
+                                        if Cvr >= 3: break
+                                        BaseCvrs[2][r0] = True; Cvr += 1
+                                else:
+                                    if Cvr < 2: continue
+                                    Cvr = 0
+                                    for r0 in range(9):
+                                        if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]:
+                                            if Cvr >= 3: break
+                                            Cvrs[Cvr] = r0; Cvr += 1
+                                    else:
+                                        if Cvr != 3: continue
+                                        # Swordfish pattern found, 3 bases with 2 or 3 instances of cand
+                                        Bases[0] = c0; Bases[1] = c1; Bases[2] = c2
+                                        # TRCX(f"Swordfish Pattern: {Cand+1}c{Bases[0]+1}{Bases[1]+1}{Bases[2]+2}r{Cvrs[0]+1}{Cvrs[1]+1}{Cvrs[2]+1}")
+                                        if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, COL, T_SWORDFISH, Cands, Step): return 0
+    return -1
+
+cdef int tech_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
+    # A Jellyfish occurs when the same candidate occurs only 2 to 4 times in
+    # in four separate rows (base sets)and at least two of the candidates are
+    # aligned in the associated columns (cover sets).  Here the candidate can be
+    # eliminated from other rows along the associated columns.  This algorithm
+    # relies on the union of the cover set being exactly four columns which
+    # defines the Jellyfish pattern. In each of the four columns, where the
+    # candidate is present in at least one of the base set rows, the candidate,
+    # if present in the remaining non base set rows can be eliminated.
+    #
+    # Base sets can also be columns and cover sets, rows - to find column wise
+    # Jellyfish
+    cdef int r0, c0, r1, c1, r2, c2, r3, c3, Base, Cvr, Cand
+    cdef bint BaseCvrs[4][9]
+    cdef int Bases[4]
+    cdef int Cvrs[4]
+
+    for Cand in range(9):
+        # Look in rows
+        for r0 in range(6):
+            Cvr = 0
+            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            for c0 in range(9):
+                if Cands[r0][c0][Cand]:
+                  if Cvr >= 4: break
+                  BaseCvrs[0][c0] = True; Cvr += 1
+            else:
+                if Cvr < 2: continue
+                # first base found with 2 to 4 instances of Cand, look for next three bases
+                # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                for r1 in range(r0+1, 7):
+                    Cvr = 0
+                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    for c0 in range(9):
+                        if Cands[r1][c0][Cand]:
+                            if Cvr >= 4: break
+                            BaseCvrs[1][c0] = True; Cvr += 1
+                    else:
+                        if Cvr < 2: continue
+                        # TRCX(f"Potential Second Base: {Cand+1}r{r1+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                        Cvr = 0
+                        for c0 in range(9):
+                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
+                                if Cvr >= 4: break
+                                Cvr += 1
+                        else:
+                            # TRCX(f"Got Here, Cvr = {Cvr}")
+                            if not (3 <= Cvr <= 4): continue
+                            # 2 of 4 bases found with 2 to 4 instances of cand, look for third base
+                            # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                            for r2 in range(r1+1, 8):
+                                Cvr = 0
+                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                for c0 in range(9):
+                                     if Cands[r2][c0][Cand]:
+                                        if Cvr >= 4: break
                                         BaseCvrs[2][c0] = True; Cvr += 1
                                 else:
                                     if Cvr < 2: continue
                                     Cvr = 0
                                     for c0 in range(9):
-                                        if Cvr >= 3: break
                                         if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]:
-                                            Cvrs[Cvr] = c0; Cvr += 1
+                                            if Cvr >= 4: break
+                                            Cvr += 1
                                     else:
-                                        if Cvr != 3: continue
-                                        # Swordfish pattern found, 3 bases with 2 or 3 instances of cand
-                                        Bases[0] = r0; Bases[1] = r1; Bases[2] = r2
-                                        if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, ROW, T_SWORDFISH, Cands, Step): return 0
-
-        for r in range(9)
-
-
-
-        BC = [set() for i in range(9)]
-        for r in range(9):
-            for c in range(9):
-                if Cand in Cands[r][c]: BC[r].add(c)
-        for r0 in range(8):
-            if len(BC[r0]) != 2: continue
-            for r1 in range(r0+1, 9):
-                if len(BC[r1]) != 2: continue
-                BS = [r0, r1]
-                CU = sorted(BC[r0] | BC[r1])
-                if len(CU) != 2: continue
-                if _elim_cands_in_fish(Cand, BS, CU, P_ROW, Cands, Step): return 0
-        # look at cols
-        BC = [set() for i in range(9)]
-        for c in range(9):
-            for r in range(9):
-                if Cand in Cands[r][c]: BC[c].add(r)
-        for c0 in range(8):
-            if len(BC[c0]) != 2: continue
-            for c1 in range(c0+1, 9):
-                if len(BC[c1]) != 2: continue
-                BS = [c0, c1]
-                CU = sorted(BC[c0] | BC[c1])
-                if len(CU) != 2: continue
-                if _elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
+                                        if Cvr != 4: continue
+                                        # 3 of 4 bases with 2 to 4 instances of cand, look for fourth base
+                                        # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        for r3 in range(r2+1, 9):
+                                            Cvr = 0
+                                            memset(<void*> BaseCvrs[3], False, sizeof(int[9]))
+                                            for c0 in range(9):
+                                                if Cands[r3][c0][Cand]:
+                                                    if Cvr >= 4: break
+                                                    BaseCvrs[3][c0] = True; Cvr += 1
+                                            else:
+                                                if Cvr < 2: continue
+                                                Cvr = 0
+                                                for c0 in range(9):
+                                                    if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]:
+                                                        if Cvr >= 4: break
+                                                        Cvrs[Cvr] = c0; Cvr += 1
+                                                else:
+                                                    if Cvr != 4: continue
+                                                    # Jellyfish pattern found, 4 bases with 2 to 4 instances of cand
+                                                    # TRCX(f"Fourth Base: {Cand+1}r{r3+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                                    Bases[0] = r0; Bases[1] = r1; Bases[2] = r2; Bases[3] = r3
+                                                    if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, ROW, T_JELLYFISH, Cands, Step): return 0
+        # Look in cols
+        # TRCX("Col-wise bases")
+        for c0 in range(6):
+            Cvr = 0
+            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            for r0 in range(9):
+                if Cands[r0][c0][Cand]:
+                  if Cvr >= 4: break
+                  BaseCvrs[0][r0] = True; Cvr += 1
+            else:
+                if Cvr < 2: continue
+                # first base found with 2 to 4 instances of Cand, look for next three bases
+                # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                for c1 in range(c0+1, 7):
+                    Cvr = 0
+                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    for r0 in range(9):
+                        if Cands[r0][c1][Cand]:
+                            if Cvr >= 4: break
+                            BaseCvrs[1][r0] = True; Cvr += 1
+                    else:
+                        if Cvr < 2: continue
+                        Cvr = 0
+                        for r0 in range(9):
+                            if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
+                                if Cvr >= 4: break
+                                Cvr += 1
+                        else:
+                            if not (3 <= Cvr <= 4): continue
+                            # 2 of 4 bases found with 2 to 4 instances of cand, look for third base
+                            # TRCX(f"Second Base: {Cand+1}r{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                            for c2 in range(c1+1, 8):
+                                Cvr = 0
+                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                for r0 in range(9):
+                                    if Cands[r0][c2][Cand]:
+                                        if Cvr >= 4: break
+                                        BaseCvrs[2][r0] = True; Cvr += 1
+                                else:
+                                    if Cvr < 2: continue
+                                    Cvr = 0
+                                    for r0 in range(9):
+                                        if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]:
+                                            if Cvr >= 4: break
+                                            Cvr += 1
+                                    else:
+                                        if Cvr != 4: continue
+                                        # 3 of 4 bases with 2 to 4 instances of cand, look for 4th base
+                                        # TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        for c3 in range(c2+1, 9):
+                                            Cvr = 0
+                                            memset(<void *>BaseCvrs[3], False, sizeof(int[9]))
+                                            for r0 in range(9):
+                                                if Cands[r0][c3][Cand]:
+                                                    if Cvr >= 4: break
+                                                    BaseCvrs[3][r0] = True; Cvr += 1
+                                            else:
+                                                if Cvr < 2: continue
+                                                Cvr = 0
+                                                for r0 in range(9):
+                                                    if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0] or BaseCvrs[3][r0]:
+                                                        if Cvr >= 4: break
+                                                        Cvrs[Cvr] = r0; Cvr += 1
+                                                else:
+                                                    if Cvr != 4: continue
+                                                    # Jellyfish pattern found, r bases with 2 to 3 instances of cand
+                                                    # TRCX(f"Fourth Base: {Cand+1}c{c3+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                                    Bases[0] = c0; Bases[1] = c1; Bases[2] = c2; Bases[3] = c3
+                                                    if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, COL, T_JELLYFISH, Cands, Step): return 0
     return -1
 
 def _finned_x_wings(Grid, Step, Cands, Method, Kraken = False, GrpLks = False):
@@ -269,52 +471,6 @@ def _finned_x_wings(Grid, Step, Cands, Method, Kraken = False, GrpLks = False):
                     elif bi == 2: CS.append(cu)
                 if (len(CS) == 2 and 1 <= len(CF) <= 2) or (len(CS) == 1 and 2 <= len(CF) <= 3):
                     if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method, Kraken, GrpLks): return 0
-    return -1
-
-def tech_swordfish(Grid, Step, Cands, Methods):
-    # A Swordfish occurs when the same candidate occurs only 2 or 3 times
-    # in three separate rows (base sets)and at least two of the candidates are
-    # aligned in the associated columns (cover sets).  Here the candidate can be
-    # eliminated from other rows along the associated columns.  This algorithm
-    # relies on the union of the cover set being exactly three columns which
-    # defines the Swordfish pattern. In each of the three columns, where the
-    # candidate is present in at least one of the base set rows, the candidate,
-    # if present in the remaining non base set rows can be eliminated.
-    #
-    # Base sets can also be columns and cover sets, rows - to find column wise
-    # Swordfish
-
-    for Cand in range(1, 10):
-        # look at rows
-        BC = [set() for i in range(9)]
-        for r in range(9):
-            for c in range(9):
-                if Cand in Cands[r][c]: BC[r].add(c)
-        for r0 in range(7):
-            if len(BC[r0]) < 2: continue
-            for r1 in range(r0+1, 8):
-                if len(BC[r1]) < 2: continue
-                for r2 in range(r1+1, 9):
-                    if len(BC[r2]) < 2: continue
-                    BS = [r0, r1, r2]
-                    CU = sorted(BC[r0] | BC[r1] | BC[r2])
-                    if len(CU) != 3: continue
-                    if _elim_cands_in_fish(Cand, BS, CU, P_ROW, Cands, Step): return 0
-        # look at cols
-        BC = [set() for i in range(9)]
-        for c in range(9):
-            for r in range(9):
-                if Cand in Cands[r][c]: BC[c].add(r)
-        for c0 in range(7):
-            if len(BC[c0]) < 2: continue
-            for c1 in range(c0+1, 8):
-                if len(BC[c1]) < 2: continue
-                for c2 in range(c1+1, 9):
-                    if len(BC[c2]) < 2: continue
-                    BS = [c0, c1, c2]
-                    CU = sorted(BC[c0] | BC[c1] | BC[c2])
-                    if len(CU) != 3: continue
-                    if _elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
     return -1
 
 def _finned_swordfish(Grid, Step, Cands, Method, Kraken = False, GrpLks = False):
@@ -379,57 +535,6 @@ def _finned_swordfish(Grid, Step, Cands, Method, Kraken = False, GrpLks = False)
                         elif bi >= 2: CS.append(cu)
                     if (len(CS) == 3 and 1 <= len(CF) <= 2) or (len(CS) == 2 and 2 <= len(CF) <= 3):
                         if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method, Kraken, GrpLks): return 0
-    return -1
-
-
-def tech_jellyfish(Grid, Step, Cands, Methods):
-    # A Jellyfish occurs when the same candidate occurs only 2 to 4 times in
-    # in four separate rows (base sets)and at least two of the candidates are
-    # aligned in the associated columns (cover sets).  Here the candidate can be
-    # eliminated from other rows along the associated columns.  This algorithm
-    # relies on the union of the cover set being exactly four columns which
-    # defines the Jellyfish pattern. In each of the four columns, where the
-    # candidate is present in at least one of the base set rows, the candidate,
-    # if present in the remaining non base set rows can be eliminated.
-    #
-    # Base sets can also be columns and cover sets, rows - to find column wise
-    # Jellyfish
-
-    for Cand in range(1, 10):
-        # look at rows
-        BC = [set() for i in range(9)]
-        for r in range(9):
-            for c in range(9):
-                if Cand in Cands[r][c]: BC[r].add(c)
-        for r0 in range(6):
-            if len(BC[r0]) < 2: continue
-            for r1 in range(r0+1, 7):
-                if len(BC[r1]) < 2: continue
-                for r2 in range(r1+1, 8):
-                    if len(BC[r2]) < 2: continue
-                    for r3 in range(r2+1, 9):
-                        if len(BC[r3]) < 2: continue
-                        BS = [r0, r1, r2, r3]
-                        CU = sorted(BC[r0] | BC[r1] | BC[r2] | BC[r3])
-                        if len(CU) != 4: continue
-                        if _elim_cands_in_fish(Cand, BS, CU, P_ROW, Cands, Step): return 0
-        # look at cols
-        BC = [set() for i in range(9)]
-        for c in range(9):
-            for r in range(9):
-                if Cand in Cands[r][c]: BC[c].add(r)
-        for c0 in range(6):
-            if len(BC[c0]) < 2: continue
-            for c1 in range(c0+1, 7):
-                if len(BC[c1]) < 2: continue
-                for c2 in range(c1+1, 8):
-                    if len(BC[c2]) < 2: continue
-                    for c3 in range(c2+1, 9):
-                        if len(BC[c3]) < 2: continue
-                        BS = [c0, c1, c2, c3]
-                        CU = sorted(BC[c0] | BC[c1] | BC[c2] | BC[c3])
-                        if len(CU) != 4: continue
-                        if _elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
     return -1
 
 def _finned_jellyfish(Grid, Step, Cands, Method, Kraken = False, GrpLks = False):
@@ -552,37 +657,44 @@ def _finned_jellyfish(Grid, Step, Cands, Method, Kraken = False, GrpLks = False)
 # todo: tech_franken_swordfish
 # todo: tech_franken_jellyfish
 
-cdef bint elim_cands_in_fish(int Cand, int *Bases, int * Cvrs, int Orient, Method, bint Cands[9][9][9], Step):
-# def _elim_cands_in_fish(Cand, BS, CS, rc, Cands, Step):
+cdef bint elim_cands_in_fish(int Cand, int *Bases, int *Cvrs, int Orient, Method, bint Cands[9][9][9], Step):
+    cdef int Ord, r0, c0, Base
 
-    if rc == P_ROW:
-        for r in set(range(9)) - set(BS):
-            for c in CS:
-                if Cand in Cands[r][c]:
-                    Cands[r][c].discard(Cand)
-                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                    Step.Outcome.extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-    else:  # if rc == P_COL:
-        for c in sorted(set(range(9)) - set(BS)):
-            for r in CS:
-                if Cand in Cands[r][c]:
-                    Cands[r][c].discard(Cand)
-                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                    Step.Outcome.extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+    if Method == T_X_WING: Ord = 2
+    elif Method == T_SWORDFISH: Ord = 3
+    elif Method == T_JELLYFISH: Ord = 4
+    else: return False
 
+    # TRCX(f"Elim Cands: {Cand+1}r{Bases[0]+1}{Bases[1]+1}{Bases[2]+1}c{Cvrs[0]+1}{Cvrs[1]+1}{Cvrs[2]+2}")  ### Row swordfish
+    Base = 0
+    if Orient == ROW:
+        for r0 in range(9):
+            if Base < Ord and r0 == Bases[Base]: Base += 1; continue
+            for c0 in range(Ord):
+                if Cands[r0][Cvrs[c0]][Cand]:
+                    Cands[r0][Cvrs[c0]][Cand] = False
+                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                    Step.Outcome.extend([[P_ROW, r0], [P_COL, Cvrs[c0]], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
+    else:  # Orient == COL
+        for c0 in range(9):
+            if Base < Ord and c0 == Bases[Base]: Base += 1; continue
+            for r0 in range(Ord):
+                if Cands[Cvrs[r0]][c0][Cand]:
+                    Cands[Cvrs[r0]][c0][Cand] = False
+                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                    Step.Outcome.extend([[P_ROW, Cvrs[r0]], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
     if Step.Outcome:
         Step.Outcome.append([P_END, ])
-        Ord = len(BS)
-        if Ord == 2: Step.Method = T_X_WING
-        elif Ord == 3: Step.Method = T_SWORDFISH
-        elif Ord == 4: Step.Method = T_JELLYFISH
-        else: return False
-        if rc == P_ROW:
-            Step.Pattern = [[P_VAL, Cand], [P_ROW, BS], [P_COL, CS], [P_END, ]]
-            return True
-        else:  # if rc == P_COL:
-            Step.Pattern = [[P_VAL, Cand], [P_COL, BS], [P_ROW, CS], [P_END, ]]
-            return True
+        Step.Method = Method
+        if Orient == ROW:
+            if Ord == 2: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1]], [P_COL, Cvrs[0], Cvrs[1]], [P_END, ]]
+            elif Ord == 3: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1], Bases[2]], [P_COL, Cvrs[0], Cvrs[1], Cvrs[2]], [P_END, ]]
+            else: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1], Bases[2], Bases[3]], [P_COL, Cvrs[0], Cvrs[1], Cvrs[2], Cvrs[3]], [P_END, ]]
+        else:  # Orient == COL:
+            if Ord == 2: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1]], [P_ROW, Cvrs[0], Cvrs[1]], [P_END, ]]
+            elif Ord == 3: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1], Bases[2]], [P_ROW, Cvrs[0], Cvrs[1], Cvrs[2]], [P_END, ]]
+            else: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1], Bases[2], Bases[3]], [P_ROW, Cvrs[0], Cvrs[1], Cvrs[2], Cvrs[3]], [P_END, ]]
+        return True
     return False
 
 def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method, Kraken = False, GrpLks = False):
