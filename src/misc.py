@@ -319,9 +319,13 @@ def open_puzzle(Fp, Pzl):
     except (OSError, IOError):
         return None, 0
 
-    NrFlds = pzl_str_to_pzl(sPzl, Pzl)
+    NrFlds, sErr = pzl_str_to_pzl(sPzl, Pzl)
     if NrFlds: return os.path.split(Fs), NrFlds
-    else: return None, 0
+    else:
+        wx.MessageBox(sErr,
+                      "Warning",
+                      wx.ICON_WARNING | wx.OK)
+        return None, 0
 
 def save_puzzle(Fp, oPzl):
 
@@ -376,35 +380,34 @@ def pzl_str_to_pzl(sPzl, Pzl):
     Pzl.Grid   = [[0 for c in range(9)] for r in range(9)]
     Pzl.Givens = [[0 for c in range(9)] for r in range(9)]
     if not grid_str_to_grid(lG[0], Pzl.Grid, Pzl.Givens):
-        PgmMsg("Invalid Sudoku value puzzle spec format - grid.",
-               "Warning",
-               wx.ICON_WARNING | wx.OK)
-        return 0
+        return 0, "Invalid Sudoku value puzzle spec format - grid."
     if lenlG >= 2 and lG[1]:
         Pzl.Elims = [[set() for c in range(9)] for r in range(9)]
         for sE in lG[1].split(";"):
             r, c, op, Cands = parse_ccell_phrase(sE)
             if r < 0 or op != OP_ELIM:
-                PgmMsg("Invalid Sudoku value puzzle spec format - elims.",
-                       "Warning",
-                       wx.ICON_WARNING | wx.OK)
-                return 0
+                return 0, "Invalid Sudoku value puzzle spec format - elims."
+
             Pzl.Elims[r][c] |= Cands
     if lenlG >= 3 and lG[2]:
         for Meth, TInfo in Tech.items():  # m in range(len(T):
             if TInfo.Text == lG[2]:
                 Pzl.Method = Meth
                 break
-        # else:
+        else:
         #     PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
         #            "Warning",
         #            wx.ICON_WARNING | wx.OK)
-        #     Pzl.Method = T_UNDEF
+            Pzl.Method = T_UNDEF
     else: Pzl.Method = T_UNDEF
-    if lenlG == 5:
+    if lenlG >= 5:
         Pzl.Pattern = lG[3]
         Pzl.Outcome = lG[4]
-    return lenlG
+        if lenlG >=6:
+            Pzl.Soln = [[0 for c in range(9)] for r in range(9)]
+            if not grid_str_to_grid(lG[5],  Pzl.Soln, None):
+                Pzl.Soln = None
+    return lenlG, ""
 
 def pzl_to_pzl_str(oPzl):
 

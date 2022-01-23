@@ -74,7 +74,7 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                         Step.Outcome.extend([[P_ROW, or2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
                         if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                        else: Step.Method = T_EXPOSED_PAIR
+                        # else: Step.Method = T_EXPOSED_PAIR
                         # what can be eliminated along the row?
                         for c2 in range(9):
                             if c2 == c0 or c2 == c1: continue
@@ -87,6 +87,7 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                 Step.Outcome.extend([[P_ROW, r0], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
                         if Step.Outcome:  # candidates are eliminated
+                            if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
                             Step.Outcome.append([P_END, ])
                             Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0, c1], [P_END, ]]
                             return 0
@@ -142,7 +143,7 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                          if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                          Step.Outcome.extend([[P_ROW, r2], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
                         if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                        else: Step.Method = T_EXPOSED_PAIR
+                        # else: Step.Method = T_EXPOSED_PAIR
                         # what can be eliminated along the row?
                         for r2 in range(9):
                             if r2 == r0 or r2 == r1: continue
@@ -155,6 +156,7 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                 Step.Outcome.extend([[P_ROW, r2], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, p[1]+1]])
                         if Step.Outcome:  # candidates were eliminated
+                            if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
                             Step.Outcome.append([P_END, ])
                             Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0, r1], [P_COL, c0], [P_END, ]]
                             return 0
@@ -390,7 +392,7 @@ cdef int tech_exposed_triples_c(int Grid[9][9], Step, bint Cands[9][9][9], Metho
                                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                                         Step.Outcome.extend([[P_ROW, or2], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, u[i]+1]])
                                     if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_TRIPLE
-                                    else: Step.Method = T_EXPOSED_TRIPLE
+                                    # else: Step.Method = T_EXPOSED_TRIPLE
                                     # What can be eliminated from the row?
                                     for c3 in range(9):
                                         if c3 == c0 or c3 == c1 or c3 == c2: continue
@@ -400,6 +402,7 @@ cdef int tech_exposed_triples_c(int Grid[9][9], Step, bint Cands[9][9][9], Metho
                                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                                 Step.Outcome.extend([[P_ROW, r0], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, u[i]+1]])
                                     if Step.Outcome:  # cands are eliminated
+                                        if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
                                         Step.Outcome.append([P_END, ])
                                         P0 = []; P1 = []; P2 = []  # Python lists.
                                         for i in range(3):
@@ -479,7 +482,7 @@ cdef int tech_exposed_triples_c(int Grid[9][9], Step, bint Cands[9][9][9], Metho
                                                         if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                                         Step.Outcome.extend([[P_ROW, r3], [P_COL, oc2], [P_OP, OP_ELIM], [P_VAL, u[i]+1]])
                                     if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_TRIPLE
-                                    else: Step.Method = T_EXPOSED_TRIPLE
+                                    # else: Step.Method = T_EXPOSED_TRIPLE
                                     # What can be eliminated from the column
                                     for r3 in range(9):
                                         if r3 == r0 or r3 == r1 or r3 == r2: continue
@@ -489,6 +492,7 @@ cdef int tech_exposed_triples_c(int Grid[9][9], Step, bint Cands[9][9][9], Metho
                                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                                 Step.Outcome.extend([[P_ROW, r3], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, u[i]+1]])
                                     if Step.Outcome:
+                                        if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
                                         Step.Outcome.append([P_END, ])
                                         P0 = []; P1 = []; P2 = []  # Python lists
                                         for i in range(3):

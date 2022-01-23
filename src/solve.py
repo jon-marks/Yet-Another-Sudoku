@@ -58,9 +58,12 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_X_WING:                   TECH_T(True, "X-Wing",                    EXP_PROFICIENT,         45),
         T_SWORDFISH:                TECH_T(True, "Swordfish",                 EXP_PROFICIENT,         50),
         T_JELLYFISH:                TECH_T(True, "Jellyfish",                 EXP_PROFICIENT,         55),
-        T_FINNED_X_WING:            TECH_T(False, "Finned X-Wing",             EXP_PROFICIENT,         60),
-        T_FINNED_SWORDFISH:         TECH_T(False, "Finned Swordfish",          EXP_PROFICIENT,         65),
-        T_FINNED_JELLYFISH:         TECH_T(False, "Finned Jellyfish",          EXP_PROFICIENT,         70),
+        T_FINNED_X_WING:            TECH_T(True, "Finned X-Wing",             EXP_PROFICIENT,         60),
+        T_FINNED_SWORDFISH:         TECH_T(True, "Finned Swordfish",          EXP_PROFICIENT,         65),
+        T_FINNED_JELLYFISH:         TECH_T(True, "Finned Jellyfish",          EXP_PROFICIENT,         70),
+        T_SASHIMI_X_WING:           TECH_T(True, "Sashimi X-Wing",            EXP_PROFICIENT,         60),
+        T_SASHIMI_SWORDFISH:        TECH_T(True, "Sashimi Swordfish",         EXP_PROFICIENT,         65),
+        T_SASHIMI_JELLYFISH:        TECH_T(True, "Sashimi Jellyfish",         EXP_PROFICIENT,         70),
         T_SKYSCRAPER:               TECH_T(False, "Skyscraper",                EXP_PROFICIENT,         45),
         T_TWO_STRING_KITE:          TECH_T(False, "Two String Kite",           EXP_PROFICIENT,         45),
         T_TURBOT_FISH:              TECH_T(False, "Turbot Fish",               EXP_PROFICIENT,         50),
@@ -80,9 +83,12 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_DC_AI_CHAIN:              TECH_T(False, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED,80),
         T_EVEN_AI_LOOP:             TECH_T(False, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
         T_STRONG_AI_LOOP:           TECH_T(False, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
-        T_KRAKEN_X_WING:            TECH_T(False, "Kraken Finned X-Wing",      EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_SWORDFISH:         TECH_T(False, "Kraken Finned Swordfish",   EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_JELLYFISH:         TECH_T(False, "Kraken Finned Jellyfish",   EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_X_WING:            TECH_T(False, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SWORDFISH:         TECH_T(False, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_JELLYFISH:         TECH_T(False, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_X_WING:    TECH_T(False, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_SWORDFISH: TECH_T(False, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_JELLYFISH: TECH_T(False, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
         T_GL_TWO_STRING_KITE:       TECH_T(False, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
         T_GL_TURBOT_FISH:           TECH_T(False, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
         T_GL_X_CHAIN:               TECH_T(False, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
@@ -93,11 +99,24 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_GL_DC_AI_CHAIN:           TECH_T(False, "Group Linked Different End Candidates AI-Chain", EXP_ACCOMPLISHED, 80),
         T_GL_EVEN_AI_LOOP:          TECH_T(False, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
         T_GL_STRONG_AI_LOOP:        TECH_T(False, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
-        T_GL_KRAKEN_X_WING:         TECH_T(False, "Group Linked Kraken Finned X-Wing", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_SWORDFISH:      TECH_T(False, "Group Linked Kraken Finned Swordfish", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_JELLYFISH:      TECH_T(False, "Group Linked Kraken Finned Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_X_WING:         TECH_T(False, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SWORDFISH:      TECH_T(False, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_JELLYFISH:      TECH_T(False, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(False, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(False, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(False, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),
         T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
         }
+
+# the order of the methods in the Solver structures is significant to the underlying code, change with caution.
+# the order of the Slvr items can be changed with varying result in solution path and difficulty rating.
+#   But do not do stupid things like:
+#   *  putting the equivalent group linked pattern ahead of its scalar pattern:
+#   *  changing the order of fish from X_WING before SWORDFISH before JELLYFISH
+#   *  changing the fish sub order of ordinary before FINNED before SASHIMI, before KRAKEN before GL_KRAKEN
+#   *  not maintaining the loose order of singles, subsets, (fish, bent subsets, empty rectangle, 3 link x chains)
+#   *       (remote pairs, xy-chains, finned fish), x chains, ai chains, Kraken fish.
+#   *       - order of grouped items can be changed
 
 Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_hidden_singles,      [T_HIDDEN_SINGLE]),
@@ -111,27 +130,27 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_x_wings,             [T_X_WING]),
            SLVR(tech_swordfish,           [T_SWORDFISH]),
            SLVR(tech_jellyfish,           [T_JELLYFISH]),
+           SLVR(tech_empty_rects,         [T_EMPTY_RECT]),
            # SLVR(tech_bent_exposed_triples, [T_Y_WING, T_XYZ_WING]),
            # SLVR(tech_three_link_x_chains, [T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH]),
-           SLVR(tech_empty_rects,         [T_EMPTY_RECT]),
-           # SLVR(tech_finned_x_wings,      [T_FINNED_X_WING]),  # finned fish never before ordinary fish
-           # SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH]),
-           # SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH]),
            # SLVR(tech_bent_exposed_quads,  [T_WXYZ_WING, T_BENT_EXPOSED_QUAD]),
-           # SLVR(tech_other_x_chains,      [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
+           SLVR(tech_finned_x_wings,      [T_FINNED_X_WING, T_SASHIMI_X_WING]),  # finned fish never before ordinary fish
+           SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH, T_SASHIMI_SWORDFISH]),
+           SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
            # SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
            # SLVR(tech_xy_chains,           [T_XY_CHAIN]),
+           # SLVR(tech_other_x_chains,      [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
            # SLVR(tech_xy_loops,            [T_XY_LOOP]),
            # SLVR(tech_ai_chains,           [T_W_WING, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP]),
            # SLVR(tech_gl_three_link_x_chains, [T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH]),
            # SLVR(tech_gl_other_x_chains,   [T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP]), # and loops, never before three link xchains
            # SLVR(tech_gl_ai_chains,        [T_GL_W_WING, T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP]),
-           # SLVR(tech_kraken_x_wings,      [T_KRAKEN_X_WING]),  # kraken fish never before finned fish
-           # SLVR(tech_kraken_swordfish,    [T_KRAKEN_SWORDFISH]),
-           # SLVR(tech_kraken_jellyfish,    [T_KRAKEN_JELLYFISH]),
-           # SLVR(tech_gl_kraken_x_wings,   [T_GL_KRAKEN_X_WING]),
-           # SLVR(tech_gl_kraken_swordfish, [T_GL_KRAKEN_SWORDFISH]),
-           # SLVR(tech_gl_kraken_jellyfish, [T_GL_KRAKEN_JELLYFISH]),
+           SLVR(tech_finned_x_wings,      [T_KRAKEN_X_WING, T_KRAKEN_SASHIMI_X_WING]),  # kraken fish never before finned fish
+           SLVR(tech_finned_swordfish,    [T_KRAKEN_SWORDFISH, T_KRAKEN_SASHIMI_SWORDFISH]),
+           SLVR(tech_finned_jellyfish,    [T_KRAKEN_JELLYFISH, T_KRAKEN_SASHIMI_JELLYFISH]),
+           SLVR(tech_finned_x_wings,      [T_GL_KRAKEN_X_WING, T_GL_KRAKEN_SASHIMI_X_WING]),
+           SLVR(tech_finned_swordfish,    [T_GL_KRAKEN_SWORDFISH, T_GL_KRAKEN_SASHIMI_SWORDFISH]),
+           SLVR(tech_finned_jellyfish,    [T_GL_KRAKEN_JELLYFISH, T_GL_KRAKEN_SASHIMI_JELLYFISH]),
            SLVR(tech_brute_force,         [T_BRUTE_FORCE])
            ]
 
@@ -199,7 +218,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
             return UNDEF, Steps, "Can't solve step"
     return MaxLvl, Steps, ""
 
-def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
+def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, OverrideEnableMthds = False):
     # Find the solution for the next step, used in providing hints to users.
     # Hints cannot be taken from the solution list as the user more than likely
     # solved the puzzle to this point taking a different path to that of the
@@ -223,7 +242,7 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     for Slvr in Solvers:
         EnMthds = []; NrSlvd = -1
         for Mthd in Slvr.Mthds:
-            if Tech[Mthd].Enabled: EnMthds.append(Mthd)
+            if Tech[Mthd].Enabled or OverrideEnableMthds: EnMthds.append(Mthd)
         if EnMthds: NrSlvd = Slvr.pFn(Grid1, Step, Cands, EnMthds)
         if NrSlvd >= 0:
             if Soln:

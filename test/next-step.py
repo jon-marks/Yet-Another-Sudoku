@@ -52,6 +52,7 @@ else: path.append(".trc_false")
 
 from globals import *
 from trc import *
+from generate import *
 from misc import *
 from solve import *
 from solve_utils import *
@@ -73,39 +74,49 @@ def next_step():
                 i += 1
                 if not Line: break
                 if Line == "\n" or Line[0] == "#":
-                    f1.write(Line)
-                    f1.flush()
+                    f1.write(Line); f1.flush()
                     continue
                 oPzl = PZL()
-                Flds = pzl_str_to_pzl(Line, oPzl)
-                if not Flds: continue
-                TD = Line.rstrip(" \n").split("|")
-                # if len(TD) > 2 and TD[2]: sMeth1 = TD[2]
-                # else: sMeth1 = "Unspecified"
+                Flds, sErr = pzl_str_to_pzl(Line, oPzl)
+                if not Flds:
+                    f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
+                    continue
                 Test += 1
-                Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method)
+                TD = Line.rstrip(" \n").split("|")
+                lenTD = len(TD)
+                if not oPzl.Soln:
+                    Found, oPzl.Soln = check_puzzle(oPzl.Grid)
+                    if Found == 1: sSoln = grid_to_grid_str(oPzl.Soln, oPzl.Givens)
+                    else:
+                        st = f"Invalid Puzzle:  {Found} solutions found: {Line}"
+                        f1.write(st); f1.flush()
+                        continue
+                else: sSoln = TD[5]  # if lenTD >= 6 else ""
+                Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True)
                 if Err:
-                    Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF)
+                    Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True)
                     if Err:
                         f1.write(f"# Warning: Cannot solve next step on line: {Err}: {Line}\n")
-                        TRCX(f"Line {i}, Test: {Test}, Expected: {sMeth1}, Err: {Err}")
+                        TRCX(f"Line {i}, Test: {Test}, Expected: {sExpMeth}, Err: {Err}")
                         continue
 
-                sExpMeth = Tech[oPzl.Method].Text
                 sActMeth = Tech[Step.Method].Text
                 sCond = tkns_to_str(Step.Pattern).replace(" ", "").replace(".", "")
                 sOutc = tkns_to_str(Step.Outcome).replace(" ", "").replace(".", "")
-                TD = Line.rstrip(" \n").split("|")
-                if len(TD) >= 2: sElims = TD[1]
-                else: sElims = ""
+                sExpOutc = TD[4] if lenTD >= 5 else ""
+                sExpCond = TD[3] if lenTD >= 4 else ""
+                sExpMeth = TD[2] if lenTD >= 3 else ""
+                sElims   = TD[1] if lenTD >= 2 else ""
+                if not sExpMeth: sExpMeth = "Undefined"
                 sGr = TD[0].replace("0", ".")
-                if oPzl.Method != Step.Method:
-                    if len(TD) == 2: TD.append("")
-                    f1.write(f"# Info: Expected: {sExpMeth}; Actual: {sActMeth}, line: {Line}")
-                    f1.write(f"# New: {sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}\n")
-                else: f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}\n")
+                if oPzl.Method != Step.Method or sExpCond != sCond or sExpOutc != sOutc:
+                    # f1.write(f"# Expected Line: {i}: {TD[0]}|{sElims}|{sExpMeth}|{sExpCond}|{sExpOutc}|{sSoln}\n")
+                    f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}|{sSoln}\n")
+                    TRCX(f"Line {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {sActMeth}")
+                else:
+                    f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}|{sSoln}\n")
+                    TRCX(f"Line {i}, Test: {Test}, {sActMeth}")
                 f1.flush()
-                TRCX(f"Line {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {sActMeth}")
     TRCX(f"End Run, Lines: {i}, Tests: {Test}")
 
 

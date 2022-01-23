@@ -32,7 +32,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
                 if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                else: Step.Method = T_EXPOSED_PAIR
+                # else: Step.Method = T_EXPOSED_PAIR
                 for c2 in set(range(9)) - {c, c1}:
                     if len(Cands[r][c2]) == 0: continue
                     for Cand in Cands[r][c]:
@@ -41,6 +41,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                             if Step.Outcome: Step.Outcome.append([P_SEP, ])
                             Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
                 if Step.Outcome:  # Candidates were eliminated
+                    if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
                     Step.Outcome.append([P_END, ])
                     Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END, ]]
                     return 0
@@ -65,7 +66,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                                     if Step.Outcome: Step.Outcome.append((P_SEP,))
                                     Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
                 if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                else: Step.Method = T_EXPOSED_PAIR
+                # else: Step.Method = T_EXPOSED_PAIR
                 for r2 in set(range(9)) - {r, r1}:
                     if len(Cands[r2][c]) == 0: continue
                     if (r2 != r1) and (r2 != r):
@@ -75,6 +76,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                                 if Step.Outcome: Step.Outcome.append((P_SEP,))
                                 Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
                 if Step.Outcome:  # Candidates were eliminated
+                    if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
                     Step.Outcome.append([P_END, ])
                     Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END, ]]
                     return 0
@@ -235,7 +237,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                                 Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
                         if Step.Outcome:  Step.Method = T_LOCKED_EXPOSED_TRIPLE
-                        else: Step.Method = T_EXPOSED_TRIPLE
+                        # else: Step.Method = T_EXPOSED_TRIPLE
                         for c3 in range(9):
                             if c3 == c or c3 == c1 or c3 == c2: continue
                             if Grid[r][c3]: continue
@@ -245,6 +247,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                     Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
                         if Step.Outcome:
+                            if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
                             Step.Outcome.append([P_END, ])
                             Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c], [P_CON, ],
@@ -279,7 +282,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                                 if Step.Outcome: Step.Outcome.append([P_SEP, ])
                                                 Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
                         if Step.Outcome:  Step.Method = T_LOCKED_EXPOSED_TRIPLE
-                        else: Step.Method = T_EXPOSED_TRIPLE
+                        # else: Step.Method = T_EXPOSED_TRIPLE
                         for r3 in range(9):
                             if r3 == r or r3 == r1 or r3 == r2: continue
                             if Grid[r3][c]: continue
@@ -289,6 +292,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                     if Step.Outcome: Step.Outcome.append((P_SEP,))
                                     Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
                         if Step.Outcome:  # Candidates were eliminated
+                            if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
                             Step.Outcome.append([P_END, ])
                             Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
                                             [P_ROW, r], [P_COL, c], [P_CON, ],

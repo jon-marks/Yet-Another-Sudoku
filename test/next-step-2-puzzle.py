@@ -21,8 +21,10 @@ def next_step_to_puzzle():
                     else: Pzl += (Line[i]); i += 1
 
                 oPzl = PZL()  # {PZL_GRID: [], PZL_ELIMS: [], PZL_METH: T_UNDEF, PZL_PTRN: "", PZL_OUTC: ""}
-                Flds = pzl_str_to_pzl(Line, oPzl)  # parse_pzl_str_depreciated(Line, Opzl)
-                if not Flds: continue
+                Flds, sErr = pzl_str_to_pzl(Line, oPzl)
+                if not Flds:
+                    f1.write(f"# Error: {sErr}: {Line}")
+                    continue
                 mPzl = grid_to_grid_str(minimalise_puzzle(Opzl.Grid)) # [PZL_GRID]))
                 if mPzl and mPzl in lPzls: continue
                 oPzls.append(mPzl)

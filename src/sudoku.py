@@ -333,7 +333,11 @@ class Sudoku:
         if Key == wx.WXK_CONTROL_V:  # paste a puzzle spec from the clipboard
             # overwrites existing entries, and treated as if the spec was loaded from a file.
             oPzl = PZL()
-            NrFlds = copy_clipboard_to_pzl(oPzl)
+            NrFlds, sErr = copy_clipboard_to_pzl(oPzl)
+            if sErr:
+                wx.MessageBox("sErr", "Warning", wx.CANCEL)
+                self.gen_event(EV_SC_ENT, False)
+                return
             if NrFlds: self.update_board(ST_ENT, oPzl)
             if NrFlds > 1:  # if only givens and placed values read, in enter mode, else transition to validation
                 # self.MainWindow.SetTitle(TITLE+" - "+Fp[1])

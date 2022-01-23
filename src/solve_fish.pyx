@@ -757,11 +757,12 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method, Kraken
     return False
 
 class TREE:
-    def __init__(self, Root = None, Chains = None, Outcome = None, Found = False):
+    def __init__(self, Root = None, Chains = None, Outcome = None, Found = False, BottomedOut = False):
         self.Root = Root
         self.Chains = Chains if Chains else []
         self.Outcome = Outcome if Outcome else []
         self.Found = Found
+        self.BottomedOut = BottomedOut
 
 def _find_cover_that_sees_all_fins(Fins, Covers, Cand, Cands, Kraken, GrpLks, Status):
     # Finds covers that see fins by building trees (one for each cover) that grow branches which are
@@ -809,7 +810,7 @@ def _find_cover_that_sees_all_fins(Fins, Covers, Cand, Cands, Kraken, GrpLks, St
         if GrpLks:  # Kraken group links.
             Fins = [({r}, {c}, Cand) for r, c in Fins]
             for i, (rc, cc) in enumerate(Covers):
-                Tree = TREE(TNODE({rc}, {cc}, Cand, None, None, None, None), [[] for i in Fins], None, False)
+                Tree = TREE(TNODE({rc}, {cc}, Cand, None, None, None, None), [[] for i in Fins], None, False, False)
                 for r, c, Cand, LkT, LkH in list_ccells_linked_to({rc}, {cc}, Cand, Cands, LK_STWK, GrpLks):
                     for j, (rf, cf, Candf) in enumerate(Fins):
                         if ccells_match(r, c, Cand, rf, cf, Candf, GrpLks):
@@ -827,7 +828,7 @@ def _find_cover_that_sees_all_fins(Fins, Covers, Cand, Cands, Kraken, GrpLks, St
                 # Orchard.append(TREE(TNODE(rc, cc, Cand, None, None, None, None), [[] for i in Fins]))
                 # # Orchard.append(TNODE(rc, cc, Cand, None, None, None, None))
                 # Idx.append(i)
-                Tree = TREE(TNODE(rc, cc, Cand, None, None, None, None), [[] for i in Fins])
+                Tree = TREE(TNODE(rc, cc, Cand, None, None, None, None), [[] for i in Fins], None, False, False)
                 # UC = []
                 for r0, c0, Cand0, LkT, LkH in list_ccells_linked_to(rc, cc, Cand, Cands, LK_STWK, GrpLks):
                     # if (r0, c0, Cand0) in UC: continue
@@ -864,11 +865,15 @@ def _find_next_branches(Children, Fins, Cands, GrpLks, Lvl, Tree):
     # if it has found a cover that sees all fins.  Pruning is acheived by not copying a child branch from
     # the Children list into the Kids list.
 
+    if Lvl > RECURSE_LIM:
+        Tree.BottomedOut = True
+        return Children
+
     Kids = []
     for C in Children:
         if C.Children:  # Recurse down the children
             C.Children = _find_next_branches(C.Children, Fins, Cands, GrpLks, Lvl+1, Tree)
-            if Tree.Found: return C
+            if Tree.Found or Tree.BottomedOut: return Children
         else:
             UC = []
             for r, c, Cand, LkT, LkH in list_ccells_linked_to(C.r, C.c, C.Cand, Cands, LK_STWK if C.Lk == LK_STRG else LK_STRG, GrpLks):

@@ -23,6 +23,7 @@ VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 # Generic enumerations
 UNDEF   = -1
+RECURSE_LIM = 10   # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
 
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
@@ -243,6 +244,7 @@ PZL_VAL     = 11  # Validate a existing puzzle (entered, loaded or pasted [ctrl]
 # Technique Extensions:
 T_KRAKEN                    = 0x00000100
 T_GRPLK                     = 0x00000200
+T_SASHIMI                   = 0x00000400
 
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
@@ -263,6 +265,9 @@ T_JELLYFISH                 = 14
 T_FINNED_X_WING             = 15
 T_FINNED_SWORDFISH          = 16
 T_FINNED_JELLYFISH          = 17
+T_SASHIMI_X_WING            = T_FINNED_X_WING + T_SASHIMI
+T_SASHIMI_SWORDFISH         = T_FINNED_SWORDFISH + T_SASHIMI
+T_SASHIMI_JELLYFISH         = T_FINNED_JELLYFISH + T_SASHIMI
 T_SKYSCRAPER                = 18
 T_TWO_STRING_KITE           = 19
 T_TURBOT_FISH               = 20
@@ -286,6 +291,9 @@ T_STRONG_AI_LOOP            = 36
 T_KRAKEN_X_WING             = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_SWORDFISH          = T_FINNED_SWORDFISH + T_KRAKEN
 T_KRAKEN_JELLYFISH          = T_FINNED_JELLYFISH + T_KRAKEN
+T_KRAKEN_SASHIMI_X_WING     = T_SASHIMI_X_WING + T_KRAKEN
+T_KRAKEN_SASHIMI_SWORDFISH  = T_SASHIMI_SWORDFISH + T_KRAKEN
+T_KRAKEN_SASHIMI_JELLYFISH  = T_SASHIMI_JELLYFISH + T_KRAKEN
 
 T_GL_W_WING                 = T_W_WING + T_GRPLK
 T_GL_SKYSCRAPER             = T_SKYSCRAPER + T_GRPLK
@@ -303,6 +311,9 @@ T_GL_STRONG_AI_LOOP         = T_STRONG_AI_LOOP + T_GRPLK
 T_GL_KRAKEN_X_WING          = T_KRAKEN_X_WING + T_GRPLK
 T_GL_KRAKEN_SWORDFISH       = T_KRAKEN_SWORDFISH + T_GRPLK
 T_GL_KRAKEN_JELLYFISH       = T_KRAKEN_JELLYFISH + T_GRPLK
+T_GL_KRAKEN_SASHIMI_X_WING    = T_KRAKEN_SASHIMI_X_WING + T_GRPLK
+T_GL_KRAKEN_SASHIMI_SWORDFISH = T_KRAKEN_SASHIMI_SWORDFISH + T_GRPLK
+T_GL_KRAKEN_SASHIMI_JELLYFISH = T_KRAKEN_SASHIMI_JELLYFISH + T_GRPLK
 
 T_BRUTE_FORCE               = 0x000000FF  # 255
 
