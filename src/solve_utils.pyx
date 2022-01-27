@@ -68,17 +68,17 @@ cdef CHAIN* pchain_2_cchain(list PChain):
     # with start and end in "ctypedef struct CHAIN"
     # implicitly mallocs the memory for the cchain.
     cdef CHAIN      *CChain = <CHAIN *>PyMem_Malloc(sizeof(CHAIN))
-    cdef NODEC *N
+    cdef NODE *N
     cdef i
     # print("---- In pchain_2_cchain() ----", file=stderr)
     if not PChain or CChain == NULL: return NULL
 
-    N = <NODEC *>PyMem_Malloc(sizeof(NODEC))
+    N = <NODE *>PyMem_Malloc(sizeof(NODE))
     if N == NULL: return NULL
     CChain.Start = N; N.Prev = NULL
     for i in range(len(PChain)-1):
         N.r, N.c, N.Cand, N.Lk = PChain[i]
-        N.Next = <NODEC *>PyMem_Malloc(sizeof(NODEC))
+        N.Next = <NODE *>PyMem_Malloc(sizeof(NODE))
         if N == NULL: return NULL
         N.Next.Prev = N
         # print(f"Loop: {i}, {PChain[i]}")
@@ -91,13 +91,13 @@ cdef CHAIN* pchain_2_cchain(list PChain):
         # print(f"{N.r},{N.c},{N.Cand},{N.Lk},N: 0x{<long long>N:016x}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}")
     return CChain
 
-cdef CHAIN_GL* pchain_2_cchain_gl(list PChain):
+cdef CHAIN* pchain_2_cchain_gl(list PChain):
     # for group links.
     # pchain is a list of (r, c, Cand, Lk) tuples, where r and c are sets of up to 3 .
     # cchain is a linked list of "Ctypedef struct CHAIN_NODE_GL"s
     # with start and end in "ctypedef struct CHAIN_GL"
     # implicitly mallocs the memory for the cchain.
-    cdef CHAIN_GL       *CChain = <CHAIN_GL *>PyMem_Malloc(sizeof(CHAIN_GL))
+    cdef CHAIN       *CChain = <CHAIN *>PyMem_Malloc(sizeof(CHAIN_GL))
     cdef NODE_GL *N
     cdef int i
 
@@ -105,7 +105,7 @@ cdef CHAIN_GL* pchain_2_cchain_gl(list PChain):
     if not PChain or CChain == NULL: return NULL
     N = <NODE_GL *>PyMem_Malloc(sizeof(NODE_GL))
     if N == NULL: return NULL
-    CChain.Start = N; N.Prev = NULL
+    CChain.StartGL = N; N.Prev = NULL
     for i in range(len(PChain)-1):
         r, c, N.Cand, N.Lk = PChain[i]
         # if DEBUG: print(f"  Pchain[{i}] upacked, r:{r}, c:{c}, N.Cand:{N.Cand}, N.Lk:{N.Lk}, len(r):{len(r)}, len(c):{len(c)}")
@@ -130,7 +130,7 @@ cdef CHAIN_GL* pchain_2_cchain_gl(list PChain):
         for j, x in enumerate(c): N.c.v[j] = x
         for j in range(len(c),3): N.c.v[j] = 0
         N.c.l = len(c)
-        N.Next = NULL; CChain.End = N
+        N.Next = NULL; CChain.EndGL = N
         # print(f"Loop: {len(PChain)-1}, {PChain[len(PChain)-1]}")
         # print(f"{N.r},{N.c},{N.Cand},{N.Lk},N: 0x{<long long>N:016x}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}")
     return CChain
@@ -140,39 +140,39 @@ cdef list cchain_2_pchain(CHAIN* CChain):
     # with start and end in "ctypedef struct CHAIN"
     # returns PChain
     # implicitly frees the allocated cchain memory
-    cdef NODEC *N
-    cdef NODEC *N1
+    cdef NODE *N
+    # cdef NODE *N1
     cdef list PChain = []
 
     N = CChain.Start
     while N:
         PChain.append((N.r, N.c, N.Cand, N.Lk))
-        N1 = N
+        # N1 = N
         N = N.Next
-        PyMem_Free(N1)
+        PyMem_Free(N.Prev)
     PyMem_Free(CChain); CChain = NULL
     return PChain
 
-cdef list cchain_2_pchain_gl(CHAIN_GL* CChain):
+cdef list cchain_2_pchain_gl(CHAIN* CChain):
     # for group_links
     # pchain is a list of (r, c, Cand, Lk) tuples. cchain is a linked list of "Ctypedef struct CHAIN_NODE"s
     # with start and end in "ctypedef struct CHAIN"
     # returns PChain
     # implicitly frees the allocated cchain memory
     cdef NODE_GL *N
-    cdef NODE_GL *N1
+    # cdef NODE_GL *N1
     cdef list PChain = []
     cdef int i
 
-    N = CChain.Start
+    N = CChain.StartGL
     while N:
         r = set(); c = set()
         for i in range(N.r.l): r.add(N.r.v[i])
         for i in range(N.c.l): c.add(N.c.v[i])
         PChain.append((r, c, N.Cand, N.Lk))
-        N1 = N
+        # N1 = N
         N = N.Next
-        PyMem_Free(N1)
+        PyMem_Free(N.Prev)
     PyMem_Free(CChain); CChain = NULL
     return PChain
 
@@ -314,17 +314,17 @@ cdef int determine_cands_c(int Grid[9][9], bint Elims[9][9][9], bint Cands[9][9]
                             Cands[r][c][d] = True
     return NrEmpties
 
-def link_house(r0, c0, r1, c1, GrpLks = False):
-    # wrapper for Cython C functions.
-    # ccells must be linked else erroneous LK_BOX cand be returned.
-    cdef SET3 r0s, c0s, r1s, c1s
-
-    if GrpLks:
-        pset_2_cset3(r0, &r0s); pset_2_cset3(c0, &c0s)
-        pset_2_cset3(r1, &r1s); pset_2_cset3(c1, &c1s)
-        return link_house_gl_c(r0s, c0s, r1s, c1s)
-    else:
-        return link_house_c(r0, c0, r1, c1)
+# def link_house(r0, c0, r1, c1, GrpLks = False):
+#     # wrapper for Cython C functions.
+#     # ccells must be linked else erroneous LK_BOX cand be returned.
+#     cdef SET3 r0s, c0s, r1s, c1s
+#
+#     if GrpLks:
+#         pset_2_cset3(r0, &r0s); pset_2_cset3(c0, &c0s)
+#         pset_2_cset3(r1, &r1s); pset_2_cset3(c1, &c1s)
+#         return link_house_gl_c(r0s, c0s, r1s, c1s)
+#     else:
+#         return link_house_c(r0, c0, r1, c1)
 
 cdef int link_house_gl_c(SET3 r0, SET3 c0, SET3 r1, SET3 c1):
     # cells must be linked, else erroneous LK_BOX_C is returned.
@@ -339,35 +339,37 @@ cdef int link_house_c(int r0, int c0, int r1, int c1):
     if c0 == c1: return LK_COL_C
     return LK_BOX_C
 
-def token_link(Lk):
-    #wrapper for token_link_c
-    return token_link_c(Lk)
+# def token_link(Lk):
+#     #wrapper for token_link_c
+#     return token_link_c(Lk)
 
 cdef int token_link_c(int Lk):
+    Lk &= 0x000f
     if Lk == LK_WEAK_C: return OP_WLK_C
     if Lk == LK_STRG_C or Lk == LK_STWK_C: return OP_SLK_C
     if Lk == LK_WKST_C: return OP_WSLK_C
+    if Lk == LK_NONE_C: return OP_NONE_C
     return -1
 
-def discard_cand_from_peers(Cand, r, c, Cands):
-    #wrapper for discard_cand_from_peers_c.
-    cdef bint Cands_c[9][9][9]
-    cdef int r1, c1, d1
-
-    pcands_2_ccands(Cands, Cands_c)
-    # for r1 in range(9):
-    #     for c1 in range(9):
-    #         for d1 in range(9): Cands_c[r1][c1][d1] = False
-    #         for Cand1 in Cands[r1][c1]: Cands_c[r1][c1][Cand1-1] = True
-    discard_cand_from_peers_c(Cand, r, c, Cands_c)
-    # python objects are passed by assignment, so assigning something else to cands will not be
-    # passed to the caller.  However changes to to the values in the cands object do not alter
-    # the cands assignment.
-    for r1 in range(9):
-        for c1 in range(9):
-            if Cands[r1][c1]:
-                for d1 in range(9):
-                    if not Cands_c[r1][c1][d1]: Cands[r1][c1].discard(d1+1)
+# def discard_cand_from_peers(Cand, r, c, Cands):
+#     #wrapper for discard_cand_from_peers_c.
+#     cdef bint Cands_c[9][9][9]
+#     cdef int r1, c1, d1
+#
+#     pcands_2_ccands(Cands, Cands_c)
+#     # for r1 in range(9):
+#     #     for c1 in range(9):
+#     #         for d1 in range(9): Cands_c[r1][c1][d1] = False
+#     #         for Cand1 in Cands[r1][c1]: Cands_c[r1][c1][Cand1-1] = True
+#     discard_cand_from_peers_c(Cand, r, c, Cands_c)
+#     # python objects are passed by assignment, so assigning something else to cands will not be
+#     # passed to the caller.  However changes to to the values in the cands object do not alter
+#     # the cands assignment.
+#     for r1 in range(9):
+#         for c1 in range(9):
+#             if Cands[r1][c1]:
+#                 for d1 in range(9):
+#                     if not Cands_c[r1][c1][d1]: Cands[r1][c1].discard(d1+1)
 
 
 cdef void discard_cand_from_peers_c(int Cand, int r, int c, bint Cands[9][9][9]):
@@ -381,70 +383,70 @@ cdef void discard_cand_from_peers_c(int Cand, int r, int c, bint Cands[9][9][9])
         for j in range(bc, bc+3):
             Cands[i][j][Cand-1] = False
 
-def is_in_chain(r, c, Cand, PChain, GrpLks):
-    # wrapper for is_in_chain_c() and is_in_chain_gl_c()
-    cdef SET3 r_gl, c_gl
-    # cdef int i, x, res
-    cdef int res
-    cdef CHAIN *Chain
-    cdef CHAIN_GL *Chain_gl
-    cdef NODE_GL *N
+# def is_in_chain(r, c, Cand, PChain, GrpLks):
+#     # wrapper for is_in_chain_c() and is_in_chain_gl_c()
+#     cdef SET3 r_gl, c_gl
+#     # cdef int i, x, res
+#     cdef int res
+#     cdef CHAIN *Chain
+#     cdef CHAIN_GL *Chain_gl
+#     cdef NODE_GL *N
+#
+#     if GrpLks:
+#         if DEBUG: print(f"is_in_chain(): GrpLks, r:{r}, c:{c}, Cand:{Cand}, PChain:{PChain}")
+#         pset_2_cset3(r, &r_gl); pset_2_cset3(c, &c_gl)
+#         # for i, x in enumerate(r): r_gl.v[i] = x
+#         # for i in range(len(r),3): r_gl.v[i] = 0
+#         # r_gl.l = len(r)
+#         # for i, x in enumerate(c): c_gl.v[i] = x
+#         # for i in range(len(c),3): c_gl.v[i] = 0
+#         # c_gl.l = len(c)
+#         # if DEBUG: print(f"Is this group node in the chain?  r_gl:{r_gl}, c_gl:{c_gl}")
+#         Chain_gl = pchain_2_cchain_gl(PChain)
+#         ####
+#         # if DEBUG: print(f"B4 is_in_chain_gl_c(), Chain_gl.Start: 0x{<long long>Chain_gl.Start:016x}, CChain.End: 0x{<long long>Chain_gl.End:016x}")
+#         # N = Chain_gl.Start
+#         # while N:
+#         #     if DEBUG: print(f"N.r:{N.r}, N.c:{N.c}, N.Cand:{N.Cand}, N.Lk:{N.Lk}, N: 0x{<long long> N:016x}, N.Prev: 0x{<long long> N.Prev:016x}, N.Next: 0x{<long long> N.Next:016x}")
+#         #     N = N.Next
+#         res = is_in_chain_gl_c(r_gl, c_gl, Cand, Chain_gl)
+#         # if DEBUG: print(f"After is_in_chain_gl_c(), Chain_gl.Start: 0x{<long long>Chain_gl.Start:016x}, CChain.End: 0x{<long long>Chain_gl.End:016x}")
+#         # N = Chain_gl.Start
+#         # while N:
+#         #     if DEBUG: print(f"N.r:{N.r}, N.c:{N.c}, N.Cand:{N.Cand}, N.Lk:{N.Lk}, N: 0x{<long long>N:016x}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}")
+#         #     N = N.Next
+#         ####
+#         cchain_2_pchain_gl(Chain_gl)  # lazy way to free all allocated memory
+#         # PC = cchain_2_pchain_gl(Chain_gl)  # lazy way to free all allocated memory
+#         # if DEBUG: print(f"res:{res}, Reconst PChain:{PC}")
+#     else:
+#         Chain = pchain_2_cchain(PChain)
+#         res = is_in_chain_c(r, c, Cand, Chain)
+#         cchain_2_pchain(Chain) # lazy way to free all allocated memory
+#     return res
 
-    if GrpLks:
-        if DEBUG: print(f"is_in_chain(): GrpLks, r:{r}, c:{c}, Cand:{Cand}, PChain:{PChain}")
-        pset_2_cset3(r, &r_gl); pset_2_cset3(c, &c_gl)
-        # for i, x in enumerate(r): r_gl.v[i] = x
-        # for i in range(len(r),3): r_gl.v[i] = 0
-        # r_gl.l = len(r)
-        # for i, x in enumerate(c): c_gl.v[i] = x
-        # for i in range(len(c),3): c_gl.v[i] = 0
-        # c_gl.l = len(c)
-        # if DEBUG: print(f"Is this group node in the chain?  r_gl:{r_gl}, c_gl:{c_gl}")
-        Chain_gl = pchain_2_cchain_gl(PChain)
-        ####
-        # if DEBUG: print(f"B4 is_in_chain_gl_c(), Chain_gl.Start: 0x{<long long>Chain_gl.Start:016x}, CChain.End: 0x{<long long>Chain_gl.End:016x}")
-        # N = Chain_gl.Start
-        # while N:
-        #     if DEBUG: print(f"N.r:{N.r}, N.c:{N.c}, N.Cand:{N.Cand}, N.Lk:{N.Lk}, N: 0x{<long long> N:016x}, N.Prev: 0x{<long long> N.Prev:016x}, N.Next: 0x{<long long> N.Next:016x}")
-        #     N = N.Next
-        res = is_in_chain_gl_c(r_gl, c_gl, Cand, Chain_gl)
-        # if DEBUG: print(f"After is_in_chain_gl_c(), Chain_gl.Start: 0x{<long long>Chain_gl.Start:016x}, CChain.End: 0x{<long long>Chain_gl.End:016x}")
-        # N = Chain_gl.Start
-        # while N:
-        #     if DEBUG: print(f"N.r:{N.r}, N.c:{N.c}, N.Cand:{N.Cand}, N.Lk:{N.Lk}, N: 0x{<long long>N:016x}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}")
-        #     N = N.Next
-        ####
-        cchain_2_pchain_gl(Chain_gl)  # lazy way to free all allocated memory
-        # PC = cchain_2_pchain_gl(Chain_gl)  # lazy way to free all allocated memory
-        # if DEBUG: print(f"res:{res}, Reconst PChain:{PC}")
-    else:
-        Chain = pchain_2_cchain(PChain)
-        res = is_in_chain_c(r, c, Cand, Chain)
-        cchain_2_pchain(Chain) # lazy way to free all allocated memory
-    return res
-
-cdef int is_in_chain_c(int r, int c, int Cand, CHAIN *Chain):
-    cdef NODEC *N
-    cdef int i = 0
-
-    N = Chain.Start
-    while N:
-        # For scalars (non group links, intersecting is the same as ==
-        if r == N.r and c == N.c and Cand == N.Cand: return i
-        i += 1
-        N = N.Next
-    return -1
-
-cdef int is_in_chain_gl_c(SET3 r, SET3 c, int Cand, CHAIN_GL *Chain_gl):
-    cdef NODE_GL *N
-    cdef int i = 0
-
-    N = Chain_gl.Start
-    while N:
-        if set3_intersect(r, N.r) and set3_intersect(c, N.c) and Cand == N.Cand: return i
-        i += 1
-        N = N.Next
-    return -1
+# cdef int is_in_chain_c(int r, int c, int Cand, CHAIN *Chain):
+#     cdef NODE *N
+#     cdef int i = 0
+#
+#     N = Chain.Start
+#     while N:
+#         # For scalars (non group links, intersecting is the same as ==
+#         if r == N.r and c == N.c and Cand == N.Cand: return i
+#         i += 1
+#         N = N.Next
+#     return -1
+#
+# cdef int is_in_chain_gl_c(SET3 r, SET3 c, int Cand, CHAIN_GL *Chain_gl):
+#     cdef NODE_GL *N
+#     cdef int i = 0
+#
+#     N = Chain_gl.Start
+#     while N:
+#         if set3_intersect(r, N.r) and set3_intersect(c, N.c) and Cand == N.Cand: return i
+#         i += 1
+#         N = N.Next
+#     return -1
 
 cdef inline bint set3_intersect(SET3 a, SET3 b):
 
@@ -453,9 +455,9 @@ cdef inline bint set3_intersect(SET3 a, SET3 b):
             if a.v[i] == b.v[j]: return True
     return False
 
-cdef NODEC* list_ccells_linked_to_c(int r, int c, bint Cands[9][9][9], int Type):
+cdef NODE* list_ccells_linked_to_c(int r, int c, bint Cands[9][9][9], int Type):
     # returns a singly linked list of ccell nodes
-    return <NODEC *>void
+    return <NODE *>void
 
 cdef NODE_GL *list_ccells_linked_to_gl_c(SET3 r, SET3 c, bint Cands[9][9][9], int Type):
     # returns a singly linked list of ccell nodes
@@ -475,16 +477,6 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False):
     # This is an opportunity to for pointing or claiming locked singles eliminations (which
     # BTW should have been cleared by earlier steps than when these higher level of
     # complexity functions are used.
-
-    cdef bint cCands[9][9][9]
-    cdef SET3 sR, sC
-    pcands_2_ccands(pCands, cCands)
-
-    #
-    # if GrpLks:
-    #
-    #     pass
-    # else:
 
     LCL = []
     if GrpLks:
@@ -766,45 +758,46 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
 #             if Cands[r][c][Cand-1]: n += 1
 #     return n
 
-cdef (int, int) how_ccells_linked_c(int r0, int c0, int Cand0, int r1, int c1, int Cand1, bint Cands[9][9][9]):
+cdef int how_ccells_linked_c(int r0, int c0, int Cand0, int r1, int c1, int Cand1, bint Cands[9][9][9]):
     cdef int LkH, r, c, rb0, cb0, rb1, cb1
 
     if r0 == r1 and c0 == c1:
-        if Cand0 == Cand1: return LK_NONE_C, LK_NONE_C  # ccells cannot link on themselves
-        if len(Cands[r0][c0]) == 2: return LK_STWK, LK_CELL
-        return LK_WEAK, CELL
+        if Cand0 == Cand1: return LK_NONE_C  # ccells cannot link on themselves
+        #### FIX BUG #### Need to count # Nr Cands = True in Cands[][][].
+        if len(Cands[r0][c0]) == 2: return LK_STWK_C | LK_CELL_C
+        return LK_WEAK_C | LK_CELL_C
     # different cells, therefore linked by same candidate
-    if Cand0 != Cand1: return LK_NONE, LK_NONE
+    if Cand0 != Cand1: return LK_NONE
     if r0 == r1:  # house is a row
         LkH = LK_ROW_C
         if c0//3 == c1//3: LkH |= LK_BOX_C
         for c in range(9):
             if c == c0 or c == c1: continue
             # TRCX(f"{Cand0+1}r{r0+1}c{c+1}=={Cands[r0][c][Cand0]}")
-            if Cands[r0][c][Cand0]: return LK_WEAK_C, LkH
-        return LK_STWK_C, LkH
+            if Cands[r0][c][Cand0]: return LK_WEAK_C | LkH
+        return LK_STWK_C | LkH
     if c0 == c1:  # house is a col
         LkH = LK_COL_C
         if r0//3 == r1//3: LkH |= LK_BOX_C
         for r in range(9):
             if r == r0 or r == r1: continue
             # TRCX(f"{Cand0+1}r{r+1}c{c0+1}=={Cands[r][c0][Cand0]}")
-            if Cands[r][c0][Cand0]: return LK_WEAK_C, LkH
-        return LK_STWK_C, LkH
+            if Cands[r][c0][Cand0]: return LK_WEAK_C | LkH
+        return LK_STWK_C | LkH
     rb0 = (r0//3)*3; cb0 = (c0//3)*3; rb1 = (r1//3)*3; cb1 = (c1//3)*3
     if rb0 == rb1 and cb0 == cb1:  # house is a box
         for r in range(rb0, rb0+3):
             for c in range(cb0, cb0+3):
                 if (r == r0 and c == c0) or (r == r1 and c == c1): continue
                 # TRCX(f"{Cand0+1}r{r+1}c{c+1}=={Cands[r][c][Cand0]}")
-                if Cands[r][c][Cand0]: return LK_WEAK_C, LK_BOX_C
-        return LK_STRG_C, LK_BOX_C
-    return LK_NONE_C, LK_NONE_C
+                if Cands[r][c][Cand0]: return LK_WEAK_C | LK_BOX_C
+        return LK_STRG_C | LK_BOX_C
+    return LK_NONE_C | LK_NONE_C
 
-cdef (int, int) how_ccells_linked_gl_c(SET3 r0, SET3 c0, int Cand0, SET3 r1, SET3 c1, int Cand1,bint Cands[9][9][9]):
+cdef int how_ccells_linked_gl_c(SET3 r0, SET3 c0, int Cand0, SET3 r1, SET3 c1, int Cand1,bint Cands[9][9][9]):
 
     TRCX("TODO: Stubbed out")
-    return LK_NONE_C, LK_NONE_C
+    return LK_NONE_C
 
 
 def find_all_strong_cand_links(Cand, Cands, GrpLks = False):

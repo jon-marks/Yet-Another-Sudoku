@@ -13,12 +13,12 @@
         2021-04-xx  jm  Initial entry
 
 """
+import os
 
 import wx
 import wx.html
 
 from globals import *
-from misc import UserGuide
 
 class MainMenubar(wx.MenuBar):
 
@@ -622,3 +622,30 @@ class MainMenubar(wx.MenuBar):
     def on_help_guide(self, e):
         dlgUserGuide = UserGuide(self.parent.Title)
         dlgUserGuide.Show()
+
+class UserGuide(wx.Dialog):
+    # Simple class to display the user guide written in simple html when created
+    # and destroy itself when close is selected.  User guide pops up as a
+    # non-modal window.
+
+    def __init__(self, Title):  # , parent):
+        wx.Dialog.__init__(self, None, id = wx.ID_ANY, title = Title + ": User Guide",
+                           pos = wx.DefaultPosition,
+                           size = USER_GUIDE_DLG_SZ,
+                           style = wx.DEFAULT_DIALOG_STYLE | wx.DIALOG_NO_PARENT | wx.RESIZE_BORDER)
+        szr = wx.BoxSizer(wx.VERTICAL)
+        self.htc = wx.html.HtmlWindow(self)
+        szr.Add(self.htc, 1, wx.ALL | wx.EXPAND, 5)
+
+        self.BtnClose = wx.Button(self, wx.ID_ANY, "Close", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.BtnClose.Bind(wx.EVT_BUTTON, self.on_close)
+        szr.Add(self.BtnClose, 0, wx.ALIGN_CENTER | wx.TOP, 2)
+        szr.Add((0, 7), 0, 0, 0)  # Add a 7 pixel spacer.
+        self.htc.LoadFile(os.path.join(os.path.dirname(__file__), "../doc/user_guide.html"))
+        self.SetSizer(szr)
+        self.Layout()
+        self.Centre(wx.BOTH)
+
+    def on_close(self, e):
+        wx.CallAfter(self.Destroy)
+

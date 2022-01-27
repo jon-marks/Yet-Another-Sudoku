@@ -142,15 +142,15 @@ def tech_xy_chains(Grid, Step, Cands, Method = T_UNDEF):
                     if LkT == LK_NONE: continue
                     # BVC is linked to XY, connect it.
                     X1 = deepcopy(X)
-                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
-                    X1.XY.extend([NODE(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODE(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
+                    X1.XY[-1] = NODEP(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
+                    X1.XY.extend([NODEP(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODEP(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
                     # Does this newly added BVC connect to the OE.
                     LkT, LkH = how_ccells_linked(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, X1.OE[0].r, X1.OE[0].c, X1.OE[0].Cand, Cands)
                     if LkT == LK_NONE:
                         X1.UC.append(CELL(BVC.r, BVC.c))
                         XYC1.append(X1)
                     else:
-                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
+                        X1.XY[-1] = NODEP(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
                         X1.XY.extend(X.OE)
                         if _xy_chain_elims(X1, Cands, Step): return 0
         XYC0 = XYC1
@@ -173,15 +173,15 @@ def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
                     if LkT == LK_NONE: continue
                     # BVC is linked to XY, connect it.
                     X1 = deepcopy(X)
-                    X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
-                    X1.XY.extend([NODE(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODE(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
+                    X1.XY[-1] = NODEP(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
+                    X1.XY.extend([NODEP(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODEP(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
                     # Does this newly added BVC connect to the OE.
                     LkT, LkH = how_ccells_linked(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, X1.OE[0].r, X1.OE[0].c, X1.OE[0].Cand, Cands)
                     if LkT == LK_NONE:
                         X1.UC.append(CELL(BVC.r, BVC.c))
                         XYL1.append(X1)
                     else:
-                        X1.XY[-1] = NODE(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
+                        X1.XY[-1] = NODEP(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
                         X1.XY.extend(X.OE)
                         if _xy_loop_elims(X1, Cands, Step): return 0
         XYL0 = XYL1
@@ -207,10 +207,10 @@ def _find_xy_chain_starts(Cands):
                     if CELL(r0, c0) not in UC and Cand in Cands[r0][c0]: EL.append(CCELL(r0, c0, Cand))
                 if EL:
                     X = XYCUC()
-                    X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG),
-                                 NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
-                    X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
-                                 NODE(BVL[j].r, BVL[j].c, Cand, LK_NONE)])
+                    X.XY.extend([NODEP(BVL[i].r, BVL[i].c, Cand, LK_STRG),
+                                 NODEP(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
+                    X.OE.extend([NODEP(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
+                                 NODEP(BVL[j].r, BVL[j].c, Cand, LK_NONE)])
                     X.UC = UC
                     X.EL = EL
                     XYCStarts.append(deepcopy(X))
@@ -233,11 +233,11 @@ def _find_xy_loop_starts(Cands):
                 LkT, LkH = how_ccells_linked(BVL[i].r, BVL[i].c, Cand, BVL[j].r, BVL[j].c, Cand, Cands)
                 if LkT == LK_NONE: continue
                 X = XYCUC()
-                X.XY.extend([NODE(BVL[i].r, BVL[i].c, Cand, LK_STRG),
-                             NODE(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
-                X.OE.extend([NODE(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
-                             NODE(BVL[j].r, BVL[j].c, Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST),
-                             NODE(BVL[i].r, BVL[i].c, Cand, LK_NONE)])
+                X.XY.extend([NODEP(BVL[i].r, BVL[i].c, Cand, LK_STRG),
+                             NODEP(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
+                X.OE.extend([NODEP(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
+                             NODEP(BVL[j].r, BVL[j].c, Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST),
+                             NODEP(BVL[i].r, BVL[i].c, Cand, LK_NONE)])
                 X.UC = UC
                 XYLStarts.append(deepcopy(X))
     return BVL, XYLStarts

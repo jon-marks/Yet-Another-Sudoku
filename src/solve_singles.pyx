@@ -278,7 +278,7 @@ cdef int tech_empty_rects_c(int Grid[9][9], Step, bint Cands[9][9][9], Method):
     # is/was a strong link between Cb and Cr, then Cc too can be eliminated.
     #
     cdef int    Cand, row, col, r, c, rb, cb, or1, or2, oc1, oc2, i, n, n1, m, m1
-    cdef int    LkH, LkT
+    cdef int    Lk
     cdef COORD  BC[5]
     cdef COORD  Elim[2]
     cdef int    Rx[6]
@@ -316,12 +316,12 @@ cdef int tech_empty_rects_c(int Grid[9][9], Step, bint Cands[9][9][9], Method):
                             if Cands[r][c][Cand]:
                                 # TRCX(f"Opposing Candidate found {Cand+1}r{r+1}c{c+1}")
                                 m = 0
-                                LkT, LkH = how_ccells_linked_c(r, c, Cand, row, c, Cand, Cands)
+                                Lk = how_ccells_linked_c(r, c, Cand, row, c, Cand, Cands)
                                 # TRCX(f"LkT:{LkT} between {Cand+1}r{r+1}c{c+1} and {Cand+1}r{row+1}c{c+1}")
-                                if LkT & LK_STRG_C: Elim[m].r = r; Elim[m].c = col; m += 1
-                                LkT, LkH = how_ccells_linked_c(r, c, Cand, r, col, Cand, Cands)
+                                if Lk & LK_STRG_C: Elim[m].r = r; Elim[m].c = col; m += 1
+                                Lk = how_ccells_linked_c(r, c, Cand, r, col, Cand, Cands)
                                 # TRCX(f"LkT:{LkT} between {Cand+1}r{r+1}c{c+1} and {Cand+1}r{r+1}c{col+1}")
-                                if LkT & LK_STRG_C:  Elim[m].r = row; Elim[m].c = c; m += 1
+                                if Lk & LK_STRG_C:  Elim[m].r = row; Elim[m].c = c; m += 1
                                 if m:
                                     Step.Method = T_EMPTY_RECT
                                     for m1 in range(m):

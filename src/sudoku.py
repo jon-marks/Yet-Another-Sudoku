@@ -17,10 +17,11 @@ from os.path import join
 
 from globals import *
 from trc import *
-from misc import open_puzzle, save_puzzle, ListSolnWindow, tkns_to_str, copy_clipboard_to_pzl, copy_puzzle_to_clipboard
+from misc import open_puzzle, save_puzzle, tkns_to_str, copy_clipboard_to_pzl, copy_puzzle_to_clipboard
 from generate import check_puzzle, gen_filled_grid, scramble_puzzle, minimalise_puzzle, create_puzzle
 from solve_utils import determine_cands, cell_val_has_conflicts, cell_val_has_no_conflicts
 from solve import *
+from list_soln_win import *
 from timer import *
 from board import *
 from puzzle import *
@@ -335,7 +336,7 @@ class Sudoku:
             oPzl = PZL()
             NrFlds, sErr = copy_clipboard_to_pzl(oPzl)
             if sErr:
-                wx.MessageBox("sErr", "Warning", wx.CANCEL)
+                wx.MessageBox(f"Error: {sErr}", "Warning", wx.CANCEL)
                 self.gen_event(EV_SC_ENT, False)
                 return
             if NrFlds: self.update_board(ST_ENT, oPzl)
@@ -442,9 +443,9 @@ class Sudoku:
 
         self.StatusBar.update_0("Grading Puzzle, may take some time. . .")
         self.update_board(ST_SLV, oPzl)  # Change board colouring from Enter mode to Solve mode
-        TRCX("Begin Solve")
+        # TRCX("Begin Solve")
         oPzl.Lvl, oPzl.Steps, Err = logic_solve_puzzle(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln)
-        TRCX("End Solve")
+        # TRCX("End Solve")
         if oPzl.Lvl < 0:
             wx.MessageBox(f"Cannot solve puzzle: {Err}\n"
                           "Please save puzzle and send to developers",

@@ -337,23 +337,42 @@ P_CON = 16  # Concatinator for combining cell collections
 P_END = 17  # End of list of phrases
 
 # Logic technique operator enumerations
-OP_POS  = 0   # "?-" Possibility, perhaps something to try
-OP_PRES = 1   # "--" Presence of candidate / value in cell
-OP_ABS  = 2   # "!-" Absence of candidate in cell.
-OP_EQ   = 3   # "==" Presence of only candidates or value in cell
-OP_NEQ  = 4   # "!=" Cell cannot assume that value
-OP_ASNV = 5   # ":="  Assign value to cell.
-OP_ASNC = 6   # "+=" Add candidate to cell.
-OP_ELIM = 7   # "-=" Eliminate candidate from cell.
-OP_WLK  = 8   # "-"  Weak link
-OP_SLK  = 9   # "="  Strong link
-OP_WSLK = 10  # "~"  Strong link masquerading as a weak link
-OP_CNT  = 11  # "#"  Number of occurrences or count.
-OP_PARO = 12  # "("  Opening parenthesis
-OP_PARC = 13  # ")"  Closing parenthesis
-OP_SETO = 14  # "{"  Opening set
-OP_SETC = 15  # "}"  Closing set
-OP_NR_OPS = 16
+OP_NONE = 0   # ""
+OP_POS  = 1   # "?-" Possibility, perhaps something to try
+OP_PRES = 2   # "--" Presence of candidate / value in cell
+OP_ABS  = 3   # "!-" Absence of candidate in cell.
+OP_EQ   = 4   # "==" Presence of only candidates or value in cell
+OP_NEQ  = 5   # "!=" Cell cannot assume that value
+OP_ASNV = 6   # ":="  Assign value to cell.
+OP_ASNC = 7   # "+=" Add candidate to cell.
+OP_ELIM = 8   # "-=" Eliminate candidate from cell.
+OP_WLK  = 9   # "-"  Weak link
+OP_SLK  = 10  # "="  Strong link
+OP_WSLK = 11  # "~"  Strong link masquerading as a weak link
+OP_CNT  = 12  # "#"  Number of occurrences or count.
+OP_PARO = 13  # "("  Opening parenthesis
+OP_PARC = 14  # ")"  Closing parenthesis
+OP_SETO = 15  # "{"  Opening set
+OP_SETC = 16  # "}"  Closing set
+OP_NR_OPS = 17
+
+OP = ["",    # OP_NONE
+      "?-",  # OP_POS   Possibility, perhaps something to try
+      "--",  # OP_PRES  Presence of candidate / value in cell
+      "!-",  # OP_ABS   Absence of candidate in cell.
+      "==",  # OP_EQ    Presence of only value in cell
+      "!=",  # OP_NEQ   Cell cannot assume that value
+      ":=",  # OP_ASNV  Assign value to cell.
+      "+=",  # OP_ASNC  Add candidate to cell.
+      "-=",  # OP_ELIM  Eliminate candidate from cell.
+      "-" ,  # OP_WLK   Chain weak link.
+      "=" ,  # OP_SLK   Chain strong link.
+      "~" ,  # OP_WSLK  Chain strong masquerading as weak link.
+      "#" ,  # OP_CNT   Count / number of occurrences
+      "(" ,  # OP_PARO  Opening parenthesis
+      ")" ,  # OP_PARC  Closing parenthesis
+      "{" ,  # OP_SETO  Opening set
+      "}" ]  # OP_SETC  Closing set
 
 # Puzzle Solution attributes
 S_FOUND = 0  # True if found, false otherwise
@@ -391,7 +410,7 @@ class BVCELL:  # Bi-value cell
     def __init__(self, r = -1, c = -1, Cands = None):
         self.r = r; self.c = c; self.Cands = Cands
 
-class NODE:  # Node in a chain with link type to partner on right.
+class NODEP:  # Node in a chain with link type to partner on right.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
 
@@ -458,3 +477,76 @@ class PZL_PROPS:
         self.Steps       = Steps if Steps else []
         self.StepsHisto  = StepsHisto if StepsHisto else []
         self.Difficulty  = Difficulty
+
+class TECH_T:
+    def __init__(self, Enabled=False, Text=None, Expertise=UNDEF, Difficulty=UNDEF):
+        self.Enabled    = Enabled  # if true will be used to find a logic solution for the puzzle
+        self.Text       = Text if Text else ""
+        self.Expertise  = Expertise
+        self.Difficulty = Difficulty
+
+Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UNDEF                   -1),
+        T_EXPOSED_SINGLE:           TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
+        T_HIDDEN_SINGLE:            TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
+        T_CLAIMING_LOCKED_SINGLE:   TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
+        T_POINTING_LOCKED_SINGLE:   TECH_T(True, "Pointing Locked Single",    EXP_NOVICE,             15),
+        T_EXPOSED_PAIR:             TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
+        T_LOCKED_EXPOSED_PAIR:      TECH_T(True, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
+        T_HIDDEN_PAIR:              TECH_T(True, "Hidden Pair",               EXP_INTERMEDIATE,       20),
+        T_EXPOSED_TRIPLE:           TECH_T(True, "Exposed Triple",            EXP_INTERMEDIATE,       20),
+        T_LOCKED_EXPOSED_TRIPLE:    TECH_T(True, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
+        T_HIDDEN_TRIPLE:            TECH_T(True, "Hidden Triple",             EXP_INTERMEDIATE,       30),
+        T_EXPOSED_QUAD:             TECH_T(True, "Exposed Quad",              EXP_INTERMEDIATE,       35),
+        T_HIDDEN_QUAD:              TECH_T(True, "Hidden Quad",               EXP_INTERMEDIATE,       40),
+        T_X_WING:                   TECH_T(True, "X-Wing",                    EXP_PROFICIENT,         45),
+        T_SWORDFISH:                TECH_T(True, "Swordfish",                 EXP_PROFICIENT,         50),
+        T_JELLYFISH:                TECH_T(True, "Jellyfish",                 EXP_PROFICIENT,         55),
+        T_FINNED_X_WING:            TECH_T(True, "Finned X-Wing",             EXP_PROFICIENT,         60),
+        T_FINNED_SWORDFISH:         TECH_T(True, "Finned Swordfish",          EXP_PROFICIENT,         65),
+        T_FINNED_JELLYFISH:         TECH_T(True, "Finned Jellyfish",          EXP_PROFICIENT,         70),
+        T_SASHIMI_X_WING:           TECH_T(True, "Sashimi X-Wing",            EXP_PROFICIENT,         60),
+        T_SASHIMI_SWORDFISH:        TECH_T(True, "Sashimi Swordfish",         EXP_PROFICIENT,         65),
+        T_SASHIMI_JELLYFISH:        TECH_T(True, "Sashimi Jellyfish",         EXP_PROFICIENT,         70),
+        T_SKYSCRAPER:               TECH_T(False, "Skyscraper",                EXP_PROFICIENT,         45),
+        T_TWO_STRING_KITE:          TECH_T(False, "Two String Kite",           EXP_PROFICIENT,         45),
+        T_TURBOT_FISH:              TECH_T(False, "Turbot Fish",               EXP_PROFICIENT,         50),
+        T_EMPTY_RECT:               TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
+        T_Y_WING:                   TECH_T(False, "Y-Wing",                    EXP_INTERMEDIATE,       50),
+        T_XYZ_WING:                 TECH_T(False, "XYZ-Wing",                  EXP_PROFICIENT,         60),
+        T_WXYZ_WING:                TECH_T(False, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
+        T_BENT_EXPOSED_QUAD:        TECH_T(False, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
+        T_X_CHAIN:                  TECH_T(False, "X-Chain",                   EXP_PROFICIENT,         70),
+        T_EVEN_X_LOOP:              TECH_T(False, "Even X-Loop",               EXP_PROFICIENT,         70),
+        T_STRONG_X_LOOP:            TECH_T(False, "Strong X-Loop",             EXP_PROFICIENT,         70),
+        T_REMOTE_PAIR:              TECH_T(False, "Remote Pair",               EXP_ACCOMPLISHED,       80),
+        T_XY_CHAIN:                 TECH_T(False, "XY-Chain",                  EXP_ACCOMPLISHED,       80),
+        T_XY_LOOP:                  TECH_T(False, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
+        T_W_WING:                   TECH_T(False, "W-Wing",                    EXP_PROFICIENT,         55),
+        T_SC_AI_CHAIN:              TECH_T(False, "Same End Candidate AI-Chain", EXP_PROFICIENT,       70),
+        T_DC_AI_CHAIN:              TECH_T(False, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED,80),
+        T_EVEN_AI_LOOP:             TECH_T(False, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
+        T_STRONG_AI_LOOP:           TECH_T(False, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
+        T_KRAKEN_X_WING:            TECH_T(True, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SWORDFISH:         TECH_T(True, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_JELLYFISH:         TECH_T(True, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
+        T_GL_TWO_STRING_KITE:       TECH_T(False, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
+        T_GL_TURBOT_FISH:           TECH_T(False, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
+        T_GL_X_CHAIN:               TECH_T(False, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
+        T_GL_EVEN_X_LOOP:           TECH_T(False, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
+        T_GL_STRONG_X_LOOP:         TECH_T(False, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
+        T_GL_W_WING:                TECH_T(False, "Group Linked W-Wing",       EXP_PROFICIENT,         80),
+        T_GL_SC_AI_CHAIN:           TECH_T(False, "Group Linked Same End Candidates AI-Chain", EXP_PROFICIENT, 80),
+        T_GL_DC_AI_CHAIN:           TECH_T(False, "Group Linked Different End Candidates AI-Chain", EXP_ACCOMPLISHED, 80),
+        T_GL_EVEN_AI_LOOP:          TECH_T(False, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
+        T_GL_STRONG_AI_LOOP:        TECH_T(False, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
+        T_GL_KRAKEN_X_WING:         TECH_T(True, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SWORDFISH:      TECH_T(True, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_JELLYFISH:      TECH_T(True, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
+        }

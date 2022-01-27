@@ -1,43 +1,11 @@
 from copy import copy
 
 from globals import *
+from misc import tkns_to_str
 from solve_utils import *
 
-# def tech_finned_x_wings(Grid, Step, Cands, Methods):
-#     # if Method != T_UNDEF and Method != T_FINNED_X_WING: return -2
-#     return _finned_x_wings(Grid, Step, Cands, T_FINNED_X_WING, Kraken = False, GrpLks = False)
-#
-# def tech_kraken_x_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_KRAKEN_X_WING: return -2
-#     return _finned_x_wings(Grid, Step, Cands, T_KRAKEN_X_WING, Kraken = True, GrpLks = False)
-#
-# def tech_gl_kraken_x_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_GL_KRAKEN_X_WING: return -2
-#     return _finned_x_wings(Grid, Step, Cands, T_GL_KRAKEN_X_WING, Kraken = True, GrpLks = True)
-#
-# def tech_finned_swordfish(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_FINNED_SWORDFISH: return -2
-#     return _finned_swordfish(Grid, Step, Cands, T_FINNED_SWORDFISH, Kraken = False, GrpLks = False)
-#
-# def tech_kraken_swordfish(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_KRAKEN_SWORDFISH: return -2
-#     return _finned_swordfish(Grid, Step, Cands, T_KRAKEN_SWORDFISH, Kraken = True, GrpLks = False)
-#
-# def tech_gl_kraken_swordfish(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_GL_KRAKEN_SWORDFISH: return -2
-#     return _finned_swordfish(Grid, Step, Cands, T_GL_KRAKEN_SWORDFISH, Kraken = True, GrpLks = True)
-#
-# def tech_finned_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_FINNED_JELLYFISH: return -2
-#     return _finned_jellyfish(Grid, Step, Cands, T_FINNED_JELLYFISH, Kraken = False, GrpLks = False)
-#
-# def tech_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_KRAKEN_JELLYFISH: return -2
-#     return _finned_jellyfish(Grid, Step, Cands, T_KRAKEN_JELLYFISH, Kraken = True, GrpLks = False)
-#
-# def tech_gl_kraken_jellyfish(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_GL_KRAKEN_JELLYFISH: return -2
-#     return _finned_jellyfish(Grid, Step, Cands, T_GL_KRAKEN_JELLYFISH, Kraken = True, GrpLks = True)
+abcd = []
+tkns_to_str(abcd)
 
 def tech_x_wings(Grid, Step, Cands, Methods):
     # A X-Wing occurs when the same candidate occurs twice each in two separate
@@ -78,6 +46,7 @@ def tech_x_wings(Grid, Step, Cands, Methods):
     return -1
 
 def tech_finned_x_wings(Grid, Step, Cands, Methods):
+    # Handles every type of fins and patterns
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
 
@@ -414,7 +383,6 @@ def _elim_cands_in_fish(Cand, BS, CS, rc, Cands, Step):
     return False
 
 def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method):
-# def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method, Kraken = False, GrpLks = False):
 
     Fins = []
     Cvrs = []
@@ -425,30 +393,21 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method):
     if rc == P_ROW:
         for r in BS:
             for c in CF:
-                if Cand in Cands[r][c]: Fins.append((r, c)), FB.add(r)
+                if Cand in Cands[r][c]: Fins.append((r, c)); FB.add(r)
         if len(FB) > 1 and len(CS) == Ord: return False  # Fins can only be in in one base unless sashimi
         for r in sorted(set(range(9)) - set(BS)):
-            for c in CS if len(CS) == Ord else [*CS, *CF]:
+            for c in CS if len(CS) == Ord else CF:
                 if Cand in Cands[r][c]: Cvrs.append((r, c))
         if len(Cvrs): res = _find_covers_that_sees_all_fins(Fins, Cvrs, Cand, Cands, Method, S)
-        # if len(Cvrs): _find_cover_that_sees_all_fins(Fins, Cvrs, Cand, Cands, Method & T_KRAKEN, Method & T_GRPLK, S)
     else:  # rc == P_COL:
         for c in BS:
             for r in CF:
-                if Cand in Cands[r][c]: Fins.append((r, c)), FB.add(c)
+                if Cand in Cands[r][c]: Fins.append((r, c)); FB.add(c)
         if len(FB) > 1 and len(CS) == Ord: return False  # Fins can only be in in one base unless sashimi
-        for c in sorted(set(range(9))-set(BS)):
-            for r in CS if len(CS) == Ord else [*CS, *CF]:
+        for r in CS if len(CS) == Ord else CF:
+            for c in sorted(set(range(9))-set(BS)):
                 if Cand in Cands[r][c]: Cvrs.append((r, c))
         if len(Cvrs): res = _find_covers_that_sees_all_fins(Fins, Cvrs, Cand, Cands, Method, S)
-    # if S.Tech != T_UNDEF:
-    #     if Ord == 2: Step.Method = T_FINNED_X_WING
-    #     elif Ord == 3: Step.Method = T_FINNED_SWORDFISH
-    #     elif Ord == 4: Step.Method = T_FINNED_JELLYFISH
-    #     if Kraken:
-    #         for Ch in S.Pattern:
-    #             if len(Ch) > 2: Step.Method |= T_KRAKEN; break
-    #     if GrpLks: Step.Method |= T_GRPLK
     if res:
         Step.Method = Method
         if rc == P_ROW: Step.Pattern = [[P_VAL, Cand], [P_ROW, BS], [P_COL, CS]]
@@ -458,7 +417,6 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method):
         NLks = NGrpLks = 0
         Chains = []
         for Ch in S.Pattern:  # one chain for each fin in S.Pattern
-            # for Ch in Chs:
             if Chains: Chains.append([P_SEP, ])
             for r, c, Cand, Lk, in Ch:
                 NLks += 1
@@ -467,7 +425,6 @@ def _elim_cands_in_finned_fish(Cand, BS, CS, CF, rc, Cands, Step, Method):
                 if Lk == LK_NONE: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c]])
                 else: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
         Step.Pattern.extend(Chains); Step.Pattern.append([P_END, ])
-        # Step[P_DIFF] = T[Step[P_TECH]][T_DIFF]+(NLks-NGrpLks)*LK_DIFF+NGrpLks*GRP_LK_DIFF
         Step.NrLks = NLks; Step.NrGrpLks = NGrpLks
         for r, c, Cand in S.Outcome:
             Cands[r][c].discard(Cand)
@@ -507,18 +464,19 @@ def _find_covers_that_sees_all_fins(Fins, Covers, Cand, Cands, Method, Status):
 
     if not Method & T_KRAKEN:  # GrpLks always False when Kraken is False
         # Find all covers that can be eliminated as not very expensive for non kraken to find
-        FP = []  # [] for i in len(Fins)]
         for rc, cc in Covers:
+            FP = []  # [] for i in len(Fins)]
             for rf, cf in Fins:
                 LkT, LkH = how_ccells_linked(rc, cc, Cand, rf, cf, Cand, Cands, False)
                 if LkT == LK_NONE: break
-                FP = [(rc, cc, Cand, LK_WKST if LkT & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)]
-                # FP.append([(rc, cc, Cand, LK_WKST if LkT & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)])
+                # FP = [(rc, cc, Cand, LK_WKST if LkT & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)]
+                FP.append([(rc, cc, Cand, LK_WKST if LkT & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)])
                 # FP.extend([[(rc, cc, Cand, LK_WKST if LkT & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)]])
             else:  # A cover that sees all the fins has been found.
-                Status.Pattern.append(FP)
+                # Status.Pattern.append(FP)
+                Status.Pattern.extend(FP)
                 Status.Outcome.append((rc, cc, Cand))
-        if Status.Pattern:
+        if Status.Outcome:
             Status.Tech = Method
             return True
                 # Status.Pattern = FP

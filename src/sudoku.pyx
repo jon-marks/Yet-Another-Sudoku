@@ -17,10 +17,11 @@ from os.path import join
 
 from globals import *
 from trc import *
-from misc import open_puzzle, save_puzzle, ListSolnWindow, tkns_to_str, copy_clipboard_to_pzl, copy_puzzle_to_clipboard
+from misc import open_puzzle, save_puzzle, tkns_to_str, copy_clipboard_to_pzl, copy_puzzle_to_clipboard
 from generate import check_puzzle, gen_filled_grid, scramble_puzzle, minimalise_puzzle, create_puzzle
 from solve_utils import determine_cands, cell_val_has_conflicts, cell_val_has_no_conflicts
 from solve import *
+from list_soln_win import *
 from timer import *
 from board import *
 from puzzle import *
@@ -333,7 +334,11 @@ class Sudoku:
         if Key == wx.WXK_CONTROL_V:  # paste a puzzle spec from the clipboard
             # overwrites existing entries, and treated as if the spec was loaded from a file.
             oPzl = PZL()
-            NrFlds = copy_clipboard_to_pzl(oPzl)
+            NrFlds, sErr = copy_clipboard_to_pzl(oPzl)
+            if sErr:
+                wx.MessageBox(f"Error: {sErr}", "Warning", wx.CANCEL)
+                self.gen_event(EV_SC_ENT, False)
+                return
             if NrFlds: self.update_board(ST_ENT, oPzl)
             if NrFlds > 1:  # if only givens and placed values read, in enter mode, else transition to validation
                 # self.MainWindow.SetTitle(TITLE+" - "+Fp[1])

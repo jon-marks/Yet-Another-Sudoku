@@ -25,3 +25,21 @@ DEF LK_COL_C  = (0x0020 | LK_LINE_C)
 DEF LK_BOX_C  = 0x0040
 DEF LK_CELL_C = 0x0080
 
+DEF OP_NONE_C = 0   # ""
+DEF OP_POS_C  = 1   # "?-" Possibility, perhaps something to try
+DEF OP_PRES_C = 2   # "--" Presence of candidate / value in cell
+DEF OP_ABS_C  = 3   # "!-" Absence of candidate in cell.
+DEF OP_EQ_C   = 4   # "==" Presence of only candidates or value in cell
+DEF OP_NEQ_C  = 5   # "!=" Cell cannot assume that value
+DEF OP_ASNV_C = 6   # ":="  Assign value to cell.
+DEF OP_ASNC_C = 7   # "+=" Add candidate to cell.
+DEF OP_ELIM_C = 8   # "-=" Eliminate candidate from cell.
+DEF OP_WLK_C  = 9   # "-"  Weak link
+DEF OP_SLK_C  = 10  # "="  Strong link
+DEF OP_WSLK_C = 11  # "~"  Strong link masquerading as a weak link
+DEF OP_CNT_C  = 12  # "#"  Number of occurrences or count.
+DEF OP_PARO_C = 13  # "("  Opening parenthesis
+DEF OP_PARC_C = 14  # ")"  Closing parenthesis
+DEF OP_SETO_C = 15  # "{"  Opening set
+DEF OP_SETC_C = 16  # "}"  Closing set
+DEF OP_NR_OPS_C = 17

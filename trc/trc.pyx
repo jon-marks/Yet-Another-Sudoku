@@ -27,6 +27,7 @@ from os.path import basename
 
 from cpython.pystate cimport PyFrameObject, Py_tracefunc
 from cpython cimport PyObject
+from cpython.mem cimport PyMem_Malloc, PyMem_Calloc, PyMem_Free
 
 from trc cimport *
 
@@ -51,8 +52,8 @@ def TRCX(*args, **kwargs):
     if TRC:
         Fi = getframeinfo(<object>pPFO)
         print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:", *args, file = stderr, flush = True, **kwargs)
-    else:
-        pass
+    # else:
+    #     pass
 
 cdef str trc_grid(int G[9][9]):
     cdef int r
@@ -77,3 +78,26 @@ cdef str trc_cands(bint C[9][9][9]):
             St1 += f"[{St2}]"
         St += f"\n{St1}"
     return St
+
+cdef void *PyMem_TRCX_Malloc(size_t Bytes):
+    cdef void *Mem = PyMem_Malloc(Bytes)
+
+    if TRC:
+        Fi = getframeinfo(<object>pPFO)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:PyMem_Malloc: 0x{<long long>Mem:016x}, Bytes: {Bytes}.", file = stderr, flush = True)
+    return Mem
+
+cdef void *PyMem_TRCX_Calloc(size_t Nr, size_t Bytes):
+    cdef void *Mem = PyMem_Calloc(Nr, Bytes)
+
+    if TRC:
+        Fi = getframeinfo(<object>pPFO)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:PyMem_Calloc: 0x{<long long>Mem:016x}, Nr: {Nr}, Bytes: {Bytes}.", file = stderr, flush = True)
+    return Mem
+
+cdef void PyMem_TRCX_Free(void *Mem):
+
+    if TRC:
+        Fi = getframeinfo(<object>pPFO)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:PyMem_Free: 0x{<long long>Mem:016x}", file = stderr, flush = True)
+    PyMem_Free(Mem)
