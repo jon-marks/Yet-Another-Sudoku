@@ -1,13 +1,11 @@
 
 include "globals.pxi"
-from ctypedefs cimport *
 from globals import *
-
 from trc cimport *
 from trc import *
 
 from solve_singles cimport *
-from solve_utils cimport discard_cand_from_peers_c, cell_val_has_no_conflicts_c, how_ccells_linked_c
+from solve_utils cimport COORD, discard_cand_from_peers_c, cell_val_has_no_conflicts_c, how_ccells_linked_c
 
 cdef extern from "stdlib.h" nogil:
     int rand()

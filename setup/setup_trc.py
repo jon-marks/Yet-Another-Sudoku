@@ -61,6 +61,7 @@ setup(
                               compiler_directives = {'language_level': 3,
                                                      'boundscheck': False,
                                                      'wraparound': False,
+                                                     'optimize.unpack_method_calls': False
                                                      },
                               # show_all_warnings = True,
                               annotate = True,

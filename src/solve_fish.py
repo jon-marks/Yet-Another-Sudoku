@@ -4,9 +4,6 @@ from globals import *
 from misc import tkns_to_str
 from solve_utils import *
 
-abcd = []
-tkns_to_str(abcd)
-
 def tech_x_wings(Grid, Step, Cands, Methods):
     # A X-Wing occurs when the same candidate occurs twice each in two separate
     # rows (base sets), and these candidates lie in the same two columns (cover
@@ -78,9 +75,7 @@ def tech_finned_x_wings(Grid, Step, Cands, Methods):
                     if bi == 1: CF.append(cu)
                     elif bi == 2: CS.append(cu)
                 for Method in Methods:
-                    if Method & T_SASHIMI and (len(CS) == 1 and 2 <= len(CF) <= 3):
-                        if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
-                    elif not (Method & T_SASHIMI) and (len(CS) == 2 and 1 <= len(CF) <= 2):
+                    if (Method & T_SASHIMI and (len(CS) == 1 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 2 and 1 <= len(CF) <= 2)):
                         if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
         # look at cols
         BC = [set() for i in range(9)]
@@ -103,9 +98,7 @@ def tech_finned_x_wings(Grid, Step, Cands, Methods):
                     if bi == 1: CF.append(cu)
                     elif bi == 2: CS.append(cu)
                 for Method in Methods:
-                    if Method & T_SASHIMI and (len(CS) == 1 and 2 <= len(CF) <= 3):
-                        if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
-                    elif not (Method & T_SASHIMI) and (len(CS) == 2 and 1 <= len(CF) <= 2):
+                    if (Method & T_SASHIMI and (len(CS) == 1 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 2 and 1 <= len(CF) <= 2)):
                         if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
     return -1
 
@@ -194,9 +187,7 @@ def tech_finned_swordfish(Grid, Step, Cands, Methods):
                         if bi == 1: CF.append(cu)
                         elif bi >= 2: CS.append(cu)
                     for Method in Methods:
-                        if Method & T_SASHIMI and (len(CS) == 2 and 2 <= len(CF) <= 3):
-                            if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
-                        elif not (Method & T_SASHIMI) and (len(CS) == 3 and 1 <= len(CF) <= 2):
+                        if (Method & T_SASHIMI and (len(CS) == 2 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 3 and 1 <= len(CF) <= 2)):
                             if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
         # look at cols
         BC = [set() for i in range(9)]
@@ -223,12 +214,9 @@ def tech_finned_swordfish(Grid, Step, Cands, Methods):
                         if bi == 1: CF.append(cu)
                         elif bi >= 2: CS.append(cu)
                     for Method in Methods:
-                        if Method & T_SASHIMI and (len(CS) == 2 and 2 <= len(CF) <= 3):
-                            if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
-                        elif not (Method & T_SASHIMI) and (len(CS) == 3 and 1 <= len(CF) <= 2):
+                        if (Method & T_SASHIMI and (len(CS) == 2 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 3 and 1 <= len(CF) <= 2)):
                             if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
     return -1
-
 
 def tech_jellyfish(Grid, Step, Cands, Methods):
     # A Jellyfish occurs when the same candidate occurs only 2 to 4 times in
@@ -310,9 +298,7 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                             if bi == 1: CF.append(cu)
                             elif bi >= 2: CS.append(cu)
                         for Method in Methods:
-                            if Method & T_SASHIMI and (len(CS) == 3 and 2 <= len(CF) <= 3):
-                                if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
-                            elif not (Method & T_SASHIMI) and (len(CS) == 4 and 1 <= len(CF) <= 2):
+                            if (Method & T_SASHIMI and (len(CS) == 3 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 4 and 1 <= len(CF) <= 2)):
                                 if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
         # look at cols
         BC = [set() for i in range(9)]
@@ -341,9 +327,7 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                             if bi == 1: CF.append(cu)
                             elif bi >= 2: CS.append(cu)
                         for Method in Methods:
-                            if Method & T_SASHIMI and (len(CS) == 3 and 2 <= len(CF) <= 3):
-                                if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
-                            elif not (Method & T_SASHIMI) and (len(CS) == 4 and 1 <= len(CF) <= 2):
+                            if (Method & T_SASHIMI and (len(CS) == 3 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 4 and 1 <= len(CF) <= 2)):
                                 if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
     return -1
 
@@ -482,16 +466,19 @@ def _find_covers_that_sees_all_fins(Fins, Covers, Cand, Cands, Method, Status):
                 # Status.Pattern = FP
                 # return True
     else:  # Kraken
-        # For Kraken, any cover that can see all fins can be eliminated.
-        # Find only first cover that can be eliminated as building chains is expensive.
-        # Builds an Orchard of trees, each tree being a cover, growing branches to build chains to
+        # For Kraken,
+        # *  Any cover that can see all fins can be eliminated.
+        # *  Only find the first cover that can be eliminated, rather than all covers that can
+        #    be eliminated because building chains is expensive.
+        # Algorithm:  Build a forest of trees, one for each cover.  For each tree, grow child branches
+        # from each fin, Builds a forest of trees, each tree being a cover, growing branches to build chains to
         # fins.  The first cover to build chains to all the fins wins.  Algorithm grows the branches
         # one level at a time for all trees before moving onto the next level.
 
         # Algorithm only arrives here when no cover can see all fins directly, (unless forced).  A cover
         # may be able to one or more Fins but not all fins.
 
-        Orchard = []; Idx = []
+        Forest = []; Idx = []
         Tree = None
         GrpLks = Method & T_GRPLK
         if GrpLks:  # Kraken group links.
@@ -507,13 +494,13 @@ def _find_covers_that_sees_all_fins(Fins, Covers, Cand, Cands, Method, Status):
                             Tree.Root.Children.append(TNODE(r, c, Cand, LK_WEAK, [(Tree.Root.r, Tree.Root.c, Tree.Root.Cand, LK_WEAK)], Tree, None))
                         else:
                             Tree.Root.Children.append(TNODE(r, c, Cand, LK_WKST, [(Tree.Root.r, Tree.Root.c, Tree.Root.Cand, LK_WKST)], Tree, None))
-                Orchard.append(Tree)
+                Forest.append(Tree)
                 Idx.append(i)
         else:  # kraken, non group links.
             Fins = [(r, c, Cand) for r, c in Fins]
             for i, (rc, cc) in enumerate(Covers):
-                # Orchard.append(TREE(TNODE(rc, cc, Cand, None, None, None, None), [[] for i in Fins]))
-                # # Orchard.append(TNODE(rc, cc, Cand, None, None, None, None))
+                # Forest.append(TREE(TNODE(rc, cc, Cand, None, None, None, None), [[] for i in Fins]))
+                # # Forest.append(TNODE(rc, cc, Cand, None, None, None, None))
                 # Idx.append(i)
                 Tree = TREE(TNODE(rc, cc, Cand, None, None, None, None), [[] for i in Fins], None, False, False)
                 # UC = []
@@ -527,16 +514,17 @@ def _find_covers_that_sees_all_fins(Fins, Covers, Cand, Cands, Method, Status):
                         else:
                             # Tree.Root.Children.append(TNODE(r0, c0, Cand0, LK_STRG, [(rc, cc, Cand, LK_STRG)], Tree.Root, None))
                             Tree.Root.Children.append(TNODE(r0, c0, Cand0, LK_WKST, [(rc, cc, Cand, LK_WKST)], Tree.Root, None))
-                # add tree to orchard even if there are direct links from the cover to all the fins.  The duty of the algorithm
-                # is to find a Kraken fish, not resort to a Finned Fish if one is found.
-                Orchard.append(Tree)
+                # add tree to Forest even if there are direct links from the cover to all the fins.  The purpose of this function
+                # is to find a Kraken fish, not resort to a Finned Fish if one is found.  Finned fish should have been found in earlier
+                # steps because finding finned and sashimi fish before kraken equivalents is imposed.
+                Forest.append(Tree)
                 Idx.append(i)
 
         while Idx:
-            # A Tree is removed from the orchard when none of its branches/Children are able to form chains to all fins
-            # While there are CvrTrees in the orchard, there is hope of finding a chain in remaining cover trees
+            # A Tree is removed from the forest when none of its branches/Children are able to form chains to all fins
+            # While there are CvrTrees in the forest, there is hope of finding a chain in remaining cover trees
             # that can yield eliminations.
-            for i, Tree in enumerate(Orchard):
+            for i, Tree in enumerate(Forest):
                 if Tree.Root.Children:
                     Tree.Root.Children = _find_next_branches(Tree.Root.Children, Fins, Cands, GrpLks, 1, Tree)
                     if Tree.Found:

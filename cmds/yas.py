@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 from os.path import dirname, join
 from os import chdir
-from sys import argv, exit, path
-# from pathlib import Path
-
+from sys import argv, exit, path, version, stderr
+from datetime import datetime
 INT  = 0x01
 PROD = 0x02
 DEV  = 0x04
@@ -48,7 +47,9 @@ if Trc:
     # Hack using the end of sys.path to store truly global vars.
     path.append(".trc_true")
     from trc import TRCX
-    TRCX(f"sys.path = {path}")  # sRun is empty for Prod builds with no tracing
+    print(f"Run Start: {datetime.now()}", file = stderr, flush = True)
+    print(f"Python {version}", file = stderr, flush = True)
+    print(f"sys.path: {path}", file = stderr, flush = True)
 else:
     path.append(".trc_false")
 

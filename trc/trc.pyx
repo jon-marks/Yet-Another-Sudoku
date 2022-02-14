@@ -20,7 +20,7 @@
 #   2.  The gcc warns because of the incorrect Cython generated C code from Cython which had no
 #       consequence here and can be ignored.
 
-from sys import stderr, path
+from sys import stderr, path, exit
 from time import perf_counter
 from inspect import getframeinfo
 from os.path import basename
@@ -55,17 +55,28 @@ def TRCX(*args, **kwargs):
     # else:
     #     pass
 
-cdef str trc_grid(int G[9][9]):
+def TRCX_PANIC(*args, **kwargs):
+
+    Fi = getframeinfo(<object> pPFO)
+    print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: PANIC: ", *args, file = stderr, flush = True, **kwargs)
+    exit(1)
+
+cdef void TRCX_grid(int G[9][9]):
     cdef int r
+    # global TRC
+    if TRC:
+        Fi = getframeinfo(<object>pPFO)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: TRCX_grid", file = stderr, flush = True)
+        St = ""
+        for r in range(9):
+            St += f"\n{G[r][0]},{G[r][1]},{G[r][2]},{G[r][3]},{G[r][4]},{G[r][5]},{G[r][6]},{G[r][7]},{G[r][8]}"
+        print(f"Grid: {St}", file = stderr, flush = True)
 
-    St = ""
-    for r in range(9):
-        St +=f"\n{G[r][0]},{G[r][1]},{G[r][2]},{G[r][3]},{G[r][4]},{G[r][5]},{G[r][6]},{G[r][7]},{G[r][8]}"
-    return St
-
-cdef str trc_cands(bint C[9][9][9]):
+cdef void TRCX_cands(bint C[9][9][9]):
     cdef int r, c, d
 
+    Fi = getframeinfo(<object> pPFO)
+    print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: TRCX_cands", file = stderr, flush = True)
     St = ""
     for r in range(9):
         St1 = ""
@@ -77,14 +88,30 @@ cdef str trc_cands(bint C[9][9][9]):
             if St1: St1 += ","
             St1 += f"[{St2}]"
         St += f"\n{St1}"
-    return St
+    print(f"Cands: {St}", file = stderr, flush = True)
+
+cdef void TRCX_memdump(void *Addr, int len):
+    cdef unsigned int Ofs, i
+    cdef unsigned char *B
+
+    if TRC:
+        Fi = getframeinfo(<object>pPFO)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: TRCX_Memdump", file = stderr, flush = True)
+        if not len: len = 1
+        for Ofs in range(0, len+15, 16):
+            B = <unsigned char *>(Addr + Ofs)
+            St = f"{<long long>B:016x}: {B[0]:02x} {B[1]:02x} {B[2]:02x} {B[3]:02x}  {B[4]:02x} {B[5]:02x} {B[6]:02x} {B[7]:02x} - {B[8]:02x} {B[9]:02x} {B[10]:02x} {B[11]:02x}  {B[12]:02x} {B[13]:02x} {B[14]:02x} {B[15]:02x}  "
+            for len in range(16):
+                if len == 8: St += " "
+                St += f"{chr(B[len])}" if 0x20 <= B[len] <= 0x7f else "."
+            print(f"{St}", file = stderr, flush = True)
 
 cdef void *PyMem_TRCX_Malloc(size_t Bytes):
     cdef void *Mem = PyMem_Malloc(Bytes)
 
     if TRC:
         Fi = getframeinfo(<object>pPFO)
-        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:PyMem_Malloc: 0x{<long long>Mem:016x}, Bytes: {Bytes}.", file = stderr, flush = True)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: PyMem_TRCX_Malloc: 0x{<long long>Mem:016x}: Size: {Bytes}.", file = stderr, flush = True)
     return Mem
 
 cdef void *PyMem_TRCX_Calloc(size_t Nr, size_t Bytes):
@@ -92,12 +119,12 @@ cdef void *PyMem_TRCX_Calloc(size_t Nr, size_t Bytes):
 
     if TRC:
         Fi = getframeinfo(<object>pPFO)
-        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:PyMem_Calloc: 0x{<long long>Mem:016x}, Nr: {Nr}, Bytes: {Bytes}.", file = stderr, flush = True)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: PyMem_TRCX_Calloc: 0x{<long long>Mem:016x}: Size: {Nr} * {Bytes}.", file = stderr, flush = True)
     return Mem
 
 cdef void PyMem_TRCX_Free(void *Mem):
 
     if TRC:
         Fi = getframeinfo(<object>pPFO)
-        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}:PyMem_Free: 0x{<long long>Mem:016x}", file = stderr, flush = True)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: PyMem_TRCX_Free: 0x{<long long>Mem:016x}", file = stderr, flush = True)
     PyMem_Free(Mem)

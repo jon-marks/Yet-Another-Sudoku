@@ -5,11 +5,18 @@ DEF SIZEOF_CANDS = 2916 # bytes 9 x 9 x 9 x 4
 
 DEF SLVR_TECHS = 8
 
+DEF RECURSE_LIM_C = 10
+
 # Misc readability defines
 DEF ROW = 0
 DEF COL = 1
 DEF POINTING = 0
 DEF CLAIMING = 1
+
+# Technique Extensions flags:
+DEF T_KRAKEN_C   = 0x00000100
+DEF T_GRPLK_C    = 0x00000200
+DEF T_SASHIMI_C  = 0x00000400
 
     # link strengths
 DEF LK_NONE_C = 0x0000
@@ -43,3 +50,10 @@ DEF OP_PARC_C = 14  # ")"  Closing parenthesis
 DEF OP_SETO_C = 15  # "{"  Opening set
 DEF OP_SETC_C = 16  # "}"  Closing set
 DEF OP_NR_OPS_C = 17
+
+# States when searching for chains in trees being grown.
+DEF SEARCHING       = 0  # Still looking for a chain.
+DEF FOUND           = 1  # Chain has been found
+DEF NOT_FOUND       = 2  # No more nodes to create chain
+DEF BOTTOMED_OUT    = 4  # recursion limit reached before finding chain or running out of nodes.
+

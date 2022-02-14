@@ -374,6 +374,8 @@ OP = ["",    # OP_NONE
       "{" ,  # OP_SETO  Opening set
       "}" ]  # OP_SETC  Closing set
 
+TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
+
 # Puzzle Solution attributes
 S_FOUND = 0  # True if found, false otherwise
 S_GRID  = 1  # The solved grid if not None.

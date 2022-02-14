@@ -1,6 +1,5 @@
 
 include "globals.pxi"
-from ctypedefs cimport *
 from globals import *
 from trc cimport *
 from trc import *

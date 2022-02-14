@@ -94,7 +94,7 @@ from os.path import join
 
 # Local Imports
 from globals import *  # globals imports os and wx.
-from trc import TRCX
+# from trc import TRCX
 from menus import *
 from sudoku import Sudoku, GE, ST_DEFAULT, SB
 

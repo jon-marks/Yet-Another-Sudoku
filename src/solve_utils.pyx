@@ -10,13 +10,13 @@
 
 # PyMem C_API functions are generally faster for small mem allocations than the native c
 # functions, and this mem is accounted for within the Python environment.
-from cpython.mem cimport PyMem_Malloc, PyMem_Free
+
+include "globals.pxi"
 
 cdef extern from "string.h" nogil:
     void * memset(void *, int, size_t)
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 
-include "globals.pxi"
-from ctypedefs cimport *
 from globals import *
 from trc cimport *
 from trc import *
@@ -35,8 +35,6 @@ LK_ROW  = 0x0010 | LK_LINE
 LK_COL  = 0x0020 | LK_LINE
 LK_BOX  = 0x0040
 LK_CELL = 0x0080
-# LK_ANY_depreciated  = 0x0070
-
 
 # The use of weak or strong ended AIC's to search for patterns where ccell's see
 # each other, for example in covers seeing fins in finned fish or W wings, etc,
@@ -52,7 +50,7 @@ class TNODE:
         self.Lk = Lk            # link to parent (LK_ enums)
         self.Chain = [] if Chain is None else Chain  # List of path from root to current Node. (NODE(r, c, Cand, Lk_type_to_next)
         self.Parent = Parent
-        self.Children = [] if Children is None else Children
+        self.Children = Children if Children else []
 
 class STATUS:
     def __init__(self, Tech = T_UNDEF, Pattern = None, Outcome = None):
@@ -94,18 +92,18 @@ cdef CHAIN* pchain_2_cchain(list PChain):
 cdef CHAIN* pchain_2_cchain_gl(list PChain):
     # for group links.
     # pchain is a list of (r, c, Cand, Lk) tuples, where r and c are sets of up to 3 .
-    # cchain is a linked list of "Ctypedef struct CHAIN_NODE_GL"s
-    # with start and end in "ctypedef struct CHAIN_GL"
+    # cchain is a linked list of "Ctypedef struct CHAIN_NODE"s
+    # with start and end in "ctypedef struct CHAIN"
     # implicitly mallocs the memory for the cchain.
-    cdef CHAIN       *CChain = <CHAIN *>PyMem_Malloc(sizeof(CHAIN_GL))
-    cdef NODE_GL *N
+    cdef CHAIN       *CChain = <CHAIN *>PyMem_Malloc(sizeof(CHAIN))
+    cdef NODE *N
     cdef int i
 
     # if DEBUG: print("In pchain_2_cchain_gl()")
     if not PChain or CChain == NULL: return NULL
-    N = <NODE_GL *>PyMem_Malloc(sizeof(NODE_GL))
+    N = <NODE *>PyMem_Malloc(sizeof(NODE))
     if N == NULL: return NULL
-    CChain.StartGL = N; N.Prev = NULL
+    CChain.Start = N; N.Prev = NULL
     for i in range(len(PChain)-1):
         r, c, N.Cand, N.Lk = PChain[i]
         # if DEBUG: print(f"  Pchain[{i}] upacked, r:{r}, c:{c}, N.Cand:{N.Cand}, N.Lk:{N.Lk}, len(r):{len(r)}, len(c):{len(c)}")
@@ -115,7 +113,7 @@ cdef CHAIN* pchain_2_cchain_gl(list PChain):
         for j, x in enumerate(c): N.c.v[j] = x
         for j in range(len(c),3): N.c.v[j] = 0
         N.c.l = len(c)
-        N.Next = <NODE_GL *>PyMem_Malloc(sizeof(NODE_GL))
+        N.Next = <NODE *>PyMem_Malloc(sizeof(NODE))
         if N == NULL: return NULL
         N.Next.Prev = N
         # print(f"Loop: {i}, {PChain[i]}")
@@ -130,7 +128,7 @@ cdef CHAIN* pchain_2_cchain_gl(list PChain):
         for j, x in enumerate(c): N.c.v[j] = x
         for j in range(len(c),3): N.c.v[j] = 0
         N.c.l = len(c)
-        N.Next = NULL; CChain.EndGL = N
+        N.Next = NULL; CChain.End = N
         # print(f"Loop: {len(PChain)-1}, {PChain[len(PChain)-1]}")
         # print(f"{N.r},{N.c},{N.Cand},{N.Lk},N: 0x{<long long>N:016x}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}")
     return CChain
@@ -159,12 +157,12 @@ cdef list cchain_2_pchain_gl(CHAIN* CChain):
     # with start and end in "ctypedef struct CHAIN"
     # returns PChain
     # implicitly frees the allocated cchain memory
-    cdef NODE_GL *N
-    # cdef NODE_GL *N1
+    cdef NODE *N
+    # cdef NODE *N1
     cdef list PChain = []
     cdef int i
 
-    N = CChain.StartGL
+    N = CChain.Start
     while N:
         r = set(); c = set()
         for i in range(N.r.l): r.add(N.r.v[i])
@@ -340,16 +338,20 @@ cdef int link_house_c(int r0, int c0, int r1, int c1):
     return LK_BOX_C
 
 # def token_link(Lk):
-#     #wrapper for token_link_c
-#     return token_link_c(Lk)
-
-cdef int token_link_c(int Lk):
-    Lk &= 0x000f
-    if Lk == LK_WEAK_C: return OP_WLK_C
-    if Lk == LK_STRG_C or Lk == LK_STWK_C: return OP_SLK_C
-    if Lk == LK_WKST_C: return OP_WSLK_C
-    if Lk == LK_NONE_C: return OP_NONE_C
-    return -1
+#     Lk &= 0x000f
+#     if Lk == LK_WEAK: return OP_WLK
+#     if Lk == LK_STRG or Lk == LK_STWK: return OP_SLK
+#     if Lk == LK_WKST: return OP_WSLK
+#     if Lk == LK_NONE: return OP_NONE
+#     return -1
+#
+# cdef inline int token_link_c(int Lk):
+#     Lk &= 0x000f
+#     if Lk == LK_WEAK_C: return OP_WLK_C
+#     if Lk == LK_STRG_C or Lk == LK_STWK_C: return OP_SLK_C
+#     if Lk == LK_WKST_C: return OP_WSLK_C
+#     if Lk == LK_NONE_C: return OP_NONE_C
+#     return -1
 
 # def discard_cand_from_peers(Cand, r, c, Cands):
 #     #wrapper for discard_cand_from_peers_c.
@@ -390,7 +392,7 @@ cdef void discard_cand_from_peers_c(int Cand, int r, int c, bint Cands[9][9][9])
 #     cdef int res
 #     cdef CHAIN *Chain
 #     cdef CHAIN_GL *Chain_gl
-#     cdef NODE_GL *N
+#     cdef NODE *N
 #
 #     if GrpLks:
 #         if DEBUG: print(f"is_in_chain(): GrpLks, r:{r}, c:{c}, Cand:{Cand}, PChain:{PChain}")
@@ -438,7 +440,7 @@ cdef void discard_cand_from_peers_c(int Cand, int r, int c, bint Cands[9][9][9])
 #     return -1
 #
 # cdef int is_in_chain_gl_c(SET3 r, SET3 c, int Cand, CHAIN_GL *Chain_gl):
-#     cdef NODE_GL *N
+#     cdef NODE *N
 #     cdef int i = 0
 #
 #     N = Chain_gl.Start
@@ -455,13 +457,86 @@ cdef inline bint set3_intersect(SET3 a, SET3 b):
             if a.v[i] == b.v[j]: return True
     return False
 
-cdef NODE* list_ccells_linked_to_c(int r, int c, bint Cands[9][9][9], int Type):
-    # returns a singly linked list of ccell nodes
-    return <NODE *>void
+cdef NODE* list_ccells_linked_to_c(int r, int c, int Cand, bint Cands[9][9][9], int Type):
+    # if Type = LK_STRG_C only strong links returned, else strong and weak links returned.
+    cdef int n, m, h, Lk, r0, c0, br, bc
+    cdef NODE   *LCL
+    cdef NODE   *LC
+    cdef int  House[8]
 
-cdef NODE_GL *list_ccells_linked_to_gl_c(SET3 r, SET3 c, bint Cands[9][9][9], int Type):
-    # returns a singly linked list of ccell nodes
-    return <NODE_GL *>void
+    # scan the row.
+    n = 0; LCL = LC = NULL
+    for h in range(9):
+        if h != c and Cands[r][h][Cand]:
+            if n >= 1 and Type == LK_STRG_C: n = 0; break
+            House[n] = h; n += 1
+    if n:
+        Lk = LK_STRG_C if n == 1 else LK_WEAK_C
+        for h in range(n):
+            if LC:
+                LC.Next = <NODE*>PyMem_TRCX_Calloc(1, sizeof(NODE))
+                LC.Next.Prev = LC; LC = LC.Next
+            else: LCL= LC = <NODE*>PyMem_TRCX_Calloc(1, sizeof(NODE))
+            LC.r = r; LC.c = House[h]; LC.Cand = Cand; LC.Lk = Lk
+    # scan the col
+    n = 0
+    for h in range(9):
+        if h != r and Cands[h][c][Cand]:
+            if n >= 1 and Type == LK_STRG_C: n = 0; break
+            House[n] = h; n += 1
+    if n:
+        Lk = LK_STRG_C if n == 1 else LK_WEAK_C
+        for h in range(n):
+            if LC:
+                LC.Next = <NODE*>PyMem_TRCX_Calloc(1, sizeof(NODE))
+                LC.Next.Prev = LC; LC = LC.Next
+            else: LCL = LC = <NODE*>PyMem_TRCX_Calloc(1, sizeof(NODE))
+            LC.r = House[h]; LC.c = c; LC.Cand = Cand; LC.Lk = Lk
+
+    # scan the box
+    br = (r//3)*3; bc = (c//3)*3
+    n = m = 0
+    for h in range(9):
+        r0 = br + h//3; c0 = bc + h%3
+        if not Cands[r0][c0][Cand]: continue
+        if not (r0 == r and c0 == c):
+            if m >= 1 and Type == LK_STRG_C: n = 0; break
+            m += 1
+        if r0 != r and c0 != c:
+            House[n] = h; n += 1
+    if n:
+        Lk = LK_STRG_C if m == 1 else LK_WEAK_C
+        for h in range(n):
+            if LC:
+                LC.Next = <NODE*> PyMem_TRCX_Calloc(1, sizeof(NODE))
+                LC.Next.Prev = LC; LC = LC.Next
+            else: LCL = LC = <NODE*> PyMem_TRCX_Calloc(1, sizeof(NODE))
+            LC.r = br + House[h]//3; LC.c = bc + House[h]%3; LC.Cand = Cand; LC.Lk = Lk
+
+    # scan the cell
+    n = 0
+    for h in range(9):
+        if h != Cand and Cands[r][c][h]:
+            if n >= 1 and Type == LK_STRG_C: n = 0; break
+            House[n] = h; n += 1
+    Lk = LK_STRG_C if n == 1 else LK_WEAK_C
+    for h in range(n):
+        if LC:
+            LC.Next = <NODE*> PyMem_TRCX_Calloc(1, sizeof(NODE))
+            LC.Next.Prev = LC; LC = LC.Next
+        else: LCL = LC = <NODE*> PyMem_TRCX_Calloc(1, sizeof(NODE))
+        LC.r = r; LC.c = c; LC.Cand = House[h]; LC.Lk = Lk
+    return LCL
+
+cdef NODE *list_ccells_linked_to_gl_c(SET3 r, SET3 c, int Cand, bint Cands[9][9][9], int Type):
+    # returns a linked list of ccell nodes
+
+
+        # TRCX(f"Cell: r{LC.r+1}c{LC.c+1}: {LC.Cand+1}r{LC.r+1}c{LC.c+1}{OP[TKN_LK[LC.Lk]]}")
+    # TRCX(f"Return with LCL: {<long long>LCL:016x}")
+
+    cdef NODE *LCL = NULL
+    return LCL
 
 def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False):
     # this now becomes a wrapper function for Cython functions list_ccells_linked_to_c()
@@ -763,11 +838,14 @@ cdef int how_ccells_linked_c(int r0, int c0, int Cand0, int r1, int c1, int Cand
 
     if r0 == r1 and c0 == c1:
         if Cand0 == Cand1: return LK_NONE_C  # ccells cannot link on themselves
-        #### FIX BUG #### Need to count # Nr Cands = True in Cands[][][].
-        if len(Cands[r0][c0]) == 2: return LK_STWK_C | LK_CELL_C
+        if not (Cands[r0][c0][Cand0] and Cands[r0][c0][Cand1]): return LK_NONE_C # both candidates must be present in the cell
+        c = 0
+        for r in range(9):
+            if Cands[r0][c0][r]: c += 1
+        if c == 2: return LK_STWK_C | LK_CELL_C
         return LK_WEAK_C | LK_CELL_C
     # different cells, therefore linked by same candidate
-    if Cand0 != Cand1: return LK_NONE
+    if Cand0 != Cand1: return LK_NONE_C
     if r0 == r1:  # house is a row
         LkH = LK_ROW_C
         if c0//3 == c1//3: LkH |= LK_BOX_C
@@ -792,9 +870,9 @@ cdef int how_ccells_linked_c(int r0, int c0, int Cand0, int r1, int c1, int Cand
                 # TRCX(f"{Cand0+1}r{r+1}c{c+1}=={Cands[r][c][Cand0]}")
                 if Cands[r][c][Cand0]: return LK_WEAK_C | LK_BOX_C
         return LK_STRG_C | LK_BOX_C
-    return LK_NONE_C | LK_NONE_C
+    return LK_NONE_C
 
-cdef int how_ccells_linked_gl_c(SET3 r0, SET3 c0, int Cand0, SET3 r1, SET3 c1, int Cand1,bint Cands[9][9][9]):
+cdef int how_ccells_linked_gl_c(SET3 r0, SET3 c0, int Cand0, SET3 r1, SET3 c1, int Cand1, bint Cands[9][9][9]):
 
     TRCX("TODO: Stubbed out")
     return LK_NONE_C
