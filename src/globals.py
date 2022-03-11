@@ -23,7 +23,7 @@ VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 # Generic enumerations
 UNDEF   = -1
-RECURSE_LIM = 10   # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
+RECURSE_LIM = 6   # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
 
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
@@ -288,9 +288,9 @@ T_DC_AI_CHAIN               = 34
 T_EVEN_AI_LOOP              = 35
 T_STRONG_AI_LOOP            = 36
 
-T_KRAKEN_X_WING             = T_FINNED_X_WING + T_KRAKEN
-T_KRAKEN_SWORDFISH          = T_FINNED_SWORDFISH + T_KRAKEN
-T_KRAKEN_JELLYFISH          = T_FINNED_JELLYFISH + T_KRAKEN
+T_KRAKEN_FINNED_X_WING      = T_FINNED_X_WING + T_KRAKEN
+T_KRAKEN_FINNED_SWORDFISH   = T_FINNED_SWORDFISH + T_KRAKEN
+T_KRAKEN_FINNED_JELLYFISH   = T_FINNED_JELLYFISH + T_KRAKEN
 T_KRAKEN_SASHIMI_X_WING     = T_SASHIMI_X_WING + T_KRAKEN
 T_KRAKEN_SASHIMI_SWORDFISH  = T_SASHIMI_SWORDFISH + T_KRAKEN
 T_KRAKEN_SASHIMI_JELLYFISH  = T_SASHIMI_JELLYFISH + T_KRAKEN
@@ -308,9 +308,9 @@ T_GL_DC_AI_CHAIN            = T_DC_AI_CHAIN + T_GRPLK
 T_GL_EVEN_AI_LOOP           = T_EVEN_AI_LOOP + T_GRPLK
 T_GL_STRONG_AI_LOOP         = T_STRONG_AI_LOOP + T_GRPLK
 
-T_GL_KRAKEN_X_WING          = T_KRAKEN_X_WING + T_GRPLK
-T_GL_KRAKEN_SWORDFISH       = T_KRAKEN_SWORDFISH + T_GRPLK
-T_GL_KRAKEN_JELLYFISH       = T_KRAKEN_JELLYFISH + T_GRPLK
+T_GL_KRAKEN_FINNED_X_WING     = T_KRAKEN_FINNED_X_WING + T_GRPLK
+T_GL_KRAKEN_FINNED_SWORDFISH  = T_KRAKEN_FINNED_SWORDFISH + T_GRPLK
+T_GL_KRAKEN_FINNED_JELLYFISH  = T_KRAKEN_FINNED_JELLYFISH + T_GRPLK
 T_GL_KRAKEN_SASHIMI_X_WING    = T_KRAKEN_SASHIMI_X_WING + T_GRPLK
 T_GL_KRAKEN_SASHIMI_SWORDFISH = T_KRAKEN_SASHIMI_SWORDFISH + T_GRPLK
 T_GL_KRAKEN_SASHIMI_JELLYFISH = T_KRAKEN_SASHIMI_JELLYFISH + T_GRPLK
@@ -373,6 +373,8 @@ OP = ["",    # OP_NONE
       ")" ,  # OP_PARC  Closing parenthesis
       "{" ,  # OP_SETO  Opening set
       "}" ]  # OP_SETC  Closing set
+
+TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
 # Puzzle Solution attributes
 S_FOUND = 0  # True if found, false otherwise
@@ -526,9 +528,9 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_DC_AI_CHAIN:              TECH_T(False, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED,80),
         T_EVEN_AI_LOOP:             TECH_T(False, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
         T_STRONG_AI_LOOP:           TECH_T(False, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
-        T_KRAKEN_X_WING:            TECH_T(True, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_SWORDFISH:         TECH_T(True, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_JELLYFISH:         TECH_T(True, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_X_WING:     TECH_T(True, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
@@ -542,9 +544,9 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_GL_DC_AI_CHAIN:           TECH_T(False, "Group Linked Different End Candidates AI-Chain", EXP_ACCOMPLISHED, 80),
         T_GL_EVEN_AI_LOOP:          TECH_T(False, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
         T_GL_STRONG_AI_LOOP:        TECH_T(False, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
-        T_GL_KRAKEN_X_WING:         TECH_T(True, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_SWORDFISH:      TECH_T(True, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_JELLYFISH:      TECH_T(True, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_X_WING:     TECH_T(True, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),

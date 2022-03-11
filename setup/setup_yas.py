@@ -10,6 +10,7 @@
 
 from setuptools import setup
 from Cython.Build import cythonize
+from Cython.Compiler import Options
 from setuptools.command.build_ext import build_ext
 
 from sys import argv, path
@@ -20,7 +21,8 @@ from glob import glob
 from pathlib import Path
 
 Dev = bool(getenv('BLD', 'DEV') == 'DEV')
-Asm = getenv('ASM')
+Force = getenv('FORCE')
+# Asm = getenv('ASM')
 
 # Start of User configurable stuff.  However still tread cautiously when making changes.
 # Setup Parameters
@@ -46,19 +48,19 @@ Defs = [  # translates to -D options on the gcc command lile.
         ]
 if Dev: Defs.extend([('CYTHON_TRACE_NOGIL', '1')])
 
-CompArgs = ['-Wall',       # all warnings
+CompArgs = ['-Wall',    # all warnings.
             ]
-if Dev: CompArgs.extend(['-O0', '-ggdb'])  # no optimisation (fast compile)and full debug info.
+if Dev: CompArgs.extend(['-O0', '-g', '-fno-inline'])  # no optimisation (fast compile)and full debug info.
 else: CompArgs.extend(['-O3', '-g0'])  # highy optimised (slow compile) and no debug info
 
 LinkArgs = ['-static-libgcc',
-            '-static-libstdc++',
+            # '-static-libstdc++',
             '-Wl,-Bstatic,--whole-archive',
             '-lwinpthread',
             '-Wl,--no-whole-archive',
             ]
 
-# Cythonize compiler directives
+# Cythonize compiler directives and options
 if Dev:
     CythonDirectives = {
                         'language_level': 3,
@@ -68,8 +70,10 @@ if Dev:
                         'warn.unused': True,
                         'warn.unused_arg': True,
                         'warn.unused_result': True,  # shows many false warnings
-                        # 'optimize.unpack_method_calls': False
+                        'unraisable_tracebacks': True,
+                        'optimize.unpack_method_calls': False
                         }
+    Options.fast_fail = True
 else:
     CythonDirectives = {
                         'language_level': 3,
@@ -97,7 +101,8 @@ for IncExt in IncExts:
 if not exists(TgtDir): makedirs(TgtDir)
 if not exists(TmpDir): makedirs(TmpDir)
 if (not exists(NwrSetup)) or getmtime(NwrSetup) < getmtime(Setup):
-    for path in [*SrcPaths, *[NwrSetup]]: Path(path).touch()
+    Force = True; Path(NwrSetup).touch()
+    # for path in [*SrcPaths, *[NwrSetup]]: Path(path).touch()
 
 TmpPaths = []
 for SrcPath in SrcPaths:
@@ -134,6 +139,7 @@ setup(
                               compiler_directives = CythonDirectives,
                               # show_all_warnings = True,
                               annotate = True,
+                              force = Force,
                               ),
       zip_safe = False,
      )

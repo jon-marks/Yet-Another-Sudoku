@@ -2,7 +2,7 @@
 # from copy import copy, deepcopy
 from random import randint, shuffle, seed
 from sys import path
-from ctypedefs cimport SOLN_T
+
 from generate cimport *
 from solve_utils cimport *
 
