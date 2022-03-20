@@ -416,6 +416,12 @@ class NODEP:  # Node in a chain with link type to partner on right.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
 
+class TREE:
+    def __init__(self, r = -1, c = -1, Cand = -1, FinChain = None, FinBranch = None):
+        self.r = r; self.c = c; self.Cand = Cand
+        self.FinChain = FinChain if FinChain else []
+        self.FinBranch = FinBranch if FinBranch else []
+
 # used as a general data structure for accumulating and transferring Puzzle
 # information to through the program and to initialise a Puzzle instance.
 class PZL:

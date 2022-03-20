@@ -29,200 +29,201 @@ cdef int tech_x_wings_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
 
     # The same holds true for columns instead of rows. That is the base sets are
     # in the columns and the cover sets in the rows.
-    cdef int r0, c0, r1, c1, Base, Cvr, Cand
-    cdef bint BaseCvrs[2][9]
-    cdef int Bases[2]
-    cdef int Cvrs[2]
+    cdef int r0, c0, r1, c1, Cvr, lenCU, lenCS, Cand
+    cdef int BaseCvrs[2][9]
+    cdef int CS[2]
 
     for Cand in range(9):
         # look in rows
         for r0 in range(8):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for c0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr >= 2: break
-                    BaseCvrs[0][c0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                if Cvr >= 2: break
+                BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 instances of Cand, look for another bases
                 # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 9):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for c0 in range(9):
-                        if Cands[r1][c0][Cand]:
-                            if Cvr >= 2: break
-                            BaseCvrs[1][c0] = True; Cvr += 1
+                        if Grid[r1][c0] == Cand+1: break
+                        if Grid[r1][c0] or not Cands[r1][c0][Cand]: continue
+                        if Cvr >= 2: break
+                        BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # found a second base with two instance of cand.
                         # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                        Cvr = 0
+                        lenCU = lenCS = 0
                         for c0 in range(9):
                             if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
-                                if Cvr >= 2: break
-                                # TRCX(f"Cover {Cvr} found: Col {c0+1}")
-                                Cvrs[Cvr] = c0; Cvr += 1
+                                if lenCU >= 2: break
+                                lenCU += 1
+                            if BaseCvrs[0][c0] + BaseCvrs[1][c0] == 2:
+                                if lenCS >= 2: break
+                                CS[lenCS] = c0; lenCS += 1
                         else:
-                            if Cvr != 2: continue
-                            # X-wing pattern found 2 bases with only two cands in the same cols.
-                            # TRCX("X-Wing found")
-                            Bases[0] = r0; Bases[1] = r1
-                            if elim_cands_in_fish(Cand, <int*>Bases, <int*>Cvrs, ROW, <int>T_X_WING, Cands, Step): return 0
+                            if lenCU == lenCS == 2:
+                                TRCX("X-Wing found")
+                                if elim_cands_in_fish(Cand, [r0, r1], 2, CS, ROW, Cands, Step): return 0
         # look in cols
         for c0 in range(8):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for r0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr >= 2: break
-                    BaseCvrs[0][r0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                if Cvr >= 2: break
+                BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 instances of Cand, look for another bases
                 # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 9):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for r0 in range(9):
-                        if Cands[r0][c1][Cand]:
-                            if Cvr >= 2: break
-                            # TRCX(f"Cands[{r0+1}][{c1+1}][{Cand+1}] = {Cands[r0][c0][Cand]}")
-                            BaseCvrs[1][r0] = True; Cvr += 1
+                        if Grid[r0][c1] == Cand+1: break
+                        if Grid[r0][c1] or not Cands[r0][c1][Cand]: continue
+                        if Cvr >= 2: break
+                        BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # found a second base with two instance of cand.
                         # TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                        Cvr = 0
+                        lenCU = lenCS = 0
                         for r0 in range(9):
                             if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
-                                if Cvr >= 2: break
-                                # TRCX(f"Cover {Cvr} found: Row {r0+1}")
-                                Cvrs[Cvr] = r0; Cvr += 1
+                                if lenCU >= 2: break
+                                lenCU += 1
+                            if BaseCvrs[0][r0] + BaseCvrs[1][r0] == 2:
+                                if lenCS >= 2: break
+                                CS[lenCS] = r0; lenCS += 1
                         else:
-                            if Cvr != 2: continue
-                            # X-wing pattern found 2 bases with only two cands in the same cols.
-                            Bases[0] = c0; Bases[1] = c1
-                            if elim_cands_in_fish(Cand, <int*>Bases, <int*>Cvrs, COL, <int>T_X_WING, Cands, Step): return 0
+                            if lenCU == lenCS == 2:
+                                TRCX("X-Wing found")
+                                if elim_cands_in_fish(Cand, [c0, c1], 2, CS, COL, Cands, Step): return 0
     return -1
 
 cdef int tech_finned_x_wings_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
-    cdef int r0, c0, r1, c1, Base, Cvr, Cand, lenCU, lenCS, lenCF, i, j, cu
-    cdef int Method
-    cdef bint BaseCvrs[2][9]
-    cdef int CU[4]
-    cdef int Bases[2]
-    cdef int CS[4]
-    cdef int CF[4]
+    cdef int r0, c0, r1, c1, fb0, fb1, Cvr, Cand, lenCU, lenCS, lenCF, lenFB
+    # cdef int Method
+    cdef int BaseCvrs[2][9]
+    # cdef int CU[9]
+    # cdef int Bases[2]
+    cdef int CS[2]
+    cdef int CF[8]
+    cdef int FB[8]
+    cdef COORD Fins[8]
 
     for Cand in range(9):
         # look in rows
         for r0 in range(8):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for c0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr >= 4: break   # 2 bases and up to 2 fins
-                    BaseCvrs[0][c0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 4 instances of Cand, look for another bases
                 # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 9):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for c0 in range(9):
-                        if Cands[r1][c0][Cand]:
-                            if Cvr >= 4: break
-                            BaseCvrs[1][c0] = True; Cvr += 1
+                        if Grid[r1][c0] == Cand+1: break
+                        if Grid[r1][c0] or not Cands[r1][c0][Cand]: continue
+                        BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # found a second base with 2 to 4 instances of Cand (Base + up to 2 fins).
                         # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                        # TRCX(f"BaseCvrs[0][0]: {BaseCvrs[0][0]}")
-                        lenCU = 0
+                        lenCU = lenCS = lenCF = lenFB = 0
                         for c0 in range(9):
-                            if lenCU >= 4: break
-                            if BaseCvrs[0][c0] | BaseCvrs[1][c0]: CU[lenCU] = c0; lenCU += 1
-                            # TRCX(f"BaseCvrs[0][{c0}]: {BaseCvrs[0][c0]}, BaseCvrs[1][{c0}]: {BaseCvrs[1][c0]}, lenCU: {lenCU}")
+                            if BaseCvrs[0][c0] + BaseCvrs[1][c0] == 2:
+                                if lenCS == 2: break
+                                CS[lenCS] = c0; lenCS += 1
+                            # if BaseCvrs[0][c0] or BaseCvrs[1][c0]: CU[lenCU] = c0; lenCU += 1
+                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]: lenCU += 1
+                            if BaseCvrs[0][c0] and not BaseCvrs[1][c0]:
+                                Fins[lenCF].r = r0; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                if not is_in_int_array(r0, FB, lenFB): FB[lenFB] = r0; lenFB += 1
+                            if BaseCvrs[1][c0] and not BaseCvrs[0][c0]:
+                                Fins[lenCF].r = r1; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                if not is_in_int_array(r1, FB, lenFB): FB[lenFB] = r1; lenFB += 1
                         else:
-                            if not 3 <= lenCU <= 4: continue  # 2 bases and 1 to 2 fins.
-                            Bases[0] = r0; Bases[1] = r1; lenCS = lenCF = 0
-                            for cu in range(lenCU):
-                                i = 0
-                                if Cands[r0][CU[cu]][Cand]: i += 1
-                                if Cands[r1][CU[cu]][Cand]: i += 1
-                                if i == 1: CF[lenCF] = CU[cu]; lenCF += 1
-                                elif i >= 2: CS[lenCS] = CU[cu]; lenCS += 1
-                            TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
-                            TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                            sCU = ""  ### TRCX
-                            for i in range(lenCU):  ### TRCX
-                                if sCU: sCU += ", "  ### TRCX
-                                sCU += f"{CU[i]+1}"  ### TRCX
-                            sCS = ""; sCF = ""  ### TRCX
-                            for i in range(lenCS):  ### TRCX
-                                if sCS: sCS += ", "  ### TRCX
-                                sCS += f"{CS[i]+1}"  ### TRCX
-                            for i in range(lenCF):  ### TRCX
-                                if sCF: sCF += ", "  ### TRCX
-                                sCF += f"{CF[i]+1}"  ### TRCX
-                            TRCX(f"Row: Bases: ({r0+1}, {r1+1}), CU: {sCU}; CS: {sCS}; CF: {sCF}, Methods:{Methods}")
                             for Method in Methods:
-                                if ((Method & T_SASHIMI_C) and (lenCS == 1 and 2 <= lenCF <= 3)) or (not(Method & T_SASHIMI_C) and (lenCS == 2 and 1 <= lenCF <= 2)):
-                                    if elim_cands_in_finned_fish(Cand, <int *>Bases, 2, <int *>CS, lenCS, <int *>CF, lenCF, ROW, <int>Method, Cands, Step): return 0
+                                # TRCX_int_array("Bases:       ", [r0, r1], 2)
+                                # TRCX_int_array("Cover Set:   ", CS, lenCS)
+                                # TRCX_int_array("Cover Fins:  ", CF, lenCF)
+                                # TRCX_int_array("Fin Bases:   ", FB, lenFB)
+                                # TRCX_coord_array("Fins:        ", Fins, lenCF)
+                                if Method == T_FINNED_X_WING and 3 <= lenCU <= 4 and lenFB == 1 and lenCS == 2 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
+                                    if elim_cands_in_finned_fish(Cand, [r0, r1], 2, CS, lenCS, CF, lenCF, FB[0], Fins, ROW, Cands, Step): return 0
+                                if Method == T_SASHIMI_X_WING and 3 <= lenCU <= 4 and lenFB > 1 and lenCS == 1 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                    if elim_cands_in_sashimi_fish(Cand, [r0, r1], 2, CS, lenCS, CF, lenCF, FB, lenFB, Fins, ROW, Cands, Step): return 0
+                                if Method == T_KRAKEN_FINNED_X_WING and lenCS == 2 and 1 <= lenCF <= 7:
+                                    if elim_cands_in_kraken_fish(Cand, [r0, r1], 2, CS, lenCS, Fins, lenCF, ROW, Cands, False, Step): return 0
+                                if Method == T_KRAKEN_SASHIMI_X_WING and lenCS == 1 and 2 <lenCF <= 8:
+                                    if elim_cands_in_kraken_fish(Cand, [r0, r1], 2, CS, lenCS, Fins, lenCF, ROW, Cands, False, Step): return 0
+                                if Method == T_GL_KRAKEN_FINNED_X_WING and lenCS == 2 and 1 <= lenCF <= 7:
+                                    if elim_cands_in_kraken_fish(Cand, [r0, r1], 2, CS, lenCS, Fins, lenCF, ROW, Cands, True, Step): return 0
+                                if Method == T_GL_KRAKEN_SASHIMI_X_WING and lenCS == 1 and 2 < lenCF <= 8:
+                                    if elim_cands_in_kraken_fish(Cand, [r0, r1], 2, CS, lenCS, Fins, lenCF, ROW, Cands, True, Step): return 0
         # look in cols
         for c0 in range(8):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for r0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr >= 4: break  # 2 bases and up to 2 fins
-                    BaseCvrs[0][r0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 4 instances of Cand, look for another bases
                 # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 9):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for r0 in range(9):
-                        if Cands[r0][c1][Cand]:
-                            if Cvr >= 4: break
-                            BaseCvrs[1][r0] = True; Cvr += 1
+                        if Grid[r0][c1] == Cand+1: break
+                        if Grid[r0][c1] or not Cands[r0][c1][Cand]: continue
+                        BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # found a second base with 2 to 4 instances of Cand (Base + up to 2 fins).
                         # TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                        lenCU = 0
+                        lenCU = lenCS = lenCF = lenFB = 0
                         for r0 in range(9):
-                            if lenCU >= 4: break
-                            if BaseCvrs[0][r0] | BaseCvrs[1][r0]: CU[lenCU] = r0; lenCU += 1
+                            if BaseCvrs[0][r0] + BaseCvrs[1][r0] == 2:
+                                if lenCS == 2: break
+                                CS[lenCS] = r0; lenCS += 1
+                            # if BaseCvrs[0][r0] or BaseCvrs[1][r0]: CU[lenCU] = r0; lenCU += 1
+                            if BaseCvrs[0][r0] or BaseCvrs[1][r0]:lenCU += 1
+                            if BaseCvrs[0][r0] and not BaseCvrs[1][r0]:
+                                Fins[lenCF].c = c0; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                if not is_in_int_array(c0, FB, lenFB): FB[lenFB] = c0; lenFB += 1
+                            if BaseCvrs[1][r0] and not BaseCvrs[0][r0]:
+                                Fins[lenCF].c = c1; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                if not is_in_int_array(c1, FB, lenFB): FB[lenFB] = c1; lenFB += 1
                         else:
-                            if not 3 <= lenCU <= 4: continue  # 2 bases and 1 to 2 fins.
-                            Bases[0] = c0; Bases[1] = c1; lenCS = lenCF = 0
-                            for cu in range(lenCU):
-                                i = 0
-                                if Cands[CU[cu]][c0][Cand]: i += 1
-                                if Cands[CU[cu]][c1][Cand]: i += 1
-                                if i == 1: CF[lenCF] = CU[cu]; lenCF += 1
-                                elif i >= 2: CS[lenCS] = CU[cu]; lenCS += 1
-                            # sCU = ""  ### TRCX
-                            # for i in range(lenCU):  ### TRCX
-                            #     if sCU: sCU += ", "  ### TRCX
-                            #     sCU += f"{CU[i]+1}"  ### TRCX
-                            # sCS = ""; sCF = ""  ### TRCX
-                            # for i in range(lenCS):  ### TRCX
-                            #     if sCS: sCS += ", "  ### TRCX
-                            #     sCS += f"{CS[i]+1}"  ### TRCX
-                            # for i in range(lenCF):  ### TRCX
-                            #     if sCF: sCF += ", "  ### TRCX
-                            #     sCF += f"{CF[i]+1}"  ### TRCX
-                            # TRCX(f"Col Bases: ({c0+1}, {c1+1}), CU: {sCU}; CS: {sCS}; CF: {sCF}, Methods:{Methods}")
                             for Method in Methods:
-                                if ((Method & T_SASHIMI_C) and (lenCS == 1 and 2 <= lenCF <= 3)) or (not(Method & T_SASHIMI_C) and (lenCS == 2 and 1 <= lenCF <= 2)):
-                                    if elim_cands_in_finned_fish(Cand, <int*> Bases, 2, <int*> CS, lenCS, <int*> CF, lenCF, COL, <int>Method, Cands, Step): return 0
+                                # TRCX_int_array("Bases:       ", [c0, c1], 2)
+                                # TRCX_int_array("Cover Set:   ", CS, lenCS)
+                                # TRCX_int_array("Cover Fins:  ", CF, lenCF)
+                                # TRCX_int_array("Fin Bases:   ", FB, lenFB)
+                                # TRCX_coord_array("Fins:        ", Fins, lenCF)
+                                if Method == T_FINNED_X_WING and 3 <= lenCU <= 4 and lenFB == 1 and lenCS == 2 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
+                                    if elim_cands_in_finned_fish(Cand, [c0, c1], 2, CS, lenCS, CF, lenCF, FB[0], Fins, COL, Cands, Step): return 0
+                                if Method == T_SASHIMI_X_WING and 3 <= lenCU <= 4 and lenFB > 1 and lenCS == 1 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                    if elim_cands_in_sashimi_fish(Cand, [c0, c1], 2, CS, lenCS, CF, lenCF, FB, lenFB, Fins, COL, Cands, Step): return 0
+                                if Method == T_KRAKEN_FINNED_X_WING and lenCS == 2 and 1 <= lenCF <= 7:
+                                    if elim_cands_in_kraken_fish(Cand, [c0, c1], 2, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
+                                if Method == T_KRAKEN_SASHIMI_X_WING and lenCS == 1 and 2 < lenCF <= 8:
+                                    if elim_cands_in_kraken_fish(Cand, [c0, c1], 2, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
+                                if Method == T_GL_KRAKEN_FINNED_X_WING and lenCS == 2 and 1 <= lenCF <= 7:
+                                    if elim_cands_in_kraken_fish(Cand, [c0, c1], 2, CS, lenCS, Fins, lenCF, COL, Cands, True, Step): return 0
+                                if Method == T_GL_KRAKEN_SASHIMI_X_WING and lenCS == 1 and 2 < lenCF <= 8:
+                                    if elim_cands_in_kraken_fish(Cand, [c0, c1], 2, CS, lenCS, Fins, lenCF, COL, Cands, True, Step): return 0
     return -1
 
 cdef int tech_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
@@ -237,252 +238,237 @@ cdef int tech_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
     #
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Swordfish
-    cdef int r0, c0, r1, c1, r2, c2, Base, Cvr, Cand
-    cdef bint BaseCvrs[3][9]
-    cdef int Bases[3]
-    cdef int Cvrs[3]
+    cdef int r0, c0, r1, c1, r2, c2, Cvr, lenCU, lenCS, Cand
+    cdef int BaseCvrs[3][9]
+    cdef int CS[3]
 
     for Cand in range(9):
         # Look in rows
         for r0 in range(7):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for c0 in range(9):
-                if Cands[r0][c0][Cand]:
-                  if Cvr >= 3: break
-                  BaseCvrs[0][c0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                if Cvr >= 3: break
+                BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 or 3 instances of Cand, look for next two bases
                 # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 8):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for c0 in range(9):
-                        if Cands[r1][c0][Cand]:
-                            if Cvr >= 3: break
-                            BaseCvrs[1][c0] = True; Cvr += 1
+                        if Grid[r1][c0] == Cand+1: break
+                        if Grid[r1][c0] or not Cands[r1][c0][Cand]: continue
+                        if Cvr >= 3: break
+                        BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        Cvr = 0
-                        for c0 in range(9):
-                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
+                        # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        for r2 in range(r1+1, 9):
+                            Cvr = 0
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
+                            for c0 in range(9):
+                                if Grid[r2][c0] == Cand+1: break
+                                if Grid[r2][c0] or not Cands[r2][c0][Cand]: continue
                                 if Cvr >= 3: break
-                                Cvr += 1
-                        else:
-                            if Cvr != 3: continue
-                            # 2 of 3 bases found with 2 or 3 instances of cand, look for third base
-                            # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                            for r2 in range(r1+1, 9):
-                                Cvr = 0
-                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                BaseCvrs[2][c0] = 1; Cvr += 1
+                            else:
+                                if Cvr < 2: continue
+                                # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                lenCU = lenCS = 0
                                 for c0 in range(9):
-                                    # TRCX(f"Seeking third base: Cands[{r2+1}][{c0+1}][{Cand+1}]: {Cands[r2][c0][Cand]}")
-                                    if Cands[r2][c0][Cand]:
-                                        if Cvr >= 3: break
-                                        BaseCvrs[2][c0] = True; Cvr += 1
-                                        # TRCX(f"Base 3 Covers {Cvr} found: r{r2+1}c{c0+1}")
+                                    if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]:
+                                        if lenCU >= 3: break
+                                        lenCU += 1
+                                    if BaseCvrs[0][c0] + BaseCvrs[1][c0] + BaseCvrs[2][c0] >=2:
+                                        if lenCS >= 3: break
+                                        CS[lenCS] = c0; lenCS += 1
                                 else:
-                                    if Cvr < 2: continue
-                                    Cvr = 0
-                                    for c0 in range(9):
-                                        if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]:
-                                            if Cvr >= 3: break
-                                            Cvrs[Cvr] = c0; Cvr += 1
-                                    else:
-                                        if Cvr != 3: continue
-                                        # Swordfish pattern found, 3 bases with 2 or 3 instances of cand
-                                        # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                        Bases[0] = r0; Bases[1] = r1; Bases[2] = r2
-                                        # TRCX(f"Swordfish Pattern: {Cand+1}r{Bases[0]+1}{Bases[1]+1}{Bases[2]+2}c{Cvrs[0]+1}{Cvrs[1]+1}{Cvrs[2]+1}")
-                                        if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, ROW, <int>T_SWORDFISH, Cands, Step): return 0
+                                    if lenCU == lenCS == 3:
+                                        # TRCX(f"Swordfish found: {Cand+1}r{r0+1}{r1+1}{r2+1}c{CS[0]+1}{CS[1]+1}{CS[2]+1}")
+                                        if elim_cands_in_fish(Cand, [r0, r1, r2], 3, CS, ROW, Cands, Step): return 0
         # Look in cols
         for c0 in range(7):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for r0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr >= 3: break
-                    BaseCvrs[0][r0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                if Cvr >= 3: break
+                BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 or 3 instances of Cand, look for next two bases
+                # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 8):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for r0 in range(9):
-                        if Cands[r0][c1][Cand]:
-                            if Cvr >= 3: break
-                            BaseCvrs[1][r0] = True; Cvr += 1
+                        if Grid[r0][c1] == Cand+1: break
+                        if Grid[r0][c1] or not Cands[r0][c1][Cand]: continue
+                        if Cvr >= 3: break
+                        BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        Cvr = 0
-                        for r0 in range(9):
-                            if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
+                        # TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        for c2 in range(c1+1, 9):
+                            Cvr = 0
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
+                            for r0 in range(9):
+                                if Grid[r0][c2] == Cand+1: break
+                                if Grid[r0][c2] or not Cands[r0][c2][Cand]: continue
                                 if Cvr >= 3: break
-                                Cvr += 1
-                        else:
-                            if Cvr != 3: continue
-                            # 2 of 3 bases found with 2 or 3 instances of cand, look for third base
-                            for c2 in range(c1+1, 9):
-                                Cvr = 0
-                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                                BaseCvrs[2][r0] = 1; Cvr += 1
+                            else:
+                                if Cvr < 2: continue
+                                # TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                lenCU = lenCS = 0
                                 for r0 in range(9):
-                                    if Cands[r0][c2][Cand]:
-                                        if Cvr >= 3: break
-                                        BaseCvrs[2][r0] = True; Cvr += 1
+                                    if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]:
+                                        if lenCU >= 3: break
+                                        lenCU += 1
+                                    if BaseCvrs[0][r0] + BaseCvrs[1][r0] + BaseCvrs[2][r0] >= 2:
+                                        if lenCS >= 3: break
+                                        CS[lenCS] = r0; lenCS += 1
                                 else:
-                                    if Cvr < 2: continue
-                                    Cvr = 0
-                                    for r0 in range(9):
-                                        if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]:
-                                            if Cvr >= 3: break
-                                            Cvrs[Cvr] = r0; Cvr += 1
-                                    else:
-                                        if Cvr != 3: continue
-                                        # Swordfish pattern found, 3 bases with 2 or 3 instances of cand
-                                        Bases[0] = c0; Bases[1] = c1; Bases[2] = c2
-                                        # TRCX(f"Swordfish Pattern: {Cand+1}c{Bases[0]+1}{Bases[1]+1}{Bases[2]+2}r{Cvrs[0]+1}{Cvrs[1]+1}{Cvrs[2]+1}")
-                                        if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, COL, <int>T_SWORDFISH, Cands, Step): return 0
+                                    if lenCU == lenCS == 3:
+                                        # TRCX(f"Swordfish found: {Cand+1}c{c0+1}{c1+1}{c2+2}r{CS[0]+1}{CS[1]+1}{CS[2]+1}")
+                                        if elim_cands_in_fish(Cand, [c0, c1, c2], 3, CS, COL, Cands, Step): return 0
     return -1
 
 cdef int tech_finned_swordfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
-    cdef int r0, c0, r1, c1, r2, c2, Base, Cvr, Cand, lenCU, lenCS, lenCF, i, j, cu
-    cdef int Method
+    cdef int r0, c0, r1, c1, r2, c2, Cvr, Cand, lenCU, lenCS, lenCF, lenFB
     cdef bint BaseCvrs[3][9]
-    cdef int CU[5]
-    cdef int Bases[3]
-    cdef int CS[5]  # needs to be large enough to collect all possilbilites.
-    cdef int CF[5]
+    # cdef int CU[9]
+    cdef int CS[3]  # needs to be large enough to collect all possibilities.
+    cdef int CF[7]
+    cdef int FB[7]
+    cdef COORD Fins[7]
 
     for Cand in range(9):
         # look in rows
         for r0 in range(7):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for c0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr > 5: break   # 3 bases and up to 2 fins
-                    BaseCvrs[0][c0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 5 instances of Cand, look for another bases
-                TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 8):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for c0 in range(9):
-                        if Cands[r1][c0][Cand]:
-                            if Cvr > 5: break
-                            BaseCvrs[1][c0] = True; Cvr += 1
+                        if Grid[r1][c0] == Cand+1: break
+                        if Grid[r1][c0] or not Cands[r1][c0][Cand]: continue
+                        BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # Second base with 2 to 5 instances of Cand (Base + up to 2 fins).
-                        TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         for r2 in range(r1+1, 9):
                             Cvr = 0
-                            memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
                             for c0 in range(9):
-                                if Cands[r2][c0][Cand]:
-                                    if Cvr > 5: break
-                                    BaseCvrs[2][c0] = True; Cvr += 1
+                                if Grid[r2][c0] == Cand+1: break
+                                if Grid[r2][c0] or not Cands[r2][c0][Cand]: continue
+                                BaseCvrs[2][c0] = 1; Cvr += 1
                             else:
                                 if Cvr < 2: continue
-                                # Third base with 2 to 5 instances of Cand (Base + up to 2 fins).
-                                TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
-                                # How are the bases covered?
-                                lenCU = 0
+                                # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                lenCU = lenCS = lenCF = lenFB = 0
                                 for c0 in range(9):
-                                    if lenCU >= 5: break
-                                    if BaseCvrs[0][c0] | BaseCvrs[1][c0] | BaseCvrs[2][c0]: CU[lenCU] = c0; lenCU += 1
+                                    if BaseCvrs[0][c0] + BaseCvrs[1][c0] + BaseCvrs[2][c0] >= 2:
+                                        if lenCS == 3: break
+                                        CS[lenCS] = c0; lenCS += 1
+                                    # if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]: CU[lenCU] = c0; lenCU += 1
+                                    if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]: lenCU += 1
+                                    if BaseCvrs[0][c0] and not (BaseCvrs[1][c0] or BaseCvrs[2][c0]):
+                                        Fins[lenCF].r = r0; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                        if not is_in_int_array(r0, FB, lenFB): FB[lenFB] = r0; lenFB += 1
+                                    if BaseCvrs[1][c0] and not (BaseCvrs[0][c0] or BaseCvrs[2][c0]):
+                                        Fins[lenCF].r = r1; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                        if not is_in_int_array(r1, FB, lenFB): FB[lenFB] = r1; lenFB += 1
+                                    if BaseCvrs[2][c0] and not (BaseCvrs[0][c0] or BaseCvrs[1][c0]):
+                                        Fins[lenCF].r = r2; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                        if not is_in_int_array(r2, FB, lenFB): FB[lenFB] = r2; lenFB += 1
                                 else:
-                                    if not 4 <= lenCU <= 5: continue  # 3 bases and 1 to 2 fins or for sashimi,  2 bases and 2 - 3 fins.
-                                    Bases[0] = r0; Bases[1] = r1; Bases[2] = r2; lenCS = lenCF = 0
-                                    for cu in range(lenCU):
-                                        i = 0
-                                        if Cands[r0][CU[cu]][Cand]: i += 1
-                                        if Cands[r1][CU[cu]][Cand]: i += 1
-                                        if Cands[r2][CU[cu]][Cand]: i += 1
-                                        if i == 1: CF[lenCF] = CU[cu]; lenCF += 1
-                                        elif i >= 2: CS[lenCS] = CU[cu]; lenCS += 1
-                                    sCU = ""  ### TRCX
-                                    for i in range(lenCU):  ### TRCX
-                                        if sCU: sCU += ", "  ### TRCX
-                                        sCU += f"{CU[i]+1}"  ### TRCX
-                                    sCS = ""; sCF = ""  ### TRCX
-                                    for i in range(lenCS):  ### TRCX
-                                        if sCS: sCS += ", "  ### TRCX
-                                        sCS += f"{CS[i]+1}"  ### TRCX
-                                    for i in range(lenCF):  ### TRCX
-                                        if sCF: sCF += ", "  ### TRCX
-                                        sCF += f"{CF[i]+1}"  ### TRCX
-                                    TRCX(f"Row Bases: ({r0+1}, {r1+1}, {r2+1}), CU: {sCU}; CS: {sCS}; CF: {sCF}, Methods:{Methods}")
                                     for Method in Methods:
-                                        if ((Method & T_SASHIMI_C) and (lenCS == 2 and 2 <= lenCF <= 3)) or (not(Method & T_SASHIMI_C) and (lenCS == 3 and 1 <= lenCF <= 2)):
-                                            if elim_cands_in_finned_fish(Cand, <int *>Bases, 3, <int *>CS, lenCS, <int *>CF, lenCF, ROW, <int>Method, Cands, Step): return 0
+                                        if Method == T_FINNED_SWORDFISH and 4 <= lenCU <= 5 and lenFB == 1 and lenCS == 3 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
+                                            if elim_cands_in_finned_fish(Cand, [r0, r1, r2], 3, CS, lenCS, CF, lenCF, FB[0], Fins, ROW, Cands, Step): return 0
+                                        if Method == T_SASHIMI_SWORDFISH and 4 <= lenCU <= 5 and lenFB > 1 and lenCS == 2 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                            if elim_cands_in_sashimi_fish(Cand, [r0, r1, r2], 3, CS, lenCS, CF, lenCF, FB, lenFB, Fins, ROW, Cands, Step): return 0
+                                        if Method == T_KRAKEN_FINNED_SWORDFISH and lenCS == 3 and 1 <= lenCF <= 6:
+                                            if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], 3, CS, lenCS, Fins, lenCF, ROW, Cands, False, Step): return 0
+                                        if Method == T_KRAKEN_SASHIMI_SWORDFISH and lenCS == 2 and 2 < lenCF <= 7:
+                                            if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], 3, CS, lenCS, Fins, lenCF, ROW, Cands, False, Step): return 0
+                                        if Method == T_GL_KRAKEN_FINNED_SWORDFISH and lenCS == 3 and 1 <= lenCF <= 6:
+                                            if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], 3, CS, lenCS, Fins, lenCF, ROW, Cands, True, Step): return 0
+                                        if Method == T_GL_KRAKEN_SASHIMI_SWORDFISH and lenCS == 2 and 2 < lenCF <= 7:
+                                            if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], 3, CS, lenCS, Fins, lenCF, ROW, Cands, True, Step): return 0
         # look in cols
         for c0 in range(7):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for r0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr > 5: break  # 3 bases and up to 2 fins
-                    BaseCvrs[0][r0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 5 instances of Cand, look for another bases
-                TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 8):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for r0 in range(9):
-                        if Cands[r0][c1][Cand]:
-                            if Cvr > 5: break
-                            BaseCvrs[1][r0] = True; Cvr += 1
+                        if Grid[r0][c1] == Cand+1: break
+                        if Grid[r0][c1] or not Cands[r0][c1][Cand]: continue
+                        BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # Second base found with 2 to 5 instances of Cand (Base + up to 2 fins).
-                        TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        # TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         for c2 in range(c1+1, 9):
                             Cvr = 0
-                            memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
                             for r0 in range(9):
-                                if Cands[r0][c2][Cand]:
-                                    if Cvr > 5: break
-                                    BaseCvrs[2][r0] = True; Cvr += 1
+                                if Grid[r0][c2] == Cand+1: break
+                                if Grid[r0][c2] or not Cands[r0][c2][Cand]: continue
+                                BaseCvrs[2][r0] = 1; Cvr += 1
                             else:
                                 if Cvr < 2: continue
-                                # Third base found  with 2 to 5 instances of Cand (Base + up to 2 fins).
-                                TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
-                                lenCU = 0
+                                # TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                lenCU = lenCS = lenCF = lenFB = 0
                                 for r0 in range(9):
-                                    if lenCU >= 5: break
-                                    if BaseCvrs[0][r0] | BaseCvrs[1][r0] | BaseCvrs[2][r0]: CU[lenCU] = r0; lenCU += 1
+                                    if BaseCvrs[0][r0] + BaseCvrs[1][r0] + BaseCvrs[2][r0] >= 2:
+                                        if lenCS == 3: break
+                                        CS[lenCS] = r0; lenCS += 1
+                                    # if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]: CU[lenCU] = r0; lenCU += 1
+                                    if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]: lenCU += 1
+                                    if BaseCvrs[0][r0] and not (BaseCvrs[1][r0] or BaseCvrs[2][r0]):
+                                        Fins[lenCF].c = c0; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                        if not is_in_int_array(c0, FB, lenFB): FB[lenFB] = c0; lenFB += 1
+                                    if BaseCvrs[1][r0] and not (BaseCvrs[0][r0] or BaseCvrs[2][r0]):
+                                        Fins[lenCF].c = c1; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                        if not is_in_int_array(c1, FB, lenFB): FB[lenFB] = c1; lenFB += 1
+                                    if BaseCvrs[2][r0] and not (BaseCvrs[0][r0] or BaseCvrs[1][r0]):
+                                        Fins[lenCF].c = c2; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                        if not is_in_int_array(c2, FB, lenFB): FB[lenFB] = c2; lenFB += 1
                                 else:
-                                    if not 4 <= lenCU <= 5: continue  # 3 bases and 1 to 2 fins.
-                                    Bases[0] = c0; Bases[1] = c1; Bases[2] = c2; lenCS = lenCF = 0
-                                    for cu in range(lenCU):
-                                        i = 0
-                                        if Cands[CU[cu]][c0][Cand]: i += 1
-                                        if Cands[CU[cu]][c1][Cand]: i += 1
-                                        if Cands[CU[cu]][c2][Cand]: i += 1
-                                        if i == 1: CF[lenCF] = CU[cu]; lenCF += 1
-                                        elif i >= 2: CS[lenCS] = CU[cu]; lenCS += 1
-                                    sCU = ""  ### TRCX
-                                    for i in range(lenCU):  ### TRCX
-                                        if sCU: sCU += ", "  ### TRCX
-                                        sCU += f"{CU[i]+1}"  ### TRCX
-                                    sCS = ""; sCF = ""  ### TRCX
-                                    for i in range(lenCS):  ### TRCX
-                                        if sCS: sCS += ", "  ### TRCX
-                                        sCS += f"{CS[i]+1}"  ### TRCX
-                                    for i in range(lenCF):  ### TRCX
-                                        if sCF: sCF += ", "  ### TRCX
-                                        sCF += f"{CF[i]+1}"  ### TRCX
-                                    TRCX(f"Col Bases: ({c0+1}, {c1+1}, {c2+1}), CU: {sCU}; CS: {sCS}; CF: {sCF}, Methods:{Methods}")
                                     for Method in Methods:
-                                        if ((Method & T_SASHIMI_C) and (lenCS == 2 and 2 <= lenCF <= 3)) or (not(Method & T_SASHIMI_C) and (lenCS == 3 and 1 <= lenCF <= 2)):
-                                            if elim_cands_in_finned_fish(Cand, <int*> Bases, 3, <int*> CS, lenCS, <int*> CF, lenCF, COL, <int>Method, Cands, Step): return 0
+                                        if Method == T_FINNED_SWORDFISH and 4 <= lenCU <= 5 and lenFB == 1 and lenCS == 3 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
+                                            if elim_cands_in_finned_fish(Cand, [c0, c1, c2], 3, CS, lenCS, CF, lenCF, FB[0], Fins, COL, Cands, Step): return 0
+                                        if Method == T_SASHIMI_SWORDFISH and 4 <= lenCU <= 5 and lenFB > 1 and lenCS == 2 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                            if elim_cands_in_sashimi_fish(Cand, [c0, c1, c2], 3, CS, lenCS, CF, lenCF, FB, lenFB, Fins, COL, Cands, Step): return 0
+                                        if Method == T_KRAKEN_FINNED_SWORDFISH and lenCS == 3 and 1 <= lenCF <= 6:
+                                            if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], 3, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
+                                        if Method == T_KRAKEN_SASHIMI_SWORDFISH and lenCS == 2 and 2 < lenCF <= 7:
+                                            if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], 3, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
+                                        if Method == T_GL_KRAKEN_FINNED_SWORDFISH and lenCS == 3 and 1 <= lenCF <= 6:
+                                            if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], 3, CS, lenCS, Fins, lenCF, COL, Cands, True, Step): return 0
+                                        if Method == T_GL_KRAKEN_SASHIMI_SWORDFISH and lenCS == 2 and 2 < lenCF <= 7:
+                                            if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], 3, CS, lenCS, Fins, lenCF, COL, Cands, True, Step): return 0
     return -1
 
 cdef int tech_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
@@ -497,486 +483,510 @@ cdef int tech_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
     #
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Jellyfish
-    cdef int r0, c0, r1, c1, r2, c2, r3, c3, Base, Cvr, Cand
-    cdef bint BaseCvrs[4][9]
-    cdef int Bases[4]
-    cdef int Cvrs[4]
+    cdef int r0, c0, r1, c1, r2, c2, r3, c3, Cvr, lenCU, lenCS, Cand
+    cdef int BaseCvrs[4][9]
+    cdef int CS[4]
 
     for Cand in range(9):
         # Look in rows
         for r0 in range(6):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for c0 in range(9):
-                if Cands[r0][c0][Cand]:
-                  if Cvr >= 4: break
-                  BaseCvrs[0][c0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                if Cvr >= 4: break
+                BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 4 instances of Cand, look for next three bases
-                # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                #TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 7):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for c0 in range(9):
-                        if Cands[r1][c0][Cand]:
-                            if Cvr >= 4: break
-                            BaseCvrs[1][c0] = True; Cvr += 1
+                        if Grid[r1][c0] == Cand+1: break
+                        if Grid[r1][c0] or not Cands[r1][c0][Cand]: continue
+                        if Cvr >= 4: break
+                        BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # TRCX(f"Potential Second Base: {Cand+1}r{r1+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
-                        Cvr = 0
-                        for c0 in range(9):
-                            if BaseCvrs[0][c0] or BaseCvrs[1][c0]:
+                        # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        for r2 in range(r1+1, 8):
+                            Cvr = 0
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
+                            for c0 in range(9):
+                                if Grid[r2][c0] == Cand+1: break
+                                if Grid[r2][c0] or not Cands[r2][c0][Cand]: continue
                                 if Cvr >= 4: break
-                                Cvr += 1
-                        else:
-                            # TRCX(f"Got Here, Cvr = {Cvr}")
-                            if not (3 <= Cvr <= 4): continue
-                            # 2 of 4 bases found with 2 to 4 instances of cand, look for third base
-                            # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                            for r2 in range(r1+1, 8):
-                                Cvr = 0
-                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
-                                for c0 in range(9):
-                                     if Cands[r2][c0][Cand]:
-                                        if Cvr >= 4: break
-                                        BaseCvrs[2][c0] = True; Cvr += 1
-                                else:
-                                    if Cvr < 2: continue
+                                BaseCvrs[2][c0] = 1; Cvr += 1
+                            else:
+                                if Cvr < 2: continue
+                                # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                for r3 in range(r2+1, 9):
                                     Cvr = 0
+                                    memset(<void*> BaseCvrs[3], 0, sizeof(int[9]))
                                     for c0 in range(9):
-                                        if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]:
-                                            if Cvr >= 4: break
-                                            Cvr += 1
+                                        if Grid[r3][c0] == Cand+1: break
+                                        if Grid[r3][c0] or not Cands[r3][c0][Cand]: continue
+                                        if Cvr >= 4: break
+                                        BaseCvrs[3][c0] = 1; Cvr += 1
                                     else:
-                                        if Cvr != 4: continue
-                                        # 3 of 4 bases with 2 to 4 instances of cand, look for fourth base
-                                        # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                        for r3 in range(r2+1, 9):
-                                            Cvr = 0
-                                            memset(<void*> BaseCvrs[3], False, sizeof(int[9]))
-                                            for c0 in range(9):
-                                                if Cands[r3][c0][Cand]:
-                                                    if Cvr >= 4: break
-                                                    BaseCvrs[3][c0] = True; Cvr += 1
-                                            else:
-                                                if Cvr < 2: continue
-                                                Cvr = 0
-                                                for c0 in range(9):
-                                                    if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]:
-                                                        if Cvr >= 4: break
-                                                        Cvrs[Cvr] = c0; Cvr += 1
-                                                else:
-                                                    if Cvr != 4: continue
-                                                    # Jellyfish pattern found, 4 bases with 2 to 4 instances of cand
-                                                    # TRCX(f"Fourth Base: {Cand+1}r{r3+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                                    Bases[0] = r0; Bases[1] = r1; Bases[2] = r2; Bases[3] = r3
-                                                    if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, ROW, <int>T_JELLYFISH, Cands, Step): return 0
-        # Look in cols
+                                        if Cvr < 2: continue
+                                        Cvr = 0
+                                        # TRCX(f"Fourth Base: {Cand+1}r{r3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        lenCU = lenCS = 0
+                                        for c0 in range(9):
+                                            if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]:
+                                                if lenCU >= 4: break
+                                                lenCU += 1
+                                            if BaseCvrs[0][c0] + BaseCvrs[1][c0] + BaseCvrs[2][c0] + BaseCvrs[3][c0] >=2:
+                                                if lenCS >= 4: break
+                                                CS[lenCS] = c0; lenCS += 1
+                                        else:
+                                            if lenCU == lenCS == 4:
+                                                # TRCX(f"Jellyfish found: {Cand+1}r{r0+1}{r1+1}{r2+2}{r3+1}c{CS[0]+1}{CS[1]+1}{CS[2]+1}{CS[3]+1}")
+                                                if elim_cands_in_fish(Cand, [r0, r1, r2, r3], 4, CS, ROW, Cands, Step): return 0
         # TRCX("Col-wise bases")
         for c0 in range(6):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for r0 in range(9):
-                if Cands[r0][c0][Cand]:
-                  if Cvr >= 4: break
-                  BaseCvrs[0][r0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                if Cvr >= 4: break
+                BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 4 instances of Cand, look for next three bases
                 # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 7):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for r0 in range(9):
-                        if Cands[r0][c1][Cand]:
-                            if Cvr >= 4: break
-                            BaseCvrs[1][r0] = True; Cvr += 1
+                        if Grid[r0][c1] == Cand+1: break
+                        if Grid[r0][c1] or not Cands[r0][c1][Cand]: continue
+                        if Cvr >= 4: break
+                        BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        Cvr = 0
-                        for r0 in range(9):
-                            if BaseCvrs[0][r0] or BaseCvrs[1][r0]:
+                        # TRCX(f"Second Base: {Cand+1}r{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        for c2 in range(c1+1, 8):
+                            Cvr = 0
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
+                            for r0 in range(9):
+                                if Grid[r0][c2] == Cand+1: break
+                                if Grid[r0][c2] or not Cands[r0][c2][Cand]: continue
                                 if Cvr >= 4: break
-                                Cvr += 1
-                        else:
-                            if not (3 <= Cvr <= 4): continue
-                            # 2 of 4 bases found with 2 to 4 instances of cand, look for third base
-                            # TRCX(f"Second Base: {Cand+1}r{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
-                            for c2 in range(c1+1, 8):
-                                Cvr = 0
-                                memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
-                                for r0 in range(9):
-                                    if Cands[r0][c2][Cand]:
-                                        if Cvr >= 4: break
-                                        BaseCvrs[2][r0] = True; Cvr += 1
-                                else:
-                                    if Cvr < 2: continue
+                                BaseCvrs[2][r0] = 1; Cvr += 1
+                            else:
+                                if Cvr < 2: continue
+                                # TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                for c3 in range(c2+1, 9):
                                     Cvr = 0
+                                    memset(<void*> BaseCvrs[3], 0, sizeof(int[9]))
                                     for r0 in range(9):
-                                        if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]:
-                                            if Cvr >= 4: break
-                                            Cvr += 1
+                                        if Grid[r0][c3] == Cand+1: break
+                                        if Grid[r0][c3] or not Cands[r0][c3][Cand]: continue
+                                        if Cvr >= 4: break
+                                        BaseCvrs[3][r0] = 1; Cvr += 1
                                     else:
-                                        if Cvr != 4: continue
-                                        # 3 of 4 bases with 2 to 4 instances of cand, look for 4th base
-                                        # TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                        for c3 in range(c2+1, 9):
-                                            Cvr = 0
-                                            memset(<void *>BaseCvrs[3], False, sizeof(int[9]))
-                                            for r0 in range(9):
-                                                if Cands[r0][c3][Cand]:
-                                                    if Cvr >= 4: break
-                                                    BaseCvrs[3][r0] = True; Cvr += 1
-                                            else:
-                                                if Cvr < 2: continue
-                                                Cvr = 0
-                                                for r0 in range(9):
-                                                    if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0] or BaseCvrs[3][r0]:
-                                                        if Cvr >= 4: break
-                                                        Cvrs[Cvr] = r0; Cvr += 1
-                                                else:
-                                                    if Cvr != 4: continue
-                                                    # Jellyfish pattern found, r bases with 2 to 3 instances of cand
-                                                    # TRCX(f"Fourth Base: {Cand+1}c{c3+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                                    Bases[0] = c0; Bases[1] = c1; Bases[2] = c2; Bases[3] = c3
-                                                    if elim_cands_in_fish(Cand, <int *>Bases, <int *>Cvrs, COL, <int>T_JELLYFISH, Cands, Step): return 0
+                                        if Cvr < 2: continue
+                                        # TRCX(f"Fourth Base: {Cand+1}c{c3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        lenCU = lenCS = 0
+                                        for r0 in range(9):
+                                            if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0] or BaseCvrs[3][r0]:
+                                                if lenCU >= 4: break
+                                                lenCU += 1
+                                            if BaseCvrs[0][r0] + BaseCvrs[1][r0] + BaseCvrs[2][r0] + BaseCvrs[3][r0] >= 2:
+                                                if lenCS >= 4: break
+                                                CS[lenCS] = r0; lenCS += 1
+                                        else:
+                                            if lenCU == lenCS == 4:
+                                                # TRCX(f"Jellyfish found: {Cand+1}c{c0+1}{c1+1}{c2+1}{c3+1}r{CS[0]+1}{CS[1]+1}{CS[2]+1}{CS[3]+1}")
+                                                if elim_cands_in_fish(Cand, [c0, c1, c2, c3], 4, CS, COL, Cands, Step): return 0
     return -1
 
 
 cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
-    cdef int r0, c0, r1, c1, r2, c2, r3, c3, Base, Cvr, Cand, lenCU, lenCS, lenCF, i, j, cu
+    cdef int r0, c0, r1, c1, r2, c2, r3, c3, Cvr, Cand, lenCU, lenCS, lenCF, lenFB
     cdef int Method
-    cdef bint BaseCvrs[4][9]
-    cdef int CU[6]
-    cdef int Bases[4]
-    cdef int CS[6]  # needs to be large enough to collect all possilbilites.
+    cdef int BaseCvrs[4][9]
+    # cdef int CU[6]
+    cdef int CS[4]  # needs to be large enough to collect all possibilities.
     cdef int CF[6]
+    cdef int FB[6]
+    cdef COORD Fins[6]
 
     for Cand in range(9):
         # look in rows
         for r0 in range(6):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for c0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr > 6: break   # 4 bases and up to 2 fins
-                    BaseCvrs[0][c0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 6 instances of Cand, look for another bases
                 TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 7):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for c0 in range(9):
-                        if Cands[r1][c0][Cand]:
-                            if Cvr > 6: break
-                            BaseCvrs[1][c0] = True; Cvr += 1
+                        if Grid[r1][c0] == Cand+1: break
+                        if Grid[r1][c0] or not Cands[r1][c0][Cand]: continue
+                        BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # Second base with 2 to 6 instances of Cand (Base + up to 2 fins).
                         TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         for r2 in range(r1+1, 8):
                             Cvr = 0
-                            memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
                             for c0 in range(9):
-                                if Cands[r2][c0][Cand]:
-                                    if Cvr > 6: break
-                                    BaseCvrs[2][c0] = True; Cvr += 1
+                                if Grid[r2][c0] == Cand+1: break
+                                if Grid[r2][c0] or not Cands[r2][c0][Cand]: continue
+                                BaseCvrs[2][c0] = 1; Cvr += 1
                             else:
                                 if Cvr < 2: continue
-                                # Third base with 2 to 6 instances of Cand (Base + up to 2 fins).
                                 TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
                                 for r3 in range(r2+1, 9):
                                     Cvr = 0
-                                    memset(<void*> BaseCvrs[3], False, sizeof(int[9]))
+                                    memset(<void*> BaseCvrs[3], 0, sizeof(int[9]))
                                     for c0 in range(9):
-                                        if Cands[r3][c0][Cand]:
-                                            if Cvr > 6: break
-                                            BaseCvrs[3][c0] = True; Cvr += 1
+                                        if Grid[r3][c0] == Cand+1: break
+                                        if Grid[r3][c0] or not Cands[r3][c0][Cand]: continue
+                                        BaseCvrs[3][c0] = 1; Cvr += 1
                                     else:
                                         if Cvr < 2: continue
-                                        # Fourth base with 2 to 6 instances of Cand (Base + up to 2 fins).
                                         TRCX(f"Fourth Base: {Cand+1}r{r3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                        # How are the bases covered?
-                                        lenCU = 0
+                                        lenCU = lenCS = lenCF = lenFB = 0
                                         for c0 in range(9):
-                                            if lenCU >= 6: break
-                                            if BaseCvrs[0][c0] | BaseCvrs[1][c0] | BaseCvrs[2][c0] | BaseCvrs[3][c0]: CU[lenCU] = c0; lenCU += 1
+                                            if BaseCvrs[0][c0] + BaseCvrs[1][c0] + BaseCvrs[2][c0] + BaseCvrs[3][c0] >= 2:
+                                                if lenCS == 4: break
+                                                CS[lenCS] = c0; lenCS += 1
+                                            # if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]: CU[lenCU] = c0; lenCU += 1
+                                            if BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]: lenCU += 1
+                                            if BaseCvrs[0][c0] and not (BaseCvrs[1][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]):
+                                                Fins[lenCF].r = r0; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                                if not is_in_int_array(r0, FB, lenFB): FB[lenFB] = r0; lenFB += 1
+                                            if BaseCvrs[1][c0] and not (BaseCvrs[0][c0] or BaseCvrs[2][c0] or BaseCvrs[3][c0]):
+                                                Fins[lenCF].r = r1; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                                if not is_in_int_array(r1, FB, lenFB): FB[lenFB] = r1; lenFB += 1
+                                            if BaseCvrs[2][c0] and not (BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[3][c0]):
+                                                Fins[lenCF].r = r2; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                                if not is_in_int_array(r2, FB, lenFB): FB[lenFB] = r2; lenFB += 1
+                                            if BaseCvrs[3][c0] and not (BaseCvrs[0][c0] or BaseCvrs[1][c0] or BaseCvrs[2][c0]):
+                                                Fins[lenCF].r = r3; Fins[lenCF].c = CF[lenCF] = c0; lenCF += 1
+                                                if not is_in_int_array(r3, FB, lenFB): FB[lenFB] = r3; lenFB += 1
                                         else:
-                                            if not 5 <= lenCU <= 6: continue  # 4 bases and 1 to 2 fins or for sashimi,  2 bases and 2 - 3 fins.
-                                            Bases[0] = r0; Bases[1] = r1; Bases[2] = r2; Bases[3] = r3; lenCS = lenCF = 0
-                                            for cu in range(lenCU):
-                                                i = 0
-                                                if Cands[r0][CU[cu]][Cand]: i += 1
-                                                if Cands[r1][CU[cu]][Cand]: i += 1
-                                                if Cands[r2][CU[cu]][Cand]: i += 1
-                                                if Cands[r3][CU[cu]][Cand]: i += 1
-                                                if i == 1: CF[lenCF] = CU[cu]; lenCF += 1
-                                                elif i >= 2: CS[lenCS] = CU[cu]; lenCS += 1
-                                            sCU = ""  ### TRCX
-                                            for i in range(lenCU):  ### TRCX
-                                                if sCU: sCU += ", "  ### TRCX
-                                                sCU += f"{CU[i]+1}"  ### TRCX
-                                            sCS = ""; sCF = ""  ### TRCX
-                                            for i in range(lenCS):  ### TRCX
-                                                if sCS: sCS += ", "  ### TRCX
-                                                sCS += f"{CS[i]+1}"  ### TRCX
-                                            for i in range(lenCF):  ### TRCX
-                                                if sCF: sCF += ", "  ### TRCX
-                                                sCF += f"{CF[i]+1}"  ### TRCX
-                                            TRCX(f"Row:  Bases: ({r0+1}, {r1+1}, {r2+1}, {r3+1}), CU: {sCU}; CS: {sCS}; CF: {sCF}, Methods:{Methods}")
                                             for Method in Methods:
-                                                if ((Method & T_SASHIMI_C) and (lenCS == 3 and 2 <= lenCF <= 3)) or (not(Method & T_SASHIMI_C) and (lenCS == 4 and 1 <= lenCF <= 2)):
-                                                    if elim_cands_in_finned_fish(Cand, <int *>Bases, 4, <int *>CS, lenCS, <int *>CF, lenCF, ROW, <int>Method, Cands, Step): return 0
-        # look in cols
+                                                if Method == T_FINNED_JELLYFISH and 5 <= lenCU <= 6 and lenFB == 1 and lenCS == 4 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
+                                                    if elim_cands_in_finned_fish(Cand, [r0, r1, r2, r3], 4, CS, lenCS, CF, lenCF, FB[0], Fins, ROW, Cands, Step): return 0
+                                                if Method == T_SASHIMI_JELLYFISH and 5 <= lenCU <= 6 and lenFB > 1 and lenCS == 3 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                                    if elim_cands_in_sashimi_fish(Cand, [r0, r1, r2, r3], 4, CS, lenCS, CF, lenCF, FB, lenFB, Fins, ROW, Cands, Step): return 0
+                                                if Method == T_KRAKEN_FINNED_JELLYFISH and lenCS == 4 and 1 <= lenCF <= 5:
+                                                    if elim_cands_in_kraken_fish(Cand, [r0, r1, r2, r3], 4, CS, lenCS, Fins, lenCF, ROW, Cands, False, Step): return 0
+                                                if Method == T_KRAKEN_SASHIMI_JELLYFISH and lenCS == 3 and 2 < lenCF <= 6:
+                                                    if elim_cands_in_kraken_fish(Cand, [r0, r1, r2, r3], 4, CS, lenCS, Fins, lenCF, ROW, Cands, False, Step): return 0
+                                                if Method == T_GL_KRAKEN_FINNED_JELLYFISH and lenCS == 4 and 1 <= lenCF <= 5:
+                                                    if elim_cands_in_kraken_fish(Cand, [r0, r1, r2, r3], 4, CS, lenCS, Fins, lenCF, ROW, Cands, True, Step): return 0
+                                                if Method == T_GL_KRAKEN_SASHIMI_JELLYFISH and lenCS == 3 and 2 < lenCF <= 6:
+                                                    if elim_cands_in_kraken_fish(Cand, [r0, r1, r2, r3], 4, CS, lenCS, Fins, lenCF, ROW, Cands, True, Step): return 0
+         # look in cols
         for c0 in range(6):
             Cvr = 0
-            memset(<void*> BaseCvrs[0], False, sizeof(int[9]))
+            memset(<void*> BaseCvrs[0], 0, sizeof(int[9]))
             for r0 in range(9):
-                if Cands[r0][c0][Cand]:
-                    if Cvr > 6: break  # 4 bases and up to 2 fins
-                    BaseCvrs[0][r0] = True; Cvr += 1
+                if Grid[r0][c0] == Cand+1: break
+                if Grid[r0][c0] or not Cands[r0][c0][Cand]: continue
+                BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                # first base found with 2 to 6 instances of Cand, look for another bases
                 TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 7):
                     Cvr = 0
-                    memset(<void*> BaseCvrs[1], False, sizeof(int[9]))
+                    memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
                     for r0 in range(9):
-                        if Cands[r0][c1][Cand]:
-                            if Cvr > 6: break
-                            BaseCvrs[1][r0] = True; Cvr += 1
+                        if Grid[r0][c1] == Cand+1: break
+                        if Grid[r0][c1] or not Cands[r0][c1][Cand]: continue
+                        BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        # Second base found with 2 to 6 instances of Cand (Base + up to 2 fins).
                         TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         for c2 in range(c1+1, 8):
                             Cvr = 0
-                            memset(<void*> BaseCvrs[2], False, sizeof(int[9]))
+                            memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
                             for r0 in range(9):
-                                if Cands[r0][c2][Cand]:
-                                    if Cvr > 6: break
-                                    BaseCvrs[2][r0] = True; Cvr += 1
+                                if Grid[r0][c2] == Cand+1: break
+                                if Grid[r0][c2] or not Cands[r0][c2][Cand]: continue
+                                BaseCvrs[2][r0] = 1; Cvr += 1
                             else:
                                 if Cvr < 2: continue
-                                # Third base found  with 2 to 6 instances of Cand (Base + up to 2 fins).
                                 TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
                                 for c3 in range(c2+1, 9):
                                     Cvr = 0
-                                    memset(<void*> BaseCvrs[3], False, sizeof(int[9]))
+                                    memset(<void*> BaseCvrs[3], 0, sizeof(int[9]))
                                     for r0 in range(9):
-                                        if Cands[r0][c3][Cand]:
-                                            if Cvr > 6: break
-                                            BaseCvrs[3][r0] = True;  Cvr += 1
+                                        if Grid[r0][c3] == Cand+1: break
+                                        if Grid[r0][c3] or not Cands[r0][c3][Cand]: continue
+                                        BaseCvrs[3][r0] = 1;  Cvr += 1
                                     else:
                                         if Cvr < 2: continue
-                                        # Fourth  base found  with 2 to 6 instances of Cand (Base + up to 2 fins).
                                         TRCX(f"Fourth Base: {Cand+1}c{c3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
-                                        lenCU = 0
+                                        lenCU = lenCS = lenCF = lenFB = 0
                                         for r0 in range(9):
-                                            if lenCU >= 6: break
-                                            if BaseCvrs[0][r0] | BaseCvrs[1][r0] | BaseCvrs[2][r0] | BaseCvrs[3][r0]: CU[lenCU] = r0; lenCU += 1
+                                            if BaseCvrs[0][r0] + BaseCvrs[1][r0] + BaseCvrs[2][r0] + BaseCvrs[3][r0] >= 2:
+                                                if lenCS == 4: break
+                                                CS[lenCS] = r0; lenCS += 1
+                                            if BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0] or BaseCvrs[3][r0]: lenCU += 1
+                                            if BaseCvrs[0][r0] and not (BaseCvrs[1][r0] or BaseCvrs[2][r0] or BaseCvrs[3][r0]):
+                                                Fins[lenCF].c = c0; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                                if not is_in_int_array(c0, FB, lenFB): FB[lenFB] = c0; lenFB += 1
+                                            if BaseCvrs[1][r0] and not (BaseCvrs[0][r0] or BaseCvrs[2][r0] or BaseCvrs[3][r0]):
+                                                Fins[lenCF].c = c1; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                                if not is_in_int_array(c1, FB, lenFB): FB[lenFB] = c1; lenFB += 1
+                                            if BaseCvrs[2][r0] and not (BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[3][r0]):
+                                                Fins[lenCF].c = c2; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                                if not is_in_int_array(c2, FB, lenFB): FB[lenFB] = c2; lenFB += 1
+                                            if BaseCvrs[3][r0] and not (BaseCvrs[0][r0] or BaseCvrs[1][r0] or BaseCvrs[2][r0]):
+                                                Fins[lenCF].c = c3; Fins[lenCF].r = CF[lenCF] = r0; lenCF += 1
+                                                if not is_in_int_array(c3, FB, lenFB): FB[lenFB] = c3; lenFB += 1
                                         else:
-                                            if not 5 <= lenCU <= 6: continue  # 4 bases and 1 to 2 fins.
-                                            Bases[0] = c0; Bases[1] = c1; Bases[2] = c2; Bases[3] = c3; lenCS = lenCF = 0
-                                            for cu in range(lenCU):
-                                                i = 0
-                                                if Cands[CU[cu]][c0][Cand]: i += 1
-                                                if Cands[CU[cu]][c1][Cand]: i += 1
-                                                if Cands[CU[cu]][c2][Cand]: i += 1
-                                                if Cands[CU[cu]][c3][Cand]: i += 1
-                                                if i == 1: CF[lenCF] = CU[cu]; lenCF += 1
-                                                elif i >= 2: CS[lenCS] = CU[cu]; lenCS += 1
-                                            sCU = ""  ### TRCX
-                                            for i in range(lenCU):  ### TRCX
-                                                if sCU: sCU += ", "  ### TRCX
-                                                sCU += f"{CU[i]+1}"  ### TRCX
-                                            sCS = ""; sCF = ""  ### TRCX
-                                            for i in range(lenCS):  ### TRCX
-                                                if sCS: sCS += ", "  ### TRCX
-                                                sCS += f"{CS[i]+1}"  ### TRCX
-                                            for i in range(lenCF):  ### TRCX
-                                                if sCF: sCF += ", "  ### TRCX
-                                                sCF += f"{CF[i]+1}"  ### TRCX
-                                            TRCX(f"Col: Bases: ({c0+1}, {c1+1}, {c2+1}, {c3+1}), CU: {sCU}; CS: {sCS}; CF: {sCF}, Methods:{Methods}")
                                             for Method in Methods:
-                                                if ((Method & T_SASHIMI_C) and (lenCS == 3 and 2 <= lenCF <= 3)) or (not(Method & T_SASHIMI_C) and (lenCS == 4 and 1 <= lenCF <= 2)):
-                                                    if elim_cands_in_finned_fish(Cand, <int*> Bases, 4, <int*> CS, lenCS, <int*> CF, lenCF, COL, <int>Method, Cands, Step): return 0
+                                                if Method == T_FINNED_JELLYFISH and 5 <= lenCU <= 6 and lenFB == 1 and lenCS == 4 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
+                                                    if elim_cands_in_finned_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, CF, lenCF, FB[0], Fins, COL, Cands, Step): return 0
+                                                if Method == T_SASHIMI_JELLYFISH and 5 <= lenCU <= 6 and lenFB > 1 and lenCS == 3 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                                    if elim_cands_in_sashimi_fish(Cand, [c0, c1, c2, c3], 3, CS, lenCS, CF, lenCF, FB, lenFB, Fins, COL, Cands, Step): return 0
+                                                if Method == T_KRAKEN_FINNED_JELLYFISH and lenCS == 4 and 1 <= lenCF <= 5:
+                                                    if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
+                                                if Method == T_KRAKEN_SASHIMI_JELLYFISH and lenCS == 3 and 2 < lenCF <= 6:
+                                                    if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
+                                                if Method == T_GL_KRAKEN_FINNED_JELLYFISH and lenCS == 4 and 1 <= lenCF <= 5:
+                                                    if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, Fins, lenCF, COL, Cands, True, Step): return 0
+                                                if Method == T_GL_KRAKEN_SASHIMI_JELLYFISH and lenCS == 3 and 2 < lenCF <= 6:
+                                                    if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, Fins, lenCF, COL, Cands, True, Step): return 0
     return -1
 
-cdef bint elim_cands_in_fish(int Cand, int *Bases, int *Cvrs, int Orient, Method, bint Cands[9][9][9], Step):
-    cdef int Ord, r0, c0, Base
+cdef bint elim_cands_in_fish(int Cand, int *Bases, int Ord, int *CS, int Orient, bint Cands[9][9][9], Step):
+    cdef int r0, c0, Base
 
-    if Method == T_X_WING: Ord = 2
-    elif Method == T_SWORDFISH: Ord = 3
-    elif Method == T_JELLYFISH: Ord = 4
-    else: return False
-
-    # TRCX(f"Elim Cands: {Cand+1}r{Bases[0]+1}{Bases[1]+1}{Bases[2]+1}c{Cvrs[0]+1}{Cvrs[1]+1}{Cvrs[2]+2}")  ### Row swordfish
+    # TRCX(f"Elim Cands: {Cand+1}r{Bases[0]+1}{Bases[1]+1}{Bases[2]+1}c{CS[0]+1}{CS[1]+1}{CS[2]+2}")
     Base = 0
     if Orient == ROW:
         for r0 in range(9):
             if Base < Ord and r0 == Bases[Base]: Base += 1; continue
             for c0 in range(Ord):
-                if Cands[r0][Cvrs[c0]][Cand]:
-                    Cands[r0][Cvrs[c0]][Cand] = False
+                if Cands[r0][CS[c0]][Cand]:
+                    Cands[r0][CS[c0]][Cand] = False
                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                    Step.Outcome.extend([[P_ROW, r0], [P_COL, Cvrs[c0]], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
+                    Step.Outcome.extend([[P_ROW, r0], [P_COL, CS[c0]], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
     else:  # Orient == COL
         for c0 in range(9):
             if Base < Ord and c0 == Bases[Base]: Base += 1; continue
             for r0 in range(Ord):
-                if Cands[Cvrs[r0]][c0][Cand]:
-                    Cands[Cvrs[r0]][c0][Cand] = False
+                if Cands[CS[r0]][c0][Cand]:
+                    Cands[CS[r0]][c0][Cand] = False
                     if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                    Step.Outcome.extend([[P_ROW, Cvrs[r0]], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
+                    Step.Outcome.extend([[P_ROW, CS[r0]], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
     if Step.Outcome:
         Step.Outcome.append([P_END, ])
-        Step.Method = Method
+        if Ord == 2: Step.Method = T_X_WING
+        elif Ord == 3: Step.Method = T_SWORDFISH
+        elif Ord == 4: Step.Method = T_JELLYFISH
+        else: return False
         if Orient == ROW:
-            if Ord == 2: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1]], [P_COL, Cvrs[0], Cvrs[1]], [P_END, ]]
-            elif Ord == 3: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1], Bases[2]], [P_COL, Cvrs[0], Cvrs[1], Cvrs[2]], [P_END, ]]
-            else: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1], Bases[2], Bases[3]], [P_COL, Cvrs[0], Cvrs[1], Cvrs[2], Cvrs[3]], [P_END, ]]
+            if Ord == 2: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1]], [P_COL, CS[0], CS[1]], [P_END, ]]
+            elif Ord == 3: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1], Bases[2]], [P_COL, CS[0], CS[1], CS[2]], [P_END, ]]
+            else: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, Bases[0], Bases[1], Bases[2], Bases[3]], [P_COL, CS[0], CS[1], CS[2], CS[3]], [P_END, ]]
         else:  # Orient == COL:
-            if Ord == 2: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1]], [P_ROW, Cvrs[0], Cvrs[1]], [P_END, ]]
-            elif Ord == 3: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1], Bases[2]], [P_ROW, Cvrs[0], Cvrs[1], Cvrs[2]], [P_END, ]]
-            else: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1], Bases[2], Bases[3]], [P_ROW, Cvrs[0], Cvrs[1], Cvrs[2], Cvrs[3]], [P_END, ]]
+            if Ord == 2: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1]], [P_ROW, CS[0], CS[1]], [P_END, ]]
+            elif Ord == 3: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1], Bases[2]], [P_ROW, CS[0], CS[1], CS[2]], [P_END, ]]
+            else: Step.Pattern = [[P_VAL, Cand+1], [P_COL, Bases[0], Bases[1], Bases[2], Bases[3]], [P_ROW, CS[0], CS[1], CS[2], CS[3]], [P_END, ]]
         return True
     return False
 
-cdef bint elim_cands_in_finned_fish(int Cand, int *Bases, int Ord, int *CS, int lenCS,  int *CF, int lenCF, int Orient, int Method, bint Cands[9][9][9], Step):
-    cdef int     b, cf, fb, r, c
-    cdef COORD   Fins[3]   # up to 3 fin ccells (in sashimi)
-    cdef COORD   Cvrs [18]  # up to 18 possible cvr ccells (3x6 in swordfish, 2x7=14 in x-wing, 3x5=15 in jellyfish)
-    cdef int     nCvrs, nFins
-    cdef RESULT  Result
-    cdef CHAIN   *Chain
-    cdef NODE    *N
-    cdef OUTCOME *Outcome
+cdef bint elim_cands_in_finned_fish(int Cand, int *BS, int Ord, int *CS, int lenCS, int *CF, int lenCF, int fb, COORD *Fins, int Orient, bint Cands[9][9][9], Step):
+    cdef int f0, cs, fbb, lenCS1, lenElims, FinChute
+    cdef int CS1[3]
+    cdef COORD Elims[6]
 
+    FinChute = CF[0]//3; lenCS1 = 0
+    for cs in range(lenCS):
+        if CS[cs]//3 == FinChute: CS1[lenCS1] = CS[cs]; lenCS1 += 1
+    if not lenCS1: return False
+    lenElims =0; fbb = (fb//3)*3
+    R = []; C = []
     if Orient == ROW:
-        fb = -1; nFins = 0
-        for b in range(Ord):
-            for cf in range(lenCF):
-                if Cands[Bases[b]][CF[cf]][Cand]:
-                    if not(Method & T_SASHIMI_C):  # if not Sashimi
-                        if fb == -1: fb = Bases[b]     # fins can only be in one base
-                        elif fb != Bases[b]: return False
-                    Fins[nFins].r = Bases[b]; Fins[nFins].c = CF[cf]; nFins += 1
-        b = 0; nCvrs = 0
-        # if Method & T_SASHIMI_C:  # For sashimi, the covers are only found along (perpendicular to) the covers of both bases and fins.
-        for r in range(9):
-            if b < Ord and r == Bases[b]: b += 1; continue  # skip over baseset rows (assumes ascending order)
-            for c in range(lenCS):
-                if Cands[r][CS[c]][Cand]: Cvrs[nCvrs].r = r; Cvrs[nCvrs].c = CS[c]; nCvrs += 1
-            for c in range(lenCF):
-                if Cands[r][CF[c]][Cand]: Cvrs[nCvrs].r = r; Cvrs[nCvrs].c = CF[c]; nCvrs += 1
-        # else:  # non sashimi fins, the covers are along (perpendicular) to the coverset values in the basesets
-        #     for r in range(9):
-        #         if b < Ord and r == Bases[b]: b += 1; continue  # skip over basesets (assumes ascending order)
-        #         for c in range(lenCS):
-        #             if Cands[r][CS[c]][Cand]: Cvrs[nCvrs].r = r; Cvrs[nCvrs].c = CS[c]; nCvrs += 1
-        St = ""   ### TRCX
-        for i in range(nFins): ### TRCX
-            if St: St += ", "   ### TRCX
-            St += f"{Cand+1}r{Fins[i].r+1}c{Fins[i].c+1}"  ### TRCX
-        St1 = ""   ### TRCX
-        for i in range(nCvrs): ### TRCX
-            if St1: St1 += ", "   ### TRCX
-            St1 += f"{Cand+1}r{Cvrs[i].r+1}c{Cvrs[i].c+1}"  ### TRCX
-        TRCX(f"Orient: Row, Fins: {St}, Cvrs: {St1}")
+        for f0 in range(fbb, fbb+3):
+            if is_in_int_array(f0, BS, Ord): continue
+            for cs in range(lenCS1):
+                if Cands[f0][CS1[cs]][Cand]: Elims[lenElims].r = f0; Elims[lenElims].c = CS1[cs]; lenElims += 1
+        if lenElims:
+            for i in range(Ord): R.append(BS[i])
+            for i in range(lenCS): C.append(CS[i])
+            Step.Pattern = [[P_VAL, Cand+1], [P_ROW, R], [P_COL, C]]
+    else:  # Orient == COL:
+        for f0 in range(fbb, fbb+3):
+            if is_in_int_array(f0, BS, Ord): continue
+            for cs in range(lenCS1):
+                if Cands[CS1[cs]][f0][Cand]: Elims[lenElims].r = CS1[cs]; Elims[lenElims].c = f0; lenElims += 1
+        if lenElims:
+            for i in range(lenCS): R.append(CS[i])
+            for i in range(Ord): C.append(BS[i])
+            Step.Pattern = [[P_VAL, Cand+1], [P_COL, C], [P_ROW, R]]
 
-    else: # Orient == COL
-        fb = -1; nFins = 0
-        for b in range(Ord):
-            for cf in range(lenCF):
-                if Cands[CF[cf]][Bases[b]][Cand]:
-                    if not(Method & T_SASHIMI_C):  # if not Sashimi
-                        if fb == -1: fb = Bases[b]     # fins can only be in one base
-                        elif fb != Bases[b]: return False
-                    Fins[nFins].r = CF[cf]; Fins[nFins].c = Bases[b]; nFins += 1
-        b = 0; nCvrs = 0
-        if Method & T_SASHIMI_C:  # For sashimi, the covers are only found in the fins.
-            for c in range(9):
-                if b < Ord and c == Bases[b]: b += 1; continue  # skip over baseset rows (assumes ascending order)
-                for r in range(lenCS):
-                    if Cands[CS[r]][c][Cand]: Cvrs[nCvrs].r = CS[r]; Cvrs[nCvrs].c = c; nCvrs += 1
-                for r in range(lenCF):
-                    if Cands[CF[r]][c][Cand]: Cvrs[nCvrs].r = CF[r]; Cvrs[nCvrs].c = c; nCvrs += 1
-        else:  # non sashimi fins, the covers are in the coverset columns.
-            for c in range(9):
-                if b < Ord and c == Bases[b]: b += 1; continue  # skip over baseset rows (assumes ascending order)
-                for r in range(lenCS):
-                    if Cands[CS[r]][c][Cand]: Cvrs[nCvrs].r = CS[r]; Cvrs[nCvrs].c = c; nCvrs += 1
-        St = ""   ### TRCX
-        for i in range(nFins): ### TRCX
-            if St: St += ", "   ### TRCX
-            St += f"{Cand+1}r{Fins[i].r+1}c{Fins[i].c+1}"  ### TRCX
-        St1 = ""   ### TRCX
-        for i in range(nCvrs): ### TRCX
-            if St1: St1 += ", "   ### TRCX
-            St1 += f"{Cand+1}r{Cvrs[i].r+1}c{Cvrs[i].c+1}"  ### TRCX
-        TRCX(f"Orient: Col, Fins: {St}, Cvrs: {St1}")
+    if not lenElims: return False
+    for i in range(lenCF):
+        Step.Pattern.extend([[P_CON, ], [P_ROW, Fins[i].r], [P_COL, Fins[i].c]])
+    for e in range(lenElims):
+        for f in range(lenCF):
+            Step.Pattern.extend([[P_SEP, ], [P_VAL, Cand+1], [P_ROW, Elims[e].r], [P_COL, Elims[e].c], [P_OP, OP_WSLK if how_ccells_linked_c(Elims[e].r, Elims[e].c, Cand, Fins[f].r, Fins[f].c, Cand, Cands) & LK_STRG_C else OP_WLK], [P_VAL, Cand+1], [P_ROW, Fins[f].r], [P_COL, Fins[f].c]])
+        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+        Step.Outcome.extend([[P_ROW, Elims[e].r], [P_COL, Elims[e].c], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
+    for e in range(lenElims): Cands[Elims[e].r][Elims[e].c][Cand] = False
+    if Ord == 2: Step.Method = T_FINNED_X_WING
+    elif Ord == 3: Step.Method = T_FINNED_SWORDFISH
+    else:  Step.Method = T_FINNED_JELLYFISH
+    Step.Pattern.append([P_END, ])
+    Step.Outcome.append([P_END, ])
+    return True
 
-    if nCvrs:
-        if Method & T_GRPLK_C:
-            if not find_cover_links_to_all_fins_gl(<COORD *>Fins, nFins, <COORD *>Cvrs, nCvrs, Cand, Cands, Method, &Result): return False
-        else:
-            if not find_cover_links_to_all_fins(<COORD *>Fins, nFins, <COORD *>Cvrs, nCvrs, Cand, Cands, Method, &Result): return False
-        Step.Method = Method
-        BSp = []; CSp = []
-        for b in range(Ord): BSp.append(Bases[b]);
-        for c in range(lenCS): CSp.append(CS[c])
-        if Orient == ROW: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, BSp], [P_COL, CSp]]
-        else: Step.Pattern = [[P_VAL, Cand+1], [P_COL, BSp], [P_ROW, CSp]]
-        for fb in range(nFins): Step.Pattern.extend([[P_CON, ], [P_ROW, Fins[fb].r], [P_COL, Fins[fb].c]])
-        if Method & T_GRPLK_C:
-            while Result.Chain:
-                Chain = Result.Chain; Result.Chain = Chain.Next
-                Step.Pattern.append([P_SEP, ])
-                while Chain.Start:
-                    N = Chain.Start; Chain.Start = N.Next
-                    R = []; C = []
-                    for i in range(N.rgl.l): R.append(N.rgl.v[i])
-                    for i in range(N.cgl.l): C.append(N.cgl.v[i])
-                    Step.NrLks += 1
-                    if N.rgl.l > 1 or N.cgl.l > 1: Step.NrGrpLks += 1
-                    Step.Pattern.extend([[P_VAL, N.Cand+1], [P_ROW, R], [P_COL, C], [P_OP, TKN_LK[N.Lk&7]]])
-                    PyMem_TRCX_Free(N)
-                PyMem_TRCX_Free(Chain)
-        else:  # normal scalar links, not group links.
-            TRCX(f"Result: 0x{<long long>&Result:016x}, Result.Chain: 0x{<long long> Result.Chain:016x}, Result.Outcome: 0x{<long long> Result.Outcome:016x}.")
-            TRCX(f"Result.Chain: 0x{<long long>Result.Chain:016x}, Result.Chain.Start: 0x{<long long>Result.Chain.Start:016x}, Result.Chain.Next: 0x{<long long>Result.Chain.Next:016x}")
-            while Result.Chain:
-                Chain = Result.Chain; Result.Chain = Chain.Next
-                Step.Pattern.append([P_SEP, ])
-                while Chain.Start:
-                    N = Chain.Start; Chain.Start = N.Next
-                    Step.NrLks += 1
-                    St = f"&N: 0x{<long long> &N:016x}, N: 0x{<long long> N:016x}, N: {N.Cand+1}r{N.r+1}c{N.c+1}{OP[TKN_LK[N.Lk&7]]}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}"
-                    TRCX(St)
-                    Step.Pattern.extend([[P_VAL, N.Cand+1], [P_ROW, N.r], [P_COL, N.c], [P_OP, TKN_LK[N.Lk&7]]])
-                    PyMem_TRCX_Free(N)
-                PyMem_TRCX_Free(Chain)
-        Step.Pattern.append([P_END, ])
-        St = tkns_to_str(Step.Pattern)  # TRCX
-        TRCX(f"Pattern: {St}")
-        Outcome = Result.Outcome
-        while Result.Outcome:
-            Outcome = Result.Outcome; Result.Outcome = Outcome.Next
-            Cands[Outcome.r][Outcome.c][Outcome.Cand] = False
-            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-            Step.Outcome.extend([[P_ROW, Outcome.r], [P_COL, Outcome.c], [P_OP, Outcome.Op], [P_VAL, Outcome.Cand+1]])
-            PyMem_TRCX_Free(Outcome)
-        Step.Outcome.append([P_END, ])
-        St = tkns_to_str(Step.Outcome)  ### TRCX
-        TRCX(f"Outcome: {St}")
-        return True
+cdef bint elim_cands_in_sashimi_fish(int Cand, int*Bases, int Ord, int*CS, int lenCS, int*CF, int lenCF, int*FB, int lenFB, COORD*Fins, int Orient, bint Cands[9][9][9], Step):
     return False
+
+cdef bint elim_cands_in_kraken_fish(int Cand, int*Bases, int Ord, int*CS, int lenCS, COORD*Fins, int lenCF, int Orient, bint Cands[9][9][9], bint GrpLk, Step):
+    return False
+
+    #
+    # # cdef int     b, cf, fb, r, c
+    # cdef int     b, cf, r, c
+    # # cdef COORD   Fins[3]   # up to 3 fin ccells (in sashimi)
+    # cdef COORD   Cvrs [18]  # up to 18 possible cvr ccells (3x6 in swordfish, 2x7=14 in x-wing, 3x5=15 in jellyfish)
+    # cdef int     nCvrs, nFins
+    # cdef RESULT  Result
+    # cdef CHAIN   *Chain
+    # cdef NODE    *N
+    # cdef OUTCOME *Outcome
+    #
+    # if Orient == ROW:
+    #     fb = -1; nFins = 0
+    #     for b in range(Ord):
+    #         for cf in range(lenCF):
+    #             if Cands[Bases[b]][CF[cf]][Cand]:
+    #                 if not(Method & T_SASHIMI_C):  # if not Sashimi
+    #                     if fb == -1: fb = Bases[b]     # fins can only be in one base
+    #                     elif fb != Bases[b]: return False
+    #                 Fins[nFins].r = Bases[b]; Fins[nFins].c = CF[cf]; nFins += 1
+    #     b = 0; nCvrs = 0
+    #     # if Method & T_SASHIMI_C:  # For sashimi, the covers are only found along (perpendicular to) the covers of both bases and fins.
+    #     for r in range(9):
+    #         if b < Ord and r == Bases[b]: b += 1; continue  # skip over baseset rows (assumes ascending order)
+    #         for c in range(lenCS):
+    #             if Cands[r][CS[c]][Cand]: Cvrs[nCvrs].r = r; Cvrs[nCvrs].c = CS[c]; nCvrs += 1
+    #         for c in range(lenCF):
+    #             if Cands[r][CF[c]][Cand]: Cvrs[nCvrs].r = r; Cvrs[nCvrs].c = CF[c]; nCvrs += 1
+    #     # else:  # non sashimi fins, the covers are along (perpendicular) to the coverset values in the basesets
+    #     #     for r in range(9):
+    #     #         if b < Ord and r == Bases[b]: b += 1; continue  # skip over basesets (assumes ascending order)
+    #     #         for c in range(lenCS):
+    #     #             if Cands[r][CS[c]][Cand]: Cvrs[nCvrs].r = r; Cvrs[nCvrs].c = CS[c]; nCvrs += 1
+    #     St = ""   ### TRCX
+    #     for i in range(nFins): ### TRCX
+    #         if St: St += ", "   ### TRCX
+    #         St += f"{Cand+1}r{Fins[i].r+1}c{Fins[i].c+1}"  ### TRCX
+    #     St1 = ""   ### TRCX
+    #     for i in range(nCvrs): ### TRCX
+    #         if St1: St1 += ", "   ### TRCX
+    #         St1 += f"{Cand+1}r{Cvrs[i].r+1}c{Cvrs[i].c+1}"  ### TRCX
+    #     TRCX(f"Orient: Row, Fins: {St}, Cvrs: {St1}")
+    #
+    # else: # Orient == COL
+    #     fb = -1; nFins = 0
+    #     for b in range(Ord):
+    #         for cf in range(lenCF):
+    #             if Cands[CF[cf]][Bases[b]][Cand]:
+    #                 if not(Method & T_SASHIMI_C):  # if not Sashimi
+    #                     if fb == -1: fb = Bases[b]     # fins can only be in one base
+    #                     elif fb != Bases[b]: return False
+    #                 Fins[nFins].r = CF[cf]; Fins[nFins].c = Bases[b]; nFins += 1
+    #     b = 0; nCvrs = 0
+    #     if Method & T_SASHIMI_C:  # For sashimi, the covers are only found in the fins.
+    #         for c in range(9):
+    #             if b < Ord and c == Bases[b]: b += 1; continue  # skip over baseset rows (assumes ascending order)
+    #             for r in range(lenCS):
+    #                 if Cands[CS[r]][c][Cand]: Cvrs[nCvrs].r = CS[r]; Cvrs[nCvrs].c = c; nCvrs += 1
+    #             for r in range(lenCF):
+    #                 if Cands[CF[r]][c][Cand]: Cvrs[nCvrs].r = CF[r]; Cvrs[nCvrs].c = c; nCvrs += 1
+    #     else:  # non sashimi fins, the covers are in the coverset columns.
+    #         for c in range(9):
+    #             if b < Ord and c == Bases[b]: b += 1; continue  # skip over baseset rows (assumes ascending order)
+    #             for r in range(lenCS):
+    #                 if Cands[CS[r]][c][Cand]: Cvrs[nCvrs].r = CS[r]; Cvrs[nCvrs].c = c; nCvrs += 1
+    #     St = ""   ### TRCX
+    #     for i in range(nFins): ### TRCX
+    #         if St: St += ", "   ### TRCX
+    #         St += f"{Cand+1}r{Fins[i].r+1}c{Fins[i].c+1}"  ### TRCX
+    #     St1 = ""   ### TRCX
+    #     for i in range(nCvrs): ### TRCX
+    #         if St1: St1 += ", "   ### TRCX
+    #         St1 += f"{Cand+1}r{Cvrs[i].r+1}c{Cvrs[i].c+1}"  ### TRCX
+    #     TRCX(f"Orient: Col, Fins: {St}, Cvrs: {St1}")
+    #
+    # if nCvrs:
+    #     if Method & T_GRPLK_C:
+    #         if not find_cover_links_to_all_fins_gl(<COORD *>Fins, nFins, <COORD *>Cvrs, nCvrs, Cand, Cands, Method, &Result): return False
+    #     else:
+    #         if not find_cover_links_to_all_fins(<COORD *>Fins, nFins, <COORD *>Cvrs, nCvrs, Cand, Cands, Method, &Result): return False
+    #     Step.Method = Method
+    #     BSp = []; CSp = []
+    #     for b in range(Ord): BSp.append(Bases[b]);
+    #     for c in range(lenCS): CSp.append(CS[c])
+    #     if Orient == ROW: Step.Pattern = [[P_VAL, Cand+1], [P_ROW, BSp], [P_COL, CSp]]
+    #     else: Step.Pattern = [[P_VAL, Cand+1], [P_COL, BSp], [P_ROW, CSp]]
+    #     for fb in range(nFins): Step.Pattern.extend([[P_CON, ], [P_ROW, Fins[fb].r], [P_COL, Fins[fb].c]])
+    #     if Method & T_GRPLK_C:
+    #         while Result.Chain:
+    #             Chain = Result.Chain; Result.Chain = Chain.Next
+    #             Step.Pattern.append([P_SEP, ])
+    #             while Chain.Start:
+    #                 N = Chain.Start; Chain.Start = N.Next
+    #                 R = []; C = []
+    #                 for i in range(N.rgl.l): R.append(N.rgl.v[i])
+    #                 for i in range(N.cgl.l): C.append(N.cgl.v[i])
+    #                 Step.NrLks += 1
+    #                 if N.rgl.l > 1 or N.cgl.l > 1: Step.NrGrpLks += 1
+    #                 Step.Pattern.extend([[P_VAL, N.Cand+1], [P_ROW, R], [P_COL, C], [P_OP, TKN_LK[N.Lk&7]]])
+    #                 PyMem_TRCX_Free(N)
+    #             PyMem_TRCX_Free(Chain)
+    #     else:  # normal scalar links, not group links.
+    #         TRCX(f"Result: 0x{<long long>&Result:016x}, Result.Chain: 0x{<long long> Result.Chain:016x}, Result.Outcome: 0x{<long long> Result.Outcome:016x}.")
+    #         TRCX(f"Result.Chain: 0x{<long long>Result.Chain:016x}, Result.Chain.Start: 0x{<long long>Result.Chain.Start:016x}, Result.Chain.Next: 0x{<long long>Result.Chain.Next:016x}")
+    #         while Result.Chain:
+    #             Chain = Result.Chain; Result.Chain = Chain.Next
+    #             Step.Pattern.append([P_SEP, ])
+    #             while Chain.Start:
+    #                 N = Chain.Start; Chain.Start = N.Next
+    #                 Step.NrLks += 1
+    #                 St = f"&N: 0x{<long long> &N:016x}, N: 0x{<long long> N:016x}, N: {N.Cand+1}r{N.r+1}c{N.c+1}{OP[TKN_LK[N.Lk&7]]}, N.Prev: 0x{<long long>N.Prev:016x}, N.Next: 0x{<long long>N.Next:016x}"
+    #                 TRCX(St)
+    #                 Step.Pattern.extend([[P_VAL, N.Cand+1], [P_ROW, N.r], [P_COL, N.c], [P_OP, TKN_LK[N.Lk&7]]])
+    #                 PyMem_TRCX_Free(N)
+    #             PyMem_TRCX_Free(Chain)
+    #     Step.Pattern.append([P_END, ])
+    #     St = tkns_to_str(Step.Pattern)  # TRCX
+    #     TRCX(f"Pattern: {St}")
+    #     Outcome = Result.Outcome
+    #     while Result.Outcome:
+    #         Outcome = Result.Outcome; Result.Outcome = Outcome.Next
+    #         Cands[Outcome.r][Outcome.c][Outcome.Cand] = False
+    #         if Step.Outcome: Step.Outcome.append([P_SEP, ])
+    #         Step.Outcome.extend([[P_ROW, Outcome.r], [P_COL, Outcome.c], [P_OP, Outcome.Op], [P_VAL, Outcome.Cand+1]])
+    #         PyMem_TRCX_Free(Outcome)
+    #     Step.Outcome.append([P_END, ])
+    #     St = tkns_to_str(Step.Outcome)  ### TRCX
+    #     TRCX(f"Outcome: {St}")
+    #     return True
+    # return False
+
 
 cdef bint find_cover_links_to_all_fins(COORD *Fins, int nFins, COORD *Cvrs, int nCvrs, int Cand, bint Cands[9][9][9], int Method, RESULT *Result):
     # must free all allocated memory if returning false.

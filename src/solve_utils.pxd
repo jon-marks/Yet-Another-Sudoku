@@ -65,6 +65,8 @@ ctypedef struct TNODE_FFISH:
 # That said, I am not going to waste time converting wrappers back to their python function
 # and will continue to use them.  But unless a there is no alternative, no more wrappers.
 
+cdef bint is_in_int_array(int v, int *A, int lenA)
+
 cdef CHAIN* pchain_2_cchain(list PChain)
 cdef list cchain_2_pchain(CHAIN* CChain)
 cdef CHAIN* pchain_2_cchain_gl(list PChain)

@@ -38,8 +38,8 @@ def tech_x_wings(Grid, Step, Cands, Methods):
                             bc0 = int(c in BC0); bc1 = int(c in BC1)
                             if bc0 or bc1: CU.append(c)
                             if bc0 + bc1 == 2: CS.append(c)
-                        if len(CU) != len(CS) or len(CS) != 2: continue
-                        if elim_cands_in_fish(Cand, [r0, r1], CS, P_ROW, Cands, Step): return 0
+                        if len(CU) == len(CS) == 2:
+                            if elim_cands_in_fish(Cand, [r0, r1], CS, P_ROW, Cands, Step): return 0
         # look at col base-sets
         for c0 in range(8):
             BC0 = []
@@ -64,36 +64,9 @@ def tech_x_wings(Grid, Step, Cands, Methods):
                             bc0 = int(r in BC0); bc1 = int(r in BC1)
                             if bc0 or bc1: CU.append(r)
                             if bc0 + bc1 == 2: CS.append(r)
-                        if len(CU) != len(CS) or len(CS) != 2: continue
-                        if elim_cands_in_fish(Cand, [c0, c1], CS, P_COL, Cands, Step): return 0
+                        if len(CU) == len(CS) == 2:
+                            if elim_cands_in_fish(Cand, [c0, c1], CS, P_COL, Cands, Step): return 0
     return -1
-    #     # look at rows
-    #     BC = [set() for i in range(9)]
-    #     for r in range(9):
-    #         for c in range(9):
-    #             if Cand in Cands[r][c]: BC[r].add(c)
-    #     for r0 in range(8):
-    #         if len(BC[r0]) != 2: continue
-    #         for r1 in range(r0+1, 9):
-    #             if len(BC[r1]) != 2: continue
-    #             BS = [r0, r1]
-    #             CU = sorted(BC[r0] | BC[r1])
-    #             if len(CU) != 2: continue
-    #             if elim_cands_in_fish(Cand, BS, CU, P_ROW, Cands, Step): return 0
-    #     # look at cols
-    #     BC = [set() for i in range(9)]
-    #     for c in range(9):
-    #         for r in range(9):
-    #             if Cand in Cands[r][c]: BC[c].add(r)
-    #     for c0 in range(8):
-    #         if len(BC[c0]) != 2: continue
-    #         for c1 in range(c0+1, 9):
-    #             if len(BC[c1]) != 2: continue
-    #             BS = [c0, c1]
-    #             CU = sorted(BC[c0] | BC[c1])
-    #             if len(CU) != 2: continue
-    #             if elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
-    # return -1
 
 def tech_finned_x_wings(Grid, Step, Cands, Methods):
     # Handles every type of fins and patterns
@@ -179,52 +152,6 @@ def tech_finned_x_wings(Grid, Step, Cands, Methods):
                             if elim_cands_in_kraken_fish(Cand, [c0, c1], CS, Fins, P_COL, Cands, T_GL_KRAKEN_FINNED_X_WING, Step): return 0
                         if T_GL_KRAKEN_SASHIMI_X_WING in Methods and len(CS) == 1 and 2 <= len(CF) <= 8:
                             if elim_cands_in_kraken_fish(Cand, [c0, c1], CS, Fins, P_COL, Cands, T_GL_KRAKEN_SASHIMI_X_WING, Step): return 0
-        #
-        # BC = [set() for i in range(9)]
-        # for r in range(9):
-        #     for c in range(9):
-        #         if Cand in Cands[r][c]: BC[r].add(c)
-        # for r0 in range(8):  # looking for base sets with two bases and zero, one or two fins.
-        #     if not 2 <= len(BC[r0]) <= 4: continue
-        #     for r1 in range(r0+1, 9):
-        #         if not 2 <= len(BC[r1]) <= 4: continue
-        #         CU = sorted(BC[r0] | BC[r1])
-        #         # A valid union CU is either 2 cover sets and 1 or 2 fins, or 1 cover and 2 or 3 fins.
-        #         lenCU = len(CU)
-        #         if not 3 <= lenCU <= 4: continue
-        #         BS = [r0, r1]; CS = []; CF = []
-        #         for cu in CU:
-        #             bi = 0
-        #             for bs in BS:
-        #                 if Cand in Cands[bs][cu]: bi +=1
-        #             if bi == 1: CF.append(cu)
-        #             elif bi == 2: CS.append(cu)
-        #         for Method in Methods:
-        #             if (Method & T_SASHIMI and (len(CS) == 1 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 2 and 1 <= len(CF) <= 2)):
-        #                 if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
-        # # look at cols
-        # BC = [set() for i in range(9)]
-        # for c in range(9):
-        #     for r in range(9):
-        #         if Cand in Cands[r][c]: BC[c].add(r)
-        # for c0 in range(8):
-        #     if not 2 <= len(BC[c0]) <= 4: continue
-        #     for c1 in range(c0+1, 9):
-        #         if not 2 <= len(BC[c1]) <= 4: continue
-        #         CU = sorted(BC[c0] | BC[c1])
-        #         # A valid union CU is either 2 cover sets and 1 or 2 fins, or 1 cover and 2 or 3 fins.
-        #         lenCU = len(CU)
-        #         if not 3 <= lenCU <= 4: continue
-        #         BS = [c0, c1]; CS = []; CF = []
-        #         for cu in CU:
-        #             bi = 0
-        #             for bs in BS:
-        #                 if Cand in Cands[cu][bs]: bi +=1
-        #             if bi == 1: CF.append(cu)
-        #             elif bi == 2: CS.append(cu)
-        #         for Method in Methods:
-        #             if (Method & T_SASHIMI and (len(CS) == 1 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 2 and 1 <= len(CF) <= 2)):
-        #                 if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
     return -1
 
 def tech_swordfish(Grid, Step, Cands, Methods):
@@ -240,37 +167,6 @@ def tech_swordfish(Grid, Step, Cands, Methods):
     # Base sets can also be columns and cover sets, rows - to find column wise
     # Swordfish
 
-    # for Cand in range(1, 10):
-    #     # look at rows
-    #     BC = [set() for i in range(9)]
-    #     for r in range(9):
-    #         for c in range(9):
-    #             if Cand in Cands[r][c]: BC[r].add(c)
-    #     for r0 in range(7):
-    #         if len(BC[r0]) < 2: continue
-    #         for r1 in range(r0+1, 8):
-    #             if len(BC[r1]) < 2: continue
-    #             for r2 in range(r1+1, 9):
-    #                 if len(BC[r2]) < 2: continue
-    #                 BS = [r0, r1, r2]
-    #                 CU = sorted(BC[r0] | BC[r1] | BC[r2])
-    #                 if len(CU) != 3: continue
-    #                 if elim_cands_in_fish(Cand, BS, CU, P_ROW, Cands, Step): return 0
-    #     # look at cols
-    #     BC = [set() for i in range(9)]
-    #     for c in range(9):
-    #         for r in range(9):
-    #             if Cand in Cands[r][c]: BC[c].add(r)
-    #     for c0 in range(7):
-    #         if len(BC[c0]) < 2: continue
-    #         for c1 in range(c0+1, 8):
-    #             if len(BC[c1]) < 2: continue
-    #             for c2 in range(c1+1, 9):
-    #                 if len(BC[c2]) < 2: continue
-    #                 BS = [c0, c1, c2]
-    #                 CU = sorted(BC[c0] | BC[c1] | BC[c2])
-    #                 if len(CU) != 3: continue
-    #                 if elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
     for Cand in range(1, 10):
         # look at row base-sets
         for r0 in range(7):
@@ -305,8 +201,8 @@ def tech_swordfish(Grid, Step, Cands, Methods):
                                     bc0 = int(c in BC0); bc1 = int(c in BC1); bc2 = int(c in BC2)
                                     if bc0 or bc1 or bc2: CU.append(c)
                                     if bc0 + bc1 + bc2 >= 2: CS.append(c)
-                                if len(CU) != len(CS) or len(CS) != 3: continue
-                                if elim_cands_in_fish(Cand, [r0, r1, r2], CS, P_ROW, Cands, Step): return 0
+                                if len(CU) == len(CS) == 3:
+                                    if elim_cands_in_fish(Cand, [r0, r1, r2], CS, P_ROW, Cands, Step): return 0
         # look at col base-sets
         for c0 in range(7):
             BC0 = []
@@ -340,8 +236,8 @@ def tech_swordfish(Grid, Step, Cands, Methods):
                                     bc0 = int(r in BC0); bc1 = int(r in BC1); bc2 = int(r in BC2)
                                     if bc0 or bc1 or bc2: CU.append(r)
                                     if bc0 + bc1 + bc2 >= 2: CS.append(r)
-                                if len(CU) != len(CS) or len(CS) != 3: continue
-                                if elim_cands_in_fish(Cand, [c0, c1, c2], CS, P_COL, Cands, Step): return 0
+                                if len(CU) == len(CS) == len(CS) == 3:
+                                    if elim_cands_in_fish(Cand, [c0, c1, c2], CS, P_COL, Cands, Step): return 0
     return -1
 
 def tech_finned_swordfish(Grid, Step, Cands, Methods):
@@ -403,7 +299,7 @@ def tech_finned_swordfish(Grid, Step, Cands, Methods):
                                     if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], CS, Fins, P_ROW, Cands, T_GL_KRAKEN_FINNED_SWORDFISH, Step): return 0
                                 if T_GL_KRAKEN_SASHIMI_SWORDFISH in Methods and len(CS) == 2 and 2 <= len(CF) <= 7:
                                     if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], CS, Fins, P_ROW, Cands, T_GL_KRAKEN_SASHIMI_SWORDFISH, Step): return 0
-            # look at base-set cols
+        # look at base-set cols
         for c0 in range(7):
             BC0 = []
             for r in range(9):
@@ -448,60 +344,6 @@ def tech_finned_swordfish(Grid, Step, Cands, Methods):
                                     if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], CS, Fins, P_COL, Cands, T_GL_KRAKEN_FINNED_SWORDFISH, Step): return 0
                                 if T_GL_KRAKEN_SASHIMI_SWORDFISH in Methods and len(CS) == 2 and 2 <= len(CF) <= 7:
                                     if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], CS, Fins, P_COL, Cands, T_GL_KRAKEN_SASHIMI_SWORDFISH, Step): return 0
-
-        # BC = [set() for i in range(9)]
-        # for r in range(9):
-        #     for c in range(9):
-        #         if Cand in Cands[r][c]: BC[r].add(c)
-        # for r0 in range(7):  # looking for bases with btwn two and three bases and btwn zero and two fins
-        #     if not 2 <= len(BC[r0]) <= 5: continue
-        #     for r1 in range(r0+1, 8):
-        #         if not 2 <= len(BC[r1]) <= 5: continue
-        #         for r2 in range(r1+1, 9):
-        #             if not 2 <= len(BC[r2]) <= 5: continue
-        #             CU = sorted(BC[r0] | BC[r1] | BC[r2])
-        #             lenCU = len(CU)
-        #             # lenCU must be between 4 and 5, comprising EITHER
-        #             #   lenCS = 3 and lenCF of 1 or 2 for finned OR
-        #             #   lenCF = 2 and lenCF of 1 to 3 for Sashimi.
-        #             if not 4 <= lenCU <= 5: continue
-        #             BS = [r0, r1, r2]; CS = []; CF = []
-        #             for cu in CU:
-        #                 bi = 0
-        #                 for bs in BS:
-        #                     if Cand in Cands[bs][cu]: bi += 1
-        #                 if bi == 1: CF.append(cu)
-        #                 elif bi >= 2: CS.append(cu)
-        #             for Method in Methods:
-        #                 if (Method & T_SASHIMI and (len(CS) == 2 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 3 and 1 <= len(CF) <= 2)):
-        #                     if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
-        # # look at cols
-        # BC = [set() for i in range(9)]
-        # for c in range(9):
-        #     for r in range(9):
-        #         if Cand in Cands[r][c]: BC[c].add(r)
-        # for c0 in range(7):
-        #     if not 2 <= len(BC[c0]) <= 5: continue
-        #     for c1 in range(c0+1, 8):
-        #         if not 2 <= len(BC[c1]) <= 5: continue
-        #         for c2 in range(c1+1, 9):
-        #             if not 2 <= len(BC[c2]) <= 5: continue
-        #             CU = sorted(BC[c0] | BC[c1] | BC[c2])
-        #             lenCU = len(CU)
-        #             # lenCU must be between 4 and 5, comprising EITHER
-        #             #   lenCS = 3 and lenCF of 1 or 2 for finned OR
-        #             #   lenCF = 2 and lenCF of 1 to 3 for Sashimi
-        #             if not 4 <= lenCU <= 5: continue
-        #             BS = [c0, c1, c2]; CS = []; CF = []
-        #             for cu in CU:
-        #                 bi = 0
-        #                 for bs in BS:
-        #                     if Cand in Cands[cu][bs]: bi += 1
-        #                 if bi == 1: CF.append(cu)
-        #                 elif bi >= 2: CS.append(cu)
-        #             for Method in Methods:
-        #                 if (Method & T_SASHIMI and (len(CS) == 2 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 3 and 1 <= len(CF) <= 2)):
-        #                     if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
     return -1
 
 def tech_jellyfish(Grid, Step, Cands, Methods):
@@ -560,8 +402,8 @@ def tech_jellyfish(Grid, Step, Cands, Methods):
                                             bc0 = int(c in BC0); bc1 = int(c in BC1); bc2 = int(c in BC2); bc3 = int(c in BC3)
                                             if bc0 or bc1 or bc2 or bc3: CU.append(c)
                                             if bc0 + bc1 + bc2 + bc3 >= 2: CS.append(c)
-                                        if len(CU) != len(CS) or len(CS) != 4: continue
-                                        if elim_cands_in_fish(Cand, [r0, r1, r2, r3], CS, P_ROW, Cands, Step): return 0
+                                        if len(CU) == len(CS) == 4:
+                                            if elim_cands_in_fish(Cand, [r0, r1, r2, r3], CS, P_ROW, Cands, Step): return 0
         # look at col base-sets
         for c0 in range(6):
             BC0 = []
@@ -604,43 +446,8 @@ def tech_jellyfish(Grid, Step, Cands, Methods):
                                             bc0 = int(r in BC0); bc1 = int(r in BC1); bc2 = int(r in BC2); bc3 = int(r in BC3)
                                             if bc0 or bc1 or bc2 or bc3: CU.append(r)
                                             if bc0 + bc1 + bc2 + bc3 >= 2: CS.append(r)
-                                        if len(CU) != len(CS) or len(CS) != 4: continue
-                                        if elim_cands_in_fish(Cand, [c0, c1, c2, c3], CS, P_COL, Cands, Step): return 0
-    # for Cand in range(1, 10):
-    #     # look at rows
-    #     BC = [set() for i in range(9)]
-    #     for r in range(9):
-    #         for c in range(9):
-    #             if Cand in Cands[r][c]: BC[r].add(c)
-    #     for r0 in range(6):
-    #         if len(BC[r0]) < 2: continue
-    #         for r1 in range(r0+1, 7):
-    #             if len(BC[r1]) < 2: continue
-    #             for r2 in range(r1+1, 8):
-    #                 if len(BC[r2]) < 2: continue
-    #                 for r3 in range(r2+1, 9):
-    #                     if len(BC[r3]) < 2: continue
-    #                     BS = [r0, r1, r2, r3]
-    #                     CU = sorted(BC[r0] | BC[r1] | BC[r2] | BC[r3])
-    #                     if len(CU) != 4: continue
-    #                     if elim_cands_in_fish(Cand, BS, CU, P_ROW, Cands, Step): return 0
-    #     # look at cols
-    #     BC = [set() for i in range(9)]
-    #     for c in range(9):
-    #         for r in range(9):
-    #             if Cand in Cands[r][c]: BC[c].add(r)
-    #     for c0 in range(6):
-    #         if len(BC[c0]) < 2: continue
-    #         for c1 in range(c0+1, 7):
-    #             if len(BC[c1]) < 2: continue
-    #             for c2 in range(c1+1, 8):
-    #                 if len(BC[c2]) < 2: continue
-    #                 for c3 in range(c2+1, 9):
-    #                     if len(BC[c3]) < 2: continue
-    #                     BS = [c0, c1, c2, c3]
-    #                     CU = sorted(BC[c0] | BC[c1] | BC[c2] | BC[c3])
-    #                     if len(CU) != 4: continue
-    #                     if elim_cands_in_fish(Cand, BS, CU, P_COL, Cands, Step): return 0
+                                        if len(CU) == len(CS) == 4:
+                                            if elim_cands_in_fish(Cand, [c0, c1, c2, c3], CS, P_COL, Cands, Step): return 0
     return -1
 
 def tech_finned_jellyfish(Grid, Step, Cands, Methods):
@@ -659,7 +466,7 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                     BC1 = []
                     for c in range(9):
                         if Cand == Grid[r1][c]: break
-                        if Grid[r1][c] or Cand not in Cands[r1][c]: break
+                        if Grid[r1][c] or Cand not in Cands[r1][c]: continue
                         BC1.append(c)
                     else:
                         if len(BC1) < 2: continue
@@ -667,7 +474,7 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                             BC2 = []
                             for c in range(9):
                                 if Cand == Grid[r2][c]: break
-                                if Grid[r2][c] or Cand not in Cands[r2][c]: break
+                                if Grid[r2][c] or Cand not in Cands[r2][c]: continue
                                 BC2.append(c)
                             else:
                                 if len(BC2) < 2: continue
@@ -675,7 +482,7 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                                     BC3 = []
                                     for c in range(9):
                                         if Cand == Grid[r3][c]: break
-                                        if Grid[r3][c] or Cand not in Cands[r3][c]: break
+                                        if Grid[r3][c] or Cand not in Cands[r3][c]: continue
                                         BC3.append(c)
                                     else:
                                         if len(BC3) < 2: continue
@@ -754,65 +561,6 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                                             if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], CS, Fins, P_COL, Cands, T_GL_KRAKEN_FINNED_JELLYFISH, Step): return 0
                                         if T_GL_KRAKEN_SASHIMI_JELLYFISH in Methods and len(CS) == 3 and 2 <= len(CF) <= 6:
                                             if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], CS, Fins, P_COL, Cands, T_GL_KRAKEN_SASHIMI_JELLYFISH, Step): return 0
-    # for Cand in range(1, 10):
-    #     # look at rows
-    #     BC = [set() for i in range(9)]
-    #     for r in range(9):
-    #         for c in range(9):
-    #             if Cand in Cands[r][c]: BC[r].add(c)
-    #     for r0 in range(6):  # looking for base rows with 2 to 4 bases and 0 to 2 fins
-    #         if not 2 <= len(BC[r0]) <= 6: continue
-    #         for r1 in range(r0+1, 7):
-    #             if not 2 <= len(BC[r1]) <= 6: continue
-    #             for r2 in range(r1+1, 8):
-    #                 if not 2 <= len(BC[r2]) <= 6: continue
-    #                 for r3 in range(r2+1, 9):
-    #                     if not 2 <= len(BC[r3]) <= 6: continue
-    #                     CU = sorted(BC[r0] | BC[r1] | BC[r2] | BC[r3])
-    #                     lenCU = len(CU)
-    #                     # lenCU must be between 5 and 6, comprising EITHER
-    #                     #   lenCS = 4 and lenCF of 1 or 2 for finned OR
-    #                     #   lenCF = 3 and lenCF of 1 to 3 for Sashimi.
-    #                     if not 5 <= lenCU <= 6: continue
-    #                     BS = [r0, r1, r2, r3]; CS = []; CF = []
-    #                     for cu in CU:
-    #                         bi = 0
-    #                         for bs in BS:
-    #                             if Cand in Cands[bs][cu]: bi += 1
-    #                         if bi == 1: CF.append(cu)
-    #                         elif bi >= 2: CS.append(cu)
-    #                     for Method in Methods:
-    #                         if (Method & T_SASHIMI and (len(CS) == 3 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 4 and 1 <= len(CF) <= 2)):
-    #                             if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_ROW, Cands, Step, Method): return 0
-    #     # look at cols
-    #     BC = [set() for i in range(9)]
-    #     for c in range(9):
-    #         for r in range(9):
-    #             if Cand in Cands[r][c]: BC[c].add(r)
-    #     for c0 in range(6):
-    #         if not 2 <= len(BC[c0]) <= 6: continue
-    #         for c1 in range(c0+1, 7):
-    #             if not 2 <= len(BC[c1]) <= 6: continue
-    #             for c2 in range(c1+1, 8):
-    #                 if not 2 <= len(BC[c2]) <= 6: continue
-    #                 for c3 in range(c2+1, 9):
-    #                     if not 2 <= len(BC[c3]) <= 6: continue
-    #                     CU = sorted(BC[c0] | BC[c1] | BC[c2] | BC[c3])
-    #                     lenCU = len(CU)
-    #                     # lenCU must be between 5 and 6, comprising EITHER
-    #                     #   lenCS = 4 and lenCF of 1 or 2 for finned OR
-    #                     #   lenCF = 3 and lenCF of 1 to 3 for Sashimi.
-    #                     if not 5 <= lenCU <= 6: continue
-    #                     BS = [c0, c1, c2, c3]; CS = []; CF = []
-    #                     for cu in CU:
-    #                         bi = 0
-    #                         for bs in BS:
-    #                             if Cand in Cands[cu][bs]: bi += 1
-    #                         if bi == 1: CF.append(cu)
-    #                         elif bi >= 2: CS.append(cu)
-    #                     for Method in Methods:
-    #                         if (Method & T_SASHIMI and (len(CS) == 3 and 2 <= len(CF) <= 3)) or (Method ^ T_SASHIMI and (len(CS) == 4 and 1 <= len(CF) <= 2)):
-    #                             if _elim_cands_in_finned_fish(Cand, BS, CS, CF, P_COL, Cands, Step, Method): return 0
     return -1
 
 # todo: tech_franken_swordfish
@@ -855,8 +603,6 @@ def elim_cands_in_finned_fish(Cand, BS, CS, CF, fb, Fins, Orient, Cands, Step):
     CS1 = []; FinChute = CF[0]//3 # ensure Fin(s) in the same cover chute as one of the cover-sets.
     for cs in CS:
         if cs//3 == FinChute: CS1.append(cs)
-    # if CS[0]//3 == CF[0]//3: CS1.append(CS[0])
-    # if CS[1]//3 == CF[0]//3: CS1.append(CS[1])
     if not CS1: return False
     Elims = []; fbb = (fb//3)*3
     if Orient == P_ROW:
@@ -874,14 +620,12 @@ def elim_cands_in_finned_fish(Cand, BS, CS, CF, fb, Fins, Orient, Cands, Step):
     if not Elims: return False
     for rf, cf in Fins:
         Step.Pattern.extend([[P_CON, ], [P_ROW, rf], [P_COL, cf]])
-    Discards = []
     for rc, cc in Elims:
         for rf, cf in Fins:
             Step.Pattern.extend([[P_SEP, ], [P_VAL, Cand], [P_ROW, rc], [P_COL, cc], [P_OP, OP_WSLK if how_ccells_linked(rc, cc, Cand, rf, cf, Cand, Cands, False) & LK_STRG else OP_WLK], [P_VAL, Cand], [P_ROW, rf], [P_COL, cf]])
-        Discards.append((rc, cc))  # Cands[rc][cc].discard(Cand)
         if Step.Outcome: Step.Outcome.append([P_SEP, ])
         Step.Outcome.extend([[P_ROW, rc], [P_COL, cc], [P_OP, OP_ELIM], [P_VAL, Cand]])
-    for rc, cc in Discards: Cands[rc][cc].discard(Cand)
+    for rc, cc in Elims: Cands[rc][cc].discard(Cand)
     Ord = len(BS)
     if Ord == 2:  Step.Method = T_FINNED_X_WING
     elif Ord == 3:  Step.Method = T_FINNED_SWORDFISH
@@ -909,7 +653,7 @@ def elim_cands_in_sashimi_fish(Cand, BS, CS, CF, FB, Fins, Orient, Cands, Step):
                 if c in BS: continue
                 for r in CF:
                     if Cand in Cands[r][c]: Cvrs.append((r, c))
-    Links = []; Discards = []
+    Links = []; Elims = []
     for rc, cc in Cvrs:
         CFLinks = []
         for rf, cf in Fins:
@@ -917,12 +661,12 @@ def elim_cands_in_sashimi_fish(Cand, BS, CS, CF, FB, Fins, Orient, Cands, Step):
             if not Lk: break
             CFLinks.extend([[P_SEP, ], [P_VAL, Cand], [P_ROW, rc], [P_COL, cc], [P_OP, OP_WSLK if Lk & LK_STRG else OP_WLK], [P_VAL, Cand], [P_ROW, rf], [P_COL, cf]])
         else:
-            Discards.append((rc, cc))  # Cands[rc][cc].discard(Cand)
+            Elims.append((rc, cc))  # Cands[rc][cc].discard(Cand)
             if Step.Outcome: Step.Outcome.append([P_SEP, ])
             Step.Outcome.extend([[P_ROW, rc], [P_COL, cc], [P_OP, OP_ELIM], [P_VAL, Cand]])
             Links.extend(CFLinks)
     if Step.Outcome:
-        for rc, cc in Discards: Cands[rc][cc].discard(Cand)
+        for rc, cc in Elims: Cands[rc][cc].discard(Cand)
         Ord = len(BS)
         if Ord == 2:  Step.Method = T_SASHIMI_X_WING
         elif Ord == 3:  Step.Method = T_SASHIMI_SWORDFISH
@@ -992,99 +736,12 @@ def elim_cands_in_kraken_fish(Cand, BS, CS, Fins, Orient, Cands, Method, Step):
     return False
 
 
-# def _elim_cands_in_finned_fish(Cand, BS, CS, CF, Orient, Cands, Step, Method):
-#
-#     Fins = []
-#     Cvrs = []
-#     S = STATUS()
-#     Ord = len(BS)
-#     FB = set()
-#     res = False
-#     if Orient == P_ROW:
-#         for r in BS:
-#             for c in CF:
-#                 if Cand in Cands[r][c]: Fins.append((r, c)); FB.add(r)
-#         if len(FB) > 1 and len(CS) == Ord: return False  # Fins can only be in in one base unless sashimi
-#         for r in sorted(set(range(9)) - set(BS)):
-#             for c in CS if len(CS) == Ord else [*CS, *CF]:
-#                 if Cand in Cands[r][c]: Cvrs.append((r, c))
-#         if len(Cvrs): res = _find_covers_that_sees_all_fins(Fins, Cvrs, Cand, Cands, Method, S)
-#     else:  # Orient == P_COL:
-#         for c in BS:
-#             for r in CF:
-#                 if Cand in Cands[r][c]: Fins.append((r, c)); FB.add(c)
-#         if len(FB) > 1 and len(CS) == Ord: return False  # Fins can only be in in one base unless sashimi
-#         for r in CS if len(CS) == Ord else CF:
-#             for c in sorted(set(range(9))-set(BS)):
-#                 if Cand in Cands[r][c]: Cvrs.append((r, c))
-#         if len(Cvrs): res = _find_covers_that_sees_all_fins(Fins, Cvrs, Cand, Cands, Method, S)
-#     if res:
-#         Step.Method = Method
-#         if Orient == P_ROW: Step.Pattern = [[P_VAL, Cand], [P_ROW, BS], [P_COL, CS]]
-#         else: Step.Pattern = [[P_VAL, Cand], [P_COL, BS], [P_ROW, CS]]  # Orient == P_COL
-#         for r, c in sorted(Fins): Step.Pattern.extend([[P_CON, ], [P_ROW, r], [P_COL, c]])
-#         Step.Pattern.append([P_SEP, ])
-#         NLks = NGrpLks = 0
-#         Chains = []
-#         for Ch in S.Pattern:  # one chain for each fin in S.Pattern
-#             if Chains: Chains.append([P_SEP, ])
-#             for r, c, Cand, Lk, in Ch:
-#                 NLks += 1
-#                 if Method & T_GRPLK:
-#                     if len(r) > 1: NGrpLks += 1
-#                     if len(c) > 1: NGrpLks += 1
-#                 if Lk == LK_NONE: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c]])
-#                 else: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
-#         Step.Pattern.extend(Chains); Step.Pattern.append([P_END, ])
-#         Step.NrLks = NLks; Step.NrGrpLks = NGrpLks
-#         for r, c, Cand in S.Outcome:
-#             if Method & T_GRPLK: Cands[list(r)[0]][list(c)[0]].discard(Cand)
-#             else: Cands[r][c].discard(Cand)
-#             if Step.Outcome: Step.Outcome.append([P_SEP, ])
-#             Step.Outcome.extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-#         Step.Outcome.append([P_END, ])
-#         return True
-#     return False
-
-class TREE:
-    def __init__(self, r = -1, c = -1, Cand = -1, FinChain = None, FinBranch = None):
-        self.r = r; self.c = c; self.Cand = Cand
-        self.FinChain = FinChain if FinChain else []
-        self.FinBranch = FinBranch if FinBranch else []
-
 def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
-# def _find_covers_that_sees_all_fins(Fins, Covers, Cand, Cands, Method, Status):
-
-# TODO: only required for kraken, get rid of non-kraken support.
-
-    # if not Method & T_KRAKEN:  # GrpLks always False when Kraken is False
-    #     # Find all covers that can be eliminated as not very expensive for non kraken to find
-    #     for rc, cc in Covers:
-    #         FP = []  # [] for i in len(Fins)]
-    #         for rf, cf in Fins:
-    #             Lk = how_ccells_linked(rc, cc, Cand, rf, cf, Cand, Cands, False)
-    #             if not Lk: break
-    #             FP.append([(rc, cc, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)])
-    #         else:  # A cover that sees all the fins has been found.
-    #             Status.Pattern.extend(FP)
-    #             Status.Outcome.append((rc, cc, Cand))
-    #     if Status.Outcome:
-    #         Status.Tech = Method
-    #         return True
-    # else:  # Kraken
-    # For Kraken,
-    # *  Any cover that can see all fins can be eliminated.
-    # *  Only find the first cover that can be eliminated, rather than all covers that can
-    #    be eliminated because building chains is expensive.
-    # Algorithm:  Build a forest of trees, one for each cover.  For each tree, grow child branches
-    # from each fin.  The first cover to build chains to all the fins wins.  Algorithm grows the branches
-    # two levels at a time for all trees before moving onto the next level.
 
     Forest = []
     Tree = None
     GrpLks = Method & T_GRPLK
     if GrpLks:  # Kraken group links.
-        # Fins = [({r}, {c}, Cand) for r, c in Fins]
         for rc, cc in Covers:
             Forest.append(TREE({rc}, {cc}, Cand, None, None))
             for rf, cf in Fins:
@@ -1097,19 +754,6 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
                     Forest[-1].FinBranch.append(TNODE({rf}, {cf}, Cand, LK_NONE, None, None))
                     for r0, c0, Cand0, Lk0 in list_ccells_linked_to({rf}, {cf}, Cand, Cands, LK_STWK, GrpLks):  # Solving for singles prior to this method ensures LCL cannot be empty.
                         Forest[-1].FinBranch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 == LK_STRG else LK_WEAK, None, Forest[-1].FinBranch[-1], None))
-            # Tree = TREE(TNODE({rc}, {cc}, Cand, None, None, None, None), [[] for i in Fins], None, False, False)
-            # for r, c, Cand, Lk in list_ccells_linked_to({rc}, {cc}, Cand, Cands, LK_STWK, GrpLks):
-            #     for j, (rf, cf, Candf) in enumerate(Fins):
-            #         if r == rf and c == cf and Cand == Candf:
-            #         # if ccells_match(r, c, Cand, rf, cf, Candf, GrpLks):
-            #             Tree.Chains[j] = [({rc}, {cc}, Cand, LK_WKST if Lk == LK_STWK else LK_WEAK), (r, c, Cand, LK_NONE)]
-            #     else:
-            #         if Lk == LK_WEAK:
-            #             Tree.Root.Children.append(TNODE(r, c, Cand, LK_WEAK, [(Tree.Root.r, Tree.Root.c, Tree.Root.Cand, LK_WEAK)], Tree, None))
-            #         else:
-            #             Tree.Root.Children.append(TNODE(r, c, Cand, LK_WKST, [(Tree.Root.r, Tree.Root.c, Tree.Root.Cand, LK_WKST)], Tree, None))
-            # Forest.append(Tree)
-            # Idx.append(i)
     else:  # kraken, non group links.
         # Plant a forest of trees, one for each cover.  Each tree has a main TNode branch and a Chain for each fin.
         # The Chain is empty until a one is found for that fin.  The MainBranch of TNodes, is used to build a tree
@@ -1177,29 +821,6 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
         # walk_the_forest(Forest)
     return False
 
-def walk_the_forest(Forest):
-    print("Walking the forest")
-    for Tree in Forest:
-        for Fin in range(len(Tree.FinChain)):  # FinChain and FinBranch lists are the same length:
-            if not bool(Tree.FinChain[Fin]) ^ bool(Tree.FinBranch[Fin]): print(f"ERROR: CoverTree :{Tree.Cand}r{Tree.r+1}c{Tree.c+1}: Only one of .FinChain[{Fin}] and .FinBranch[{Fin}] can exist: {Tree.FinChain[Fin]}, {Tree.FinBranch[Fin]}.")
-            if Tree.FinChain[Fin]:
-                St = ""
-                for (r, c, Cand, Lk) in Tree.FinChain[Fin]:
-                    St += f"{Cand}r{r+1}c{c+1}{OP[TKN_LK[Lk]]}"
-                (r, c, Cand, Lk) = Tree.FinChain[Fin][-1]
-                print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, Fin: {Fin}: {Cand}r{r+1}c{c+1}, Chain: {St}")
-            if Tree.FinBranch[Fin]:
-                print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, FinBranch[{Fin}]:")
-                print(f"{Tree.FinBranch[Fin].Cand}r{Tree.FinBranch[Fin].r+1}c{Tree.FinBranch[Fin].c+1}")
-                climb_branch(Tree.FinBranch[Fin], 1)
-
-def climb_branch(TN, Lvl):
-
-    if TN.Children:
-        for Child in TN.Children:
-            print(f"{' |'*Lvl}{OP[TKN_LK[Child.Lk]]}{Child.Cand}r{Child.r+1}c{Child.c+1}")
-            climb_branch(Child, Lvl+1)
-
 def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
     # each recursive iteration grows/steps two levels of branches/children at a time. As an even number of nodes
     # are required with a strong link followed by a weak link.  1st step is odd, second step is even.
@@ -1249,3 +870,26 @@ def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
                             Child.Children.append(TNODE(r1, c1, Cand1, LK_STRG, None, Child, None))
                         Lk2 = LK_WKST if Lk2 & LK_STRG else LK_WEAK
                         Child.Children[-1].Children.append(TNODE(r2, c2, Cand2, Lk2, [(r2, c2, Cand2, Lk2), (r1, c1, Cand1, LK_STRG), *Child.Chain], Child.Children[-1], None))
+
+def walk_the_forest(Forest):
+    print("Walking the forest")
+    for Tree in Forest:
+        for Fin in range(len(Tree.FinChain)):  # FinChain and FinBranch lists are the same length:
+            if not bool(Tree.FinChain[Fin]) ^ bool(Tree.FinBranch[Fin]): print(f"ERROR: CoverTree :{Tree.Cand}r{Tree.r+1}c{Tree.c+1}: Only one of .FinChain[{Fin}] and .FinBranch[{Fin}] can exist: {Tree.FinChain[Fin]}, {Tree.FinBranch[Fin]}.")
+            if Tree.FinChain[Fin]:
+                St = ""
+                for (r, c, Cand, Lk) in Tree.FinChain[Fin]:
+                    St += f"{Cand}r{r+1}c{c+1}{OP[TKN_LK[Lk]]}"
+                (r, c, Cand, Lk) = Tree.FinChain[Fin][-1]
+                print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, Fin: {Fin}: {Cand}r{r+1}c{c+1}, Chain: {St}")
+            if Tree.FinBranch[Fin]:
+                print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, FinBranch[{Fin}]:")
+                print(f"{Tree.FinBranch[Fin].Cand}r{Tree.FinBranch[Fin].r+1}c{Tree.FinBranch[Fin].c+1}")
+                climb_branch(Tree.FinBranch[Fin], 1)
+
+def climb_branch(TN, Lvl):
+
+    if TN.Children:
+        for Child in TN.Children:
+            print(f"{' |'*Lvl}{OP[TKN_LK[Child.Lk]]}{Child.Cand}r{Child.r+1}c{Child.c+1}")
+            climb_branch(Child, Lvl+1)

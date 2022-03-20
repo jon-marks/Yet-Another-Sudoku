@@ -59,8 +59,17 @@ class STATUS:
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
 
-# Python <==> Cython conversion functions, neccessary while port to Cython code, will
-# eventually be depreciated with the the python structures when all the code is in Cython.
+# General utils
+
+cdef bint is_in_int_array(int v, int *A, int lenA):
+
+    for i in range(lenA):
+        if v == A[i]: return True
+    else:
+        return False
+
+
+# Python <==> Cython conversion functions,
 
 cdef CHAIN* pchain_2_cchain(list PChain):
     # pchain is a list of (r, c, Cand, Lk) tuples. cchain is a linked list of "Ctypedef struct CHAIN_NODE"s
@@ -175,7 +184,7 @@ cdef list cchain_2_pchain_gl(CHAIN* CChain):
     PyMem_Free(CChain); CChain = NULL
     return PChain
 
-cdef inline pGRIDC pgrid_2_cgrid(pG, int cG[9][9]):
+cdef pGRIDC pgrid_2_cgrid(pG, int cG[9][9]):
     cdef int r, c
 
     for r in range(9):
@@ -184,11 +193,11 @@ cdef inline pGRIDC pgrid_2_cgrid(pG, int cG[9][9]):
     return cG
 
 
-# cdef inline cgrid_2_pgrid(int cG[9][9], pG):
+# cdef cgrid_2_pgrid(int cG[9][9], pG):
 # just do the following list comprehension instead.
 # pG = [[cG[r][c] for c in range(9)] for r in range(9)]
 
-cdef inline pCANDSC pcands_2_ccands(list pCands, bint cCands[9][9][9]):
+cdef pCANDSC pcands_2_ccands(list pCands, bint cCands[9][9][9]):
     cdef int r, c, d, Cand
 
     memset(<void *>cCands, False, SIZEOF_CANDS)
@@ -198,7 +207,7 @@ cdef inline pCANDSC pcands_2_ccands(list pCands, bint cCands[9][9][9]):
             for Cand in pCands[r][c]: cCands[r][c][Cand-1] = True
     return cCands
 
-cdef inline list ccands_2_pcands(bint cCands[9][9][9]):  # , list pCands):
+cdef list ccands_2_pcands(bint cCands[9][9][9]):  # , list pCands):
     cdef int r, c, d
 
     pCands = [[set() for c in range(9)] for r in range(9)]
@@ -208,7 +217,7 @@ cdef inline list ccands_2_pcands(bint cCands[9][9][9]):  # , list pCands):
                 if cCands[r][c][d]: pCands[r][c].add(d+1)
     return pCands
 
-cdef inline SET3* pset_2_cset3(set SetP, SET3* pSetC):
+cdef SET3* pset_2_cset3(set SetP, SET3* pSetC):
     cdef int i, x
 
     for i, x in enumerate(SetP): pSetC[0].v[i] = x
@@ -216,7 +225,7 @@ cdef inline SET3* pset_2_cset3(set SetP, SET3* pSetC):
     for i in range(pSetC[0].l, 3): cSet[0].v[i] = 0
     return pSetC
 
-cdef inline set cset3_2_pset(SET3* pSetC):
+cdef set cset3_2_pset(SET3* pSetC):
     cdef i
 
     SetP = set()
@@ -349,7 +358,7 @@ cdef void discard_cand_from_peers_c(int Cand, int r, int c, bint Cands[9][9][9])
         for j in range(bc, bc+3):
             Cands[i][j][Cand-1] = False
 
-cdef inline bint set3_intersect(SET3 a, SET3 b):
+cdef bint set3_intersect(SET3 a, SET3 b):
 
     for i in range(a.l):
         for j in range(b.l):
@@ -698,21 +707,21 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
             return LK_STWK | LK_BOX
         return LK_NONE
 
-# cdef inline int cands_in_row_c(int r, int Cand, bint Cands[9][9][9]):
+# cdef int cands_in_row_c(int r, int Cand, bint Cands[9][9][9]):
 #     cdef int c, n = 0
 #
 #     for c in range(9):
 #         if Cands[r][c][Cand-1]: n += 1
 #     return n
 #
-# cdef inline int cands_in_col_c(int c, int Cand, bint Cands[9][9][9]):
+# cdef int cands_in_col_c(int c, int Cand, bint Cands[9][9][9]):
 #     cdef int r, n = 0
 #
 #     for r in range(9):
 #         if Cands[r][c][Cand-1]: n += 1
 #     return n
 #
-# cdef inline int cands_in_box_c(int b, int Cand, bint Cands[9][9][9]):
+# cdef int cands_in_box_c(int b, int Cand, bint Cands[9][9][9]):
 #     cdef int br, bc, r, c, n = 0
 #
 #     br = (b//3)*3; bc = (b%3)*3

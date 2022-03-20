@@ -115,7 +115,7 @@ cdef void TRCX_int_array(object sDesc, int *A, int lenA):
         for i in range(lenA):
             if St: St += ", "
             St += f"{A[i]+1}"
-        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: {sDesc}, [{St}]", file = stderr, flush = True)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: {sDesc}[{St}]", file = stderr, flush = True)
 
 cdef void TRCX_coord_array(object sDesc, COORD *A, int lenA):
     cdef int i
@@ -126,7 +126,7 @@ cdef void TRCX_coord_array(object sDesc, COORD *A, int lenA):
         for i in range(lenA):
             if St: St += ", "
             St += f"({A[i].r+1}, {A[i].c+1})"
-        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: {sDesc}, [{St}]", file = stderr, flush = True)
+        print(f"{perf_counter():0.6f}:{basename(Fi.filename)}:{Fi.lineno}:{Fi.function}: {sDesc}[{St}]", file = stderr, flush = True)
 
 cdef void *PyMem_TRCX_Malloc(size_t Bytes):
     cdef void *Mem = PyMem_Malloc(Bytes)
