@@ -1,6 +1,7 @@
 from copy import copy
 
 from globals import *
+from trc import *
 from misc import tkns_to_str
 from solve_utils import *
 
@@ -661,7 +662,7 @@ def elim_cands_in_sashimi_fish(Cand, BS, CS, CF, FB, Fins, Orient, Cands, Step):
             if not Lk: break
             CFLinks.extend([[P_SEP, ], [P_VAL, Cand], [P_ROW, rc], [P_COL, cc], [P_OP, OP_WSLK if Lk & LK_STRG else OP_WLK], [P_VAL, Cand], [P_ROW, rf], [P_COL, cf]])
         else:
-            Elims.append((rc, cc))  # Cands[rc][cc].discard(Cand)
+            Elims.append((rc, cc))
             if Step.Outcome: Step.Outcome.append([P_SEP, ])
             Step.Outcome.extend([[P_ROW, rc], [P_COL, cc], [P_OP, OP_ELIM], [P_VAL, Cand]])
             Links.extend(CFLinks)

@@ -627,7 +627,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                 BaseCvrs[0][c0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                # TRCX(f"First Base: {Cand+1}r{r0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for r1 in range(r0+1, 7):
                     Cvr = 0
                     memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
@@ -637,7 +637,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                         BaseCvrs[1][c0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        # TRCX(f"Second Base: {Cand+1}r{r1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         for r2 in range(r1+1, 8):
                             Cvr = 0
                             memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
@@ -647,7 +647,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                                 BaseCvrs[2][c0] = 1; Cvr += 1
                             else:
                                 if Cvr < 2: continue
-                                TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                # TRCX(f"Third Base: {Cand+1}r{r2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
                                 for r3 in range(r2+1, 9):
                                     Cvr = 0
                                     memset(<void*> BaseCvrs[3], 0, sizeof(int[9]))
@@ -657,7 +657,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                                         BaseCvrs[3][c0] = 1; Cvr += 1
                                     else:
                                         if Cvr < 2: continue
-                                        TRCX(f"Fourth Base: {Cand+1}r{r3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        # TRCX(f"Fourth Base: {Cand+1}r{r3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
                                         lenCU = lenCS = lenCF = lenFB = 0
                                         for c0 in range(9):
                                             if BaseCvrs[0][c0] + BaseCvrs[1][c0] + BaseCvrs[2][c0] + BaseCvrs[3][c0] >= 2:
@@ -701,7 +701,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                 BaseCvrs[0][r0] = 1; Cvr += 1
             else:
                 if Cvr < 2: continue
-                TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
+                # TRCX(f"First Base: {Cand+1}c{c0+1}: {BaseCvrs[0][0]},{BaseCvrs[0][1]},{BaseCvrs[0][2]},{BaseCvrs[0][3]},{BaseCvrs[0][4]},{BaseCvrs[0][5]},{BaseCvrs[0][6]},{BaseCvrs[0][7]},{BaseCvrs[0][8]}")
                 for c1 in range(c0+1, 7):
                     Cvr = 0
                     memset(<void*> BaseCvrs[1], 0, sizeof(int[9]))
@@ -711,7 +711,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                         BaseCvrs[1][r0] = 1; Cvr += 1
                     else:
                         if Cvr < 2: continue
-                        TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
+                        # TRCX(f"Second Base: {Cand+1}c{c1+1}: {BaseCvrs[1][0]},{BaseCvrs[1][1]},{BaseCvrs[1][2]},{BaseCvrs[1][3]},{BaseCvrs[1][4]},{BaseCvrs[1][5]},{BaseCvrs[1][6]},{BaseCvrs[1][7]},{BaseCvrs[1][8]}")
                         for c2 in range(c1+1, 8):
                             Cvr = 0
                             memset(<void*> BaseCvrs[2], 0, sizeof(int[9]))
@@ -721,7 +721,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                                 BaseCvrs[2][r0] = 1; Cvr += 1
                             else:
                                 if Cvr < 2: continue
-                                TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
+                                # TRCX(f"Third Base: {Cand+1}c{c2+1}: {BaseCvrs[2][0]},{BaseCvrs[2][1]},{BaseCvrs[2][2]},{BaseCvrs[2][3]},{BaseCvrs[2][4]},{BaseCvrs[2][5]},{BaseCvrs[2][6]},{BaseCvrs[2][7]},{BaseCvrs[2][8]}")
                                 for c3 in range(c2+1, 9):
                                     Cvr = 0
                                     memset(<void*> BaseCvrs[3], 0, sizeof(int[9]))
@@ -731,7 +731,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                                         BaseCvrs[3][r0] = 1;  Cvr += 1
                                     else:
                                         if Cvr < 2: continue
-                                        TRCX(f"Fourth Base: {Cand+1}c{c3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
+                                        # TRCX(f"Fourth Base: {Cand+1}c{c3+1}: {BaseCvrs[3][0]},{BaseCvrs[3][1]},{BaseCvrs[3][2]},{BaseCvrs[3][3]},{BaseCvrs[3][4]},{BaseCvrs[3][5]},{BaseCvrs[3][6]},{BaseCvrs[3][7]},{BaseCvrs[3][8]}")
                                         lenCU = lenCS = lenCF = lenFB = 0
                                         for r0 in range(9):
                                             if BaseCvrs[0][r0] + BaseCvrs[1][r0] + BaseCvrs[2][r0] + BaseCvrs[3][r0] >= 2:
@@ -755,7 +755,7 @@ cdef int tech_finned_jellyfish_c(int Grid[9][9], Step, bint Cands[9][9][9], Meth
                                                 if Method == T_FINNED_JELLYFISH and 5 <= lenCU <= 6 and lenFB == 1 and lenCS == 4 and (lenCF == 1 or lenCF == 2 and CF[0]//3 == CF[1]//3):
                                                     if elim_cands_in_finned_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, CF, lenCF, FB[0], Fins, COL, Cands, Step): return 0
                                                 if Method == T_SASHIMI_JELLYFISH and 5 <= lenCU <= 6 and lenFB > 1 and lenCS == 3 and ((lenCF == 2 and CF[0]//3 == CF[1]//3) or (lenCF == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
-                                                    if elim_cands_in_sashimi_fish(Cand, [c0, c1, c2, c3], 3, CS, lenCS, CF, lenCF, FB, lenFB, Fins, COL, Cands, Step): return 0
+                                                    if elim_cands_in_sashimi_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, CF, lenCF, FB, lenFB, Fins, COL, Cands, Step): return 0
                                                 if Method == T_KRAKEN_FINNED_JELLYFISH and lenCS == 4 and 1 <= lenCF <= 5:
                                                     if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], 4, CS, lenCS, Fins, lenCF, COL, Cands, False, Step): return 0
                                                 if Method == T_KRAKEN_SASHIMI_JELLYFISH and lenCS == 3 and 2 < lenCF <= 6:
@@ -850,7 +850,65 @@ cdef bint elim_cands_in_finned_fish(int Cand, int *BS, int Ord, int *CS, int len
     Step.Outcome.append([P_END, ])
     return True
 
-cdef bint elim_cands_in_sashimi_fish(int Cand, int*Bases, int Ord, int*CS, int lenCS, int*CF, int lenCF, int*FB, int lenFB, COORD*Fins, int Orient, bint Cands[9][9][9], Step):
+cdef bint elim_cands_in_sashimi_fish(int Cand, int *BS, int Ord, int *CS, int lenCS, int *CF, int lenCF, int *FB, int lenFB, COORD *Fins, int Orient, bint Cands[9][9][9], Step):
+    cdef int r, c, rc, cc, fb, bc, cf, cvr, fin, elim, Lk, lenBC, lenCvr, lenElim
+    cdef int BaseChutes[3]
+    cdef COORD Cvrs[12]
+    cdef COORD Elims[4]
+
+    lenBC = 0
+    for fb in range(lenFB):
+        if is_in_int_array((FB[fb]//3)*3, BaseChutes, lenBC): continue
+        BaseChutes[lenBC] = (FB[fb]//3)*3; lenBC += 1
+    if lenBC > 2: return False
+    lenCvr = 0
+    if Orient == ROW:
+        for bc in range(lenBC):
+            for r in range(BaseChutes[bc], BaseChutes[bc]+3):
+                if is_in_int_array(r, BS, Ord): continue
+                for cf in range(lenCF):
+                    if Cands[r][CF[cf]][Cand]: Cvrs[lenCvr].r = r; Cvrs[lenCvr].c = CF[cf]; lenCvr += 1
+    else:  # Orient == COL:
+        for bc in range(lenBC):
+            for c in range(BaseChutes[bc], BaseChutes[bc]+3):
+                if is_in_int_array(c, BS, Ord): continue
+                for cf in range(lenCF):
+                    if Cands[CF[cf]][c][Cand]: Cvrs[lenCvr].r = CF[cf]; Cvrs[lenCvr].c = c; lenCvr += 1
+    if lenCvr > 12:  TRCX_PANIC("Increase size of Cvrs array")  #########
+    lenElim = 0; Links = []
+    for cvr in range(lenCvr):
+        rc = Cvrs[cvr].r; cc = Cvrs[cvr].c
+        CFLinks = []
+        for fin in range(lenCF):
+            Lk = how_ccells_linked_c(rc, cc, Cand, Fins[fin].r, Fins[fin].c, Cand, Cands)
+            if not Lk: break
+            CFLinks.extend([[P_SEP, ], [P_VAL, Cand+1], [P_ROW, rc], [P_COL, cc], [P_OP, OP_WSLK if Lk & LK_STRG_C else OP_WLK], [P_VAL, Cand+1], [P_ROW, Fins[fin].r], [P_COL, Fins[fin].c]])
+        else:
+            Elims[lenElim].r = rc; Elims[lenElim].c = cc; lenElim += 1
+            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+            Step.Outcome.extend([[P_ROW, rc], [P_COL, cc], [P_OP, OP_ELIM], [P_VAL, Cand+1]])
+            Links.extend(CFLinks)
+    if Step.Outcome:
+        for elim in range(lenElim):
+            Cands[Elims[elim].r][Elims[elim].c][Cand] = False
+        if Ord == 2:  Step.Method = T_SASHIMI_X_WING
+        elif Ord == 3:  Step.Method = T_SASHIMI_SWORDFISH
+        else: Step.Method = T_SASHIMI_JELLYFISH
+        R = []; C = []
+        if Orient == ROW:
+            for i in range(Ord): R.append(BS[i])
+            for i in range(lenCS): C.append(CS[i])
+            Step.Pattern = [[P_VAL, Cand+1], [P_ROW, R], [P_COL, C]]
+        else:  # Orient == COL:
+            for i in range(lenCS): R.append(CS[i])
+            for i in range(Ord): C.append(BS[i])
+            Step.Pattern = [[P_VAL, Cand+1], [P_COL, C], [P_ROW, R]]
+        for fin in range(lenCF):
+            Step.Pattern.extend([[P_CON, ], [P_ROW, Fins[fin].r], [P_COL, Fins[fin].c]])
+        Step.Pattern.extend(Links)
+        Step.Pattern.append([P_END, ])
+        Step.Outcome.append([P_END, ])
+        return True
     return False
 
 cdef bint elim_cands_in_kraken_fish(int Cand, int*Bases, int Ord, int*CS, int lenCS, COORD*Fins, int lenCF, int Orient, bint Cands[9][9][9], bint GrpLk, Step):
