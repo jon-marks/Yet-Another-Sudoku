@@ -1,6 +1,5 @@
 
 include "globals.pxi"
-from ctypedefs cimport *
 from globals import *
 from trc cimport *
 from trc import *
@@ -200,7 +199,7 @@ cdef int tech_exposed_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                             if Step.Outcome:  # candidates were eliminated
                                 Step.Method = T_EXPOSED_PAIR
                                 Step.Outcome.append([P_END, ])
-                                Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0, r1], [P_COL, c0, c1], [P_END, ]]
+                                Step.Pattern = [[P_VAL, p[0]+1, p[1]+1], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
                                 return 0
     return -1
 
@@ -211,10 +210,9 @@ cdef int tech_hidden_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods)
     # candidates they share.  All other candidates in those two cells can be
     # eliminated, thereby exposing the pair.  Algorithmically, find two cands
     # in a cell and check if this pair of cands only occur twice in the group.
-    cdef int r0, c0, r1, c1, d0, d1, d2, br, bc, b0, n0
+    cdef int r0, c0, r1, c1, d0, d1, d2, br, bc, b0, h0, n0
     cdef int p[2]
 
-    # TRCX(f"Cands: {trc_cands(Cands)}")
     for d0 in range(8):
         for d1 in range(d0+1, 9):
             # scan rows:
@@ -275,37 +273,36 @@ cdef int tech_hidden_pairs_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods)
                         Step.Pattern = [[P_VAL, d0+1, d1+1], [P_OP, OP_CNT, 2], [P_ROW, r0, r1], [P_COL, c0], [P_END, ]]
                         return 0
             #scan blocks
-            for br in range(0, 9, 3):
-                for bc in range(0, 9, 3):
-                    n0 = 0
-                    for b0 in range(9):
-                        r0 = br+(b0//3); c0 = bc+(b0%3)
-                        if Grid[r0][c0]: continue
-                        if Cands[r0][c0][d0] != Cands[r0][c0][d1]: break
-                        if Cands[r0][c0][d0] and Cands[r0][c0][d1]:
-                            if n0 > 1: break
-                            p[n0] = b0; n0 += 1
-                    else:
-                        if n0 != 2: continue
-                        r0 = br+(p[0]//3); c0 = bc+(p[0]%3)
-                        r1 = br+(p[1]//3); c1 = bc+(p[1]%3)
-                        # A pair subset has been found - what type is it.
-                        for d2 in range(9):
-                            if d2 == d0 or d2 == d1: continue
-                            if Cands[r0][c0][d2]:
-                                Cands[r0][c0][d2] = False
-                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d2+1]])
-                            if Cands[r1][c1][d2]:
-                                Cands[r1][c1][d2] = False
-                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                Step.Outcome.extend([[P_ROW, r1], [P_COL, c1], [P_OP, OP_ELIM], [P_VAL, d2+1]])
-                        if Step.Outcome:
-                            Step.Outcome.append([P_END, ])
-                            Step.Method = T_HIDDEN_PAIR
-                            Step.Pattern = [[P_VAL, d0+1, d1+1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, c0],
-                                            [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
-                            return 0
+            for h0 in range(9):
+                br = (h0//3)*3; bc = (h0%3)*3
+                n0 = 0
+                for b0 in range(9):
+                    r0 = br+(b0//3); c0 = bc+(b0%3)
+                    if Grid[r0][c0]: continue
+                    if Cands[r0][c0][d0] != Cands[r0][c0][d1]: break
+                    if Cands[r0][c0][d0] and Cands[r0][c0][d1]:
+                        if n0 > 1: break
+                        p[n0] = b0; n0 += 1
+                else:
+                    if n0 != 2: continue
+                    r0 = br+(p[0]//3); c0 = bc+(p[0]%3)
+                    r1 = br+(p[1]//3); c1 = bc+(p[1]%3)
+                    # A hidden pair in the block has been found
+                    for d2 in range(9):
+                        if d2 == d0 or d2 == d1: continue
+                        if Cands[r0][c0][d2]:
+                            Cands[r0][c0][d2] = False
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                        if Cands[r1][c1][d2]:
+                            Cands[r1][c1][d2] = False
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r1], [P_COL, c1], [P_OP, OP_ELIM], [P_VAL, d2+1]])
+                    if Step.Outcome:
+                        Step.Outcome.append([P_END, ])
+                        Step.Method = T_HIDDEN_PAIR
+                        Step.Pattern = [[P_VAL, d0+1, d1+1], [P_OP, OP_CNT, 2], [P_BOX, h0], [P_CON, ], [P_ROW, r0], [P_COL, c0], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
+                        return 0
     return -1
 
 cdef int tech_exposed_triples_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
@@ -687,55 +684,55 @@ cdef int tech_hidden_triples_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                                                 [P_VAL, V[1]], [P_OP, OP_EQ], [P_ROW, p[1]], [P_COL, c0], [P_CON, ],
                                                 [P_VAL, V[2]], [P_OP, OP_EQ], [P_ROW, p[2]], [P_COL, c0], [P_END, ]]
                                 return 0
-                for br in range(0, 9, 3):
-                    for bc in range(0, 9, 3):
-                        n0 = u0 = u1 = u2 = 0
-                        for b0 in range(9):
-                            r0 = br+(b0//3); c0 = bc+(b0%3)
-                            # TRCX(f"Scanning box: {b0}")
-                            if Grid[r0][c0]: continue
-                            # TRCX(f"{d0+1}{d1+1}{d2+1} in r{r0+1}c{c0+1}")
-                            i = 0
-                            if Cands[r0][c0][d0]:
-                                i += 1; u0 += 1
-                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d0+1}]: {Cands[r0][c0][d0]}, n0: {n0}, u: {u0},{u1},{u2}, i: {i}")
-                                if u0 > 3: break
-                            if Cands[r0][c0][d1]:
-                                i += 1; u1 += 1
-                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d1+1}]: {Cands[r0][c0][d1]}, n0: {n0}, u: {u0},{u1},{u2}, i: {i}")
-                                if u1 > 3: break
-                            if Cands[r0][c0][d2]:
-                                i += 1; u2 += 1
-                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d2+1}]: {Cands[r0][c0][d2]}, n0: {n0}, u: {u0},{u1},{u2}, i: {i}")
-                                if u2 > 3: break
-                            if not i: continue
-                            if i == 1: break
-                            if n0 >= 3: break
-                            p[n0] = b0; n0 += 1
-                        else:
-                            if n0 == 3 and u0 and u1 and u2:
-                                # hidden trip found in box b0
+                for h0 in range(9):
+                    br = (h0//3)*3; bc = (h0%3)*3
+                    n0 = u0 = u1 = u2 = 0
+                    for b0 in range(9):
+                        r0 = br+(b0//3); c0 = bc+(b0%3)
+                        # TRCX(f"Scanning box: {b0}")
+                        if Grid[r0][c0]: continue
+                        # TRCX(f"{d0+1}{d1+1}{d2+1} in r{r0+1}c{c0+1}")
+                        i = 0
+                        if Cands[r0][c0][d0]:
+                            i += 1; u0 += 1
+                            # TRCX(f"Cands[{r0+1}][{c0+1}][{d0+1}]: {Cands[r0][c0][d0]}, n0: {n0}, u: {u0},{u1},{u2}, i: {i}")
+                            if u0 > 3: break
+                        if Cands[r0][c0][d1]:
+                            i += 1; u1 += 1
+                            # TRCX(f"Cands[{r0+1}][{c0+1}][{d1+1}]: {Cands[r0][c0][d1]}, n0: {n0}, u: {u0},{u1},{u2}, i: {i}")
+                            if u1 > 3: break
+                        if Cands[r0][c0][d2]:
+                            i += 1; u2 += 1
+                            # TRCX(f"Cands[{r0+1}][{c0+1}][{d2+1}]: {Cands[r0][c0][d2]}, n0: {n0}, u: {u0},{u1},{u2}, i: {i}")
+                            if u2 > 3: break
+                        if not i: continue
+                        if i == 1: break
+                        if n0 >= 3: break
+                        p[n0] = b0; n0 += 1
+                    else:
+                        if n0 == 3 and u0 and u1 and u2:
+                            # hidden trip found in box h0
+                            for i in range(3):
+                                r[i] = br + (p[i]//3); c[i] = bc + (p[i]%3)
+                            for d3 in range(9):
+                                if d3 == d0 or d3 == d1 or d3 == d2: continue
                                 for i in range(3):
-                                    r[i] = br + (p[i]//3); c[i] = bc + (p[i]%3)
-                                for d3 in range(9):
-                                    if d3 == d0 or d3 == d1 or d3 == d2: continue
-                                    for i in range(3):
-                                        if Cands[r[i]][c[i]][d3]:
-                                            Cands[r[i]][c[i]][d3] = False
-                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                            Step.Outcome.extend([[P_ROW, r[i]], [P_COL, c[i]], [P_OP, OP_ELIM], [P_VAL, d3+1]])
-                                if Step.Outcome:
-                                    Step.Outcome.append([P_END, ])
-                                    Step.Method = T_HIDDEN_TRIPLE
-                                    V = [[], [], []]
-                                    for i in range(3):
-                                        if Cands[r[i]][c[i]][d0]: V[i].append(d0+1)
-                                        if Cands[r[i]][c[i]][d1]: V[i].append(d1+1)
-                                        if Cands[r[i]][c[i]][d2]: V[i].append(d2+1)
-                                    Step.Pattern = [[P_VAL, V[0]], [P_OP, OP_EQ], [P_ROW, r[0]], [P_COL, c[0]], [P_CON, ],
-                                                    [P_VAL, V[1]], [P_OP, OP_EQ], [P_ROW, r[1]], [P_COL, c[1]], [P_CON, ],
-                                                    [P_VAL, V[2]], [P_OP, OP_EQ], [P_ROW, r[2]], [P_COL, c[2]], [P_END, ]]
-                                    return 0
+                                    if Cands[r[i]][c[i]][d3]:
+                                        Cands[r[i]][c[i]][d3] = False
+                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        Step.Outcome.extend([[P_ROW, r[i]], [P_COL, c[i]], [P_OP, OP_ELIM], [P_VAL, d3+1]])
+                            if Step.Outcome:
+                                Step.Outcome.append([P_END, ])
+                                Step.Method = T_HIDDEN_TRIPLE
+                                V = [[], [], []]
+                                for i in range(3):
+                                    if Cands[r[i]][c[i]][d0]: V[i].append(d0+1)
+                                    if Cands[r[i]][c[i]][d1]: V[i].append(d1+1)
+                                    if Cands[r[i]][c[i]][d2]: V[i].append(d2+1)
+                                Step.Pattern = [[P_VAL, V[0]], [P_OP, OP_EQ], [P_ROW, r[0]], [P_COL, c[0]], [P_CON, ],
+                                                [P_VAL, V[1]], [P_OP, OP_EQ], [P_ROW, r[1]], [P_COL, c[1]], [P_CON, ],
+                                                [P_VAL, V[2]], [P_OP, OP_EQ], [P_ROW, r[2]], [P_COL, c[2]], [P_END, ]]
+                                return 0
     return -1
 
 cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods):
@@ -753,7 +750,6 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
     cdef int p3[4]
     cdef int u[4]
 
-    # TRCX(f"Cands: {trc_cands(Cands)}")
     # Scan the rows first
     for r0 in range(9):
         for c0 in range(6):
@@ -852,8 +848,8 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                     p0[n] = d; n += 1
             else:
                 if not (2 <= n <= 4): continue
-                # found first cell with between 2 and 3 cands
-                # TRCX(f"Found 1 of 4: {p0[0]+1}{p0[1]+1}{p0[2]+1}r{r0+1}c{c0+1}")
+                # found first cell with between 2 and 4 cands
+                # TRCX(f"Found 1 of 4: {p0[0]+1}{p0[1]+1}{p0[2]+1}{p0[3]+1}r{r0+1}c{c0+1}")
                 for r1 in range(r0+1, 7):
                     if Grid[r1][c0]: continue
                     n = 0; p1[2] = p1[3] = -1
@@ -864,7 +860,7 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                     else:
                         if not (2 <= n <= 4): continue
                         # found a second cell with between 2 and 3 cands
-                        # TRCX(f"Possible 2 of 4: {p1[0]+1}{p1[1]+1}{p1[2]+1}r{r1+1}c{c0+1}")
+                        # TRCX(f"Possible 2 of 4: {p1[0]+1}{p1[1]+1}{p1[2]+1}{p1[3]+1}r{r1+1}c{c0+1}")
                         i = 0
                         for d in range(9):
                             if Cands[r0][c0][d] or Cands[r1][c0][d]: i += 1
@@ -882,13 +878,14 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                             else:
                                 if not (2 <= n <= 4): continue
                                 # found a third cell with between 2 and 4 cands.
-                                # TRCX(f"Possible 3 of 3: {p2[0]+1}{p2[1]+1}{p2[2]+1}r{r2+1}c{c0+1}")
+                                # TRCX(f"Possible 3 of 4: {p2[0]+1}{p2[1]+1}{p2[2]+1}{p2[3]+1}r{r2+1}c{c0+1}")
                                 i = 0
                                 for d in range(9):
                                     if Cands[r0][c0][d] or Cands[r1][c0][d] or Cands[r2][c0][d]: i += 1
                                     if i >= 4: break
                                 if i < 4: continue
                                 # these three cells have the potential to be part of the exposed quad, look for the fourth cell
+                                # TRCX(f"Found 3 of 4: {p2[0]+1}{p2[1]+1}{p2[2]+1}{p2[3]+1}r{r1+1}c{c0+1}")
                                 for r3 in range(r2+1, 9):
                                     if Grid[r3][c0]: continue
                                     n = 0; p3[2] = p3[3] = -1
@@ -899,6 +896,7 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                     else:
                                         if not (2 <= n <= 4): continue
                                         # found a fourth cell between 2 and 4 cands
+                                        # TRCX(f"Possible 4 of 4: {p3[0]+1}{p3[1]+1}{p3[2]+1}{p3[3]+1}r{r3+1}c{c0+1}")
                                         i = 0
                                         for d in range(9):
                                             if Cands[r0][c0][d] or Cands[r1][c0][d] or Cands[r2][c0][d] or Cands[r3][c0][d]:
@@ -907,6 +905,7 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                         else:
                                             if i != 4: continue
                                             # found an exposed quad, what can be eliminated?
+                                            # TRCX(f"Found 4 of 4: {p3[0]+1}{p3[1]+1}{p3[2]+1}{p3[3]+1}r{r3+1}c{c0+1}")
                                             for r4 in range(9):
                                                 if r4 == r0 or r4 == r1 or r4 == r2 or r4 == r3: continue
                                                 for i in range(4):
@@ -942,7 +941,7 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                 else:
                     if not (2 <= n <= 4): continue
                     # found first cell with between 2 and 4 cands
-                    # TRCX(f"Found 1 of 4: {p0[0]+1}{p0[1]+1}{p0[2]+1}r{r0+1}c{c0+1}")
+                    # TRCX(f"Found 1 of 4: {p0[0]+1}{p0[1]+1}{p0[2]+1}{p0[3]+1}r{r0+1}c{c0+1}")
                     for b1 in range(b0+1, 7):
                         r1 = br+(b1//3); c1 = bc+(b1%3)
                         if Grid[r1][c1]: continue
@@ -954,18 +953,18 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                         else:
                             if not (2 <= n <= 4): continue
                             # found a second cell with between 2 and 4 candidates
-                            # TRCX(f"Possible 2 of 3: {p1[0]+1}{p1[1]+1}{p1[2]+1}r{r1+1}c{c1+1}")
+                            # TRCX(f"Possible 2 of 4: {p1[0]+1}{p1[1]+1}{p1[2]+1}{p1[3]+1}r{r1+1}c{c1+1}")
                             i = 0
                             for d in range(9):
                                 if Cands[r0][c0][d] or Cands[r1][c1][d]: i += 1
                                 if i > 4: break
                             if i > 4: continue
                             # second cell has potential to form an exposed quad, look for third cell
-                            # TRCX(f"Found 2 of 3: {p1[0]+1}{p1[1]+1}{p1[2]+1}r{r1+1}c{c1+1}")
+                            # TRCX(f"Found 2 of 4: {p1[0]+1}{p1[1]+1}{p1[2]+1}{p1[3]+1}r{r1+1}c{c1+1}")
                             for b2 in range(b1+1, 8):
                                 r2 = br+(b2//3); c2 = bc+(b2%3)
                                 if Grid[r2][c2]: continue
-                                n = 0; p2[2] = p3[3] = -1
+                                n = 0; p2[2] = p2[3] = -1
                                 for d in range(9):
                                     if Cands[r2][c2][d]:
                                         if n >= 4: break
@@ -973,17 +972,18 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                 else:
                                     if not (2 <= n <= 4): continue
                                     # found third cell with between 2 and 3 candidates
-                                    # TRCX(f"Possible 3 of 3: {p2[0]+1}{p2[1]+1}{p2[2]+1}r{r2+1}c{c2+1}")
+                                    # TRCX(f"Possible 3 of 4: {p2[0]+1}{p2[1]+1}{p2[2]+1}{p2[3]+1}r{r2+1}c{c2+1}")
                                     i = 0
                                     for d in range(9):
                                         if Cands[r0][c0][d] or Cands[r1][c1][d] or Cands[r2][c2][d]: i += 1
                                         if i >= 4: break
                                     if i > 4: continue
                                     # first three cells have the potential to form an exposed quad, look for fourth cell
+                                    # TRCX(f"Found 3 of 4: {p2[0]+1}{p2[1]+1}{p2[2]+1}{p2[3]+1}r{r2+1}c{c2+1}")
                                     for b3 in range(b2+1, 9):
                                         r3 = br+(b3//3); c3 = bc+(b3%3)
                                         if Grid[r3][c3]: continue
-                                        n = 0; p2[2] = p3[3] = -1
+                                        n = 0; p3[2] = p3[3] = -1
                                         for d in range(9):
                                             if Cands[r3][c3][d]:
                                                 if n >= 4: break
@@ -991,6 +991,7 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                         else:
                                             if not (2 <= n <= 4): continue
                                             # found a fourth cell with between 2 and 4 candidates
+                                            # TRCX(f"Possible 4 of 4: {p3[0]+1}{p3[1]+1}{p3[2]+1}{p3[3]+1}r{r2+1}c{c2+1}")
                                             i = 0
                                             for d in range(9):
                                                 if Cands[r0][c0][d] or Cands[r1][c1][d] or Cands[r2][c2][d] or Cands[r3][c3][d]:
@@ -999,6 +1000,7 @@ cdef int tech_exposed_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods
                                             else:
                                                 if i != 4: continue
                                                 # found an exposed quad in a box
+                                                # TRCX(f"Found 4 of 4: {p3[0]+1}{p3[1]+1}{p3[2]+1}{p3[3]+1}r{r2+1}c{c2+1}")
                                                 for b4 in range(9):
                                                     if b4 == b0 or b4 == b1 or b4 == b2 or b4 == b3: continue
                                                     r4 = br+(b4//3); c4 = bc+(b4%3)
@@ -1141,58 +1143,61 @@ cdef int tech_hidden_quads_c(int Grid[9][9], Step, bint Cands[9][9][9], Methods)
                                                     [P_VAL, V[2]], [P_OP, OP_EQ], [P_ROW, p[2]], [P_COL, c0], [P_CON, ],
                                                     [P_VAL, V[3]], [P_OP, OP_EQ], [P_ROW, p[3]], [P_COL, c0], [P_END, ]]
                                     return 0
-                    for br in range(0, 9, 3):
-                        for bc in range(0, 9, 3):
-                            n0 = u0 = u1 = u2 = u3 = 0
-                            for b0 in range(9):
-                                r0 = br+(b0//3); c0 = bc+(b0%3)
-                                if Grid[r0][c0]: continue
-                                # TRCX(f"Cands: {d0+1}{d1+1}{d2+1}{d3+1}, r{r0+1}c{c0+1}")
-                                i = 0
-                                if Cands[r0][c0][d0]:
-                                    i += 1; u0 += 1
-                                    # TRCX(f"Cands[{r0+1}][{c0+1}][{d0+1}]: {Cands[r0][c0][d0]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
-                                    if u0 > 4: break
-                                if Cands[r0][c0][d1]:
-                                    i += 1; u1 += 1
-                                    # TRCX(f"Cands[{r0+1}][{c0+1}][{d1+1}]: {Cands[r0][c0][d1]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
-                                    if u1 > 4: break
-                                if Cands[r0][c0][d2]:
-                                    i += 1; u2 += 1
-                                    # TRCX(f"Cands[{r0+1}][{c0+1}][{d2+1}]: {Cands[r0][c0][d2]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
-                                    if u2 > 4: break
-                                if Cands[r0][c0][d3]:
-                                    i += 1; u3 += 1
-                                    # TRCX(f"Cands[{r0+1}][{c0+1}][{d3+1}]: {Cands[r0][c0][d3]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
-                                    if u3 > 4: break
-                                if not i: continue
-                                if i == 1: break
-                                if n0 >= 4: break
-                                p[n0] = b0; n0 += 1
-                            else:
-                                if n0 == 4 and u0 and u1 and u2 and u3:
-                                    # hidden trip found in box b0
+                    for h0 in range(9):
+                        br = (h0//3)*3; bc = (h0%3)*3
+                        n0 = u0 = u1 = u2 = u3 = 0
+                        for b0 in range(9):
+                            r0 = br+(b0//3); c0 = bc+(b0%3)
+                            if Grid[r0][c0]: continue
+                            # TRCX(f"Cands: {d0+1}{d1+1}{d2+1}{d3+1}, r{r0+1}c{c0+1}")
+                            i = 0
+                            if Cands[r0][c0][d0]:
+                                i += 1; u0 += 1
+                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d0+1}]: {Cands[r0][c0][d0]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
+                                if u0 > 4: break
+                            if Cands[r0][c0][d1]:
+                                i += 1; u1 += 1
+                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d1+1}]: {Cands[r0][c0][d1]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
+                                if u1 > 4: break
+                            if Cands[r0][c0][d2]:
+                                i += 1; u2 += 1
+                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d2+1}]: {Cands[r0][c0][d2]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
+                                if u2 > 4: break
+                            if Cands[r0][c0][d3]:
+                                i += 1; u3 += 1
+                                # TRCX(f"Cands[{r0+1}][{c0+1}][{d3+1}]: {Cands[r0][c0][d3]}, n0: {n0}, u: {u0},{u1},{u2},{u3}, i: {i}")
+                                if u3 > 4: break
+                            if not i: continue
+                            if i == 1: break
+                            if n0 >= 4: break
+                            p[n0] = b0; n0 += 1
+                        else:
+                            if n0 == 4 and u0 and u1 and u2 and u3:
+                                # hidden quad found in box h0
+                                # TRCX_cands(Cands)
+                                # TRCX(f"Hidden Quad found in box: {h0+1}")
+                                for i in range(4):
+                                    r[i] = br+(p[i]//3); c[i] = bc+(p[i]%3)
+                                    # TRCX(f"p[{i+1}]: {p[i]+1}, r[{i+1}]: {r[i]+1}, c[{i+1}]: {c[i]+1}")
+                                for d4 in range(9):
+                                    if d4 == d0 or d4 == d1 or d4 == d2 or d4 == d3: continue
                                     for i in range(4):
-                                        r[i] = br+(p[i]//3); c[i] = bc+(p[i]%3)
-                                    for d4 in range(9):
-                                        if d4 == d0 or d4 == d1 or d4 == d2 or d4 == d3: continue
-                                        for i in range(4):
-                                            if Cands[r[i]][c[i]][d4]:
-                                                Cands[r[i]][c[i]][d4] = False
-                                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                                Step.Outcome.extend([[P_ROW, r[i]], [P_COL, c[i]], [P_OP, OP_ELIM], [P_VAL, d3+1]])
-                                    if Step.Outcome:
-                                        Step.Outcome.append([P_END, ])
-                                        Step.Method = T_HIDDEN_QUAD
-                                        V = [[], [], [], []]
-                                        for i in range(4):
-                                            if Cands[r[i]][c[i]][d0]: V[i].append(d0+1)
-                                            if Cands[r[i]][c[i]][d1]: V[i].append(d1+1)
-                                            if Cands[r[i]][c[i]][d2]: V[i].append(d2+1)
-                                            if Cands[r[i]][c[i]][d3]: V[i].append(d3+1)
-                                        Step.Pattern = [[P_VAL, V[0]], [P_OP, OP_EQ], [P_ROW, r[0]], [P_COL, c[0]], [P_CON, ],
-                                                        [P_VAL, V[1]], [P_OP, OP_EQ], [P_ROW, r[1]], [P_COL, c[1]], [P_CON, ],
-                                                        [P_VAL, V[2]], [P_OP, OP_EQ], [P_ROW, r[2]], [P_COL, c[2]], [P_CON, ],
-                                                        [P_VAL, V[3]], [P_OP, OP_EQ], [P_ROW, r[3]], [P_COL, c[3]], [P_END, ]]
-                                        return 0
+                                        if Cands[r[i]][c[i]][d4]:
+                                            Cands[r[i]][c[i]][d4] = False
+                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                            Step.Outcome.extend([[P_ROW, r[i]], [P_COL, c[i]], [P_OP, OP_ELIM], [P_VAL, d4+1]])
+                                if Step.Outcome:
+                                    Step.Outcome.append([P_END, ])
+                                    Step.Method = T_HIDDEN_QUAD
+                                    V = [[], [], [], []]
+                                    for i in range(4):
+                                        if Cands[r[i]][c[i]][d0]: V[i].append(d0+1)
+                                        if Cands[r[i]][c[i]][d1]: V[i].append(d1+1)
+                                        if Cands[r[i]][c[i]][d2]: V[i].append(d2+1)
+                                        if Cands[r[i]][c[i]][d3]: V[i].append(d3+1)
+                                    Step.Pattern = [[P_VAL, V[0]], [P_OP, OP_EQ], [P_ROW, r[0]], [P_COL, c[0]], [P_CON, ],
+                                                    [P_VAL, V[1]], [P_OP, OP_EQ], [P_ROW, r[1]], [P_COL, c[1]], [P_CON, ],
+                                                    [P_VAL, V[2]], [P_OP, OP_EQ], [P_ROW, r[2]], [P_COL, c[2]], [P_CON, ],
+                                                    [P_VAL, V[3]], [P_OP, OP_EQ], [P_ROW, r[3]], [P_COL, c[3]], [P_END, ]]
+                                    return 0
     return -1

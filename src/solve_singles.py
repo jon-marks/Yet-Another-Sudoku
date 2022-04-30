@@ -23,51 +23,60 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
     # group (either row, col, blk_peers will yield the single if one exists,
     # either hidden or exposed.
 
+    n = c1 = r1 = Cand = 0  # hack to give variables function level scope.
+    # scan rows
     for r in range(9):
-        for c in range(9):
-            # Scan the row first.
-            D = Cands[r][c].copy()
-            for c1 in set(range(9))-{c}:
-                D -= Cands[r][c1]
-            if len(D) == 1:  # Hidden single found in row.
-                Step.Method     = T_HIDDEN_SINGLE
-                Grid[r][c]      = D.pop()
-                Step.Pattern    = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_ROW, r],
-                                   [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
-                Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                Cands[r][c].clear()
-                discard_cand_from_peers(Grid[r][c], r, c, Cands)
-                return 1
-            # Scan the col
-            D = Cands[r][c].copy()
-            for r1 in set(range(9))-{r}:
-                D -= Cands[r1][c]
-            if len(D) == 1:  # Hidden single found in col.
-                Step.Method     = T_HIDDEN_SINGLE
-                Grid[r][c]      = D.pop()
-                Step.Pattern    = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_COL, c],
-                                   [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
-                Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                Cands[r][c].clear()
-                discard_cand_from_peers(Grid[r][c], r, c, Cands)
-                return 1
-            # scan the block.
-            D = Cands[r][c].copy()
-            br = (r//3)*3
-            bc = (c//3)*3
-            for r1 in range(br, br+3):
-                for c1 in range(bc, bc+3):
-                    if (r1 != r) or (c1 != c):
-                        D -= Cands[r1][c1]
-            if len(D) == 1:  # Hidden single found in blk.
-                Step.Method     = T_HIDDEN_SINGLE
-                Grid[r][c]      = D.pop()
-                Step.Pattern    = [[P_VAL, Grid[r][c]], [P_OP, OP_CNT, 1], [P_BOX, (br//3)*3+bc//3],
-                                   [P_CON, ], [P_ROW, r], [P_COL, c], [P_END, ]]
-                Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
-                Cands[r][c].clear()
-                discard_cand_from_peers(Grid[r][c], r, c, Cands)
-                return 1
+        for Cand in range(1, 10):
+            n = 0
+            for c in range(9):
+                if Cand in Cands[r][c]:
+                    if n: break
+                    else: n += 1; c1 = c
+            else:
+                if n:
+                    Step.Method = T_HIDDEN_SINGLE
+                    Grid[r][c1] = Cand
+                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_ROW, r], [P_CON, ], [P_ROW, r], [P_COL, c1], [P_END, ]]
+                    Step.Outcome = [[P_ROW, r], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                    Cands[r][c1].clear()
+                    discard_cand_from_peers(Cand, r, c1, Cands)
+                    return 1
+    # scan cols
+    for c in range(9):
+        for Cand in range(1, 10):
+            n = 0
+            for r in range(9):
+                if Cand in Cands[r][c]:
+                    if n: break
+                    else: n += 1; r1 = r
+            else:
+                if n:
+                    Step.Method = T_HIDDEN_SINGLE
+                    Grid[r1][c] = Cand
+                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c], [P_END, ]]
+                    Step.Outcome = [[P_ROW, r1], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                    Cands[r1][c].clear()
+                    discard_cand_from_peers(Cand, r1, c, Cands)
+                    return 1
+    #scan boxs
+    for h in range(9):
+        br = (h//3)*3; bc = (h%3)*3
+        for Cand in range(1, 10):
+            n = 0
+            for b in range(9):
+                r = br + b//3; c = bc + b%3
+                if Cand in Cands[r][c]:
+                    if n: break
+                    else: n += 1; r1 = r; c1 = c
+            else:
+                if n:
+                    Step.Method = T_HIDDEN_SINGLE
+                    Grid[r1][c1] = Cand
+                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_BOX, h], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
+                    Step.Outcome = [[P_ROW, r1], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                    Cands[r1][c1].clear()
+                    discard_cand_from_peers(Cand, r1, c1, Cands)
+                    return 1
     return -1
 
 def tech_locked_singles(Grid, Step, Cands, Methods):
@@ -245,10 +254,10 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
                             # found a cand along the row and col, does the opposing cell have a Cand
                             if Cand in Cands[r][c]:
                                 Elim = []
-                                LkT, LkH = how_ccells_linked(r, c, Cand, row, c, Cand, Cands)
-                                if LkT & LK_STRG: Elim.append((r, col))
-                                LkT, LkH = how_ccells_linked(r, c, Cand, r, col, Cand, Cands)
-                                if LkT & LK_STRG: Elim.append((row, c))
+                                Lk = how_ccells_linked(r, c, Cand, row, c, Cand, Cands)
+                                if Lk & LK_STRG: Elim.append((r, col))
+                                Lk = how_ccells_linked(r, c, Cand, r, col, Cand, Cands)
+                                if Lk & LK_STRG: Elim.append((row, c))
                                 if len(Elim):
                                     Step.Method = T_EMPTY_RECT
                                     for r3, c3 in Elim:

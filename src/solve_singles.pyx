@@ -1,13 +1,11 @@
 
 include "globals.pxi"
-from ctypedefs cimport *
 from globals import *
-
 from trc cimport *
 from trc import *
 
 from solve_singles cimport *
-from solve_utils cimport discard_cand_from_peers_c, cell_val_has_no_conflicts_c, how_ccells_linked_c
+from solve_utils cimport COORD, discard_cand_from_peers_c, cell_val_has_no_conflicts_c, how_ccells_linked_c
 
 cdef extern from "stdlib.h" nogil:
     int rand()
@@ -107,7 +105,7 @@ cdef int tech_hidden_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                 Grid[r1][c1] = d+1
                 memset(<void *>&Cands[r1][c1][0], False, 36)  # 9 x 4bytes = 36
                 discard_cand_from_peers_c(d+1, r1, c1, Cands)
-                Step.Pattern = [[P_VAL, d+1], [P_OP, OP_CNT, 1], [P_BOX, b+1],
+                Step.Pattern = [[P_VAL, d+1], [P_OP, OP_CNT, 1], [P_BOX, b],
                                 [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
                 Step.Outcome = [[P_ROW, r1], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, d+1], [P_END, ]]
                 return 1
@@ -231,7 +229,7 @@ cdef int tech_locked_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                                         if Cands[r0][c0][Cand]: R1.append(r0)
                                     Step.Outcome.append([P_END, ])
                                     Step.Pattern = [[P_VAL, Cand+1], [P_ROW, R1], [P_COL, c0], [P_SEP, ],
-                                                    [P_VAL, Cand+1], [P_OP, OP_ABS], [P_ROW, or1, or2], [P_COL, bc, bc+1, bc+2],
+                                                    [P_VAL, Cand+1], [P_OP, OP_ABS], [P_ROW, br, br+1, br+2], [P_COL, oc1, oc2],
                                                     [P_END]]
                                     return 0
                         if Claiming:
@@ -254,7 +252,7 @@ cdef int tech_locked_singles_c(int Grid[9][9], Step, bint Cands[9][9][9], Method
                                 if Step.Outcome:
                                     Step.Method = T_CLAIMING_LOCKED_SINGLE
                                     R1 = []  # C1 Python var.
-                                    for r0 in range(bc, bc+3):
+                                    for r0 in range(br, br+3):
                                         if Cands[r0][c0][Cand]: R1.append(r0)
                                     Step.Outcome.append([P_END, ])
                                     Step.Pattern = [[P_VAL, Cand+1], [P_ROW, R1], [P_COL, c0], [P_SEP, ],

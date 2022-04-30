@@ -89,7 +89,8 @@ def _find_ai_chain_starts(Cands, GrpLks = False):
             for k in range(j+1, NSLks):
                 # up to four slks possible (row, col, box and cell), scan the rest of the SLks for them
                 ((r2, c2, Cand2), (r3, c3, Cand3)) = SLks[i][k]
-                if not ccells_match(r0, c0, Cand0, r2, c2, Cand2, GrpLks): continue  # only looking for branches off trunk (r0, c0, Cand0)
+                if r0 != r2 or c0 != c2 or Cand0 != Cand2: continue  # only looking for branches off trunk (r0, c0, Cand0)
+                # if not ccells_match(r0, c0, Cand0, r2, c2, Cand2, GrpLks): continue
                 if (r3, c3, Cand3) in UCS1: continue  # dup SLk, skip.
                 UCS1.append((r3, c3, Cand3))
                 N.Children.append(TNODE(r3, c3, Cand3, LK_STRG, [(r0, c0, Cand0, LK_STRG)], N, None))

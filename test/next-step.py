@@ -2,6 +2,8 @@
 from os.path import dirname, join
 from os import chdir
 from sys import argv, exit, path
+from datetime import datetime
+from time import perf_counter
 
 INT  = 0x01
 PROD = 0x02
@@ -13,8 +15,9 @@ SrcDir   = "src"
 TrcDir   = "trc"
 TestDir  = "test"
 TestDDir = "test-data"
-SrcFile  = "next-step-1.0-in.txt"
-DstFile  = "next-step-1.0-out.txt"
+SrcFile  = "next-step-1.0-in"
+DstFile  = "next-step-1.0-out"
+FileExt  = ".txt"
 
 sRun = ""
 Trc = False
@@ -59,14 +62,16 @@ from solve_utils import *
 
 def next_step():
 
-    if Mods == INT | DEV | PROD: TRCX("Next step using development code.")
-    elif Mods == INT | PROD: TRCX("Next step using production code.")
-    else: TRCX("Next step using interpreted code.")
+    if Mods == INT | DEV | PROD: Suff= "-dev"; Code = "Cython developoment"
+    elif Mods == INT | PROD: Suff = "-prod"; Code = "Cython production"
+    else: Suff = "-int"; Code = "interpreted"
+    print(f"Regression test (next-step.py) run start: {datetime.now()}, using {Code} code.", flush = True)
     TestDataDir = join(join(Root, TestDir), TestDDir)
-    Src = join(TestDataDir, SrcFile)
-    Dst = join(TestDataDir, DstFile)
+    Src = join(TestDataDir, SrcFile+FileExt)
+    Dst = join(TestDataDir, DstFile+Suff+FileExt)
     i = 0
     Test = 0
+    Diffs = 0; Errs = 0
     with open(Src, "rt") as f:
         with open(Dst, "wt") as f1:
             while 1:
@@ -88,16 +93,19 @@ def next_step():
                     Found, oPzl.Soln = check_puzzle(oPzl.Grid)
                     if Found == 1: sSoln = grid_to_grid_str(oPzl.Soln, oPzl.Givens)
                     else:
-                        st = f"Invalid Puzzle:  {Found} solutions found: {Line}"
-                        f1.write(st); f1.flush()
+                        St = f"Invalid Puzzle:  {Found} solutions found: {Line}"
+                        f1.write(St); f1.flush()
+                        print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Error: {St}", flush = True)
+                        Errs += 1
                         continue
                 else: sSoln = TD[5]  # if lenTD >= 6 else ""
                 Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True)
                 if Err:
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True)
                     if Err:
-                        f1.write(f"# Warning: Cannot solve next step on line: {Err}: {Line}\n")
-                        TRCX(f"Line {i}, Test: {Test}, Expected: {sExpMeth}, Err: {Err}")
+                        f1.write(f"# Warning: Cannot solve next step on line: {Err}: {Line}")
+                        print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Expected: {sExpMeth}, Error: {Err}", flush = True)
+                        Errs += 1
                         continue
 
                 sActMeth = Tech[Step.Method].Text
@@ -109,15 +117,30 @@ def next_step():
                 sElims   = TD[1] if lenTD >= 2 else ""
                 if not sExpMeth: sExpMeth = "Undefined"
                 sGr = TD[0].replace("0", ".")
-                if oPzl.Method != Step.Method or sExpCond != sCond or sExpOutc != sOutc:
-                    # f1.write(f"# Expected Line: {i}: {TD[0]}|{sElims}|{sExpMeth}|{sExpCond}|{sExpOutc}|{sSoln}\n")
-                    f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}|{sSoln}\n")
-                    TRCX(f"Line {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {sActMeth}")
+                Match = True
+                if oPzl.Method != Step.Method: Match = False
+                if sExpCond:
+                    if set(sExpCond.split(";")) != set(sCond.split(";")): Match = False
+                if sExpOutc:
+                    if set(sExpOutc.split(";")) != set(sOutc.split(";")): Match = False
+                #
+                A0 = set(sExpCond.split(";")); A1 = set(sCond.split(";")); A2 = set(sExpOutc.split(";")); A3 = set(sOutc.split(";"))
+                pass
+                #
+                #     and sExpCond != sCond: Match = False
+                # elif sExpOutc:
+                #     oExpOutc = sorted(sExpOutc.split(";")); oOutc = sorted(sOutc.split(";"))
+                #     if len(oOutc) != len(oExpOutc):  Match = False
+                #     else:
+                #         for k in range(len(oOutc)):
+                #             if oOutc[k] != oExpOutc[k]: Match = False; break
+                if Match: print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, {sActMeth}", flush = True)
                 else:
-                    f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}|{sSoln}\n")
-                    TRCX(f"Line {i}, Test: {Test}, {sActMeth}")
+                    print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, {sExpMeth}|{sExpCond}|{sExpOutc}, Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
+                    Diffs += 1
+                f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}|{sSoln}\n")
                 f1.flush()
-    TRCX(f"End Run, Lines: {i}, Tests: {Test}")
+    print(f"{perf_counter():07f}: End Run, Lines: {i}, Tests: {Test},  Differences: {Diffs}, Errors: {Errs}.")
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ from globals import *
 from trc import TRCX
 
 # from solve_utils import *  # remove dependency on this file, it should only be imported
-                             # by the tech modules below.
+#                              by the tech modules below.
 from solve_singles import *
 from solve_subsets import *
 from solve_fish import *
@@ -34,79 +34,6 @@ LK_DIFF     = 20  # per link difficulty premium
 GRP_LK_DIFF = 50  # per group link difficulty premium.
 
 SLVR = namedtuple('SLVR', ['pFn', 'Mthds'])
-
-# class TECH_T:
-#     def __init__(self, Enabled=False, Text=None, Expertise=UNDEF, Difficulty=UNDEF):
-#         self.Enabled    = Enabled  # if true will be used to find a logic solution for the puzzle
-#         self.Text       = Text if Text else ""
-#         self.Expertise  = Expertise
-#         self.Difficulty = Difficulty
-#
-# Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UNDEF                   -1),
-#         T_EXPOSED_SINGLE:           TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
-#         T_HIDDEN_SINGLE:            TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
-#         T_CLAIMING_LOCKED_SINGLE:   TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
-#         T_POINTING_LOCKED_SINGLE:   TECH_T(True, "Pointing Locked Single",    EXP_NOVICE,             15),
-#         T_EXPOSED_PAIR:             TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
-#         T_LOCKED_EXPOSED_PAIR:      TECH_T(True, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
-#         T_HIDDEN_PAIR:              TECH_T(True, "Hidden Pair",               EXP_INTERMEDIATE,       20),
-#         T_EXPOSED_TRIPLE:           TECH_T(True, "Exposed Triple",            EXP_INTERMEDIATE,       20),
-#         T_LOCKED_EXPOSED_TRIPLE:    TECH_T(True, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
-#         T_HIDDEN_TRIPLE:            TECH_T(True, "Hidden Triple",             EXP_INTERMEDIATE,       30),
-#         T_EXPOSED_QUAD:             TECH_T(True, "Exposed Quad",              EXP_INTERMEDIATE,       35),
-#         T_HIDDEN_QUAD:              TECH_T(True, "Hidden Quad",               EXP_INTERMEDIATE,       40),
-#         T_X_WING:                   TECH_T(True, "X-Wing",                    EXP_PROFICIENT,         45),
-#         T_SWORDFISH:                TECH_T(True, "Swordfish",                 EXP_PROFICIENT,         50),
-#         T_JELLYFISH:                TECH_T(True, "Jellyfish",                 EXP_PROFICIENT,         55),
-#         T_FINNED_X_WING:            TECH_T(True, "Finned X-Wing",             EXP_PROFICIENT,         60),
-#         T_FINNED_SWORDFISH:         TECH_T(True, "Finned Swordfish",          EXP_PROFICIENT,         65),
-#         T_FINNED_JELLYFISH:         TECH_T(True, "Finned Jellyfish",          EXP_PROFICIENT,         70),
-#         T_SASHIMI_X_WING:           TECH_T(True, "Sashimi X-Wing",            EXP_PROFICIENT,         60),
-#         T_SASHIMI_SWORDFISH:        TECH_T(True, "Sashimi Swordfish",         EXP_PROFICIENT,         65),
-#         T_SASHIMI_JELLYFISH:        TECH_T(True, "Sashimi Jellyfish",         EXP_PROFICIENT,         70),
-#         T_SKYSCRAPER:               TECH_T(False, "Skyscraper",                EXP_PROFICIENT,         45),
-#         T_TWO_STRING_KITE:          TECH_T(False, "Two String Kite",           EXP_PROFICIENT,         45),
-#         T_TURBOT_FISH:              TECH_T(False, "Turbot Fish",               EXP_PROFICIENT,         50),
-#         T_EMPTY_RECT:               TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
-#         T_Y_WING:                   TECH_T(False, "Y-Wing",                    EXP_INTERMEDIATE,       50),
-#         T_XYZ_WING:                 TECH_T(False, "XYZ-Wing",                  EXP_PROFICIENT,         60),
-#         T_WXYZ_WING:                TECH_T(False, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
-#         T_BENT_EXPOSED_QUAD:        TECH_T(False, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
-#         T_X_CHAIN:                  TECH_T(False, "X-Chain",                   EXP_PROFICIENT,         70),
-#         T_EVEN_X_LOOP:              TECH_T(False, "Even X-Loop",               EXP_PROFICIENT,         70),
-#         T_STRONG_X_LOOP:            TECH_T(False, "Strong X-Loop",             EXP_PROFICIENT,         70),
-#         T_REMOTE_PAIR:              TECH_T(False, "Remote Pair",               EXP_ACCOMPLISHED,       80),
-#         T_XY_CHAIN:                 TECH_T(False, "XY-Chain",                  EXP_ACCOMPLISHED,       80),
-#         T_XY_LOOP:                  TECH_T(False, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
-#         T_W_WING:                   TECH_T(False, "W-Wing",                    EXP_PROFICIENT,         55),
-#         T_SC_AI_CHAIN:              TECH_T(False, "Same End Candidate AI-Chain", EXP_PROFICIENT,       70),
-#         T_DC_AI_CHAIN:              TECH_T(False, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED,80),
-#         T_EVEN_AI_LOOP:             TECH_T(False, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
-#         T_STRONG_AI_LOOP:           TECH_T(False, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
-#         T_KRAKEN_X_WING:            TECH_T(True, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
-#         T_KRAKEN_SWORDFISH:         TECH_T(True, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
-#         T_KRAKEN_JELLYFISH:         TECH_T(True, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
-#         T_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
-#         T_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
-#         T_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
-#         T_GL_TWO_STRING_KITE:       TECH_T(False, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
-#         T_GL_TURBOT_FISH:           TECH_T(False, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
-#         T_GL_X_CHAIN:               TECH_T(False, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
-#         T_GL_EVEN_X_LOOP:           TECH_T(False, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
-#         T_GL_STRONG_X_LOOP:         TECH_T(False, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
-#         T_GL_W_WING:                TECH_T(False, "Group Linked W-Wing",       EXP_PROFICIENT,         80),
-#         T_GL_SC_AI_CHAIN:           TECH_T(False, "Group Linked Same End Candidates AI-Chain", EXP_PROFICIENT, 80),
-#         T_GL_DC_AI_CHAIN:           TECH_T(False, "Group Linked Different End Candidates AI-Chain", EXP_ACCOMPLISHED, 80),
-#         T_GL_EVEN_AI_LOOP:          TECH_T(False, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
-#         T_GL_STRONG_AI_LOOP:        TECH_T(False, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
-#         T_GL_KRAKEN_X_WING:         TECH_T(True, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
-#         T_GL_KRAKEN_SWORDFISH:      TECH_T(True, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
-#         T_GL_KRAKEN_JELLYFISH:      TECH_T(True, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
-#         T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
-#         T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
-#         T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),
-#         T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
-#         }
 
 # the order of the methods in the Solver structures is significant to the underlying code, change with caution.
 # the order of the Slvr items can be changed with varying result in solution path and difficulty rating.
@@ -138,19 +65,19 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH, T_SASHIMI_SWORDFISH]),
            SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
            # SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
-           # SLVR(tech_xy_chains,           [T_XY_CHAIN]),
            # SLVR(tech_other_x_chains,      [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
+           # SLVR(tech_xy_chains,           [T_XY_CHAIN]),
            # SLVR(tech_xy_loops,            [T_XY_LOOP]),
            # SLVR(tech_ai_chains,           [T_W_WING, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP]),
            # SLVR(tech_gl_three_link_x_chains, [T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH]),
            # SLVR(tech_gl_other_x_chains,   [T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP]), # and loops, never before three link xchains
            # SLVR(tech_gl_ai_chains,        [T_GL_W_WING, T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP]),
-           SLVR(tech_finned_x_wings,      [T_KRAKEN_X_WING, T_KRAKEN_SASHIMI_X_WING]),  # kraken fish never before finned fish
-           SLVR(tech_finned_swordfish,    [T_KRAKEN_SWORDFISH, T_KRAKEN_SASHIMI_SWORDFISH]),
-           SLVR(tech_finned_jellyfish,    [T_KRAKEN_JELLYFISH, T_KRAKEN_SASHIMI_JELLYFISH]),
-           SLVR(tech_finned_x_wings,      [T_GL_KRAKEN_X_WING, T_GL_KRAKEN_SASHIMI_X_WING]),
-           SLVR(tech_finned_swordfish,    [T_GL_KRAKEN_SWORDFISH, T_GL_KRAKEN_SASHIMI_SWORDFISH]),
-           SLVR(tech_finned_jellyfish,    [T_GL_KRAKEN_JELLYFISH, T_GL_KRAKEN_SASHIMI_JELLYFISH]),
+           SLVR(tech_finned_x_wings,      [T_KRAKEN_FINNED_X_WING, T_KRAKEN_SASHIMI_X_WING]),  # kraken fish never before finned fish
+           SLVR(tech_finned_swordfish,    [T_KRAKEN_FINNED_SWORDFISH, T_KRAKEN_SASHIMI_SWORDFISH]),
+           SLVR(tech_finned_jellyfish,    [T_KRAKEN_FINNED_JELLYFISH, T_KRAKEN_SASHIMI_JELLYFISH]),
+           SLVR(tech_finned_x_wings,      [T_GL_KRAKEN_FINNED_X_WING, T_GL_KRAKEN_SASHIMI_X_WING]),
+           SLVR(tech_finned_swordfish,    [T_GL_KRAKEN_FINNED_SWORDFISH, T_GL_KRAKEN_SASHIMI_SWORDFISH]),
+           SLVR(tech_finned_jellyfish,    [T_GL_KRAKEN_FINNED_JELLYFISH, T_GL_KRAKEN_SASHIMI_JELLYFISH]),
            SLVR(tech_brute_force,         [T_BRUTE_FORCE])
            ]
 
@@ -250,4 +177,3 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, OverrideEna
                 if Err: return Step, Err
             return Step, ""
     else: return Step, "Can't solve step"
-

@@ -116,91 +116,82 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
     # cells from the two selected cells.  If there are the same two remaining
     # candidates in the selected cells, then a hidden pair has been found.
 
-    # scan the rows first.
-    for r in range(9):
-        for c in range(8):
-            if len(Cands[r][c]) < 2: continue
-            for c1 in range(c+1, 9):
-                if len(Cands[r][c1]) < 2: continue
-                D1 = copy(Cands[r][c])
-                D2 = copy(Cands[r][c1])
-                for c2 in set(range(9)) - {c, c1}:
-                    D1 -= Cands[r][c2]
-                    D2 -= Cands[r][c2]
-                    if len(D1) < 2 or len(D2) < 2: break
+    for Cand0 in range(1, 9):
+        for Cand1 in range(Cand0+1, 10):
+            # scan row
+            for r0 in range(9):
+                n0 = 0; C = []
+                for c0 in range(9):
+                    if Grid[r0][c0]: continue
+                    LenX = len(Cands[r0][c0] & {Cand0, Cand1})
+                    if not LenX: continue
+                    elif LenX == 1: break
+                    if n0 > 1: break
+                    C.append(c0); n0 += 1
                 else:
-                    if D1 == D2: # Found a hidden pair
-                        for c3 in [c, c1]:
-                            for Cand in copy(Cands[r][c3]):
-                                if Cand not in D1:
-                                    Cands[r][c3].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                        if Step.Outcome:
-                            # D3 = sorted(D1)
-                            Step.Method = T_HIDDEN_PAIR
-                            Step.Outcome.append([P_END, ])
-                            Step.Pattern = [[P_VAL, sorted(D1)], [P_OP, OP_CNT, 2], [P_ROW, r], [P_COL, c, c1], [P_END, ]]
-                            return 0
-    # then scan the cols
-    for c in range(9):
-        for r in range(8):
-            if len(Cands[r][c]) < 2: continue
-            for r1 in range(r+1, 9):
-                if len(Cands[r1][c]) < 2: continue
-                D1 = copy(Cands[r][c])
-                D2 = copy(Cands[r1][c])
-                for r2 in set(range(9)) - {r, r1}:
-                    D1 -= Cands[r2][c]
-                    D2 -= Cands[r2][c]
-                    if len(D1) < 2 or len(D2) < 2: break
+                    if n0 != 2: continue
+                    # found a hidden Pair in row
+                    for c0 in C:
+                        for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1}):
+                            Cands[r0][c0].discard(Cand)
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    if Step.Outcome:
+                        Step.Outcome.append([P_END, ])
+                        Step.Method = T_HIDDEN_PAIR
+                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, C], [P_END, ]]
+                        return 0
+            # scan cols
+            for c0 in range(9):
+                n0 = 0; R = []
+                for r0 in range(9):
+                    if Grid[r0][c0]: continue
+                    LenX = len(Cands[r0][c0] & {Cand0, Cand1})
+                    if not LenX: continue
+                    elif LenX == 1: break
+                    if n0 > 1: break
+                    R.append(r0); n0 += 1
                 else:
-                    if D1 == D2:
-                        # Found a hidden pair
-                        for r3 in [r, r1]:
-                            for Cand in copy(Cands[r3][c]):
-                                if Cand not in D1:
-                                    Cands[r3][c].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                        if Step.Outcome:
-                            # D3 = sorted(D1)
-                            Step.Method = T_HIDDEN_PAIR
-                            Step.Outcome.append([P_END, ])
-                            Step.Pattern = [[P_VAL, sorted(D1)], [P_OP, OP_CNT, 2], [P_ROW, r, r1], [P_COL, c], [P_END, ]]
-                            return 0
-    # then scan the blocks
-    for br in range(0, 9, 3):
-        for bc in range(0, 9, 3):
-            for rc in range(8):
-                r = br+(rc//3);  c = bc+(rc%3)
-                if len(Cands[r][c]) < 2: continue
-                for rc1 in range(rc+1, 9):
-                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                    if len(Cands[r1][c1]) < 2: continue
-                    D1 = copy(Cands[r][c])
-                    D2 = copy(Cands[r1][c1])
-                    for rc2 in set(range(9)) - {rc, rc1}:
-                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                        D1 -= Cands[r2][c2]
-                        D2 -= Cands[r2][c2]
-                        if len(D1) < 2 or len(D2) < 2: break
-                    else:
-                        if D1 == D2:
-                            # Found a hidden pair
-                            for r3, c3 in [(r, c), (r1, c1)]:
-                                for Cand in copy(Cands[r3][c3]):
-                                    if Cand not in D1:
-                                        Cands[r3][c3].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                        Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                            if Step.Outcome:
-                                # D3 = sorted(D1)
-                                Step.Method = T_HIDDEN_PAIR
-                                Step.Outcome.append([P_END, ])
-                                Step.Pattern = [[P_VAL, sorted(D1)], [P_OP, OP_CNT, 2], [P_BOX, (r//3)*3+c//3], [P_CON, ],
-                                                [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
-                                return 0
+                    if n0 != 2: continue
+                    # found a hidden pair in col
+                    for r0 in R:
+                        for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1}):
+                            Cands[r0][c0].discard(Cand)
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    if Step.Outcome:
+                        Step.Outcome.append([P_END, ])
+                        Step.Method = T_HIDDEN_PAIR
+                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_ROW, R], [P_COL, c0], [P_END, ]]
+                        return 0
+            # scan boxes
+            for h0 in range(9):
+                br = (h0//3)*3; bc = (h0%3)*3
+                n0 = 0; B = []
+                for b0 in range(9):
+                    r0 = br + b0//3; c0 = bc + b0%3
+                    if Grid[r0][c0]: continue
+                    LenX = len(Cands[r0][c0] & {Cand0, Cand1})
+                    if not LenX: continue
+                    elif LenX == 1: break
+                    if n0 > 1: break
+                    B.append((r0, c0)); n0 += 1
+                else:
+                    if n0 != 2: continue
+                    # found a hidden pair in block
+                    for r0, c0 in B:
+                        for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1}):
+                            Cands[r0][c0].discard(Cand)
+                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    if Step.Outcome:
+                        Step.Outcome.append([P_END, ])
+                        Step.Method = T_HIDDEN_PAIR
+                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_BOX, h0]]
+                        for r0, c0 in B:
+                            Step.Pattern.extend([[P_CON, ], [P_ROW, r0], [P_COL, c0]])
+                        Step.Pattern.append([P_END, ])
+                        return 0
     return -1
 
 def tech_exposed_triples(Grid, Step, Cands, Methods):
@@ -343,130 +334,92 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
     # Here we can eliminate candidates from those three cells that are not the
     # same three candidates, thereby exposing the hidden triple.
 
-    # scan the rows first
-    for r in range(9):
-        for c in range(7):
-            if len(Cands[r][c]) < 2: continue
-            for c1 in range(c+1, 8):
-                if len(Cands[r][c1]) < 2: continue
-                for c2 in range(c1+1, 9):
-                    if len(Cands[r][c2]) < 2: continue
-                    D1 = copy(Cands[r][c])
-                    D2 = copy(Cands[r][c1])
-                    D3 = copy(Cands[r][c2])
-                    for c3 in set(range(9)) - {c, c1, c2}:
-                        D1 -= Cands[r][c3]
-                        D2 -= Cands[r][c3]
-                        D3 -= Cands[r][c3]
-                        if len(D1) < 2 or len(D2) < 2 or len(D3) < 2: break
+    for Cand0 in range(1, 8):
+        for Cand1 in range(Cand0+1, 9):
+            for Cand2 in range(Cand1+1, 10):
+                # scan rows
+                for r0 in range(9):
+                    n0 = 0; C = []; U = set()
+                    for c0 in range(9):
+                        if Grid[r0][c0]: continue
+                        X = Cands[r0][c0] & {Cand0, Cand1, Cand2}
+                        if not X: continue
+                        if len(X) == 1: break
+                        if n0 > 2: break
+                        C.append((c0, X)); U |= X; n0 += 1
                     else:
-                        DT = sorted(D1 | D2 | D3)
-                        if len(DT) == 3:
-                            # found a hidden triple
-                            for c4 in [c, c1, c2]:
-                                for Cand in copy(Cands[r][c4]):
-                                    if Cand not in DT:
-                                        Cands[r][c4].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                        Step.Outcome.extend([[P_ROW, r], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                            if Step.Outcome:
-                                Step.Outcome.append([P_END, ])
-                                Step.Method = T_HIDDEN_TRIPLE
-                                for i, Cand in enumerate(DT):
-                                    C = []
-                                    if Cand in D1: C.append(c)
-                                    if Cand in D2: C.append(c1)
-                                    if Cand in D3: C.append(c2)
-                                    if i: Step.Pattern.append([P_CON, ])
-                                    Step.Pattern.extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)], [P_ROW, r], [P_COL, C]])
-                                Step.Pattern.append([P_END, ])
-                                return 0
-    # then scan the cols
-    for c in range(9):
-        for r in range(7):
-            if len(Cands[r][c]) < 2: continue
-            for r1 in range(r+1, 8):
-                if len(Cands[r1][c]) < 2: continue
-                for r2 in range(r1+1, 9):
-                    if len(Cands[r2][c]) < 2: continue
-                    D1 = copy(Cands[r][c])
-                    D2 = copy(Cands[r1][c])
-                    D3 = copy(Cands[r2][c])
-                    for r3 in set(range(9)) - {r, r1, r2}:
-                        D1 -= Cands[r3][c]
-                        D2 -= Cands[r3][c]
-                        D3 -= Cands[r3][c]
-                        if len(D1) < 2 or len(D2) < 2 or len(D3) < 2: break
+                        if n0 != 3 or len(U) != 3: continue
+                        # hidden trip found in r0
+                        for c0, X in C:
+                            for Cand in sorted(Cands[r0][c0]-{Cand0, Cand1, Cand2}):
+                                Cands[r0][c0].discard(Cand)
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        if Step.Outcome:
+                            Step.Outcome.append([P_END, ])
+                            Step.Method = T_HIDDEN_TRIPLE
+                            Step.Pattern = []
+                            for c0, X in C:
+                                if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                            Step.Pattern.append([P_END, ])
+                            return 0
+                # scan cols
+                for c0 in range(9):
+                    n0 = 0; R = []; U = set()
+                    for r0 in range(9):
+                        if Grid[r0][c0]: continue
+                        X = Cands[r0][c0] & {Cand0, Cand1, Cand2}
+                        if not X: continue
+                        if len(X) == 1: break
+                        if n0 > 2: break
+                        R.append((r0, X)); U |= X; n0 += 1
                     else:
-                        DT = sorted(D1 | D2 | D3)
-                        if len(DT) == 3:
-                            # found a hidden triple
-                            for r4 in [r, r1, r2]:
-                                for Cand in copy(Cands[r4][c]):
-                                    if Cand not in DT:
-                                        Cands[r4][c].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                        Step.Outcome.extend([[P_ROW, r4], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                            if Step.Outcome:
-                                Step.Outcome.append([P_END, ])
-                                Step.Method = T_HIDDEN_TRIPLE
-                                for i, Cand in enumerate(DT):
-                                    R = []
-                                    if Cand in D1: R.append(r)
-                                    if Cand in D2: R.append(r1)
-                                    if Cand in D3: R.append(r2)
-                                    if i:
-                                        Step.Pattern.append([P_CON, ])
-                                    Step.Pattern.extend([[P_VAL, Cand], [P_OP, OP_CNT, len(R)], [P_ROW, R], [P_COL, c]])
-                                Step.Pattern.append([P_END, ])
-                                return 0
-    # then scan the blocks
-    for br in range(0, 9, 3):
-        for bc in range(0, 9, 3):
-            for rc in range(7):
-                r = br+(rc//3); c = bc+(rc%3)
-                if len(Cands[r][c]) < 2: continue
-                for rc1 in range(rc+1, 8):
-                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                    if len(Cands[r1][c1]) < 2: continue
-                    for rc2 in range(rc1+1, 9):
-                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                        if len(Cands[r2][c2]) < 2: continue
-                        D1 = copy(Cands[r][c])
-                        D2 = copy(Cands[r1][c1])
-                        D3 = copy(Cands[r2][c2])
-                        for rc3 in set(range(9)) - {rc, rc1, rc2}:
-                            r3 = br+(rc3//3); c3 = bc+(rc3%3)
-                            D1 -= Cands[r3][c3]
-                            D2 -= Cands[r3][c3]
-                            D3 -= Cands[r3][c3]
-                            if len(D1) < 2 or len(D2) < 2 or len(D3) < 2: break
-                        else:
-                            DT = sorted(D1 | D2 | D3)
-                            if len(DT) == 3:
-                                # found a hidden triple
-                                for r4, c4 in [(r, c), (r1, c1), (r2, c2)]:
-                                    for Cand in copy(Cands[r4][c4]):
-                                        if Cand not in DT:
-                                            Cands[r4][c4].discard(Cand)
-                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                            Step.Outcome.extend([[P_ROW, r4], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                if Step.Outcome:
-                                    Step.Outcome.append([P_END, ])
-                                    Step.Method = T_HIDDEN_TRIPLE
-                                    Step.Pattern = []
-                                    for i, Cand in enumerate(DT):
-                                        C = []
-                                        if Cand in D1: C.append((r, c))
-                                        if Cand in D2: C.append((r1, c1))
-                                        if Cand in D3: C.append((r2, c2))
-                                        if i:
-                                            Step.Pattern.append([P_CON, ])
-                                        Step.Pattern.extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)], [P_BOX, (br//3)*3 + bc//3]])
-                                        for (r4, c4) in C:
-                                            Step.Pattern.extend([[P_CON, ], [P_ROW, r4], [P_COL, c4]])
-                                    Step.Pattern.append([P_END, ])
-                                    return 0
+                        if n0 != 3 or len(U) != 3: continue
+                        # hidden trip found in r0
+                        for r0, X in R:
+                            for Cand in sorted(Cands[r0][c0]-{Cand0, Cand1, Cand2}):
+                                Cands[r0][c0].discard(Cand)
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        if Step.Outcome:
+                            Step.Outcome.append([P_END, ])
+                            Step.Method = T_HIDDEN_TRIPLE
+                            Step.Pattern = []
+                            for r0, X in R:
+                                if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                            Step.Pattern.append([P_END, ])
+                            return 0
+                # scan boxes
+                for h0 in range(9):
+                    br = (h0//3)*3; bc = (h0%3)*3
+                    n0 = 0; B = []; U = set()
+                    for b0 in range(9):
+                        r0 = br + b0//3; c0 = bc + b0%3
+                        if Grid[r0][c0]: continue
+                        X = Cands[r0][c0] & {Cand0, Cand1, Cand2}
+                        if not X: continue
+                        if len(X) == 1: break
+                        if n0 > 2: break
+                        B.append((r0, c0, X)); U |= X; n0 += 1
+                    else:
+                        if n0 != 3 or len(U) != 3: continue
+                        # found a hidden trip in block
+                        for r0, c0, X in B:
+                            for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1, Cand2}):
+                                Cands[r0][c0].discard(Cand)
+                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        if Step.Outcome:
+                            Step.Outcome.append([P_END, ])
+                            Step.Method = T_HIDDEN_TRIPLE
+                            Step.Pattern = []
+                            for r0, c0, X in B:
+                                if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                            Step.Pattern.append([P_END, ])
+                            return 0
     return -1
 
 def tech_exposed_quads(Grid, Step, Cands, Methods):
@@ -574,140 +527,91 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
     # Here we can eliminate candidates from those four cells that are not the
     # same four candidates, thereby exposing the hidden quad.
 
-    # scan the rows first
-    for r in range(9):
-        for c in range(6):
-            if len(Cands[r][c]) < 2: continue
-            for c1 in range(c+1, 7):
-                if len(Cands[r][c1]) < 2: continue
-                for c2 in range(c1+1, 8):
-                    if len(Cands[r][c2]) < 2: continue
-                    for c3 in range(c2+1, 9):
-                        if len(Cands[r][c3]) < 2: continue
-                        D1 = copy(Cands[r][c])
-                        D2 = copy(Cands[r][c1])
-                        D3 = copy(Cands[r][c2])
-                        D4 = copy(Cands[r][c3])
-                        for c4 in set(range(9)) - {c, c1, c2, c3}:
-                            D1 -= Cands[r][c4]
-                            D2 -= Cands[r][c4]
-                            D3 -= Cands[r][c4]
-                            D4 -= Cands[r][c4]
-                            if len(D1) < 2 or len(D2) < 2 or len(D3) < 2 or len(D4) < 2: break
+    for Cand0 in range(1, 7):
+        for Cand1 in range(Cand0+1, 8):
+            for Cand2 in range(Cand1+1, 9):
+                for Cand3 in range(Cand2+1, 10):
+                    # Scan rows
+                    for r0 in range(9):
+                        n0 = 0; C = []; U = set()
+                        for c0 in range(9):
+                            if Grid[r0][c0]: continue
+                            X = Cands[r0][c0] & {Cand0, Cand1, Cand2, Cand3}
+                            if not X: continue
+                            if len(X) == 1: break
+                            if n0 > 3: break
+                            C.append((c0, X)); U |= X; n0 += 1
                         else:
-                            DT = sorted(D1 | D2 | D3 | D4)
-                            if len(DT) == 4:
-                                # found a hidden quad
-                                for c5 in [c, c1, c2, c3]:
-                                    for Cand in copy(Cands[r][c5]):
-                                        if Cand not in DT:
-                                            Cands[r][c5].discard(Cand)
-                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                            Step.Outcome.extend([[P_ROW, r], [P_COL, c5], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                if Step.Outcome:
-                                    Step.Method = T_HIDDEN_QUAD
-                                    Step.Outcome.append([P_END, ])
-                                    for i, Cand in enumerate(DT):
-                                        C = []
-                                        if Cand in D1: C.append(c)
-                                        if Cand in D2: C.append(c1)
-                                        if Cand in D3: C.append(c2)
-                                        if Cand in D4: C.append(c3)
-                                        if i: Step.Pattern.append([P_CON, ])
-                                        Step.Pattern.extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)], [P_ROW, r], [P_COL, C]])
-                                    Step.Pattern.append([P_END, ])
-                                    return 0
-    # then scan the cols
-    for c in range(9):
-        for r in range(6):
-            if len(Cands[r][c]) < 2: continue
-            for r1 in range(r+1, 7):
-                if len(Cands[r1][c]) < 2: continue
-                for r2 in range(r1+1, 8):
-                    if len(Cands[r2][c]) < 2: continue
-                    for r3 in range(r2+1, 9):
-                        if len(Cands[r3][c]) < 2: continue
-                        D1 = copy(Cands[r][c])
-                        D2 = copy(Cands[r1][c])
-                        D3 = copy(Cands[r2][c])
-                        D4 = copy(Cands[r3][c])
-                        for r4 in set(range(9))-{r, r1, r2, r3}:
-                            D1 -= Cands[r4][c]
-                            D2 -= Cands[r4][c]
-                            D3 -= Cands[r4][c]
-                            D4 -= Cands[r4][c]
-                            if len(D1) < 2 or len(D2) < 2 or len(D3) < 2 or len(D4) < 2: break
+                            if n0 != 4 or len(U) != 4: continue
+                            # hidden quad found
+                            for c0, x in C:
+                                for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}):
+                                    Cands[r0][c0].discard(Cand)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            if Step.Outcome:
+                                Step.Outcome.append([P_END, ])
+                                Step.Method = T_HIDDEN_QUAD
+                                Step.Pattern = []
+                                for c0, X in C:
+                                    if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.append([P_END, ])
+                                return 0
+                    # Scan cols
+                    for c0 in range(9):
+                        n0 = 0; R = []; U = set()
+                        for r0 in range(9):
+                            if Grid[r0][c0]: continue
+                            X = Cands[r0][c0] & {Cand0, Cand1, Cand2, Cand3}
+                            if not X: continue
+                            if len(X) == 1: break
+                            if n0 > 3: break
+                            R.append((r0, X)); U |= X; n0 += 1
                         else:
-                            DT = D1 | D2 | D3 | D4
-                            if len(DT) == 4:
-                                # found a hidden quad
-                                for r5 in [r, r1, r2, r3]:
-                                    for Cand in copy(Cands[r5][c]):
-                                        if Cand not in DT:
-                                            Cands[r5][c].discard(Cand)
-                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                            Step.Outcome.extend([[P_ROW, r5], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                if Step.Outcome:
-                                    Step.Method = T_HIDDEN_QUAD
-                                    Step.Outcome.append([P_END, ])
-                                    for i, Cand in enumerate(DT):
-                                        R = []
-                                        if Cand in D1: R.append(r)
-                                        if Cand in D2: R.append(r1)
-                                        if Cand in D3: R.append(r2)
-                                        if Cand in D4: R.append(r3)
-                                        if i: Step.Pattern.append([P_CON, ])
-                                        Step.Pattern.extend([[P_VAL, Cand], [P_OP, OP_CNT, len(R)], [P_ROW, R], [P_COL, c]])
-                                        Step.Pattern.append([P_END, ])
-                                    return 0
-    # then scan the blocks
-    for br in range(0, 9, 3):
-        for bc in range(0, 9, 3):
-            for rc in range(6):
-                r = br+(rc//3); c = bc+(rc%3)
-                if len(Cands[r][c]) < 2: continue
-                for rc1 in range(rc+1, 7):
-                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                    if len(Cands[r1][c1]) < 2: continue
-                    for rc2 in range(rc1+1, 8):
-                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                        if len(Cands[r2][c2]) < 2: continue
-                        for rc3 in range(rc2+1, 9):
-                            r3 = br+(rc3//3); c3 = bc+(rc3%3)
-                            if len(Cands[r3][c3]) < 2: continue
-                            D1 = copy(Cands[r][c])
-                            D2 = copy(Cands[r1][c1])
-                            D3 = copy(Cands[r2][c2])
-                            D4 = copy(Cands[r3][c3])
-                            for rc4 in set(range(9)) - {rc, rc1, rc2, rc3}:
-                                r4 = br+(rc4//3); c4 = bc+(rc4%3)
-                                D1 -= Cands[r4][c4]
-                                D2 -= Cands[r4][c4]
-                                D3 -= Cands[r4][c4]
-                                D4 -= Cands[r4][c4]
-                                if len(D1) < 2 or len(D2) < 2 or len(D3) < 2 or len(D4) < 2: break
-                            else:
-                                DT = D1 | D2 | D3 | D4
-                                if len(DT) == 4:
-                                    # found a hidden quad
-                                    for r5, c5 in [(r, c), (r1, c1), (r2, c2), (r3, c3)]:
-                                        for Cand in copy(Cands[r5][c5]):
-                                            if Cand not in DT:
-                                                Cands[r5][c5].discard(Cand)
-                                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                                Step.Outcome.extend([[P_ROW, r5], [P_COL, c5], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    if Step.Outcome:
-                                        Step.Method = T_HIDDEN_QUAD
-                                        Step.Outcome.append([P_END, ])
-                                        for i, Cand in enumerate(DT):
-                                            C = []
-                                            if Cand in D1: C.append((r, c))
-                                            if Cand in D2: C.append((r1, c1))
-                                            if Cand in D3: C.append((r2, c2))
-                                            if Cand in D4: C.append((r3, c3))
-                                            if i: Step.Pattern.append([P_CON, ])
-                                            Step.Pattern.extend([[P_VAL, Cand], [P_OP, OP_CNT, len(C)], [P_BOX, (br//3)*3 + bc//3]])
-                                            for (r5, c5) in C: Step.Pattern.extend([[P_CON, ], [P_ROW, r5], [P_COL, c5]])
-                                        Step.Pattern.append([P_END, ])
-                                        return 0
+                            if n0 != 4 or len(U) != 4: continue
+                            # hidden trip found in r0
+                            for r0, X in R:
+                                for Cand in sorted(Cands[r0][c0]-{Cand0, Cand1, Cand2, Cand3}):
+                                    Cands[r0][c0].discard(Cand)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            if Step.Outcome:
+                                Step.Outcome.append([P_END, ])
+                                Step.Method = T_HIDDEN_QUAD
+                                Step.Pattern = []
+                                for r0, X in R:
+                                    if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.append([P_END, ])
+                                return 0
+                    # scan boxes
+                    for h0 in range(9):
+                        br = (h0//3)*3; bc = (h0%3)*3
+                        n0 = 0; B = []; U = set()
+                        for b0 in range(9):
+                            r0 = br + b0//3; c0 = bc + b0%3
+                            if Grid[r0][c0]: continue
+                            X = Cands[r0][c0] & {Cand0, Cand1, Cand2, Cand3}
+                            if not X: continue
+                            if len(X) == 1: break
+                            if n0 > 3: break
+                            B.append((r0, c0, X)); U |= X; n0 += 1
+                        else:
+                            if n0 != 4 or len(U) != 4: continue
+                            # found a hidden quad in block
+                            for r0, c0, X in B:
+                                for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}):
+                                    Cands[r0][c0].discard(Cand)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            if Step.Outcome:
+                                Step.Outcome.append([P_END, ])
+                                Step.Method = T_HIDDEN_QUAD
+                                Step.Pattern = []
+                                for r0, c0, X in B:
+                                    if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.append([P_END, ])
+                                return 0
     return -1
