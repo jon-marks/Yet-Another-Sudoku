@@ -222,8 +222,6 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
     # is/was a strong link between Cb and Cr, then Cc too can be eliminated.
     #
 
-    # if (T_EMPTY_RECT not in Method) and (T_UNDEF not in Method): return -2
-
     # Look for a box that only has cands that describe a single row and col in
     # that box.
 

@@ -1,5 +1,3 @@
-from copy import copy
-
 from globals import *
 from trc import *
 from misc import tkns_to_str

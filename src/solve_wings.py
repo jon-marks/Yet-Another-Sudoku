@@ -23,7 +23,7 @@ from solve_utils import *
 # W-Wings are treated as the AI_chains that they are, see solve_ai_chains.py
 
 
-def tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
+def tech_bent_exposed_triples(Grid, Step, Cands, Methods):
     # a bent (exposed) triple can only be either a Y-Wing or a XYZ-Wing.
     # Note that in a bent triple, the pincers (URC) cells can only have 2 pincers
     # for the pattern to be valid.  If there are three candidates in either/both
@@ -34,7 +34,7 @@ def tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
     # only has 2 cands) and each cell is in a separate box.  If the there is a
     # common chute then it will be found in the line/box searches.
 
-    if Method != T_UNDEF and (Method != T_Y_WING or Method != T_XYZ_WING): return -1
+#    if Method != T_UNDEF and (Method != T_Y_WING or Method != T_XYZ_WING): return -1
 
     # look in rows first.
     for r in range(9):
@@ -51,15 +51,15 @@ def tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
                 if cb0 == cb1: continue  # need to be in separate boxes, else just looking for an exposed trip in a box again
                 for r0 in sorted(set(range(9)) - {rbz, rbz+1, rbz+2}):
                     if len(Cands[r0][c0]) == 2 and len(U | Cands[r0][c0]) == 3:
-                        if _bent_subset_elims(BT+[(r0, c0, Cands[r0][c0])], U | Cands[r0][c0], Cands, Step, Method): return 0
+                        if _bent_subset_elims(BT+[(r0, c0, Cands[r0][c0])], U | Cands[r0][c0], Cands, Step, Methods): return 0
                     if len(Cands[r0][c1]) == 2 and len(U | Cands[r0][c1]) == 3:
-                        if _bent_subset_elims(BT+[(r0, c1, Cands[r0][c1])], U | Cands[r0][c1], Cands, Step, Method): return 0
+                        if _bent_subset_elims(BT+[(r0, c1, Cands[r0][c1])], U | Cands[r0][c1], Cands, Step, Methods): return 0
                 # look in row box patterns
                 rb0 = rbz + (r+1)%3; rb1 = rbz + (r+2)%3
                 for cbx in {cb0, cb1}:  # use set to eliminate duplicates
                     for ra, ca in [(rb0, cbx), (rb0, cbx+1), (rb0, cbx+2), (rb1, cbx), (rb1, cbx+1), (rb1, cbx+2)]:
                         if len(Cands[ra][ca]) == 2 and len(U | Cands[ra][ca]) == 3:
-                            if _bent_subset_elims(BT+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Method): return 0
+                            if _bent_subset_elims(BT+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Methods): return 0
 
     # bent triple not found scanning rows, try scanning cols, only necessary to look at col / box patterns, row/col patterns already covered
     for c in range(9):
@@ -75,16 +75,16 @@ def tech_bent_exposed_triples(Grid, Step, Cands, Method = T_UNDEF):
                 for rbx in {rb0, rb1}:
                     for ra, ca in [(rbx, cb0), (rbx+1, cb0), (rbx+2, cb0), (rbx, cb1), (rbx+1, cb1), (rbx+2, cb1)]:
                         if len(Cands[ra][ca]) == 2 and len(U | Cands[ra][ca]) == 3:
-                            if _bent_subset_elims(BT+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Method): return 0
+                            if _bent_subset_elims(BT+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Methods): return 0
     return -1
 
 
-def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
+def tech_bent_exposed_quads(Grid, Step, Cands, Methods):
     # URC ==> unrestricted candidate.
     # BQ ==> BentQuad pattern.  list used to accumulate the cells that may form a BQ.
     # CIB ==> Cells in Box.  List of cells in box outside the intersection.
     # U ==> Union of candidates in cells being considered for the BQ.
-    if Method != T_UNDEF and (Method != T_WXYZ_WING or Method != T_BENT_EXPOSED_QUAD): return -1
+#    if Method != T_UNDEF and (Method != T_WXYZ_WING or Method != T_BENT_EXPOSED_QUAD): return -1
 
     # look in rows first.
     for r in range(9):
@@ -103,7 +103,7 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
                             U = Cands[r][c0] | Cands[r][c1] | Cands[R[i]][cx] | Cands[R[j]][cx]
                             if not 2 <= len(Cands[R[j]][cx]) <= 4 or len(U) > 4: continue
                             BQ1 = BQ + [(R[i], cx, Cands[R[i]][cx]), (R[j], cx, Cands[R[j]][cx])]
-                            if _bent_subset_elims(BQ1, U, Cands, Step, Method): return 0
+                            if _bent_subset_elims(BQ1, U, Cands, Step, Methods): return 0
                 # BQ not found in row/col patterns, look at row box patterns
                 cb0 = (c0//3)*3; cb1 = (c1//3)*3
                 rbz = (r//3)*3; rb0 = rbz + (r+1)%3; rb1 = rbz + (r+2)%3
@@ -118,7 +118,7 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 U = Cands[r][c0] | Cands[r][c1] | Cands[ra][ca] | Cands[rb][cb]
                                 if not 2 <= len(Cands[rb][cb]) <= 4 or len(U) > 4: continue
                                 BQ1 = BQ + [(ra, ca, Cands[ra][ca]), (rb, cb, Cands[rb][cb])]
-                                if _bent_subset_elims(BQ1, U, Cands, Step, Method): return 0
+                                if _bent_subset_elims(BQ1, U, Cands, Step, Methods): return 0
                 # BQ not found in row/box patterns with two cells in the row.  Scan for three cells in row pattern
                 # first row / cols
                 if c0 < 7 and c1 < 8:
@@ -131,18 +131,18 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
                         # scanning the boxes.
                         for r0 in sorted(set(range(9)) - {r}):  # scan down the three cols in parallel for single cell.
                             if 2 <= len(Cands[r0][c0]) <=4 and len(U | Cands[r0][c0]) == 4:
-                                if _bent_subset_elims(BQ1+[(r0, c0, Cands[r0][c0])], U | Cands[r0][c0], Cands, Step, Method): return 0
+                                if _bent_subset_elims(BQ1+[(r0, c0, Cands[r0][c0])], U | Cands[r0][c0], Cands, Step, Methods): return 0
                             if 2 <= len(Cands[r0][c1]) <=4 and len(U | Cands[r0][c1]) == 4:
-                                if _bent_subset_elims(BQ1+[(r0, c1, Cands[r0][c1])], U | Cands[r0][c1], Cands, Step, Method): return 0
+                                if _bent_subset_elims(BQ1+[(r0, c1, Cands[r0][c1])], U | Cands[r0][c1], Cands, Step, Methods): return 0
                             if 2 <= len(Cands[r0][c2]) <=4 and len(U | Cands[r0][c2]) == 4:
-                                if _bent_subset_elims(BQ1+[(r0, c2, Cands[r0][c2])], U | Cands[r0][c2], Cands, Step, Method): return 0
+                                if _bent_subset_elims(BQ1+[(r0, c2, Cands[r0][c2])], U | Cands[r0][c2], Cands, Step, Methods): return 0
                         #  look in row / boxes for patterns.
                         cb2 = (c2//3)*3
                         if not (cb0 == cb1 == cb2):  # if the three cells are in the same box then we are just looking for an exposed quad in a box
                             for cbx in {cb0, cb1, cb2}:  # use a set to remove dups
                                 for ra, ca in [(rb0, cbx), (rb0, cbx+1), (rb0, cbx+2), (rb1, cbx), (rb1, cbx+1), (rb1, cbx+2)]:
                                     if 2 <= len(Cands[ra][ca]) <= 4 and len(U | Cands[ra][ca]) == 4:
-                                        if _bent_subset_elims(BQ1+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Method): return 0
+                                        if _bent_subset_elims(BQ1+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Methods): return 0
     # bent quad not found by scanning rows, try scanning columns, here it would be a duplication of effort to look in row / col patterns
     for c in range(9):
         for r0 in range(8):
@@ -163,7 +163,7 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 U = Cands[r0][c] | Cands[r1][c] | Cands[ra][ca] | Cands[rb][cb]
                                 if not 2 <= len(Cands[rb][cb]) <= 4 or len(U) > 4: continue
                                 BQ1 = BQ+[(ra, ca, Cands[ra][ca]), (rb, cb, Cands[rb][cb])]
-                                if _bent_subset_elims(BQ1, U, Cands, Step, Method): return 0
+                                if _bent_subset_elims(BQ1, U, Cands, Step, Methods): return 0
                                 # BQ not found in row/box patterns with two cells in the row.  Scan for three cells in row pattern
                 if r0 < 7 and r1 < 8:
                     for r2 in range(r1+1, 9):
@@ -175,10 +175,10 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
                             for rbx in {rb0, rb1, rb2}:
                                 for ra, ca in [(rbx, cb0), (rbx+1, cb0), (rbx+2, cb0), (rbx, cb1), (rbx+1, cb1), (rbx+2, cb1)]:
                                     if 2 <= len(Cands[ra][ca]) <= 4 and len(U | Cands[ra][ca]) == 4:
-                                        if _bent_subset_elims(BQ1+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Method): return 0
+                                        if _bent_subset_elims(BQ1+[(ra, ca, Cands[ra][ca])], U | Cands[ra][ca], Cands, Step, Methods): return 0
     return -1
 
-def _bent_subset_elims(Cells, UCands, Cands, Step, Method):
+def _bent_subset_elims(Cells, UCands, Cands, Step, Methods):
     # Checks
     # 1.  only 1 URC
     # 2   ID intersecting cells
@@ -215,28 +215,28 @@ def _bent_subset_elims(Cells, UCands, Cands, Step, Method):
         NrCands.append(len(Cands0))
 
     if NrCells == 3:
-        if Method == T_Y_WING and NrCands[0] == NrCands[1] == NrCands[2] == 2: Step[P_TECH] = T_Y_WING
-        elif Method == T_XYZ_WING: Step[P_TECH] = T_XYZ_WING
+        if T_Y_WING in Methods and NrCands[0] == NrCands[1] == NrCands[2] == 2: Step.Method = T_Y_WING
+        elif T_XYZ_WING in Methods: Step.Method = T_XYZ_WING
         else: return False
     else:  # NrCells == 4
         TwoCands = FourCands = 0
         for NrCand in NrCands:
             if NrCand == 2: TwoCands += 1
             elif NrCand == 4: FourCands += 1
-        if Method == T_WXYZ_WING and TwoCands == 3 and FourCands == 1: Step[P_TECH] = T_WXYZ_WING
-        elif Method == T_BENT_EXPOSED_QUAD: Step[P_TECH] = T_BENT_EXPOSED_QUAD
+        if T_WXYZ_WING in Methods and TwoCands == 3 and FourCands == 1: Step.Method = T_WXYZ_WING
+        elif T_BENT_EXPOSED_QUAD in Methods: Step.Method = T_BENT_EXPOSED_QUAD
         else: return False
 
     for r0, c0 in cells_that_see_all_of(URCCells):
         if URC in Cands[r0][c0]:
             Cands[r0][c0].discard(URC)
-            if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-            Step[P_OUTC].extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, URC]])
-    if Step[P_OUTC]:
-        Step[P_OUTC].append([P_END, ])
+            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, URC]])
+    if Step.Outcome:
+        Step.Outcome.append([P_END, ])
         for r0, c0, Cands0 in Cells:
-            if Step[P_PTRN]: Step[P_PTRN].append([P_CON, ])
-            Step[P_PTRN].extend([[P_VAL, copy(Cands0)], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-        Step[P_PTRN].append([P_END, ])
+            if Step.Pattern: Step.Pattern.append([P_CON, ])
+            Step.Pattern.extend([[P_VAL, copy(Cands0)], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+        Step.Pattern.append([P_END, ])
         return True
     return False

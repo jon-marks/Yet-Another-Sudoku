@@ -10,8 +10,6 @@
 
 #  This module does not import any lower level project modules, it is a lowest level module.
 
-from copy import copy
-
 from globals import *
 
 # Link strength enumerations.
@@ -35,6 +33,16 @@ LK_CELL = 0x0080
 # each other, for example in covers seeing fins in finned fish or W wings, etc,
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
+
+class NODEP:  # Node in a chain with link type to partner on right.
+    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
+        self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
+
+class TREE:
+    def __init__(self, r = -1, c = -1, Cand = -1, FinChain = None, FinBranch = None):
+        self.r = r; self.c = c; self.Cand = Cand
+        self.FinChain = FinChain if FinChain else []
+        self.FinBranch = FinBranch if FinBranch else []
 
 class TNODE:
     # This is the tree node (branch) structure used in constructing AI chains.

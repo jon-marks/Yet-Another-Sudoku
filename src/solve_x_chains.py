@@ -3,10 +3,10 @@ from globals import *
 from solve_utils import *
 
 
-def tech_three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method not in {T_UNDEF, T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH}: return -2
-    return _three_link_x_chains(Grid, Step, Cands, Method)
-
+# def tech_three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method not in {T_UNDEF, T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH}: return -2
+#     return _three_link_x_chains(Grid, Step, Cands, Method)
+#
 def tech_gl_three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF):
     if Method not in {T_UNDEF, T_GL_SKYSCRAPER, T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH}: return -2
     return _three_link_x_chains(Grid, Step, Cands, Method, GrpLks = True)
@@ -19,7 +19,7 @@ def tech_gl_other_x_chains(Grid, Step, Cands, Method = T_UNDEF):
     if Method not in {T_UNDEF, T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP}: return -2
     return _x_chains(Grid, Step, Cands, Method, GrpLks = True)
 
-def _three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF, GrpLks = False):
+def tech_three_link_x_chains(Grid, Step, Cands, Methods):
     # Chains are found using trees.  X-Chains need to start with strong links.
     # There is an orchard for each candidate (XCuc[i]).  In each orchard,
     # each instance of the candidate is a potential tree trunk with up to three
@@ -33,15 +33,24 @@ def _three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF, GrpLks = False):
     # productive chain.  There is no significant time difference for an unproductive search in
     # either approach
 
+    # Handles:  T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH
+
     ChLks = 0
     Status = STATUS()
-    Lks, XCuc = _find_x_chain_starts(Cands, GrpLks)
+    SLks = find_strong_links(Cands, Methods)
 
-    for i in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
+    for i in range(9):
         if XCuc[i]:
             XCuc[i] = _find_next_xc_nodes(Lks[i], XCuc[i], Cands, GrpLks, ChLks+1, Method, Status)
             if Status.Tech != T_UNDEF: return _x_chain_elims(Status, Grid, Cands, Step)
     return -1
+
+def find_strong_links(Cands, Methods):
+
+    for Cand in range(1, 10):
+
+        pass
+    return []
 
 def _x_chains(Grid, Step, Cands, Method, GrpLks = False):
     # Because complexity is related to chain length and the algorithm seeks to find patterns from
@@ -65,7 +74,7 @@ def _x_chains(Grid, Step, Cands, Method, GrpLks = False):
     return -1
 
 def _find_x_chain_starts(Cands, GrpLks = False):
-    # Plants the trees in the candidate orchards, each tree can have upto three strong link branches
+    # Plants the trees in the candidate orchards, each tree can have upto three strong link branches/children
     # (row, col, box).
 
     # First build the list of strong links.
