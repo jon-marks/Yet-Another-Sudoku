@@ -7,19 +7,19 @@ from solve_utils import *
 #     if Method not in {T_UNDEF, T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH}: return -2
 #     return _three_link_x_chains(Grid, Step, Cands, Method)
 #
-def tech_gl_three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method not in {T_UNDEF, T_GL_SKYSCRAPER, T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH}: return -2
-    return _three_link_x_chains(Grid, Step, Cands, Method, GrpLks = True)
+# def tech_gl_three_link_x_chains(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method not in {T_UNDEF, T_GL_SKYSCRAPER, T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH}: return -2
+#     return _three_link_x_chains(Grid, Step, Cands, Method, GrpLks = True)
+#
+# def tech_other_x_chains(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method not in {T_UNDEF, T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP}: return -2
+#     return _x_chains(Grid, Step, Cands, Method)
+#
+# def tech_gl_other_x_chains(Grid, Step, Cands, Method = T_UNDEF):
+#     if Method not in {T_UNDEF, T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP}: return -2
+#     return _x_chains(Grid, Step, Cands, Method, GrpLks = True)
 
-def tech_other_x_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method not in {T_UNDEF, T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP}: return -2
-    return _x_chains(Grid, Step, Cands, Method)
-
-def tech_gl_other_x_chains(Grid, Step, Cands, Method = T_UNDEF):
-    if Method not in {T_UNDEF, T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP}: return -2
-    return _x_chains(Grid, Step, Cands, Method, GrpLks = True)
-
-def tech_three_link_x_chains(Grid, Step, Cands, Methods):
+def tech_x_chains(Grid, Step, Cands, Methods):
     # Chains are found using trees.  X-Chains need to start with strong links.
     # There is an orchard for each candidate (XCuc[i]).  In each orchard,
     # each instance of the candidate is a potential tree trunk with up to three
@@ -34,6 +34,128 @@ def tech_three_link_x_chains(Grid, Step, Cands, Methods):
     # either approach
 
     # Handles:  T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH
+
+    Forest = []
+    for Cand in range(1, 9):
+        for r in range(9):
+            for c in range(9):
+                if Cand in Cands[r][c]:
+                    Forest.append(TREE(r, c, Cand))
+                    c2 = -1
+                    for c1 in range(9):
+                        if c1 == c: continue
+                        if c2 >= 0: break
+                        if Cand in Cands[r][c1]: c2 = c1
+                    else:
+                        if c2 >= 0: Forest[-1].Branch.append(TNODE(r, c2, Cand, LK_STRG | LK_ROW, Forest[-1], [NL(r, c, Cand, LK_NONE), NL(r, c2, Cand, LK_STRG | LK_ROW)]))
+                    r2 = -1
+                    for r1 in range(9):
+                        if r1 == r: continue
+                        if r2 >= 0: break
+                        if Cand in Cands[r1][c]: r2 = r1
+                    else:
+                        if r2 >= 0: Forest[-1].Branch.append(TNODE(r2, c, Cand, LK_STRG | LK_COL, Forest[-1], [NL(r, c, Cand, LK_NONE), NL(r2, c, Cand, LK_STRG | LK_COL)]))
+                    r2 = c2 = -1
+                    rb = r//3; cb = c//3
+                    for b1 in range(9):
+                        r1 = rb + b1//3; c1 = cb + b1%3
+                        if r1 == r or c1 == c: continue
+                        if r2 >= 0: break
+                        if Cand in Cands[r1][c1]: r2 = r1; c2 = c1
+                    else:
+                        if r2 >= 0: Forest[-1].Branch.append(TNODE(r2, c2, Cand, LK_STRG | LK_BOX, Forest[-1], [NL(r, c, Cand, LK_NONE), NL(r, c, Cand, LK_STRG |LK_BOX)]))
+    # All saplings planted.
+    while Forest:
+        Culls = set()  # trees to cull, use set to avoid dups.
+        Status = STATUS()
+        for Tree in Forest:
+            Prunes = set() # branches to prune use set to avoid dups
+            for Child in Tree.Branch:
+                find_next_x_child_nodes(Child, Cands, 1, Tree, Methods, Status)
+                if Status.Tech != T_UNDEF: break  # Chain found, exit loop.
+                if not Child.Children:  Prunes.add(Child)
+            if Status.Tech != T_UNDEF: break
+            for Child in Prunes: Tree.Branch.remove(Child)
+            if not Tree.Branch: Culls.add(Tree)
+        if Status.Tech != T_UNDEF:
+            # TODO: build step structure using status and chain.
+            return 0  # or 1 if T_STRONG_X_LOOP or T_GL_STRONG_X_LOOP
+        for Tree in Culls: Forest.remove(Tree)
+    return -1
+
+def tech_gl_x_chains(Grid, Step, Cands, Methods):
+    return -1
+
+def find_next_x_child_nodes(Child, Cands, Lvl, Tree, Status, Methods, GrpLks = False):
+
+    if Child.Children:
+        OddPrunes = set()
+        for GChild in Child.Children:
+            EvenPrunes = set()
+            for GGChild in GChild.Children:
+                find_next_x_child_nodes(GGChild, Cands, Lvl+1, Tree, Methods, Status, GrpLks)
+                if Status.Tech != T_UNDEF: return  # don't waste any time when soln found.
+                if not GGChild.Children: EvenPrunes.add(GGChild)
+            for GGChild in EvenPrunes: GChild.Children.remove(GGChild)
+            if not GChild.Children: OddPrunes.add(GChild)
+        for GChild in OddPrunes: Child.Children.remove(GChild)
+    else:  # at the leaves, attempt to add the next weak and strong links.
+        for r1, c1, Cand1, Lk1 in list_ccells_linked_to(Child.r, Child.c, Child.Cand, Cands, LK_STWK, GrpLks, False):
+            for rx, cx, Candx, Lkx, in Child.Chain:
+                if r1 == rx and c1 == cx: break   # and Cand1 == Candx
+            else:
+                if lvl > 1:  # check for T_STRONG_X_LOOP
+                    if T_STRONG_X_LOOP in Methods or T_GL_STRONG_X_LOOP in Methods:
+                        Lk = how_ccells_linked(r1, c1, Cand1, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
+                        if Lk & LK_STRG:  # T_STRONG_X_LOOP
+                            # TODO: Fill Status structure, with chain, and assigh Tree.Cand to Tree.r, Tree.c
+                            return
+                for r2, c2, Cand2, Lk2 in list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks, False):
+                    for rx, cx, Candx, Lkx in Child.Chain:
+                        if r2 == rx and c2 == cx: break
+                    else:
+                        if Lvl > 1:
+                            if T_EVEN_X_LOOP in Methods or T_GL_EVEN_X_LOOP in Methods:
+                                Lk = how_ccells_linked(r2, c2, Cand2, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
+                                if Lk:
+                                    # TODO: Fill Status structure with chain and elim all other cands in weak link houses
+                                    return
+                        Elims = []
+                        for r3, c3 in cells_that_see_all_of([(r2, c2), Tree.r, Tree.c]):
+                            if Cand1 in Cands[r3][c3]: Elims.append((r3, c3, Cand1))
+                        if Elims:
+                            Tech = T_UNDEF
+                            if Lvl == 1:
+                                Lk0 = Child.Chain[1].Lk;
+                                if Lk0 & Lk1 & Lk2 & LK_LINE: Tech = T_SKYSCRAPER
+                                elif LK0 & Lk2 & LK_LINE and Lk1 & LK_BOX: Tech = T_TWO_STRING_KITE
+                                else: Tech = T_TURBOT_FISH
+                            else: Tech = T_X_CHAIN
+
+
+
+
+
+
+                            if Canda == Cand1:  # same candidate value ending ccells
+                                EL = []
+                                for r2, c2 in cells_that_see_all_of([(r1, c1), (ra, ca)], GrpLks):
+                                    if Cand1 in Cands[r2][c2]: EL.append((r2, c2, Cand1))
+                                if EL:
+                                    # if there is a three link chain: (ie 3 link patterns)
+                                    #   len(Ch1) == 3, node 0 = (ra, ca), node 1 = (C.r, C.c), node 2 = (r0, c0), node 3 = (r1, c1)
+                                    if len(Ch1) == 3:
+                                        Lh0 = link_house(ra, ca, C.r, C.c, GrpLks)
+                                        Lh1 = link_house(C.r, C.c, r0, c0, GrpLks)
+                                        Lh2 = link_house(r0, c0, r1, c1, GrpLks)
+                                        if Lh0 & LK_LINE == Lh1 & LK_LINE == Lh2 & LK_LINE == LK_LINE: s = T_SKYSCRAPER
+                                        elif Lh0 & LK_LINE == Lh2 & LK_LINE == LK_LINE and Lh1 == LK_BOX: s = T_TWO_STRING_KITE
+                                        else: s = T_TURBOT_FISH
+                                    else: s = T_X_CHAIN
+                                    if GrpLks: s |= T_GRPLK
+
+                # if lvl > 1 and (r1, c1, Cand1) is strongly linked to (tree.r, tree.c, tree.Cand)
+    pass
 
     ChLks = 0
     Status = STATUS()

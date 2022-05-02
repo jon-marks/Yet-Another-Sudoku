@@ -10,6 +10,7 @@
 
 #  This module does not import any lower level project modules, it is a lowest level module.
 
+from collections import namedtuple
 from globals import *
 
 # Link strength enumerations.
@@ -26,31 +27,30 @@ LK_ROW  = 0x0010 | LK_LINE
 LK_COL  = 0x0020 | LK_LINE
 LK_BOX  = 0x0040
 LK_CELL = 0x0080
-# LK_ANY_depreciated  = 0x0070
-
 
 # The use of weak or strong ended AIC's to search for patterns where ccell's see
 # each other, for example in covers seeing fins in finned fish or W wings, etc,
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
 
-class NODEP:  # Node in a chain with link type to partner on right.
+LN = namedtuple('LN', ['r', 'c', 'Cand', 'Lk']) # Node in a chain with lk to partner
+
+class NODEP_depreciate:  # Node in a chain with link type to partner on right.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
 
 class TREE:
-    def __init__(self, r = -1, c = -1, Cand = -1, FinChain = None, FinBranch = None):
+    # used to find chains. Tree grows branches.  Chain is the list of nodes from
+    # root to leaf that meets the chain's criteria.
+    def __init__(self, r = -1, c = -1, Cand = -1, Chain = None, Branch = None):
         self.r = r; self.c = c; self.Cand = Cand
-        self.FinChain = FinChain if FinChain else []
-        self.FinBranch = FinBranch if FinBranch else []
+        self.Chain = Chain if Chain else []
+        self.Branch = Branch if Branch else []
 
 class TNODE:
-    # This is the tree node (branch) structure used in constructing AI chains.
+    # This is the tree node (branch/child) structure used in constructing chain chains.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, Parent = None, Children = None):  # Chain = None,
-        self.r = r              # row
-        self.c = c              # col
-        self.Cand = Cand        # Candidate
-        self.Lk = Lk            # link to parent (LK_ enums)
+        self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
         self.Chain = Chain if Chain else []  # List of path from root to current Node. (NODE(r, c, Cand, Lk_type_to_next)
         self.Parent = Parent
         self.Children = Children if Children else []
@@ -162,7 +162,7 @@ def is_in_chain(r, c, Cand, Chain, GrpLks):
         if ccells_intersect(r, c, Cand, rc, cc, Candc, GrpLks): return i
     return -1
 
-def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False):
+def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, InclCell = True):
     # Returns a list of (r, c, Cand, LkType, LkHouse) tuples that the ccell(r, c, Cand) can see.
     # LkType is one of LK_STWK or LK_WEAK, LkHouse is one of LK_ROW, LK_COL, LK_BOX, or LK_CELL
     # If Type == LK_STRG, only strong links will be returned.
@@ -182,7 +182,8 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False):
             ct = list(c)[0]//3
             C1 = set()
             Twr = [set(), set(), set()]
-            for c1 in sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - c):
+            for c1 in range(9):  #in sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - c):
+                if c == c1: continue
                 if Cand in Cands[r0][c1]:
                     C1.add(c1)
                     Twr[c1//3].add(c1)
@@ -299,10 +300,11 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False):
                 Lk = LK_STRG if m == 1 else LK_WEAK
                 for r0, c0 in L: LCL.append((r0, c0, Cand, Lk | LK_BOX))
         # Scan the cell.
-        if len(Cands[r][c]) == 2: LCL.append((r, c, list(Cands[r][c]-{Cand})[0], LK_STRG | LK_CELL))
-        elif Type != LK_STRG:
-            for Cand0 in sorted(Cands[r][c]-{Cand}):
-                LCL.append((r, c, Cand0, LK_WEAK | LK_CELL))
+        if InclCell:
+            if len(Cands[r][c]) == 2: LCL.append((r, c, list(Cands[r][c]-{Cand})[0], LK_STRG | LK_CELL))
+            elif Type != LK_STRG:
+                for Cand0 in sorted(Cands[r][c]-{Cand}):
+                    LCL.append((r, c, Cand0, LK_WEAK | LK_CELL))
     return LCL
 
 def cells_in_same_house(r1, c1, r2, c2):

@@ -746,13 +746,13 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
             for rf, cf in Fins:
                 Lk = how_ccells_linked({rc}, {cc}, Cand, {rf}, {cf}, Cand, Cands, GrpLks)
                 if Lk:
-                    Forest[-1].FinChain.append([({rc}, {cc}, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), ({rf}, {cf}, Cand, LK_NONE)])
-                    Forest[-1].FinBranch.append([])
+                    Forest[-1].Chain.append([({rc}, {cc}, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), ({rf}, {cf}, Cand, LK_NONE)])
+                    Forest[-1].Branch.append([])
                 else:
-                    Forest[-1].FinChain.append([])
-                    Forest[-1].FinBranch.append(TNODE({rf}, {cf}, Cand, LK_NONE, None, None))
+                    Forest[-1].Chain.append([])
+                    Forest[-1].Branch.append(TNODE({rf}, {cf}, Cand, LK_NONE, None, None))
                     for r0, c0, Cand0, Lk0 in list_ccells_linked_to({rf}, {cf}, Cand, Cands, LK_STWK, GrpLks):  # Solving for singles prior to this method ensures LCL cannot be empty.
-                        Forest[-1].FinBranch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].FinBranch[-1], None))
+                        Forest[-1].Branch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].Branch[-1], None))
     else:  # kraken, non group links.
         # Plant a forest of trees, one for each cover.  Each tree has a main TNode branch and a Chain for each fin.
         # The Chain is empty until a one is found for that fin.  The MainBranch of TNodes, is used to build a tree
@@ -765,13 +765,13 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
             # for j, (rf, cf) in enumerate(Fins):
                 Lk = how_ccells_linked(rc, cc, Cand, rf, cf, Cand, Cands)
                 if Lk:
-                    Forest[-1].FinChain.append([(rc, cc, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)])
-                    Forest[-1].FinBranch.append([])
+                    Forest[-1].Chain.append([(rc, cc, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)])
+                    Forest[-1].Branch.append([])
                 else:
-                    Forest[-1].FinChain.append([])
-                    Forest[-1].FinBranch.append(TNODE(rf, cf, Cand, LK_NONE, None, None))
+                    Forest[-1].Chain.append([])
+                    Forest[-1].Branch.append(TNODE(rf, cf, Cand, LK_NONE, None, None))
                     for r0, c0, Cand0, Lk0 in list_ccells_linked_to(rf, cf, Cand, Cands, LK_STWK, GrpLks):  # Solving for singles prior to this method ensures LCL cannot be empty.
-                        Forest[-1].FinBranch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].FinBranch[-1], None))
+                        Forest[-1].Branch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].Branch[-1], None))
     # walk_the_forest(Forest)
 
     # Forest is planted with trees - one for each cover.  Each tree has a main branch for each fin.
@@ -779,41 +779,41 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
     # as weak) link it sees OR B) found a fin/cover link.
 
     while Forest:  # while there are still trees in the forest
-        Culls = set()  # index of trees to cull  use set to avoid possibility of dups.
-        for Tidx, Tree in enumerate(Forest):
+        Culls = set()  # trees to cull, use set to avoid dups.
+        for Tree in Forest:
             for Fin in range(len(Fins)):
-                if Tree.FinChain[Fin]: continue
+                if Tree.Chain[Fin]: continue
                 Prunes = set()
-                for Cidx, Child in enumerate(Tree.FinBranch[Fin].Children):
-                    Child.Chain = [(Child.r, Child.c, Child.Cand, Child.Lk), (Tree.FinBranch[Fin].r, Tree.FinBranch[Fin].c, Tree.FinBranch[Fin].Cand, LK_NONE)]
+                for Child in Tree.Branch[Fin].Children:
+                    Child.Chain = [(Child.r, Child.c, Child.Cand, Child.Lk), (Tree.Branch[Fin].r, Tree.Branch[Fin].c, Tree.Branch[Fin].Cand, LK_NONE)]
                     find_next_child_nodes(Child, Cands, 1, Tree, Fin, GrpLks)
                     # Return conditions, each of FN's chlildren:
                     #  * Searching
                     #     - Child's children is a non empty list
-                    #     - Tree.FinChain[Fin] is empty
-                    #     - CvrTree.FinBranch[Fin] contains the starting TNode for this branch.
+                    #     - Tree.Chain[Fin] is empty
+                    #     - CvrTree.Branch[Fin] contains the starting TNode for this branch.
                     #  * Chain has been found:
                     #     - Child's children may or may not be an empty list
-                    #     - Tree.FinChain[Fin] contains the chain.
-                    #     - CvrTree.FinBranch[Fin] points to the starting TNode for this branch
+                    #     - Tree.Chain[Fin] contains the chain.
+                    #     - CvrTree.Branch[Fin] points to the starting TNode for this branch
                     #  * Search has BOTTOMED_OUT (recursion limit) / NOT_FOUND (could not find node to form a link in the chain)
                     #     - Child's Children is an empty list
-                    #     - CvrTree.FinChain[Fin] == NULL
-                    #     - CvrTree.FinBranch[Fin] points to the main branch for this fin.
-                    if Tree.FinChain[Fin]: break  # a chain has been found, exit the loop promptly.
+                    #     - CvrTree.Chain[Fin] == NULL
+                    #     - CvrTree.Branch[Fin] points to the main branch for this fin.
+                    if Tree.Chain[Fin]: break  # a chain has been found, exit the loop promptly.
                     if not Child.Children: Prunes.add(Child)  # prune unproductive Tnode (no children/branches)
-                if Tree.FinChain[Fin]: Tree.FinBranch[Fin] = []; continue  # Cull the FinBranch
+                if Tree.Chain[Fin]: Tree.Branch[Fin] = []; continue  # Cull the Branch
                 for Child in Prunes:
-                    Tree.FinBranch[Fin].Children.remove(Child)
-                if not Tree.FinBranch[Fin].Children:
-                    Tree.FinBranch[Fin] = []  # unproductive Fin and hence cover tree. Prune Fin branch
+                    Tree.Branch[Fin].Children.remove(Child)
+                if not Tree.Branch[Fin].Children:
+                    Tree.Branch[Fin] = []  # unproductive Fin and hence cover tree. Prune Fin branch
             Found = True
             for Fin in range(len(Fins)):
-                if not Tree.FinBranch[Fin] and not Tree.FinChain[Fin]: Culls.add(Tree)
-                if not Tree.FinChain[Fin]: Found = False
+                if not Tree.Branch[Fin] and not Tree.Chain[Fin]: Culls.add(Tree)
+                if not Tree.Chain[Fin]: Found = False
             if Found:
                 # Status.Tech = Method
-                for Chain in Tree.FinChain: Status.Pattern.append(Chain)
+                for Chain in Tree.Chain: Status.Pattern.append(Chain)
                 Status.Outcome = [(Tree.r, Tree.c, Tree.Cand)]
                 return True
         for Tree in Culls:  Forest.remove(Tree)
@@ -832,31 +832,31 @@ def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
                 # Return conditions, each of GGrandChild's chlildren:
                 #  * Searching
                 #     - GGrandChild's children is a non empty list
-                #     - Tree.FinChain[Fin] is empty
-                #     - CvrTree.FinBranch[Fin] contains the starting TNode for this branch.
+                #     - Tree.Chain[Fin] is empty
+                #     - CvrTree.Branch[Fin] contains the starting TNode for this branch.
                 #  * Chain has been found:
                 #     - GGrandChild's children may or may not be an empty list
-                #     - Tree.FinChain[Fin] contains the chain.
-                #     - Tree.FinBranch[Fin] points to the starting TNode for this branch
+                #     - Tree.Chain[Fin] contains the chain.
+                #     - Tree.Branch[Fin] points to the starting TNode for this branch
                 #  * Search has BOTTOMED_OUT (recursion limit) / NOT_FOUND (could not find node to form a link in the chain)
                 #     - GGrandChild's Children is an empty list
-                #     - Tree.FinChain[Fin] == NULL
-                #     - Tree.FinBranch[Fin] points to the main branch for this fin.
-                if Tree.FinChain[Fin]: return  # A chain has been found, return promptly
+                #     - Tree.Chain[Fin] == NULL
+                #     - Tree.Branch[Fin] points to the main branch for this fin.
+                if Tree.Chain[Fin]: return  # A chain has been found, return promptly
                 if not GGrandChild.Children: EvenPrunes.add(GGrandChild)
             for GGrandChild in EvenPrunes: GrandChild.Children.remove(GGrandChild)
             if not GrandChild.Children: OddPrunes.add(GrandChild)
         for GrandChild in OddPrunes: Child.Children.remove(GrandChild)
     else:  # at the leaves, attempt to add the next odd and even levels
         for r1, c1, Cand1, Lk1 in list_ccells_linked_to(Child.r, Child.c, Child.Cand, Cands, LK_STRG, GrpLks):
-            for rx, cx, Candx, Lkx in Child.Chain:
+            for rx, cx, Candx, Lkx in Child.Chain:  # not allowed to cross the chain.
                 if r1 == rx and c1 == cx and Cand1 == Candx: break
                 # if ccells_match(r1, c1, Cand1, rx, cx, Candx, GrpLks): break
             else:
                 # does the r1, c1, Cand1 ccell see the cover.  if so, a chain is formed.
                 Lk = how_ccells_linked(r1, c1, Cand1, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
                 if Lk:  # a chain is found; construct the chain and return promptly
-                    Tree.FinChain[Fin] = [(Tree.r, Tree.c, Tree.Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (r1, c1, Cand1, LK_STRG), *Child.Chain]
+                    Tree.Chain[Fin] = [(Tree.r, Tree.c, Tree.Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (r1, c1, Cand1, LK_STRG), *Child.Chain]
                     return
                 if Lvl > RECURSE_LIM: return  # Bottomed out
                 # else find even child links
@@ -873,18 +873,18 @@ def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
 def walk_the_forest(Forest):
     print("Walking the forest")
     for Tree in Forest:
-        for Fin in range(len(Tree.FinChain)):  # FinChain and FinBranch lists are the same length:
-            if not bool(Tree.FinChain[Fin]) ^ bool(Tree.FinBranch[Fin]): print(f"ERROR: CoverTree :{Tree.Cand}r{Tree.r+1}c{Tree.c+1}: Only one of .FinChain[{Fin}] and .FinBranch[{Fin}] can exist: {Tree.FinChain[Fin]}, {Tree.FinBranch[Fin]}.")
-            if Tree.FinChain[Fin]:
+        for Fin in range(len(Tree.Chain)):  # Chain and Branch lists are the same length:
+            if not bool(Tree.Chain[Fin]) ^ bool(Tree.Branch[Fin]): print(f"ERROR: CoverTree :{Tree.Cand}r{Tree.r+1}c{Tree.c+1}: Only one of .FinChain[{Fin}] and .FinBranch[{Fin}] can exist: {Tree.Chain[Fin]}, {Tree.Branch[Fin]}.")
+            if Tree.Chain[Fin]:
                 St = ""
-                for (r, c, Cand, Lk) in Tree.FinChain[Fin]:
+                for (r, c, Cand, Lk) in Tree.Chain[Fin]:
                     St += f"{Cand}r{r+1}c{c+1}{OP[TKN_LK[Lk]]}"
-                (r, c, Cand, Lk) = Tree.FinChain[Fin][-1]
+                (r, c, Cand, Lk) = Tree.Chain[Fin][-1]
                 print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, Fin: {Fin}: {Cand}r{r+1}c{c+1}, Chain: {St}")
-            if Tree.FinBranch[Fin]:
+            if Tree.Branch[Fin]:
                 print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, FinBranch[{Fin}]:")
-                print(f"{Tree.FinBranch[Fin].Cand}r{Tree.FinBranch[Fin].r+1}c{Tree.FinBranch[Fin].c+1}")
-                climb_branch(Tree.FinBranch[Fin], 1)
+                print(f"{Tree.Branch[Fin].Cand}r{Tree.Branch[Fin].r+1}c{Tree.Branch[Fin].c+1}")
+                climb_branch(Tree.Branch[Fin], 1)
 
 def climb_branch(TN, Lvl):
 
