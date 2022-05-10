@@ -96,6 +96,7 @@ def gen_filled_grid(Grid = None, cell = 0):
     return False
 
 def scramble_puzzle(grid):
+    # TODO:  Implement selective scrapling.  Select scrambling steps to apply.
     # Creates a mathematically equivalent puzzle by shuffling the puzzle.
     # grid:  In: The Sudoku puzzle to scramble.
     #        Out: a partially scrambled puzzle.

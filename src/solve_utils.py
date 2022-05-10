@@ -33,7 +33,8 @@ LK_CELL = 0x0080
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
 
-LN = namedtuple('LN', ['r', 'c', 'Cand', 'Lk']) # Node in a chain with lk to partner
+NL = namedtuple('NL', ['r', 'c', 'Cand', 'Lk']) # Node in a chain with lk to partner
+CCELL = namedtuple('CCELL', ['r', 'c', 'Cand'])
 
 class NODEP_depreciate:  # Node in a chain with link type to partner on right.
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
@@ -124,25 +125,24 @@ def determine_cands(Grid, Elims = None):
                         Cands[r][c].add(Cand)
     return NrEmpties, Cands
 
-
-
-def link_house(r0, c0, r1, c1, GrpLks = False):
-    # ccells must be linked else erroneous LK_BOX cand be returned.
-
-    if GrpLks:
-        if len(r0) == len(r1) == 1 and list(r0)[0] == list(r1)[0]: return LK_ROW
-        if len(c0) == len(c1) == 1 and list(c0)[0] == list(c1)[0]: return LK_COL
-        return LK_BOX
-    else:
-        if r0 == r1 and c0 == c1: return LK_CELL
-        if r0 == r1: return LK_ROW
-        if c0 == c1: return LK_COL
-        return LK_BOX
+# def link_house(r0, c0, r1, c1, GrpLks = False):
+#     # ccells must be linked else erroneous LK_BOX cand be returned.
+#
+#     if GrpLks:
+#         if len(r0) == len(r1) == 1 and list(r0)[0] == list(r1)[0]: return LK_ROW
+#         if len(c0) == len(c1) == 1 and list(c0)[0] == list(c1)[0]: return LK_COL
+#         return LK_BOX
+#     else:
+#         if r0 == r1 and c0 == c1: return LK_CELL
+#         if r0 == r1: return LK_ROW
+#         if c0 == c1: return LK_COL
+#         return LK_BOX
 
 def token_link(Lk):
     if Lk == LK_WEAK: return OP_WLK
     if Lk == LK_STRG or Lk == LK_STWK: return OP_SLK
     if Lk == LK_WKST: return OP_WSLK
+    if Lk == LK_NONE: return OP_NONE
     return -1
 
 def discard_cand_from_peers(Cand, r, c, Cands):
@@ -182,8 +182,7 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             ct = list(c)[0]//3
             C1 = set()
             Twr = [set(), set(), set()]
-            for c1 in range(9):  #in sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - c):
-                if c == c1: continue
+            for c1 in sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - c):
                 if Cand in Cands[r0][c1]:
                     C1.add(c1)
                     Twr[c1//3].add(c1)
@@ -441,11 +440,13 @@ def find_all_strong_cand_links(Cand, Cands, GrpLks = False):
 
     SLks = find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks)
 
+    # Check for a strong link in a cell (only two cands in cell) and add it.
     for r in range(9):
         for c in range(9):
             if len(Cands[r][c])== 2 and Cand in Cands[r][c]:
-                if GrpLks: SLks.append((({r}, {c}, Cand), ({r}, {c}, list(Cands[r][c] ^ {Cand})[0])))
-                else: SLks.append(((r, c, Cand), (r, c, list(Cands[r][c] ^ {Cand})[0])))
+                Cand1 = list(Cands[r][c] ^ {Cand})[0]
+                if GrpLks: SLks.extend([(NL({r}, {c}, Cand, LK_NONE), NL({r}, {c}, Cand1, LK_STRG | LK_CELL)), (NL({r}, {c}, Cand1, LK_NONE), NL({r}, {c}, Cand, LK_STRG | LK_CELL))])
+                else: SLks.extend([(NL(r, c, Cand, LK_NONE), NL(r, c, Cand1, LK_STRG | LK_CELL)), (NL(r, c, Cand1, LK_NONE), NL(r, c, Cand, LK_STRG | LK_CELL))])
     return SLks
 
 def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
@@ -465,24 +466,24 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
             for c in range(9):
                 if Cand in Cands[r][c]: C.append(c); Twr[c//3].add(c)
             if len(C) == 2:  # and (((r, C[0]), (r, C[1])) not in Lks and ((r, C[1]), (r, C[0])) not in Lks):
-                Lks.extend([((r, C[0], Cand), (r, C[1], Cand)), ((r, C[1], Cand), (r, C[0], Cand))])
+                Lks.extend([((r, C[0], Cand, LK_NONE), (r, C[1], Cand, LK_STRG | LK_ROW)), ((r, C[1], Cand, LK_NONE), (r, C[0], Cand, LK_STRG | LK_ROW))])
             else:
                 if Twr[0] and Twr[1] and Twr[2]: continue
-                if Twr[0] and Twr[1]:   Lks.extend([((r, Twr[0], Cand), (r, Twr[1], Cand)), ((r, Twr[1], Cand), (r, Twr[0], Cand))])
-                elif Twr[0] and Twr[2]: Lks.extend([((r, Twr[0], Cand), (r, Twr[2], Cand)), ((r, Twr[2], Cand), (r, Twr[0], Cand))])
-                elif Twr[1] and Twr[2]: Lks.extend([((r, Twr[1], Cand), (r, Twr[2], Cand)), ((r, Twr[2], Cand), (r, Twr[1], Cand))])
+                if Twr[0] and Twr[1]:   Lks.extend([((r, Twr[0], Cand, LK_NONE), (r, Twr[1], Cand, LK_STRG | LK_ROW)), ((r, Twr[1], Cand, LK_NONE), (r, Twr[0], Cand, LK_STRG | LK_ROW))])
+                elif Twr[0] and Twr[2]: Lks.extend([((r, Twr[0], Cand, LK_NONE), (r, Twr[2], Cand, LK_STRG | LK_ROW)), ((r, Twr[2], Cand, LK_NONE), (r, Twr[0], Cand, LK_STRG | LK_ROW))])
+                elif Twr[1] and Twr[2]: Lks.extend([((r, Twr[1], Cand, LK_NONE), (r, Twr[2], Cand, LK_STRG | LK_ROW)), ((r, Twr[2], Cand, LK_NONE), (r, Twr[1], Cand, LK_STRG | LK_ROW))])
         # look in cols
         for c in range(9):
             R = []; Flr = [set(), set(), set()]
             for r in range(9):
                 if Cand in Cands[r][c]: R.append(r); Flr[r//3].add(r)
             if len(R) == 2 and (((R[0], c), (R[1], c)) not in Lks and ((R[1], c), (R[0], c)) not in Lks):
-                Lks.extend([((R[0], c, Cand), (R[1], c, Cand)), ((R[1], c, Cand), (R[0], c, Cand))])
+                Lks.extend([((R[0], c, Cand, LK_NONE), (R[1], c, Cand, LK_STRG | LK_COL)), ((R[1], c, Cand, LK_NONE), (R[0], c, Cand, LK_STRG | LK_COL))])
             else:
                 if Flr[0] and Flr[1] and Flr[2]: continue
-                if Flr[0] and Flr[1]:   Lks.extend([((Flr[0], c, Cand), (Flr[1], c, Cand)), ((Flr[1], c, Cand), (Flr[0], c, Cand))])
-                elif Flr[0] and Flr[2]: Lks.extend([((Flr[0], c, Cand), (Flr[2], c, Cand)), ((Flr[2], c, Cand), (Flr[0], c, Cand))])
-                elif Flr[1] and Flr[2]: Lks.extend([((Flr[1], c, Cand), (Flr[2], c, Cand)), ((Flr[2], c, Cand), (Flr[1], c, Cand))])
+                if Flr[0] and Flr[1]:   Lks.extend([((Flr[0], c, Cand, LK_NONE), (Flr[1], c, Cand, LK_STRG | LK_COL)), ((Flr[1], c, Cand, LK_NONE), (Flr[0], c, Cand, LK_STRG | LK_COL))])
+                elif Flr[0] and Flr[2]: Lks.extend([((Flr[0], c, Cand, LK_NONE), (Flr[2], c, Cand, LK_STRG | LK_COL)), ((Flr[2], c, Cand, LK_NONE), (Flr[0], c, Cand, LK_STRG | LK_COL))])
+                elif Flr[1] and Flr[2]: Lks.extend([((Flr[1], c, Cand, LK_NONE), (Flr[2], c, Cand, LK_STRG | LK_COL)), ((Flr[2], c, Cand, LK_NONE), (Flr[1], c, Cand, LK_STRG | LK_COL))])
         # #look in boxes
         for br, bc in [(0, 0), (0, 3), (0, 6), (3, 0), (3, 3), (3, 6), (6, 0), (6, 3), (6, 6)]:
             # 1.  Examine the ccells in the box
@@ -498,13 +499,13 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
             lenRB0 = len(RB[0]); lenRB1 = len(RB[1]); lenRB2 = len(RB[2])
             lenCB0 = len(CB[0]); lenCB1 = len(CB[1]); lenCB2 = len(CB[2])
             # 2. Check out rows patterns
-            if lenRB0 > 0 and lenRB1 > 0 and lenRB2 == 0:   Lks.extend([((br, RB[0], Cand), (br1, RB[1], Cand)), ((br1, RB[1], Cand), (br, RB[0], Cand))])
-            elif lenRB0 > 0 and lenRB1 == 0 and lenRB2 > 0: Lks.extend([((br, RB[0], Cand), (br2, RB[2], Cand)), ((br2, RB[2], Cand), (br, RB[0], Cand))])
-            elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand), (br2, RB[2], Cand)), ((br2, RB[2], Cand), (br1, RB[1], Cand))])
+            if lenRB0 > 0 and lenRB1 > 0 and lenRB2 == 0:   Lks.extend([((br, RB[0], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, RB[1], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+            elif lenRB0 > 0 and lenRB1 == 0 and lenRB2 > 0: Lks.extend([((br, RB[0], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+            elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
             # 3. Check out col patterns
-            if lenCB0 > 0 and lenCB1 > 0 and lenCB2 == 0:   Lks.extend([((CB[0], bc, Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (CB[0], bc, Cand))])
-            elif lenCB0 > 0 and lenCB1 == 0 and lenCB2 > 0: Lks.extend([((CB[0], bc, Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (CB[0], bc, Cand))])
-            elif lenCB0 == 0 and lenCB1 > 0 and lenCB2 > 0: Lks.extend([((CB[1], bc1, Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (CB[1], bc1, Cand))])
+            if lenCB0 > 0 and lenCB1 > 0 and lenCB2 == 0:   Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+            elif lenCB0 > 0 and lenCB1 == 0 and lenCB2 > 0: Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+            elif lenCB0 == 0 and lenCB1 > 0 and lenCB2 > 0: Lks.extend([((CB[1], bc1, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
             # 4. Check out row/col patterns
             RP = sorted([lenRB0, lenRB1, lenRB2]); CP = sorted([lenCB0, lenCB1, lenCB2])
             if RP == CP == [1, 1, 2]:
@@ -517,106 +518,106 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
                     if len(RB[k]) == 1 and len(CB[list(RB[k])[0]%3]) == 1: break
                 else:
                     if lenRB0 == 2:
-                        if lenCB0 == 2:   Lks.extend([((br, RB[0], Cand), (CB[0], bc, Cand)), ((CB[0], bc, Cand), (br, RB[0], Cand))])
-                        elif lenCB1 == 2: Lks.extend([((br, RB[0], Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (br, RB[0], Cand))])
-                        elif lenCB2 == 2: Lks.extend([((br, RB[0], Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (br, RB[0], Cand))])
+                        if lenCB0 == 2:   Lks.extend([((br, RB[0], Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX)), ((CB[0], bc, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                        elif lenCB1 == 2: Lks.extend([((br, RB[0], Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                        elif lenCB2 == 2: Lks.extend([((br, RB[0], Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
                     elif lenRB1 == 2:
-                        if lenCB0 == 2:   Lks.extend([((br1, RB[1], Cand), (CB[0], bc, Cand)), ((CB[0], bc, Cand), (br1, RB[1], Cand))])
-                        elif lenCB1 == 2: Lks.extend([((br1, RB[1], Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (br1, RB[1], Cand))])
-                        elif lenCB2 == 2: Lks.extend([((br1, RB[1], Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (br1, RB[1], Cand))])
+                        if lenCB0 == 2:   Lks.extend([((br1, RB[1], Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX)), ((CB[0], bc, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+                        elif lenCB1 == 2: Lks.extend([((br1, RB[1], Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+                        elif lenCB2 == 2: Lks.extend([((br1, RB[1], Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
                     elif lenRB2 == 2:
-                        if lenCB0 == 2:   Lks.extend([((br2, RB[2], Cand), (CB[0], bc, Cand)), ((CB[0], bc, Cand), (br2, RB[2], Cand))])
-                        elif lenCB1 == 2: Lks.extend([((br2, RB[2], Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (br2, RB[2], Cand))])
-                        elif lenCB2 == 2: Lks.extend([((br2, RB[2], Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (br2, RB[2], Cand))])
+                        if lenCB0 == 2:   Lks.extend([((br2, RB[2], Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX)), ((CB[0], bc, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX))])
+                        elif lenCB1 == 2: Lks.extend([((br2, RB[2], Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX))])
+                        elif lenCB2 == 2: Lks.extend([((br2, RB[2], Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX))])
             elif RP == [0, 1, 3] and CP == [1, 1, 2]:
                 # |   |  |  +| Family
                 # |  +|  |   |
                 # |**+|  |**+|
                 if lenRB0 == 3:  # and lenRB1 == 1:
-                    if lenCB0 == 2:   Lks.extend([((br, {bc1, bc2}, Cand), (CB[0], bc, Cand)), ((CB[0], bc, Cand), (br, {bc1, bc2}, Cand))])
-                    elif lenCB1 == 2: Lks.extend([((br, {bc, bc2}, Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (br, {bc, bc2}, Cand))])
-                    elif lenCB2 == 2: Lks.extend([((br, {bc, bc1}, Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (br, {bc, bc1}, Cand))])
+                    if lenCB0 == 2:   Lks.extend([((br, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX)), ((CB[0], bc, Cand, LK_NONE), (br, {bc1, bc2}, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB1 == 2: Lks.extend([((br, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br, {bc, bc2}, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB2 == 2: Lks.extend([((br, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br, {bc, bc1}, Cand, LK_STRG | LK_BOX))])
                 elif lenRB1 == 3:
-                    if lenCB0 == 2:   Lks.extend([((br1, {bc1, bc2}, Cand), (CB[0], bc, Cand)), ((CB[0], bc, Cand), (br1, {bc1, bc2}, Cand))])
-                    elif lenCB1 == 2: Lks.extend([((br1, {bc, bc2}, Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (br1, {bc, bc2}, Cand))])
-                    elif lenCB2 == 2: Lks.extend([((br1, {bc, bc1}, Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (br1, {bc, bc1}, Cand))])
+                    if lenCB0 == 2:   Lks.extend([((br1, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX)), ((CB[0], bc, Cand, LK_NONE), (br1, {bc1, bc2}, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB1 == 2: Lks.extend([((br1, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br1, {bc, bc2}, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB2 == 2: Lks.extend([((br1, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br1, {bc, bc1}, Cand, LK_STRG | LK_BOX))])
                 elif lenRB2 == 3:
-                    if lenCB0 == 2:   Lks.extend([((br2, {bc1, bc2}, Cand), (CB[0], bc, Cand)), ((CB[0], bc, Cand), (br2, {bc1, bc2}, Cand))])
-                    elif lenCB1 == 2: Lks.extend([((br2, {bc, bc2}, Cand), (CB[1], bc1, Cand)), ((CB[1], bc1, Cand), (br2, {bc, bc2}, Cand))])
-                    elif lenCB2 == 2: Lks.extend([((br2, {bc, bc1}, Cand), (CB[2], bc2, Cand)), ((CB[2], bc2, Cand), (br2, {bc, bc1}, Cand))])
+                    if lenCB0 == 2:   Lks.extend([((br2, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX)), ((CB[0], bc, Cand, LK_NONE), (br2, {bc1, bc2}, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB1 == 2: Lks.extend([((br2, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br2, {bc, bc2}, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB2 == 2: Lks.extend([((br2, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br2, {bc, bc1}, Cand, LK_STRG | LK_BOX))])
             elif RP == [1, 1, 2] and CP == [0, 1, 3]:
                 # above patterns rotated by 90degs
                 if lenCB0 == 3:
-                    if lenRB0 == 2:   Lks.extend([((br, RB[0], Cand), ({br1, br2}, bc, Cand)), (({br1, br2}, bc, Cand), (br, RB[0], Cand))])
-                    elif lenRB1 == 2: Lks.extend([((br1, RB[1], Cand), ({br, br2}, bc, Cand)), (({br, br2}, bc, Cand), (br1, RB[1], Cand))])
-                    elif lenRB2 == 2: Lks.extend([((br2, RB[2], Cand), ({br, br1}, bc, Cand)), (({br, br1}, bc, Cand), (br2, RB[2], Cand))])
+                    if lenRB0 == 2:   Lks.extend([((br, RB[0], Cand, LK_NONE), ({br1, br2}, bc, Cand, LK_STRG | LK_BOX)), (({br1, br2}, bc, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                    elif lenRB1 == 2: Lks.extend([((br1, RB[1], Cand, LK_NONE), ({br, br2}, bc, Cand, LK_STRG | LK_BOX)), (({br, br2}, bc, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+                    elif lenRB2 == 2: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX))])
                 elif lenCB1 == 3:
-                    if lenRB0 == 2:   Lks.extend([((br, RB[0], Cand), ({br1, br2}, bc1, Cand)), (({br1, br2}, bc1, Cand), (br, RB[0], Cand))])
-                    elif lenRB1 == 2: Lks.extend([((br1, RB[1], Cand), ({br, br2}, bc1, Cand)), (({br, br2}, bc1, Cand), (br1, RB[1], Cand))])
-                    elif lenRB2 == 2: Lks.extend([((br2, RB[2], Cand), ({br, br1}, bc1, Cand)), (({br, br1}, bc1, Cand), (br2, RB[2], Cand))])
+                    if lenRB0 == 2:   Lks.extend([((br, RB[0], Cand, LK_NONE), ({br1, br2}, bc1, Cand, LK_STRG | LK_BOX)), (({br1, br2}, bc1, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                    elif lenRB1 == 2: Lks.extend([((br1, RB[1], Cand, LK_NONE), ({br, br2}, bc1, Cand, LK_STRG | LK_BOX)), (({br, br2}, bc1, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+                    elif lenRB2 == 2: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc1, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc1, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX))])
                 elif lenCB2 == 3:
-                    if lenRB0 == 2:   Lks.extend([((br, RB[0], Cand), ({br1, br2}, bc2, Cand)), (({br1, br2}, bc2, Cand), (br, RB[0], Cand))])
-                    elif lenRB1 == 2: Lks.extend([((br1, RB[1], Cand), ({br, br2}, bc2, Cand)), (({br, br2}, bc2, Cand), (br1, RB[1], Cand))])
-                    elif lenRB2 == 2: Lks.extend([((br2, RB[2], Cand), ({br, br1}, bc2, Cand)), (({br, br1}, bc2, Cand), (br2, RB[2], Cand))])
+                    if lenRB0 == 2:   Lks.extend([((br, RB[0], Cand, LK_NONE), ({br1, br2}, bc2, Cand, LK_STRG | LK_BOX)), (({br1, br2}, bc2, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                    elif lenRB1 == 2: Lks.extend([((br1, RB[1], Cand, LK_NONE), ({br, br2}, bc2, Cand, LK_STRG | LK_BOX)), (({br, br2}, bc2, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+                    elif lenRB2 == 2: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc2, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc2, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX))])
             elif RP == CP == [1, 1, 3]:
                 # |  +|  |  +| Family
                 # |  +|  |  +|
                 # |**+|  |***|
                 if lenRB0 == 3:
-                    if lenCB0 == 3:   Lks.extend([((br, RB[0], Cand), ({br1, br2}, bc, Cand)),  ((CB[0], bc, Cand), (br, {bc1, bc2}, Cand)), (({br1, br2}, bc, Cand), (br, RB[0], Cand)),  ((br, {bc1, bc2}, Cand), (CB[0], bc, Cand))])
-                    elif lenCB1 == 3: Lks.extend([((br, RB[0], Cand), ({br1, br2}, bc1, Cand)), ((CB[1], bc1, Cand), (br, {bc, bc2}, Cand)), (({br1, br2}, bc1, Cand), (br, RB[0], Cand)), ((br, {bc, bc2}, Cand), (CB[1], bc1, Cand))])
-                    elif lenCB2 == 3: Lks.extend([((br, RB[0], Cand), ({br1, br2}, bc2, Cand)), ((CB[2], bc2, Cand), (br, {bc, bc1}, Cand)), (({br1, br2}, bc2, Cand), (br, RB[0], Cand)), ((br, {bc, bc1}, Cand), (CB[2], bc2, Cand))])
+                    if lenCB0 == 3:   Lks.extend([((br, RB[0], Cand, LK_NONE), ({br1, br2}, bc, Cand, LK_STRG | LK_BOX)),  ((CB[0], bc, Cand, LK_NONE), (br, {bc1, bc2}, Cand, LK_STRG | LK_BOX)), (({br1, br2}, bc, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX)),  ((br, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB1 == 3: Lks.extend([((br, RB[0], Cand, LK_NONE), ({br1, br2}, bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br, {bc, bc2}, Cand, LK_STRG | LK_BOX)), (({br1, br2}, bc1, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX)), ((br, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB2 == 3: Lks.extend([((br, RB[0], Cand, LK_NONE), ({br1, br2}, bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br, {bc, bc1}, Cand, LK_STRG | LK_BOX)), (({br1, br2}, bc2, Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX)), ((br, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX))])
                 elif lenRB1 == 3:
-                    if lenCB0 == 3:   Lks.extend([((br1, RB[1], Cand), ({br, br2}, bc, Cand)),  ((CB[0], bc, Cand), (br1, {bc1, bc2}, Cand)), (({br, br2}, bc, Cand), (br1, RB[1], Cand)),  ((br1, {bc1, bc2}, Cand), (CB[0], bc, Cand))])
-                    elif lenCB1 == 3: Lks.extend([((br1, RB[1], Cand), ({br, br2}, bc1, Cand)), ((CB[1], bc1, Cand), (br1, {bc, bc2}, Cand)), (({br, br2}, bc1, Cand), (br1, RB[1], Cand)), ((br1, {bc, bc2}, Cand), (CB[1], bc1, Cand))])
-                    elif lenCB2 == 3: Lks.extend([((br1, RB[1], Cand), ({br, br2}, bc2, Cand)), ((CB[2], bc2, Cand), (br1, {bc, bc1}, Cand)), (({br, br2}, bc2, Cand), (br1, RB[1], Cand)), ((br1, {bc, bc1}, Cand), (CB[2], bc2, Cand))])
+                    if lenCB0 == 3:   Lks.extend([((br1, RB[1], Cand, LK_NONE), ({br, br2}, bc, Cand, LK_STRG | LK_BOX)),  ((CB[0], bc, Cand, LK_NONE), (br1, {bc1, bc2}, Cand, LK_STRG | LK_BOX)), (({br, br2}, bc, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)),  ((br1, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB1 == 3: Lks.extend([((br1, RB[1], Cand, LK_NONE), ({br, br2}, bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br1, {bc, bc2}, Cand, LK_STRG | LK_BOX)), (({br, br2}, bc1, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB2 == 3: Lks.extend([((br1, RB[1], Cand, LK_NONE), ({br, br2}, bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br1, {bc, bc1}, Cand, LK_STRG | LK_BOX)), (({br, br2}, bc2, Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX))])
                 elif lenRB2 == 3:
-                    if lenCB0 == 3:   Lks.extend([((br2, RB[2], Cand), ({br, br1}, bc, Cand)),  ((CB[0], bc, Cand), (br2, {bc1, bc2}, Cand)), (({br, br1}, bc, Cand), (br2, RB[2], Cand)),  ((br2, {bc1, bc2}, Cand), (CB[0], bc, Cand))])
-                    elif lenCB1 == 3: Lks.extend([((br2, RB[2], Cand), ({br, br1}, bc1, Cand)), ((CB[1], bc1, Cand), (br2, {bc, bc2}, Cand)), (({br, br1}, bc1, Cand), (br2, RB[2], Cand)), ((br2, {bc, bc2}, Cand), (CB[1], bc1, Cand))])
-                    elif lenCB2 == 3: Lks.extend([((br2, RB[2], Cand), ({br, br1}, bc2, Cand)), ((CB[2], bc2, Cand), (br2, {bc, bc1}, Cand)), (({br, br1}, bc2, Cand), (br2, RB[2], Cand)), ((br2, {bc, bc1}, Cand), (CB[2], bc2, Cand))])
+                    if lenCB0 == 3:   Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc, Cand, LK_STRG | LK_BOX)),  ((CB[0], bc, Cand, LK_NONE), (br2, {bc1, bc2}, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)),  ((br2, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB1 == 3: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br2, {bc, bc2}, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc1, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
+                    elif lenCB2 == 3: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br2, {bc, bc1}, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc2, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX))])
         # cleanup, convert all cell coords to sets and remove duplicates.
         Lks1 = []
-        for ((r0, c0, Cand0), (r1, c1, Cand1)) in Lks:
+        for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in Lks:
             R0 = {r0} if isinstance(r0, int) else r0
             C0 = {c0} if isinstance(c0, int) else c0
             R1 = {r1} if isinstance(r1, int) else r1
             C1 = {c1} if isinstance(c1, int) else c1
 
-            for ((Ra, Ca, Canda), (Rb, Cb, Candb)) in Lks1:
+            for ((Ra, Ca, Canda, Lka), (Rb, Cb, Candb, Lkb)) in Lks1:
                 if ccells_match(Ra, Ca, Canda, R0, C0, Cand0, GrpLks) and ccells_match(Rb, Cb, Candb, R1, C1, Cand1, GrpLks): continue
-            else: Lks1.append(((R0, C0, Cand0), (R1, C1, Cand1)))
-    else:  # No group links
-        # look in rows
-        for r in range(9):
-            C = []
-            for c in range(9):
-                if Cand in Cands[r][c]: C.append(c)
-            if len(C) == 2:  # and (((r, C[0]), (r, C[1])) not in Lks and ((r, C[1]), (r, C[0])) not in Lks):
-                Lks.extend([((r, C[0], Cand), (r, C[1], Cand)), ((r, C[1], Cand), (r, C[0], Cand))])
-        # look in cols
+            else: Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
+        return Lks1
+    #  else No group links
+    for r in range(9):
         for c in range(9):
-            R = []
-            for r in range(9):
-                if Cand in Cands[r][c]: R.append(r)
-            if len(R) == 2:  # and (((R[0], c), (R[1], c)) not in Lks and ((R[1], c), (R[0], c)) not in Lks):
-                Lks.extend([((R[0], c, Cand), (R[1], c, Cand)), ((R[1], c, Cand), (R[0], c, Cand))])
-        # look in boxes
-        for b in range(9):
-            rb = (b//3)*3; cb = (b%3)*3
-            B = []
-            for r in [rb, rb+1, rb+2]:
-                for c in [cb, cb+1, cb+2]:
-                    if Cand in Cands[r][c]: B.append((r, c, Cand))
-            if len(B) == 2:
-                if (B[0], B[1]) not in Lks: Lks.extend([(B[0], B[1]), (B[1], B[0])])
-        # cleanup, convert single candidate sets and remove duplicates.
-        Lks1 = []
-        for ((ra, ca, Canda), (rb, cb, Candb)) in Lks:
-            if ((ra, ca, Canda), (rb, cb, Candb)) in Lks1: continue
-            # if ((ra, ca), (rb, cb)) in Lks1 or ((rb, cb), (ra, ca)) in Lks: continue
-            Lks1.append(((ra, ca, Candb), (rb, cb, Candb)))
-    return Lks1
-
+            if Cand in Cands[r][c]:
+                c2 = -1
+                for c1 in range(9):
+                    if Cand in Cands[r][c1]:
+                        if c1 == c: continue
+                        if c2 >= 0: break
+                        else: c2 = c1
+                else:
+                    if c2 >= 0: Lks.append((NL(r, c, Cand, LK_NONE), NL(r, c2, Cand, LK_STRG | LK_ROW)))
+                r2 = -1
+                for r1 in range(9):
+                    if Cand in Cands[r1][c]:
+                        if r1 == r: continue
+                        if r2 >= 0: break
+                        else: r2 = r1
+                else:
+                    if r2 >= 0: Lks.append((NL(r, c, Cand, LK_NONE), NL(r2, c, Cand, LK_STRG | LK_COL)))
+                r2 = c2 = -1
+                rb = r//3; cb = c//3
+                for b1 in range(9):
+                    r1 = (rb*3) + b1//3; c1 = (cb*3) + b1%3
+                    if Cand in Cands[r1][c1]:
+                        if r1 == r and c1 == c: continue
+                        if r2 >= 0: break
+                        else: r2 = r1; c2 = c1
+                else:
+                    if r2 >= 0: Lks.append((NL(r, c, Cand, LK_NONE), NL(r2, c2, Cand, LK_STRG | LK_BOX)))
+    return Lks
 
 # diagnostic code for walking tree nodes - not used for a while, may have bitrot.
 

@@ -13,54 +13,129 @@ class XYCUC:
         self.UC  = []    # list of used cells in the XY-Chain/loop
         self.EL  = []    # Ccells to eliminate if an XY Chain can be made.
 
+class NET:
+    def __init__(self, Cands = None):
+        self.Cands = Cands
+        Odds = []; Evens = []
+        self.OddEven = [[None for c in range(9)] for r in range(9)]
 
-def tech_remote_pairs(Grid, Step, Cands, Method = T_UNDEF):
+class NNODE:  # Net Node
+    def __init__(self, r = -1, c = -1, Lvl = -1):
+        self.r = r; self.c = c
+        self.Lvl = Lvl
 
-    if Method != T_UNDEF and Method != T_REMOTE_PAIR: return -2
+def tech_remote_pairs(Grid, Step, Cands, Methods):
 
-    class RPNE:  # Remote Pair node element
-        def __init__(self, r = -1, c = -1, AltLk = -1, ConnNodes = None):
-            self.r = r
-            self.c = c
-            self.AltLk = AltLk
-            self.ConnNodes = [] if ConnNodes is None else ConnNodes
-
-    class RPBVLE:  # Remote Pair Bi-Value Net lists element, BVList = [RPBVLE, ...]
-        def __init__(self, RPCands = None, RPN = None):
-            self.RPCands = set() if RPCands is None else RPCands
-            self.RPNoList = [] if RPN is None else [RPN, ]
-            self.RPNeList = []
-
-    # build a list of bi-value cells.
-    BVL0 = []
+    CellConsidered = [[False for c in range(9)] for r in range(9)]
     for r in range(9):
         for c in range(9):
             if len(Cands[r][c]) == 2:
-                for RPBVLElem in BVL0:
-                    if Cands[r][c] == RPBVLElem.RPCands:
-                        RPBVLElem.RPNoList.append(RPNE(r, c))
-                        break
-                else: BVL0.append(RPBVLE(Cands[r][c], RPNE(r, c)))
+                if CellConsidered[r][c]: continue
+                else: CellConsidered[r][c] = True
+                Net = NET(Cands[r][c])
+                Net.OddEven[r][c] = Lvl = 0
+                Net.NrEvens += 1
+                next_net_level(Net, r, c, True, True, True, CellConsidered, Lvl+1)
+                if len(Net.Odds) > 1 and len(Net.Evens) > 1:  # possibility of remote pair elims
+                    Elims = []
+                    for r in range(9):
+                        for c in range(9):
+                            if Net.OddEven[r][c] is not None:
+                                PotElims = sorted(Cands[r][c] & Net.Cands)  # Potential candidates to eliminate
+                                if PotElims:  # If there are poteintial elims in cell (r, c), does it see both an odd node and an even node in the net.
+                                    OddNetNodeSeen = EvenNetNodeSeen = False
+                                    for (rOdd, cOdd) in Net.Odds:
+                                        if rOdd == r or cOdd == c or (rOdd//3 == r//3 and cOdd//3 == c//3):  # odd Net Node seen
+                                            for (rEven, cEven) in Net.Evens:
+                                                if rEven == r or cEven == c or (rEven//3 == r//3 and cEven//3 == c//3):  #
+                                                    for Cand in PotElims:
+                                                        Elims.append(CCELL(r, c, Cand))
+                                                break
+                                        break
 
-    for BVL in BVL0:
-        if len(BVL.RPNoList) < 4: continue
 
-        for i in range(len(BVL.RPNoList)-1):
-            Ni = BVL.RPNoList[i]
-            if Ni.AltLk >= 0: continue
-            Ni.AltLk = 0
-            for j in range(i+1, len(BVL.RPNoList)):
-                Nj = BVL.RPNoList[j]
-                if Nj.AltLk >= 0: continue
-                if Ni.r == Nj.r or Ni.c == Nj.c or (Ni.r//3 == Nj.r//3 and Ni.c//3 == Nj.c//3):
-                    Ni.AltLk = 0; Nj.AltLk = 1
-                    Ni.ConnNodes.append(Nj)
-                    BVL.RPNeList.append([Ni, Nj])
-                    _next_net_node(BVL, Ni, REV)
-                    _next_net_node(BVL, Nj, FWD)
-            if BVL.RPNeList and len(BVL.RPNeList[-1]) > 3:
-                if _remote_pair_elims(BVL, Cands, Step): return 0
-    return -1
+
+def next_net_level(Net, rn, cn, Row, Col, Box, CellConsidered, Lvl):
+
+    if Row:
+        for c in range(9):
+            if c == cn: continue
+            if Cands[rn][c] == Net.Cands and not Net.OddEven[rn][c]:
+                CellConsidered[rn][c] = True
+                Net.OddEven[rn][c] = Lvl
+                if Lvl & 0x01: Net.Odds.append((rn, c))
+                else: Net.Evens.append((rn, c))
+                next_net_level(Net, rn, c, False, True, True, CellConsidered, Lvl+1)
+                break
+    if Col:
+        for r in range(9):
+            if r == rn: continue
+            if Cands[r][cn] == Net.Cands and not Net.OddEven[r][cn]:
+                CellConsidered[r][cn] = True
+                Net.OddEven[r][cn] = Lvl
+                if Lvl & 0x01: Net.Odds.append((r, cn))
+                else: Net.Evens.append((r, cn))
+                next_net_level(Net, r, cn, True, False, True, CellConsidered, Lvl+1)
+                break
+    if Box:
+        for b in range(9):
+            r = (rn//3)*3 + b//3; c = (cn//3)*3 + b%3
+            if r == rn or c == cn: continue
+            if Cands[r][c] == Net.Cands and not Net.OddEven[r][c]:
+                CellConsidered[r][c] = True
+                Net.OddEven[r][c] = Lvl
+                if Lvl & 0x01: Net.Odds.append((rn, c))
+                else: Net.Evens.append((rn, c))
+                next_net_level(Net, r, n, True, True, False, CellConsidered, Lvl+1)
+
+
+
+
+
+
+    # class RPNE:  # Remote Pair node element
+    #     def __init__(self, r = -1, c = -1, AltLk = -1, ConnNodes = None):
+    #         self.r = r
+    #         self.c = c
+    #         self.AltLk = AltLk
+    #         self.ConnNodes = [] if ConnNodes is None else ConnNodes
+    #
+    # class RPBVLE:  # Remote Pair Bi-Value Net lists element, BVList = [RPBVLE, ...]
+    #     def __init__(self, RPCands = None, RPN = None):
+    #         self.RPCands = set() if RPCands is None else RPCands
+    #         self.RPNoList = [] if RPN is None else [RPN, ]
+    #         self.RPNeList = []
+    #
+    # # build a list of bi-value cells.
+    # BVL0 = []
+    # for r in range(9):
+    #     for c in range(9):
+    #         if len(Cands[r][c]) == 2:
+    #             for RPBVLElem in BVL0:
+    #                 if Cands[r][c] == RPBVLElem.RPCands:
+    #                     RPBVLElem.RPNoList.append(RPNE(r, c))
+    #                     break
+    #             else: BVL0.append(RPBVLE(Cands[r][c], RPNE(r, c)))
+    #
+    # for BVL in BVL0:
+    #     if len(BVL.RPNoList) < 4: continue
+    #
+    #     for i in range(len(BVL.RPNoList)-1):
+    #         Ni = BVL.RPNoList[i]
+    #         if Ni.AltLk >= 0: continue
+    #         Ni.AltLk = 0
+    #         for j in range(i+1, len(BVL.RPNoList)):
+    #             Nj = BVL.RPNoList[j]
+    #             if Nj.AltLk >= 0: continue
+    #             if Ni.r == Nj.r or Ni.c == Nj.c or (Ni.r//3 == Nj.r//3 and Ni.c//3 == Nj.c//3):
+    #                 Ni.AltLk = 0; Nj.AltLk = 1
+    #                 Ni.ConnNodes.append(Nj)
+    #                 BVL.RPNeList.append([Ni, Nj])
+    #                 _next_net_node(BVL, Ni, REV)
+    #                 _next_net_node(BVL, Nj, FWD)
+    #         if BVL.RPNeList and len(BVL.RPNeList[-1]) > 3:
+    #             if _remote_pair_elims(BVL, Cands, Step): return 0
+    # return -1
 
 def _next_net_node(BVL, Ni, Dir = FWD):
 

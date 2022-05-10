@@ -104,7 +104,7 @@ def next_step():
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True)
                     if Err:
                         f1.write(f"# Warning: Cannot solve next step on line: {Err}: {Line}")
-                        print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Expected: {sExpMeth}, Error: {Err}", flush = True)
+                        print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
                         Errs += 1
                         continue
 

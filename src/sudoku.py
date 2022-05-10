@@ -226,15 +226,15 @@ class Sudoku:
             if self.LSW:
                 self.LSW.on_close(0)
                 self.LSW = None
+            self.ShowCands = False
+            self.MenuBar.miPuzzleCandsShow.Check(False)
+            self.update_board(ST_ENT, PZL(Grid = self.Grid, Givens = self.Givens))
         else:
             self.MenuBar.miPuzzleSave.Enable(True)
             self.MenuBar.miPuzzleListSoln.Enable(True)
             self.MenuBar.miPuzzleRestartGO.Enable(True)
             self.GameTimer.pause()  # ensure game timer is stopped
             self.update_status_histo(self.Grid)
-        self.ShowCands = False
-        self.MenuBar.miPuzzleCandsShow.Check(False)
-        self.update_board(ST_ENT, PZL(Grid = self.Grid, Givens = self.Givens))
 
     def on_generate_state(self, e):
         # Creates a puzzle in self.Grid according to the difficulty level

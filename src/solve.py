@@ -9,7 +9,7 @@ from trc import TRCX
 from solve_singles import *
 from solve_subsets import *
 from solve_fish import *
-from solve_wings import *
+from solve_bent_subsets import *
 from solve_x_chains import *
 from solve_xy_chains import *
 from solve_ai_chains import *
@@ -64,7 +64,7 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_finned_x_wings,      [T_FINNED_X_WING, T_SASHIMI_X_WING]),  # finned fish never before ordinary fish
            SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH, T_SASHIMI_SWORDFISH]),
            SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
-           # SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
+           SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
            SLVR(tech_x_chains,            [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
            # SLVR(tech_xy_chains,           [T_XY_CHAIN]),
            # SLVR(tech_xy_loops,            [T_XY_LOOP]),
@@ -108,7 +108,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     Grid1 = [[Grid[r][c] for c in range(9)] for r in range(9)]
 
     Steps = []
-    MaxLvl = 0
+    MaxExpertise = 0
     if Meth != T_UNDEF and NrEmpties > 0:
         Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
                     Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
@@ -117,7 +117,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
             NrSlvd = pFn(Grid1, Step, Cands, [Meth])
             if NrSlvd >= 0:
                 Steps.append(Step)
-                if Tech[Meth].Expertise > MaxLvl: MaxLvl = Tech[Meth].Expertise
+                if Tech[Meth].Expertise > MaxExpertise: MaxExpertise = Tech[Meth].Expertise
                 NrEmpties -= NrSlvd
                 if Soln:
                     Err = check_puzzle_step(Grid1, Cands, Soln)
@@ -134,7 +134,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
                 NrSlvd = Slvr.pFn(Grid1, Step, Cands, EnMthds)
                 if NrSlvd >= 0:
                     Steps.append(Step)
-                    if Tech[Step.Method].Expertise > MaxLvl: MaxLvl = Tech[Step.Method].Expertise
+                    if Tech[Step.Method].Expertise > MaxExpertise: MaxExpertise = Tech[Step.Method].Expertise
                     NrEmpties -= NrSlvd
                     if Soln:
                         Err = check_puzzle_step(Grid1, Cands, Soln)
@@ -142,7 +142,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
                     break
         else:
             return UNDEF, Steps, "Can't solve step"
-    return MaxLvl, Steps, ""
+    return MaxExpertise, Steps, ""
 
 def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, OverrideEnableMthds = False):
     # Find the solution for the next step, used in providing hints to users.

@@ -712,19 +712,16 @@ def elim_cands_in_kraken_fish(Cand, BS, CS, Fins, Orient, Cands, Method, Step):
         else: Step.Pattern = [[P_VAL, Cand], [P_COL, BS], [P_ROW, CS]]  # Orient == P_COL
         for r, c in Fins: Step.Pattern.extend([[P_CON, ], [P_ROW, r], [P_COL, c]])
         Step.Pattern.append([P_SEP, ])
-        NLks = NGrpLks = 0
         Chains = []
         for Ch in S.Pattern:  # one chain for each fin in S.Pattern
             if Chains: Chains.append([P_SEP, ])
             for r, c, Cand, Lk, in Ch:
-                NLks += 1
+                Step.NrLks += 1
                 if Method & T_GRPLK:
-                    if len(r) > 1: NGrpLks += 1
-                    if len(c) > 1: NGrpLks += 1
-                if Lk == LK_NONE: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c]])
-                else: Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
+                    if len(r) > 1: Step.NrGrpLks += 1
+                    if len(c) > 1: Step.NrGrpLks += 1
+                Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
         Step.Pattern.extend(Chains); Step.Pattern.append([P_END, ])
-        Step.NrLks = NLks; Step.NrGrpLks = NGrpLks
         for r, c, Cand in S.Outcome:
             if Method & T_GRPLK: Cands[list(r)[0]][list(c)[0]].discard(Cand)
             else: Cands[r][c].discard(Cand)

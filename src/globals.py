@@ -23,7 +23,7 @@ VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 # Generic enumerations
 UNDEF   = -1
-RECURSE_LIM = 6     # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
+RECURSE_LIM = 7     # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
                     # Equivalent to (n+1)*2 chain nodes.
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
@@ -352,8 +352,8 @@ OP_WSLK = 11  # "~"  Strong link masquerading as a weak link
 OP_CNT  = 12  # "#"  Number of occurrences or count.
 OP_PARO = 13  # "("  Opening parenthesis
 OP_PARC = 14  # ")"  Closing parenthesis
-OP_SETO = 15  # "{"  Opening set
-OP_SETC = 16  # "}"  Closing set
+OP_BRCO = 15  # "{"  Opening brace
+OP_BRCC = 16  # "}"  Closing brace
 OP_NR_OPS = 17
 
 OP = ["",    # OP_NONE
@@ -371,8 +371,8 @@ OP = ["",    # OP_NONE
       "#" ,  # OP_CNT   Count / number of occurrences
       "(" ,  # OP_PARO  Opening parenthesis
       ")" ,  # OP_PARC  Closing parenthesis
-      "{" ,  # OP_SETO  Opening set
-      "}" ]  # OP_SETC  Closing set
+      "{" ,  # OP_BRCO  Opening brace
+      "}" ]  # OP_BRCC  Closing brace
 
 TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
@@ -400,17 +400,17 @@ PR_NR_GVNS     = 7  # Grid containing only givens
 
 TRC = True if path[-1] == ".trc_true" else False
 
-class CELL:
-    def __init__(self, r = -1, c = -1):
-        self.r = r; self.c = c
-
-class CCELL:  # CCell.
-    def __init__(self, r = -1, c = -1, Cand = -1):
-        self.r = r; self.c = c; self.Cand = Cand
-
-class BVCELL:  # Bi-value cell
-    def __init__(self, r = -1, c = -1, Cands = None):
-        self.r = r; self.c = c; self.Cands = Cands
+# class CELL:
+#     def __init__(self, r = -1, c = -1):
+#         self.r = r; self.c = c
+#
+# class CCELL:  # CCell.
+#     def __init__(self, r = -1, c = -1, Cand = -1):
+#         self.r = r; self.c = c; self.Cand = Cand
+#
+# class BVCELL:  # Bi-value cell
+#     def __init__(self, r = -1, c = -1, Cands = None):
+#         self.r = r; self.c = c; self.Cands = Cands
 
 # used as a general data structure for accumulating and transferring Puzzle
 # information to through the program and to initialise a Puzzle instance.
@@ -505,18 +505,18 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_SASHIMI_X_WING:           TECH_T(True, "Sashimi X-Wing",            EXP_PROFICIENT,         60),
         T_SASHIMI_SWORDFISH:        TECH_T(True, "Sashimi Swordfish",         EXP_PROFICIENT,         65),
         T_SASHIMI_JELLYFISH:        TECH_T(True, "Sashimi Jellyfish",         EXP_PROFICIENT,         70),
-        T_SKYSCRAPER:               TECH_T(False, "Skyscraper",                EXP_PROFICIENT,         45),
-        T_TWO_STRING_KITE:          TECH_T(False, "Two String Kite",           EXP_PROFICIENT,         45),
-        T_TURBOT_FISH:              TECH_T(False, "Turbot Fish",               EXP_PROFICIENT,         50),
+        T_SKYSCRAPER:               TECH_T(True, "Skyscraper",                EXP_PROFICIENT,         45),
+        T_TWO_STRING_KITE:          TECH_T(True, "Two String Kite",           EXP_PROFICIENT,         45),
+        T_TURBOT_FISH:              TECH_T(True, "Turbot Fish",               EXP_PROFICIENT,         50),
         T_EMPTY_RECT:               TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
-        T_Y_WING:                   TECH_T(False, "Y-Wing",                    EXP_INTERMEDIATE,       50),
-        T_XYZ_WING:                 TECH_T(False, "XYZ-Wing",                  EXP_PROFICIENT,         60),
-        T_WXYZ_WING:                TECH_T(False, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
-        T_BENT_EXPOSED_QUAD:        TECH_T(False, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
-        T_X_CHAIN:                  TECH_T(False, "X-Chain",                   EXP_PROFICIENT,         70),
-        T_EVEN_X_LOOP:              TECH_T(False, "Even X-Loop",               EXP_PROFICIENT,         70),
-        T_STRONG_X_LOOP:            TECH_T(False, "Strong X-Loop",             EXP_PROFICIENT,         70),
-        T_REMOTE_PAIR:              TECH_T(False, "Remote Pair",               EXP_ACCOMPLISHED,       80),
+        T_Y_WING:                   TECH_T(True, "Y-Wing",                    EXP_INTERMEDIATE,       50),
+        T_XYZ_WING:                 TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
+        T_WXYZ_WING:                TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
+        T_BENT_EXPOSED_QUAD:        TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
+        T_X_CHAIN:                  TECH_T(True, "X-Chain",                   EXP_PROFICIENT,         70),
+        T_EVEN_X_LOOP:              TECH_T(True, "Even X-Loop",               EXP_PROFICIENT,         70),
+        T_STRONG_X_LOOP:            TECH_T(True, "Strong X-Loop",             EXP_PROFICIENT,         70),
+        T_REMOTE_PAIR:              TECH_T(True, "Remote Pair",               EXP_ACCOMPLISHED,       80),
         T_XY_CHAIN:                 TECH_T(False, "XY-Chain",                  EXP_ACCOMPLISHED,       80),
         T_XY_LOOP:                  TECH_T(False, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
         T_W_WING:                   TECH_T(False, "W-Wing",                    EXP_PROFICIENT,         55),
@@ -530,11 +530,11 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
-        T_GL_TWO_STRING_KITE:       TECH_T(False, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
-        T_GL_TURBOT_FISH:           TECH_T(False, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
-        T_GL_X_CHAIN:               TECH_T(False, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
-        T_GL_EVEN_X_LOOP:           TECH_T(False, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
-        T_GL_STRONG_X_LOOP:         TECH_T(False, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
+        T_GL_TWO_STRING_KITE:       TECH_T(True, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
+        T_GL_TURBOT_FISH:           TECH_T(True, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
+        T_GL_X_CHAIN:               TECH_T(True, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
+        T_GL_EVEN_X_LOOP:           TECH_T(True, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
+        T_GL_STRONG_X_LOOP:         TECH_T(True, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
         T_GL_W_WING:                TECH_T(False, "Group Linked W-Wing",       EXP_PROFICIENT,         80),
         T_GL_SC_AI_CHAIN:           TECH_T(False, "Group Linked Same End Candidates AI-Chain", EXP_PROFICIENT, 80),
         T_GL_DC_AI_CHAIN:           TECH_T(False, "Group Linked Different End Candidates AI-Chain", EXP_ACCOMPLISHED, 80),
