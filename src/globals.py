@@ -245,6 +245,7 @@ PZL_VAL     = 11  # Validate a existing puzzle (entered, loaded or pasted [ctrl]
 T_KRAKEN                    = 0x00000100
 T_GRPLK                     = 0x00000200
 T_SASHIMI                   = 0x00000400
+T_PLCMT                     = 0x00000800  # in XY and AI Chains, when placement is made instead of elim
 
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
@@ -317,24 +318,15 @@ T_GL_KRAKEN_SASHIMI_JELLYFISH = T_KRAKEN_SASHIMI_JELLYFISH + T_GRPLK
 
 T_BRUTE_FORCE               = 0x000000FF  # 255
 
-# Logic Technique Step Attributes
-P_TECH = 0  # The logic technique used
-P_PTRN = 1  # Ordered list of cell properties identified for the logic technique
-P_OUTC = 2  # Ordered list of cell updates on applying the logic technique
-P_DIFF = 3  # The total difficulty of the step
-# P_SUBS = 4  # Ordered list of sub-steps - a recursion of Step Attributes
-P_GRID = 5  # The grid before logic steps.
-P_CAND = 6  # The grid of eliminated candidates before the logic step
-
-# The lexical tokens of for cell description phrases
-P_ROW = 10  # cell row index
-P_COL = 11  # cell column index or set of cell column indices
-P_BOX = 12  # box coords (down, across)
-P_OP  = 13  # Operator
-P_VAL = 14  # digit 0 - 9
-P_SEP = 15  # Separator between cell phrases
-P_CON = 16  # Concatinator for combining cell collections
-P_END = 17  # End of list of phrases
+# The lexical token identifiers for cell grammar elements
+P_ROW = 0   # cell row index
+P_COL = 1   # cell column index or set of cell column indices
+P_BOX = 2   # box coords (down, across)
+P_OP  = 3   # Operator
+P_VAL = 4   # digit 0 - 9
+P_SEP = 5   # Separator between cell phrases
+P_CON = 6   # Concatenator for combining cell collections
+P_END = 7   # End of list of phrases
 
 # Logic technique operator enumerations
 OP_NONE = 0   # ""
@@ -399,18 +391,6 @@ PR_DIFF        = 6  # The difficulty of the puzzle.
 PR_NR_GVNS     = 7  # Grid containing only givens
 
 TRC = True if path[-1] == ".trc_true" else False
-
-# class CELL:
-#     def __init__(self, r = -1, c = -1):
-#         self.r = r; self.c = c
-#
-# class CCELL:  # CCell.
-#     def __init__(self, r = -1, c = -1, Cand = -1):
-#         self.r = r; self.c = c; self.Cand = Cand
-#
-# class BVCELL:  # Bi-value cell
-#     def __init__(self, r = -1, c = -1, Cands = None):
-#         self.r = r; self.c = c; self.Cands = Cands
 
 # used as a general data structure for accumulating and transferring Puzzle
 # information to through the program and to initialise a Puzzle instance.
@@ -517,8 +497,8 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_EVEN_X_LOOP:              TECH_T(True, "Even X-Loop",               EXP_PROFICIENT,         70),
         T_STRONG_X_LOOP:            TECH_T(True, "Strong X-Loop",             EXP_PROFICIENT,         70),
         T_REMOTE_PAIR:              TECH_T(True, "Remote Pair",               EXP_ACCOMPLISHED,       80),
-        T_XY_CHAIN:                 TECH_T(False, "XY-Chain",                  EXP_ACCOMPLISHED,       80),
-        T_XY_LOOP:                  TECH_T(False, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
+        T_XY_CHAIN:                 TECH_T(True, "XY-Chain",                  EXP_ACCOMPLISHED,       80),
+        T_XY_LOOP:                  TECH_T(True, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
         T_W_WING:                   TECH_T(False, "W-Wing",                    EXP_PROFICIENT,         55),
         T_SC_AI_CHAIN:              TECH_T(False, "Same End Candidate AI-Chain", EXP_PROFICIENT,       70),
         T_DC_AI_CHAIN:              TECH_T(False, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED,80),

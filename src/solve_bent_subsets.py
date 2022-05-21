@@ -1,27 +1,5 @@
-
-from copy import copy
-
 from globals import *
 from solve_utils import *
-
-# def tech_y_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_Y_WING: return -2
-#     return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_Y_WING)
-#
-# def tech_xyz_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_XYZ_WING: return -2
-#     return _tech_bent_exposed_triples(Grid, Step, Cands, Method = T_XYZ_WING)
-#
-# def tech_wxyz_wings(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_WXYZ_WING: return -2
-#     return _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_WXYZ_WING)
-#
-# def tech_bent_exposed_quads(Grid, Step, Cands, Method = T_UNDEF):
-#     if Method != T_UNDEF and Method != T_BENT_EXPOSED_QUAD: return -2
-#     return _tech_bent_exposed_quads(Grid, Step, Cands, Method = T_BENT_EXPOSED_QUAD)
-
-# W-Wings are treated as the AI_chains that they are, see solve_ai_chains.py
-
 
 def tech_bent_exposed_triples(Grid, Step, Cands, Methods):
     # a bent (exposed) triple can only be either a Y-Wing or a XYZ-Wing.
@@ -274,7 +252,7 @@ def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
         Step.Outcome.append([P_END, ])
         for r0, c0, Cands0 in Cells:
             if Step.Pattern: Step.Pattern.append([P_CON, ])
-            Step.Pattern.extend([[P_VAL, copy(Cands0)], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+            Step.Pattern.extend([[P_VAL, sorted(Cands0)], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
         Step.Pattern.append([P_END, ])
         return True
     return False

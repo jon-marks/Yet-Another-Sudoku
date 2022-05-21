@@ -33,7 +33,7 @@ LK_CELL = 0x0080
 # adds the dimension of incremental difficulty in finding and solving a pattern
 # based on the number of links in the chains used to solve a step.
 
-NL = namedtuple('NL', ['r', 'c', 'Cand', 'Lk']) # Node in a chain with lk to partner
+NL = namedtuple('NL', ['r', 'c', 'Cand', 'Lk'])  # Node in a chain with lk to partner
 CCELL = namedtuple('CCELL', ['r', 'c', 'Cand'])
 
 class NODEP_depreciate:  # Node in a chain with link type to partner on right.
@@ -125,19 +125,6 @@ def determine_cands(Grid, Elims = None):
                         Cands[r][c].add(Cand)
     return NrEmpties, Cands
 
-# def link_house(r0, c0, r1, c1, GrpLks = False):
-#     # ccells must be linked else erroneous LK_BOX cand be returned.
-#
-#     if GrpLks:
-#         if len(r0) == len(r1) == 1 and list(r0)[0] == list(r1)[0]: return LK_ROW
-#         if len(c0) == len(c1) == 1 and list(c0)[0] == list(c1)[0]: return LK_COL
-#         return LK_BOX
-#     else:
-#         if r0 == r1 and c0 == c1: return LK_CELL
-#         if r0 == r1: return LK_ROW
-#         if c0 == c1: return LK_COL
-#         return LK_BOX
-
 def token_link(Lk):
     if Lk == LK_WEAK: return OP_WLK
     if Lk == LK_STRG or Lk == LK_STWK: return OP_SLK
@@ -206,7 +193,7 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
                 if lenTwr2 == 0:
                     if lenTwr0 == 0 and lenTwr1 > 1: LCL.append((r, Twr[1], Cand, LK_STWK | LK_ROW))
                     elif lenTwr0 > 1 and lenTwr1 == 0: LCL.append((r, Twr[0], Cand, LK_STWK | LK_ROW))
-                elif Type & LK_WEAK and lenTwr0 > 1 and lenTwr1 > 1: LCL.extend([(r, Twr[0], Cand, LK_WEAK | LK_ROW), (r, Twr[1], Cand, LK_WEAK |  LK_ROW)])
+                elif Type & LK_WEAK and lenTwr0 > 1 and lenTwr1 > 1: LCL.extend([(r, Twr[0], Cand, LK_WEAK | LK_ROW), (r, Twr[1], Cand, LK_WEAK | LK_ROW)])
         if len(c) == 1:  # scan the col
             c0 = list(c)[0]
             rf = list(r)[0]//3
@@ -304,6 +291,34 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             elif Type != LK_STRG:
                 for Cand0 in sorted(Cands[r][c]-{Cand}):
                     LCL.append((r, c, Cand0, LK_WEAK | LK_CELL))
+    return LCL
+
+def list_bv_cells_linked_to(r, c, Cand, Cands):
+
+    LCL = []
+    # scan row
+    L = []
+    for c0 in range(9):
+        if c == c0 or len(Cands[r][c0]) != 2 or Cand not in Cands[r][c0]: continue
+        L.append((c0, [Cand, list(Cands[r][c0] ^ {Cand})[0]]))
+    Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_ROW
+    for c0, Candsl0 in L: LCL.append((r, c0, Candsl0, Lk0))
+    # scan col
+    L = []
+    for r0 in range(9):
+        if r == r0 or len(Cands[r0][c]) != 2 or Cand not in Cands[r0][c]: continue
+        L.append((r0, [Cand, list(Cands[r0][c] ^ {Cand})[0]]))
+    Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_COL
+    for r0, Candsl0 in L: LCL.append((r0, c, Candsl0, Lk0))
+    # scan box.
+    L = []
+    rb = (r//3)*3; cb = (c//3)*3
+    for b0 in range(9):
+        r0 = rb + b0//3; c0 = cb + b0%3
+        if r == r0 or c == c0 or len(Cands[r0][c0]) != 2 or Cand not in Cands[r0][c0]: continue
+        L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
+    Lk0 = Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_BOX
+    for r0, c0, Candsl0 in L: LCL.append((r0, c0, Candsl0, Lk0))
     return LCL
 
 def cells_in_same_house(r1, c1, r2, c2):

@@ -96,16 +96,16 @@ def tech_finned_x_wings(Grid, Step, Cands, Methods):
                         BC1.append(c)
                     else:
                         if len(BC1) < 2: continue
-                        CU = []; CS = []; CF = []; Fins = []; FB = set()
+                        CU = []; CS = []; CF = []; Fins = []; FB = set(); FinBaseChute = set(); FinCvrChute = set()
                         for c in range(9):
                             bc0 = int(c in BC0); bc1 = int(c in BC1)
                             if bc0 or bc1: CU.append(c)
                             if bc0 + bc1 == 2: CS.append(c)
-                            if bc0 and not bc1: Fins.append((r0, c)); FB.add(r0); CF.append(c)
-                            if bc1 and not bc0: Fins.append((r1, c)); FB.add(r1); CF.append(c)
-                        if T_FINNED_X_WING in Methods and 3 <= len(CU) <= 4 and len(FB) == 1 and len(CS) == 2 and (len(CF) == 1 or (len(CF) == 2 and CF[0]//3 == CF[1]//3)):
+                            if bc0 and not bc1: Fins.append((r0, c)); FB.add(r0); CF.append(c); FinBaseChute.add(r0//3); FinCvrChute.add(c//3)
+                            if bc1 and not bc0: Fins.append((r1, c)); FB.add(r1); CF.append(c); FinBaseChute.add(r1//3); FinCvrChute.add(c//3)
+                        if T_FINNED_X_WING in Methods and 3 <= len(CU) <= 4 and len(CS) == 2 and len(FinBaseChute) == len(FinCvrChute) == 1:
                             if elim_cands_in_finned_fish(Cand, [r0, r1], CS, CF, list(FB)[0], Fins, P_ROW, Cands, Step): return 0
-                        if T_SASHIMI_X_WING in Methods and 3 <= len(CU) <= 4 and len(FB) > 1 and len(CS) == 1 and ((len(CF) == 2 and CF[0]//3 == CF[1]//3) or (len(CF) == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                        if T_SASHIMI_X_WING in Methods and 3 <= len(CU) <= 4 and len(CS) == 1 and len(FinCvrChute) == 1:
                             if elim_cands_in_sashimi_fish(Cand, [r0, r1], CS, CF, FB, Fins, P_ROW, Cands, Step): return 0
                         if T_KRAKEN_FINNED_X_WING in Methods and len(CS) == 2 and 1 <= len(CF) <= 7:
                             if elim_cands_in_kraken_fish(Cand, [r0, r1], CS, Fins, P_ROW, Cands, T_KRAKEN_FINNED_X_WING, Step): return 0
@@ -132,16 +132,16 @@ def tech_finned_x_wings(Grid, Step, Cands, Methods):
                         BC1.append(r)
                     else:
                         if len(BC1) < 2: continue
-                        CU = []; CS = []; CF = []; Fins = []; FB = set()
+                        CU = []; CS = []; CF = []; Fins = []; FB = set(); FinBaseChute = set(); FinCvrChute = set()
                         for r in range(9):
                             bc0 = int(r in BC0); bc1 = int(r in BC1)
                             if bc0 or bc1: CU.append(r)
                             if bc0+bc1 == 2: CS.append(r)
-                            if bc0 and not bc1: Fins.append((r, c0)); FB.add(c0); CF.append(r)
-                            if bc1 and not bc0: Fins.append((r, c1)); FB.add(c1); CF.append(r)
-                        if T_FINNED_X_WING in Methods and 3 <= len(CU) <= 4 and len(FB) == 1 and len(CS) == 2 and (len(CF) == 1 or (len(CF) == 2 and CF[0]//3 == CF[1]//3)):
+                            if bc0 and not bc1: Fins.append((r, c0)); FB.add(c0); CF.append(r); FinBaseChute.add(c0//3); FinCvrChute.add(r//3)
+                            if bc1 and not bc0: Fins.append((r, c1)); FB.add(c1); CF.append(r); FinBaseChute.add(c1//3); FinCvrChute.add(r//3)
+                        if T_FINNED_X_WING in Methods and 3 <= len(CU) <= 4 and len(CS) == 2 and len(FinBaseChute) == len(FinCvrChute) == 1:
                             if elim_cands_in_finned_fish(Cand, [c0, c1], CS, CF, list(FB)[0], Fins, P_COL, Cands, Step): return 0
-                        if T_SASHIMI_X_WING in Methods and 3 <= len(CU) <= 4 and len(FB) > 1 and len(CS) == 1 and ((len(CF) == 2 and CF[0]//3 == CF[1]//3) or (len(CF) == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                        if T_SASHIMI_X_WING in Methods and 3 <= len(CU) <= 4 and len(CS) == 1 and len(FinCvrChute) == 1:
                             if elim_cands_in_sashimi_fish(Cand, [c0, c1], CS, CF, FB, Fins, P_COL, Cands, Step): return 0
                         if T_KRAKEN_FINNED_X_WING in Methods and len(CS) == 2 and 1 <= len(CF) <= 7:
                             if elim_cands_in_kraken_fish(Cand, [c0, c1], CS, Fins, P_COL, Cands, T_KRAKEN_FINNED_X_WING, Step): return 0
@@ -278,17 +278,17 @@ def tech_finned_swordfish(Grid, Step, Cands, Methods):
                                 BC2.append(c)
                             else:
                                 if len(BC2) < 2: continue
-                                CU = []; CS = []; CF = []; Fins = []; FB = set()
+                                CU = []; CS = []; CF = []; Fins = []; FB = set(); FinBaseChute = set(); FinCvrChute = set()
                                 for c in range(9):
                                     bc0 = int(c in BC0); bc1 = int(c in BC1); bc2 = int(c in BC2)
                                     if bc0 or bc1 or bc2: CU.append(c)
                                     if bc0 + bc1 + bc2 >= 2: CS.append(c)
-                                    if bc0 and not (bc1 or bc2): Fins.append((r0, c)); FB.add(r0); CF.append(c)
-                                    if bc1 and not (bc0 or bc2): Fins.append((r1, c)); FB.add(r1); CF.append(c)
-                                    if bc2 and not (bc0 or bc1): Fins.append((r2, c)); FB.add(r2); CF.append(c)
-                                if T_FINNED_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(FB) == 1 and len(CS) == 3 and (len(CF) == 1 or (len(CF) == 2 and CF[0]//3 == CF[1]//3)):
+                                    if bc0 and not (bc1 or bc2): Fins.append((r0, c)); FB.add(r0); CF.append(c); FinBaseChute.add(r0//3); FinCvrChute.add(c//3)
+                                    if bc1 and not (bc0 or bc2): Fins.append((r1, c)); FB.add(r1); CF.append(c); FinBaseChute.add(r1//3); FinCvrChute.add(c//3)
+                                    if bc2 and not (bc0 or bc1): Fins.append((r2, c)); FB.add(r2); CF.append(c); FinBaseChute.add(r2//3); FinCvrChute.add(c//3)
+                                if T_FINNED_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(CS) == 3 and len(FinBaseChute) == len(FinCvrChute) == 1:
                                     if elim_cands_in_finned_fish(Cand, [r0, r1, r2], CS, CF, list(FB)[0], Fins, P_ROW, Cands, Step): return 0
-                                if T_SASHIMI_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(FB) > 1 and len(CS) == 2 and ((len(CF) == 2 and CF[0]//3 == CF[1]//3) or (len(CF) == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                if T_SASHIMI_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(CS) == 2 and len(FinCvrChute) == 1:
                                     if elim_cands_in_sashimi_fish(Cand, [r0, r1, r2], CS, CF, FB, Fins, P_ROW, Cands, Step): return 0
                                 if T_KRAKEN_FINNED_SWORDFISH in Methods and len(CS) == 3 and 1 <= len(CF) <= 6:
                                     if elim_cands_in_kraken_fish(Cand, [r0, r1, r2], CS, Fins, P_ROW, Cands, T_KRAKEN_FINNED_SWORDFISH, Step): return 0
@@ -323,17 +323,17 @@ def tech_finned_swordfish(Grid, Step, Cands, Methods):
                                 BC2.append(r)
                             else:
                                 if len(BC2) < 2: continue
-                                CU = []; CS = []; CF = []; Fins = []; FB = set()
+                                CU = []; CS = []; CF = []; Fins = []; FB = set(); FinBaseChute = set(); FinCvrChute = set()
                                 for r in range(9):
                                     bc0 = int(r in BC0); bc1 = int(r in BC1); bc2 = int(r in BC2)
                                     if bc0 or bc1 or bc2: CU.append(r)
                                     if bc0 + bc1 + bc2 >= 2: CS.append(r)
-                                    if bc0 and not (bc1 or bc2): Fins.append((r, c0)); FB.add(c0); CF.append(r)
-                                    if bc1 and not (bc0 or bc2): Fins.append((r, c1)); FB.add(c1); CF.append(r)
-                                    if bc2 and not (bc0 or bc1): Fins.append((r, c2)); FB.add(c2); CF.append(r)
-                                if T_FINNED_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(FB) == 1 and len(CS) == 3 and (len(CF) == 1 or (len(CF) == 2 and CF[0]//3 == CF[1]//3)):
+                                    if bc0 and not (bc1 or bc2): Fins.append((r, c0)); FB.add(c0); CF.append(r); FinBaseChute.add(c0//3); FinCvrChute.add(r//3)
+                                    if bc1 and not (bc0 or bc2): Fins.append((r, c1)); FB.add(c1); CF.append(r); FinBaseChute.add(c1//3); FinCvrChute.add(r//3)
+                                    if bc2 and not (bc0 or bc1): Fins.append((r, c2)); FB.add(c2); CF.append(r); FinBaseChute.add(c2//3); FinCvrChute.add(r//3)
+                                if T_FINNED_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(CS) == 3 and len(FinBaseChute) == len(FinCvrChute) == 1:
                                     if elim_cands_in_finned_fish(Cand, [c0, c1, c2], CS, CF, list(FB)[0], Fins, P_COL, Cands, Step): return 0
-                                if T_SASHIMI_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(FB) > 1 and len(CS) == 2 and ((len(CF) == 2 and CF[0]//3 == CF[1]//3) or (len(CF) == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                if T_SASHIMI_SWORDFISH in Methods and 4 <= len(CU) <= 5 and len(CS) == 2 and len(FinCvrChute) == 1:
                                     if elim_cands_in_sashimi_fish(Cand, [c0, c1, c2], CS, CF, FB, Fins, P_COL, Cands, Step): return 0
                                 if T_KRAKEN_FINNED_SWORDFISH in Methods and len(CS) == 3 and 1 <= len(CF) <= 6:
                                     if elim_cands_in_kraken_fish(Cand, [c0, c1, c2], CS, Fins, P_COL, Cands, T_KRAKEN_FINNED_SWORDFISH, Step): return 0
@@ -485,18 +485,18 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                                         BC3.append(c)
                                     else:
                                         if len(BC3) < 2: continue
-                                        CU = []; CS = []; CF = []; Fins = []; FB = set()
+                                        CU = []; CS = []; CF = []; Fins = []; FB = set(); FinBaseChute = set(); FinCvrChute = set()
                                         for c in range(9):
                                             bc0 = int(c in BC0); bc1 = int(c in BC1); bc2 = int(c in BC2); bc3 = int(c in BC3)
                                             if bc0 or bc1 or bc2 or bc3: CU.append(c)
                                             if bc0 + bc1 + bc2 + bc3 >= 2: CS.append(c)
-                                            if bc0 and not (bc1 or bc2 or bc3): Fins.append((r0, c)); FB.add(r0); CF.append(c)
-                                            if bc1 and not (bc0 or bc2 or bc3): Fins.append((r1, c)); FB.add(r1); CF.append(c)
-                                            if bc2 and not (bc0 or bc1 or bc3): Fins.append((r2, c)); FB.add(r2); CF.append(c)
-                                            if bc3 and not (bc0 or bc1 or bc2): Fins.append((r3, c)); FB.add(r3); CF.append(c)
-                                        if T_FINNED_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(FB) == 1 and len(CS) == 4 and (len(CF) == 1 or (len(CF) == 2 and CF[0]//3 == CF[1]//3)):
+                                            if bc0 and not (bc1 or bc2 or bc3): Fins.append((r0, c)); FB.add(r0); CF.append(c); FinBaseChute.add(r0//3); FinCvrChute.add(c//3)
+                                            if bc1 and not (bc0 or bc2 or bc3): Fins.append((r1, c)); FB.add(r1); CF.append(c); FinBaseChute.add(r1//3); FinCvrChute.add(c//3)
+                                            if bc2 and not (bc0 or bc1 or bc3): Fins.append((r2, c)); FB.add(r2); CF.append(c); FinBaseChute.add(r2//3); FinCvrChute.add(c//3)
+                                            if bc3 and not (bc0 or bc1 or bc2): Fins.append((r3, c)); FB.add(r3); CF.append(c); FinBaseChute.add(r3//3); FinCvrChute.add(c//3)
+                                        if T_FINNED_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(CS) == 4 and len(FinBaseChute) == len(FinCvrChute) == 1:
                                             if elim_cands_in_finned_fish(Cand, [r0, r1, r2, r3], CS, CF, list(FB)[0], Fins, P_ROW, Cands, Step): return 0
-                                        if T_SASHIMI_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(FB) > 1 and len(CS) == 3 and ((len(CF) == 2 and CF[0]//3 == CF[1]//3) or (len(CF) == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                        if T_SASHIMI_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(CS) == 3 and len(FinCvrChute) == 1:
                                             if elim_cands_in_sashimi_fish(Cand, [r0, r1, r2, r3], CS, CF, FB, Fins, P_ROW, Cands, Step): return 0
                                         if T_KRAKEN_FINNED_JELLYFISH in Methods and len(CS) == 4 and 1 <= len(CF) <= 5:
                                             if elim_cands_in_kraken_fish(Cand, [r0, r1, r2, r3], CS, Fins, P_ROW, Cands, T_KRAKEN_FINNED_JELLYFISH, Step): return 0
@@ -539,18 +539,18 @@ def tech_finned_jellyfish(Grid, Step, Cands, Methods):
                                         BC3.append(r)
                                     else:
                                         if len(BC3) < 2: continue
-                                        CU = []; CS = []; CF = []; Fins = []; FB = set()
+                                        CU = []; CS = []; CF = []; Fins = []; FB = set(); FinBaseChute = set(); FinCvrChute = set()
                                         for r in range(9):
                                             bc0 = int(r in BC0); bc1 = int(r in BC1); bc2 = int(r in BC2); bc3 = int(r in BC3)
                                             if bc0 or bc1 or bc2 or bc3: CU.append(r)
                                             if bc0 + bc1 + bc2 + bc3 >= 2: CS.append(r)
-                                            if bc0 and not (bc1 or bc2 or bc3): Fins.append((r, c0)); FB.add(c0); CF.append(r)
-                                            if bc1 and not (bc0 or bc2 or bc3): Fins.append((r, c1)); FB.add(c1); CF.append(r)
-                                            if bc2 and not (bc0 or bc1 or bc3): Fins.append((r, c2)); FB.add(c2); CF.append(r)
-                                            if bc3 and not (bc0 or bc1 or bc2): Fins.append((r, c3)); FB.add(c3); CF.append(r)
-                                        if T_FINNED_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(FB) == 1 and len(CS) == 4 and (len(CF) == 1 or (len(CF) == 2 and CF[0]//3 == CF[1]//3)):
+                                            if bc0 and not (bc1 or bc2 or bc3): Fins.append((r, c0)); FB.add(c0); CF.append(r); FinBaseChute.add(c0//3); FinCvrChute.add(r//3)
+                                            if bc1 and not (bc0 or bc2 or bc3): Fins.append((r, c1)); FB.add(c1); CF.append(r); FinBaseChute.add(c1//3); FinCvrChute.add(r//3)
+                                            if bc2 and not (bc0 or bc1 or bc3): Fins.append((r, c2)); FB.add(c2); CF.append(r); FinBaseChute.add(c2//3); FinCvrChute.add(r//3)
+                                            if bc3 and not (bc0 or bc1 or bc2): Fins.append((r, c3)); FB.add(c3); CF.append(r); FinBaseChute.add(c3//3); FinCvrChute.add(r//3)
+                                        if T_FINNED_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(CS) == 4 and len(FinBaseChute) == len(FinCvrChute) == 1:
                                             if elim_cands_in_finned_fish(Cand, [c0, c1, c2, c3], CS, CF, list(FB)[0], Fins, P_COL, Cands, Step): return 0
-                                        if T_SASHIMI_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(FB) > 1 and len(CS) == 3 and ((len(CF) == 2 and CF[0]//3 == CF[1]//3) or (len(CF) == 3 and CF[0]//3 == CF[1]//3 == CF[2]//3)):
+                                        if T_SASHIMI_JELLYFISH in Methods and 5 <= len(CU) <= 6 and len(CS) == 3 and len(FinCvrChute) == 1:
                                             if elim_cands_in_sashimi_fish(Cand, [c0, c1, c2, c3], CS, CF, FB, Fins, P_COL, Cands, Step): return 0
                                         if T_KRAKEN_FINNED_JELLYFISH in Methods and len(CS) == 4 and 1 <= len(CF) <= 5:
                                             if elim_cands_in_kraken_fish(Cand, [c0, c1, c2, c3], CS, Fins, P_COL, Cands, T_KRAKEN_FINNED_JELLYFISH, Step): return 0

@@ -632,11 +632,11 @@ class Sudoku:
 
                 if cell_val_has_no_conflicts(Cand, self.Puzzle.Grid, rc, cc) and Cand not in self.Puzzle.Elims[rc][cc]:
                     self.Puzzle.Elims[rc][cc].add(Cand)
-                    if not self.AssistCands: self.Puzzle.Cands.discard(Cand)
+                    if not self.AssistCands: self.Puzzle.Cands[rc][cc].discard(Cand)
                     self.Board.set_cand_value(rc, cc, rd, cd, False)
                 elif Cand in self.Puzzle.Elims[rc][cc]:
                     self.Puzzle.Elims[rc][cc].discard(Cand)
-                    if not self.AssistCands: self.Puzzle.Cands.add(Cand)
+                    if not self.AssistCands: self.Puzzle.Cands[rc][cc].add(Cand)
                     self.Board.set_cand_value(rc, cc, rd, cd, True)
                         # This is not a bug, we are purposefully silent about
                         # eliminating the candidate which is the solved value
