@@ -141,13 +141,13 @@ def discard_cand_from_peers(Cand, r, c, Cands):
         for c1 in range(bc, bc+3):
             Cands[r1][c1].discard(Cand)
 
-def is_in_chain(r, c, Cand, Chain, GrpLks):
-    # Chain is a list of Node tuples (r, c, Cand, Lk).
-    # returns the node location in the chain (0 is first location) or -1 if not found.
-
-    for i, (rc, cc, Candc, Lkc) in enumerate(Chain):
-        if ccells_intersect(r, c, Cand, rc, cc, Candc, GrpLks): return i
-    return -1
+# def is_in_chain(r, c, Cand, Chain, GrpLks):
+#     # Chain is a list of Node tuples (r, c, Cand, Lk).
+#     # returns the node location in the chain (0 is first location) or -1 if not found.
+#
+#     for i, (rc, cc, Candc, Lkc) in enumerate(Chain):
+#         if ccells_intersect(r, c, Cand, rc, cc, Candc, GrpLks): return i
+#     return -1
 
 def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, InclCell = True):
     # Returns a list of (r, c, Cand, LkType, LkHouse) tuples that the ccell(r, c, Cand) can see.
@@ -169,7 +169,8 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             ct = list(c)[0]//3
             C1 = set()
             Twr = [set(), set(), set()]
-            for c1 in sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - c):
+            for c1 in range(9):
+                if c1 in c: continue  # sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - c):
                 if Cand in Cands[r0][c1]:
                     C1.add(c1)
                     Twr[c1//3].add(c1)
@@ -199,7 +200,8 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             rf = list(r)[0]//3
             R1 = set()
             Flr = [set(), set(), set()]
-            for r1 in sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - r):
+            for r1 in range(9):  # sorted({0, 1, 2, 3, 4, 5, 6, 7, 8} - r):
+                if r1 in r: continue
                 if Cand in Cands[r1][c0]:
                     R1.add(r1)
                     Flr[r1//3].add(r1)
@@ -225,31 +227,80 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
                     elif lenFlr0 > 1 and lenFlr1 == 0: LCL.append((Flr[0], c, Cand, LK_STWK | LK_COL))
                 elif Type & LK_WEAK and lenFlr0 > 1 and lenFlr1 > 1: LCL.extend([(Flr[0], c, Cand, LK_WEAK | LK_COL), (Flr[1], c, Cand, LK_WEAK | LK_COL)])
         # scan the box.  (Grouped) Node is always contained in a box
-        rb = (list(r)[0]//3)*3; cb = (list(c)[0]//3)*3; rb1 = rb+1; rb2 = rb+2; cb1 = cb+1; cb2 = cb+2
-        B1 = []
-        RB = [set(), set(), set()]; CB = [set(), set(), set()]
-        for i, r0 in enumerate([rb, rb1, rb2]):
-            for j, c0 in enumerate([cb, cb1, cb2]):
-                if r0 in r and c0 in c: continue
-                if Cand in Cands[r0][c0]: B1.append((r0, c0)); RB[i].add(c0); CB[j].add(r0)
-        if len(B1) == 1:
-            r1, c1 = B1[0]; LCL.append(({r1}, {c1}, Cand, LK_STWK | LK_BOX))
-        elif Type & LK_WEAK:
-            for r1, c1 in B1: LCL.append(({r1}, {c1}, Cand, LK_WEAK | LK_BOX))
-        BX = []
-        B1 = sorted(B1)
-        for i in [0, 1, 2]:
-            if RB[i]: BX.append(({rb+i}, RB[i]))
-            if CB[i]: BX.append((CB[i], {cb+i}))
-        for r2, c2 in BX:
-            B2 = []; lr2 = len(r2); lc2 = len(c2)
-            if lr2 == lc2 == 1: B2.append((list(r2)[0], list(c2)[0]))
-            elif lc2 == 1:
-                for rx in r2: B2.append((rx, list(c2)[0]))
-            elif lr2 == 1:
-                for cx in c2: B2.append((list(r2)[0], cx))
-            if B1 == sorted(B2): LCL.append((r2, c2, Cand, LK_STWK | LK_BOX))
-            elif Type & LK_WEAK: LCL.append((r2, c2, Cand, LK_WEAK | LK_BOX))
+        rb = (list(r)[0]//3)*3; cb = (list(c)[0]//3)*3  # ; rb1 = rb+1; rb2 = rb+2; cb1 = cb+1; cb2 = cb+2
+        B1 = []; RB = [set(), set(), set()]; CB = [set(), set(), set()]
+        Lks = []
+        lr = len(r); lc = len(c)
+        if lr == lc == 1:
+            rx = list(r)[0]; ix = rx - rb; cx = list(c)[0]; jx = cx - cb
+            i0 = (ix + 1) % 3; i1 = (ix + 2) % 3; j0 = (jx + 1) % 3; j1 = (jx + 2) % 3
+            r0 = i0 + rb; r1 = i1 + rb; c0 = j0 + cb; c1 = j1 + cb
+            # rows in the box.
+            Grp = set()
+            if Cand in Cands[r0][cx]: Grp.add(cx)
+            if Cand in Cands[r0][c0]: Grp.add(c0); Lks.append(({r0}, {c0}))
+            if Cand in Cands[r0][c1]: Grp.add(c1); Lks.append(({r0}, {c1}))
+            if Grp: Lks.append(({r0}, Grp))
+            Grp = set()
+            if Cand in Cands[r1][cx]: Grp.add(cx)
+            if Cand in Cands[r1][c0]: Grp.add(c0); Lks.append(({r1}, {c0}))
+            if Cand in Cands[r1][c1]: Grp.add(c1); Lks.append(({r1}, {c1}))
+            if Grp: Lks.append(({r1}, Grp))
+            # cols in the box.
+            Grp = set()
+            if Cand in Cands[rx][c0]: Grp.add(rx)
+            if Cand in Cands[r0][c0]: Grp.add(r0)
+            if Cand in Cands[r1][c0]: Grp.add(r1)
+            if Grp: Lks.append((Grp, {c0}))
+            Grp = set()
+            if Cand in Cands[rx][c1]: Grp.add(rx)
+            if Cand in Cands[r0][c1]: Grp.add(r0)
+            if Cand in Cands[r1][c1]: Grp.add(r1)
+            if Grp: Lks.append((Grp, {c1}))
+        elif lr == 1:
+            ix = list(r)[0]; i0 = (ix + 1) % 3; i1 = (ix + 2) % 3
+            r0 = i0 + rb; r1 = i1 + rb
+            Grp = set()
+            if Cand in Cands[r0][cb]: Grp.add(cb); Lks.append(({r0}, {cb}))
+            if Cand in Cands[r0][cb+1]: Grp.add(cb+1); Lks.append(({r0}, {cb+1}))
+            if Cand in Cands[r0][cb+2]: Grp.add(cb+2); Lks.append(({r0}, {cb+2}))
+            if Grp: Lks.append(({r0}, Grp))
+            Grp = set()
+            if Cand in Cands[r1][cb]: Grp.add(cb); Lks.append(({r1}, {cb}))
+            if Cand in Cands[r1][cb+1]: Grp.add(cb+1); Lks.append(({r1}, {cb+1}))
+            if Cand in Cands[r1][cb+2]: Grp.add(cb+2); Lks.append(({r1}, {cb+2}))
+            if Grp: Lks.append(({r1}, Grp))
+        elif lc == 1:
+            jx = list(c)[0] - cb; j0 = (jx + 1) % 3; j1 = (jx + 2) % 3
+            c0 = j0 + cb; c1 = j1 + cb
+            Grp = set()
+            if Cand in Cands[rb][c0]: Grp.add(rb); Lks.append(({rb}, {c0}))
+            if Cand in Cands[rb+1][c0]: Grp.add(rb+1); Lks.append(({rb+1}, {c0}))
+            if Cand in Cands[rb+2][c0]: Grp.add(rb+2); Lks.append(({rb+2}, {c0}))
+            if Grp: Lks.append((Grp, {c0}))
+            Grp = set()
+            if Cand in Cands[rb][c1]: Grp.add(rb); Lks.append(({rb}, {c1}))
+            if Cand in Cands[rb+1][c1]: Grp.add(rb+1); Lks.append(({rb+1}, {c1}))
+            if Cand in Cands[rb+2][c1]: Grp.add(rb+2); Lks.append(({rb+2}, {c1}))
+            if Grp: Lks.append((Grp, {c1}))
+
+        for r0, c0 in sorted(Lks):
+            for b in range(9):
+                r1 = rb + b//3; c1 = cb + b%3
+                if ccells_intersect({r1}, {c1}, Cand, r, c, Cand, GrpLks) or ccells_intersect({r1}, {c1}, Cand, r0, c0, Cand, GrpLks): continue
+                Lk = LK_WEAK; break
+            else:
+                Lk = LK_STWK
+            if Type == LK_STRG:
+                if Lk == LK_STWK: LCL.append((r0, c0, Cand, LK_STWK))
+            else: LCL.append((r0, c0, Cand, Lk | LK_BOX))
+        # Scan the cell.
+        if InclCell and len(r) == len(c) == 1:
+            if len(Cands[list(r)[0]][list(c)[0]]) == 2: LCL.append((r, c, list(Cands[list(r)[0]][list(c)[0]]-{Cand})[0], LK_STWK | LK_CELL))
+            elif Type != LK_STRG:
+                for Cand0 in sorted(Cands[list(r)[0]][list(c)[0]]-{Cand}):
+                    LCL.append((r, c, Cand0, LK_WEAK | LK_CELL))
+
     else:  # no GrpLks
         # Scan the row.
         n = 0; L = []
@@ -282,12 +333,12 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             m += 1
             if r0 != r and c0 != c: L.append((r0, c0)); n += 1
         else:
-            if n:
-                Lk = LK_STRG if m == 1 else LK_WEAK
-                for r0, c0 in L: LCL.append((r0, c0, Cand, Lk | LK_BOX))
+            # if n:
+            Lk = LK_STRG if m == 1 else LK_WEAK
+            for r0, c0 in L: LCL.append((r0, c0, Cand, Lk | LK_BOX))
         # Scan the cell.
         if InclCell:
-            if len(Cands[r][c]) == 2: LCL.append((r, c, list(Cands[r][c]-{Cand})[0], LK_STRG | LK_CELL))
+            if len(Cands[r][c]) == 2: LCL.append((r, c, list(Cands[r][c]-{Cand})[0], LK_STWK | LK_CELL))
             elif Type != LK_STRG:
                 for Cand0 in sorted(Cands[r][c]-{Cand}):
                     LCL.append((r, c, Cand0, LK_WEAK | LK_CELL))
@@ -297,35 +348,89 @@ def list_bv_cells_linked_to(r, c, Cand, Cands):
 
     LCL = []
     # scan row
-    L = []
+    L = []; n = 0
     for c0 in range(9):
-        if c == c0 or len(Cands[r][c0]) != 2 or Cand not in Cands[r][c0]: continue
-        L.append((c0, [Cand, list(Cands[r][c0] ^ {Cand})[0]]))
-    Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_ROW
+        if c != c0 and Cand in Cands[r][c0]:
+            n += 1
+            if len(Cands[r][c0]) == 2: L.append((c0, [Cand, list(Cands[r][c0] ^ {Cand})[0]]))
+    Lk0 = (LK_WEAK if n > 1 else LK_WKST) | LK_ROW
     for c0, Candsl0 in L: LCL.append((r, c0, Candsl0, Lk0))
     # scan col
-    L = []
+    L = []; n = 0
     for r0 in range(9):
-        if r == r0 or len(Cands[r0][c]) != 2 or Cand not in Cands[r0][c]: continue
-        L.append((r0, [Cand, list(Cands[r0][c] ^ {Cand})[0]]))
-    Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_COL
+        if r != r0 and Cand in Cands[r0][c]:
+            n += 1
+            if len(Cands[r0][c]) == 2: L.append((r0, [Cand, list(Cands[r0][c] ^ {Cand})[0]]))
+    Lk0 = (LK_WEAK if n > 1 else LK_WKST) | LK_COL
     for r0, Candsl0 in L: LCL.append((r0, c, Candsl0, Lk0))
     # scan box.
-    L = []
+    L = []; n = 0
     rb = (r//3)*3; cb = (c//3)*3
     for b0 in range(9):
         r0 = rb + b0//3; c0 = cb + b0%3
-        if r == r0 or c == c0 or len(Cands[r0][c0]) != 2 or Cand not in Cands[r0][c0]: continue
-        L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
-    Lk0 = Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_BOX
+        if Cand in Cands[r0][c0]:
+            if r != r0 and c != c0: n += 1
+            if (r != r0 or c != c0) and len(Cands[r0][c0]) == 2: L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
+        # if not(r == r0 or c == c0) and len(Cands[r0][c0]) == 2 and Cand in Cands[r0][c0]: L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
+        # if not(r == r0 and c == c0) and Cand in Cands[r0][c0]: n += 1
+    Lk0 = (LK_WEAK if n > 1 else LK_WKST) | LK_BOX
+    #     if r == r0 or c == c0 or len(Cands[r0][c0]) != 2 or Cand not in Cands[r0][c0]: continue
+    #     L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
+    # Lk0 = Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_BOX
     for r0, c0, Candsl0 in L: LCL.append((r0, c0, Candsl0, Lk0))
     return LCL
 
-def cells_in_same_house(r1, c1, r2, c2):
+def link_elims(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
+
+    Elims = []
+    if GrpLks:
+        if Cand0 == Cand1:
+            if len(r0) == len(r1) == 1 and r0 == r1:  # house is a row
+                r = list(r0)[0]
+                for c in range(9):
+                    if c in c0 | c1: continue
+                    if Cand0 in Cands[r][c]: Elims.append((r, c, Cand0))
+            if len(c0) == len(c1) == 1 and c0 == c1:  # house is a col
+                c = list(c0)[0]
+                for r in range(9):
+                    if r in r0 | r1: continue
+                    if Cand0 in Cands[r][c]: Elims.append((r, c, Cand0))
+            rb0 = list(r0)[0]//3; cb0 = list(c0)[0]//3; rb1 = list(r1)[0]//3; cb1 = list(c1)[0]//3
+            if rb0 == rb1 and cb0 == cb1:  # house is box.
+                rb = rb0 * 3; cb = cb0 * 3
+                for b in range(9):
+                    r = rb + b//3; c = cb + b%3
+                    if (r in r0 and c in c0) or (r in r1 and c in c1): continue
+                    if Cand0 in Cands[r][c] and not (r, c, Cand0) in Elims: Elims.append((r, c, Cand0))
+        elif r0 == r1 and c0 == c1 and len(r0) == len(c0) == 1:  # different candidates in the same cell
+            Candsx = Cands[list(r0)[0]][list(c0)[0]] - {Cand0, Cand1}
+            for Cand in Candsx: Elims.append((list(r0)[0], list(c0)[0], Cand))
+    else:  # not GrpLks:
+        if Cand0 == Cand1:
+            if r0 == r1:  # house is a row
+                for c in range(9):
+                    if c == c0 or c == c1: continue
+                    if Cand0 in Cands[r0][c]: Elims.append((r0, c, Cand0))
+            if c0 == c1:  # house is a col
+                for r in range(9):
+                    if r == r0 or r == r1: continue
+                    if Cand0 in Cands[r][c0]: Elims.append((r, c0, Cand0))
+            rb0 = r0//3; cb0 = c0//3; rb1 = r1//3; cb1 = c1//3
+            if rb0 == rb1 and cb0 == cb1:  # house is a box
+                rb = rb0 * 3; cb = cb0 * 3
+                for b in range(9):
+                    r = rb + b//3; c = cb + b%3
+                    if (r, c) == (r0, c0) or (r, c) == (r1, c1): continue
+                    if Cand0 in Cands[r][c] and not (r, c, Cand0) in Elims: Elims.append((r, c, Cand0))
+        elif r0 == r1 and c0 == c1:  # different candidates in the same cell
+            Candsx = Cands[r0][c0] - {Cand0, Cand1}
+            for Cand in Candsx: Elims.append((r0, c0, Cand))
+    return Elims
+
+def cells_in_same_house(r1, c1, r2, c2, GrpLks = False):
     # Cells see each other in same house
-    return r1 == r2 or c1 == c2 or (r1//3 == r2//3 and c1//3 == c2//3)
-    #     return True
-    # return False
+    if GrpLks: return r1 == r2 or c1 == c2 or (list(r1)[0]//3 == list(r2)[0]//3 and list(c1)[0]//3 == list(c2)[0]//3)
+    else: return r1 == r2 or c1 == c2 or (r1//3 == r2//3 and c1//3 == c2//3)
 
 def cells_that_see_all_of(Cells, GrpLks = False):
     # Cells = list of two or more (r,c) tuples.  Returns another list of (r, c) tuples that
@@ -411,8 +516,11 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
         for r in r0 | r1: F.add(r//3)
         for c in c0 | c1: T.add(c//3)
         if len(F) == len(T) == 1:  # house is a box.
-            rb0 = list(F)[0]; rb1 = rb0+1; rb2 = rb0+2; cb0 = list(T)[0]; cb1 = cb0+1; cb2 = cb0+2
-            for rb, cb in [(rb0, cb0), (rb0, cb1), (rb0, cb2), (rb1, cb0), (rb1, cb1), (rb1, cb2), (rb2, cb0), (rb2, cb1), (rb2, cb2)]:
+            rb0 = list(F)[0]; cb0 = list(T)[0]
+            for b0 in range(9):
+                rb = rb0 + b0//3; cb = cb0 + b0%3
+            # rb0 = list(F)[0]; rb1 = rb0+1; rb2 = rb0+2; cb0 = list(T)[0]; cb1 = cb0+1; cb2 = cb0+2
+            # for rb, cb in [(rb0, cb0), (rb0, cb1), (rb0, cb2), (rb1, cb0), (rb1, cb1), (rb1, cb2), (rb2, cb0), (rb2, cb1), (rb2, cb2)]:
                 if (rb in r0 | r1) and (cb in c0 | c1): continue
                 if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
             return LK_STWK | LK_BOX
@@ -427,54 +535,64 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
         if r0 == r1:  # house is a row
             LkHse = LK_ROW
             if c0//3 == c1//3: LkHse |= LK_BOX
-            for c in {0, 1, 2, 3, 4, 5, 6, 7, 8} - {c0, c1}:
+            for c in range(9):
+                if c == c0 or c == c1: continue
+            # for c in {0, 1, 2, 3, 4, 5, 6, 7, 8} - {c0, c1}:
                 if Cand0 in Cands[r0][c]: return LK_WEAK | LkHse
             return LK_STWK | LkHse
         if c0 == c1:  # house is a column
             LkHse = LK_COL
             if r0//3 == r1//3: LkHse |= LK_BOX
-            for r in {0, 1, 2, 3, 4, 5, 6, 7, 8} - {r0, r1}:
+            for r in range(9):
+                if r == r0 or r == r1: continue
+            # for r in {0, 1, 2, 3, 4, 5, 6, 7, 8} - {r0, r1}:
                 if Cand0 in Cands[r][c0]: return LK_WEAK | LkHse
             return LK_STWK | LkHse
-        rb0 = (r0//3)*3; cb0 = (c0//3)*3; rb1 = (r1//3)*3; cb1 = (c1//3)*3
+        rb0 = r0//3; cb0 = c0//3; rb1 = r1//3; cb1 = c1//3
         if rb0 == rb1 and cb0 == cb1:  # house is a box
-            for rb in [rb0, rb0+1, rb0+2]:
-                for cb in [cb0, cb0+1, cb0+2]:
-                    if (rb, cb) in {(r0, c0), (r1, c1)}: continue
-                    if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
+            rb0 *= 3; cb0 *= 3
+            for b0 in range(9):
+                rb = rb0 + b0//3; cb = cb0 + b0%3
+                if (rb, cb) in {(r0, c0), (r1, c1)}: continue
+                if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
             return LK_STWK | LK_BOX
         return LK_NONE
 
+        #     for rb in [rb0, rb0+1, rb0+2]:
+        #         for cb in [cb0, cb0+1, cb0+2]:
+        #             if (rb, cb) in {(r0, c0), (r1, c1)}: continue
+        #             if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
+        #     return LK_STWK | LK_BOX
+        # return LK_NONE
 
-def find_all_strong_cand_links(Cand, Cands, GrpLks = False):
+
+    # rb = (r//3)*3; cb = (c//3)*3
+    # n = 0
+    # for b0 in range(9):
+    #     r0 = rb + b0//3; c0 = cb + b0%3
+    #     if not(r == r0 or c == c0) and len(Cands[r0][c0]) == 2 and Cand in Cands[r0][c0]: L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
+    #     if not(r == r0 and c == c0) and Cand in Cands[r0][c0]: n += 1
+    # Lk0 = (LK_WEAK if n > 1 else LK_WKST) | LK_BOX
+    # #     if r == r0 or c == c0 or len(Cands[r0][c0]) != 2 or Cand not in Cands[r0][c0]: continue
+    # #     L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
+    # # Lk0 = Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_BOX
+    # for r0, c0, Candsl0 in L: LCL.append((r0, c0, Candsl0, Lk0))
+    # return LCL
+
+
+
+
+
+def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
     # Finds all the strong links for a candidate and enters makes two entries
     # in the list for same cand links in house, one from each side.  Returns
     # a list of (r, c, Cand) tuples not CCELLS as tuples are compared literally
     # but comparision of classes will compare the pointers to the instance and
     # not the contents of the class.
 
-    SLks = find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks)
-
-    # Check for a strong link in a cell (only two cands in cell) and add it.
-    for r in range(9):
-        for c in range(9):
-            if len(Cands[r][c])== 2 and Cand in Cands[r][c]:
-                Cand1 = list(Cands[r][c] ^ {Cand})[0]
-                if GrpLks: SLks.extend([(NL({r}, {c}, Cand, LK_NONE), NL({r}, {c}, Cand1, LK_STRG | LK_CELL)), (NL({r}, {c}, Cand1, LK_NONE), NL({r}, {c}, Cand, LK_STRG | LK_CELL))])
-                else: SLks.extend([(NL(r, c, Cand, LK_NONE), NL(r, c, Cand1, LK_STRG | LK_CELL)), (NL(r, c, Cand1, LK_NONE), NL(r, c, Cand, LK_STRG | LK_CELL))])
-    return SLks
-
-def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
-    # only finds strong links for the passed cand between cells.
-    # returns Lks[((r0, c0), (r1, c1)), . . .] without the cand.
-    # Note that ((r0, c0), (r1, c1)) and ((r1, c1), (r0, c0)) are seen as distinct
-    # and both tuples are returned in the list for the same candidate.
-
-    # Note that if GrpLks is True, then all coords are returned as sets.  If GrpLks are
-    # False, all coords are scalars.
-
-    Lks = []
+    Lks1 = []
     if GrpLks:
+        Lks = []
         # look in rows
         for r in range(9):
             C = []; Twr = [set(), set(), set()]
@@ -590,8 +708,13 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
                     if lenCB0 == 3:   Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc, Cand, LK_STRG | LK_BOX)),  ((CB[0], bc, Cand, LK_NONE), (br2, {bc1, bc2}, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)),  ((br2, {bc1, bc2}, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
                     elif lenCB1 == 3: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (br2, {bc, bc2}, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc1, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, {bc, bc2}, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
                     elif lenCB2 == 3: Lks.extend([((br2, RB[2], Cand, LK_NONE), ({br, br1}, bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (br2, {bc, bc1}, Cand, LK_STRG | LK_BOX)), (({br, br1}, bc2, Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, {bc, bc1}, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX))])
+        # look in cell
+        if InclCell:
+            for r in range(9):
+                for c in range(9):
+                    if len(Cands[r][c])==2 and Cand in Cands[r][c]:
+                        Lks.extend([((r, c, Cand, LK_NONE), (r, c, list(Cands[r][c] - {Cand})[0], LK_STRG | LK_CELL))])
         # cleanup, convert all cell coords to sets and remove duplicates.
-        Lks1 = []
         for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in Lks:
             R0 = {r0} if isinstance(r0, int) else r0
             C0 = {c0} if isinstance(c0, int) else c0
@@ -601,38 +724,40 @@ def find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks = False):
             for ((Ra, Ca, Canda, Lka), (Rb, Cb, Candb, Lkb)) in Lks1:
                 if ccells_match(Ra, Ca, Canda, R0, C0, Cand0, GrpLks) and ccells_match(Rb, Cb, Candb, R1, C1, Cand1, GrpLks): continue
             else: Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
-        return Lks1
-    #  else No group links
-    for r in range(9):
-        for c in range(9):
-            if Cand in Cands[r][c]:
-                c2 = -1
-                for c1 in range(9):
-                    if Cand in Cands[r][c1]:
-                        if c1 == c: continue
-                        if c2 >= 0: break
-                        else: c2 = c1
-                else:
-                    if c2 >= 0: Lks.append((NL(r, c, Cand, LK_NONE), NL(r, c2, Cand, LK_STRG | LK_ROW)))
-                r2 = -1
-                for r1 in range(9):
-                    if Cand in Cands[r1][c]:
-                        if r1 == r: continue
-                        if r2 >= 0: break
-                        else: r2 = r1
-                else:
-                    if r2 >= 0: Lks.append((NL(r, c, Cand, LK_NONE), NL(r2, c, Cand, LK_STRG | LK_COL)))
-                r2 = c2 = -1
-                rb = r//3; cb = c//3
-                for b1 in range(9):
-                    r1 = (rb*3) + b1//3; c1 = (cb*3) + b1%3
-                    if Cand in Cands[r1][c1]:
-                        if r1 == r and c1 == c: continue
-                        if r2 >= 0: break
-                        else: r2 = r1; c2 = c1
-                else:
-                    if r2 >= 0: Lks.append((NL(r, c, Cand, LK_NONE), NL(r2, c2, Cand, LK_STRG | LK_BOX)))
-    return Lks
+    else:  # No group link
+        for r in range(9):
+            for c in range(9):
+                if Cand in Cands[r][c]:
+                    c2 = -1
+                    for c1 in range(9):
+                        if Cand in Cands[r][c1]:
+                            if c1 == c: continue
+                            if c2 >= 0: break
+                            else: c2 = c1
+                    else:
+                        if c2 >= 0: Lks1.append((NL(r, c, Cand, LK_NONE), NL(r, c2, Cand, LK_STRG | LK_ROW)))
+                    r2 = -1
+                    for r1 in range(9):
+                        if Cand in Cands[r1][c]:
+                            if r1 == r: continue
+                            if r2 >= 0: break
+                            else: r2 = r1
+                    else:
+                        if r2 >= 0: Lks1.append((NL(r, c, Cand, LK_NONE), NL(r2, c, Cand, LK_STRG | LK_COL)))
+                    r2 = c2 = -1
+                    rb = r//3; cb = c//3
+                    for b1 in range(9):
+                        r1 = (rb*3) + b1//3; c1 = (cb*3) + b1%3
+                        if Cand in Cands[r1][c1]:
+                            if r1 == r and c1 == c: continue
+                            if r2 >= 0: break
+                            else: r2 = r1; c2 = c1
+                    else:
+                        if r2 >= 0: Lks1.append((NL(r, c, Cand, LK_NONE), NL(r2, c2, Cand, LK_STRG | LK_BOX)))
+                    if InclCell:
+                        if len(Cands[r][c])==2:
+                            Lks1.extend([(NL(r, c, Cand, LK_NONE), NL(r, c, list(Cands[r][c] - {Cand})[0], LK_STRG | LK_CELL))])
+    return Lks1
 
 # diagnostic code for walking tree nodes - not used for a while, may have bitrot.
 

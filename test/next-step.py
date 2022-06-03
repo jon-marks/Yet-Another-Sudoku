@@ -54,6 +54,8 @@ def next_step():
                 Line = f.readline()
                 i += 1
                 if not Line: break
+                if Line[:3] == "## ": print(f"\n{perf_counter():07f}: Line: {i}, Test: {Test}, {Line[0:-1]}", flush = True)
+
                 if Line == "\n" or Line[0] == "#":
                     f1.write(Line); f1.flush()
                     continue
@@ -79,7 +81,7 @@ def next_step():
                 if Err:
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True)
                     if Err:
-                        f1.write(f"# Warning: Cannot solve next step on line: {Err}: {Line}")
+                        f1.write(f"# Warning: Error encountered: {Err}, Solving:  {Line}")
                         print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
                         Errs += 1
                         continue
@@ -95,12 +97,14 @@ def next_step():
                 sGr = TD[0].replace("0", ".")
                 Match = True
                 if oPzl.Method != Step.Method: Match = False
-                if sExpCond:
-                    if set(sExpCond.split(";")) != set(sCond.split(";")): Match = False
-                if sExpOutc:
-                    if set(sExpOutc.split(";")) != set(sOutc.split(";")): Match = False
+                if Step.Method != T_BRUTE_FORCE:
+                    if sExpCond:
+                        if set(sExpCond.split(";")) != set(sCond.split(";")): Match = False
+                    if sExpOutc:
+                        if set(sExpOutc.split(";")) != set(sOutc.split(";")): Match = False
                 if Match: print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, {sActMeth}", flush = True)
                 else:
+                    f1.write(f"# Warning: Differnt Soln found for: {Line}")
                     print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, {sExpMeth}|{sExpCond}|{sExpOutc}, Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
                     Diffs += 1
                 f1.write(f"{sGr}|{sElims}|{sActMeth}|{sCond}|{sOutc}|{sSoln}\n")

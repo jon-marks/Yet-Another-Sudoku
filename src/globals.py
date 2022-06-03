@@ -23,7 +23,7 @@ VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 # Generic enumerations
 UNDEF   = -1
-RECURSE_LIM = 7     # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
+RECURSE_LIM = 5    # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
                     # Equivalent to (n+1)*2 chain nodes.
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
@@ -223,10 +223,6 @@ PZL_METH    = 2  # the next method to try (if present)
 PZL_PTRN    = 3  # the pattern the next method should find.
 PZL_OUTC    = 4  # the resulting placement of eliminations
 
-# Puzzle Class instantiate instructions
-PZL_GEN     = 10  # Generate a puzzle according to Lvl and Sym setting.
-PZL_VAL     = 11  # Validate a existing puzzle (entered, loaded or pasted [ctrl]V)
-
 # Names of patterns (conditions) in a puzzle that can be recognised by YAS.
 # Note:  that a solving technique (method) may be able to recognise and solve for more than
 # one of pattern.  For example the locked singles method in solve_singles can solve
@@ -245,7 +241,6 @@ PZL_VAL     = 11  # Validate a existing puzzle (entered, loaded or pasted [ctrl]
 T_KRAKEN                    = 0x00000100
 T_GRPLK                     = 0x00000200
 T_SASHIMI                   = 0x00000400
-T_PLCMT                     = 0x00000800  # in XY and AI Chains, when placement is made instead of elim
 
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
@@ -282,12 +277,15 @@ T_EMPTY_RECT                = 27
 T_X_CHAIN                   = 28
 T_EVEN_X_LOOP               = 29
 T_STRONG_X_LOOP             = 30
-T_XY_CHAIN                  = 31
-T_XY_LOOP                   = 32
-T_SC_AI_CHAIN               = 33
-T_DC_AI_CHAIN               = 34
-T_EVEN_AI_LOOP              = 35
-T_STRONG_AI_LOOP            = 36
+T_SC_XY_CHAIN               = 31
+T_DC_XY_CHAIN               = 32
+T_DC_IBVC_XY_CHAIN          = 33
+T_XY_LOOP                   = 34
+T_SC_AI_CHAIN               = 35
+T_DC_AI_CHAIN               = 36
+T_DC_IBVC_AI_CHAIN          = 37
+T_EVEN_AI_LOOP              = 38
+T_STRONG_AI_LOOP            = 39
 
 T_KRAKEN_FINNED_X_WING      = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_FINNED_SWORDFISH   = T_FINNED_SWORDFISH + T_KRAKEN
@@ -303,9 +301,9 @@ T_GL_TURBOT_FISH            = T_TURBOT_FISH + T_GRPLK
 T_GL_X_CHAIN                = T_X_CHAIN + T_GRPLK
 T_GL_EVEN_X_LOOP            = T_EVEN_X_LOOP + T_GRPLK
 T_GL_STRONG_X_LOOP          = T_STRONG_X_LOOP + T_GRPLK
-T_GL_XY_CHAIN               = T_XY_CHAIN + T_GRPLK
 T_GL_SC_AI_CHAIN            = T_SC_AI_CHAIN + T_GRPLK
 T_GL_DC_AI_CHAIN            = T_DC_AI_CHAIN + T_GRPLK
+T_GL_DC_IBVC_AI_CHAIN       = T_DC_IBVC_AI_CHAIN+T_GRPLK
 T_GL_EVEN_AI_LOOP           = T_EVEN_AI_LOOP + T_GRPLK
 T_GL_STRONG_AI_LOOP         = T_STRONG_AI_LOOP + T_GRPLK
 
@@ -368,10 +366,10 @@ OP = ["",    # OP_NONE
 
 TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
-# Puzzle Solution attributes
-S_FOUND = 0  # True if found, false otherwise
-S_GRID  = 1  # The solved grid if not None.
-S_RSTP  = 2  # Number of recursive steps (recursion calls) to find solution
+# # Puzzle Solution attributes
+# S_FOUND = 0  # True if found, false otherwise
+# S_GRID  = 1  # The solved grid if not None.
+# S_RSTP  = 2  # Number of recursive steps (recursion calls) to find solution
 
 # Puzzle properties histogram attribute enums
 HT_NR    = 0  # Count of logic technique used
@@ -380,15 +378,15 @@ HT_LVL   = 2  # Expertise level of technique
 HT_DIFF  = 3  # Difficulty score of the technique
 HT_ADIFF = 4  # Accumulated difficulty score
 
-# Puzzle properties
-# PR_REQ_LVL    = 0  # Requested level of expertise
-PR_LVL         = 1  # Actual level of expertise
-# PR_NR_HOLES   = 2  # The total number of holes dug
-PR_GVNS_HISTO  = 3  # Value histogram of the givens
-PR_STEPS       = 4  # The list of steps a solution path
-PR_STEPS_HISTO = 5  # Solution steps histogram
-PR_DIFF        = 6  # The difficulty of the puzzle.
-PR_NR_GVNS     = 7  # Grid containing only givens
+# # Puzzle properties
+# # PR_REQ_LVL    = 0  # Requested level of expertise
+# PR_LVL         = 1  # Actual level of expertise
+# # PR_NR_HOLES   = 2  # The total number of holes dug
+# PR_GVNS_HISTO  = 3  # Value histogram of the givens
+# PR_STEPS       = 4  # The list of steps a solution path
+# PR_STEPS_HISTO = 5  # Solution steps histogram
+# PR_DIFF        = 6  # The difficulty of the puzzle.
+# PR_NR_GVNS     = 7  # Grid containing only givens
 
 TRC = True if path[-1] == ".trc_true" else False
 
@@ -497,34 +495,37 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_EVEN_X_LOOP:              TECH_T(True, "Even X-Loop",               EXP_PROFICIENT,         70),
         T_STRONG_X_LOOP:            TECH_T(True, "Strong X-Loop",             EXP_PROFICIENT,         70),
         T_REMOTE_PAIR:              TECH_T(True, "Remote Pair",               EXP_ACCOMPLISHED,       80),
-        T_XY_CHAIN:                 TECH_T(True, "XY-Chain",                  EXP_ACCOMPLISHED,       80),
+        T_SC_XY_CHAIN:              TECH_T(True, "Same End Candidate XY-Chain", EXP_ACCOMPLISHED,     80),
+        T_DC_XY_CHAIN:              TECH_T(True, "Different End Candidate XY-Chain", EXP_ACCOMPLISHED, 80),
+        T_DC_IBVC_XY_CHAIN:         TECH_T(True, "Different End Candidate Identical BVC XY-Chain", EXP_ACCOMPLISHED, 80),
         T_XY_LOOP:                  TECH_T(True, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
-        T_W_WING:                   TECH_T(False, "W-Wing",                    EXP_PROFICIENT,         55),
-        T_SC_AI_CHAIN:              TECH_T(False, "Same End Candidate AI-Chain", EXP_PROFICIENT,       70),
-        T_DC_AI_CHAIN:              TECH_T(False, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED,80),
-        T_EVEN_AI_LOOP:             TECH_T(False, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
-        T_STRONG_AI_LOOP:           TECH_T(False, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
+        T_W_WING:                   TECH_T(True, "W-Wing",                    EXP_PROFICIENT,         80),
+        T_SC_AI_CHAIN:              TECH_T(True, "Same End Candidate AI-Chain", EXP_PROFICIENT,       70),
+        T_DC_AI_CHAIN:              TECH_T(True, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED, 80),
+        T_DC_IBVC_AI_CHAIN:         TECH_T(True, "Different End Candidate Identical BVC AI-Chain", EXP_ACCOMPLISHED, 80),
+        T_EVEN_AI_LOOP:             TECH_T(True, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
+        T_STRONG_AI_LOOP:           TECH_T(True, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
         T_KRAKEN_FINNED_X_WING:     TECH_T(True, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
         T_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
         T_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
-        T_GL_TWO_STRING_KITE:       TECH_T(True, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
-        T_GL_TURBOT_FISH:           TECH_T(True, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
-        T_GL_X_CHAIN:               TECH_T(True, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
-        T_GL_EVEN_X_LOOP:           TECH_T(True, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
-        T_GL_STRONG_X_LOOP:         TECH_T(True, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
-        T_GL_W_WING:                TECH_T(False, "Group Linked W-Wing",       EXP_PROFICIENT,         80),
-        T_GL_SC_AI_CHAIN:           TECH_T(False, "Group Linked Same End Candidates AI-Chain", EXP_PROFICIENT, 80),
-        T_GL_DC_AI_CHAIN:           TECH_T(False, "Group Linked Different End Candidates AI-Chain", EXP_ACCOMPLISHED, 80),
-        T_GL_EVEN_AI_LOOP:          TECH_T(False, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
-        T_GL_STRONG_AI_LOOP:        TECH_T(False, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
+        T_KRAKEN_SASHIMI_X_WING:       TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_SWORDFISH:    TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_SASHIMI_JELLYFISH:    TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
+        T_GL_TWO_STRING_KITE:          TECH_T(True, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
+        T_GL_TURBOT_FISH:              TECH_T(True, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
+        T_GL_X_CHAIN:                  TECH_T(True, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
+        T_GL_EVEN_X_LOOP:              TECH_T(True, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
+        T_GL_STRONG_X_LOOP:            TECH_T(True, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
+        T_GL_SC_AI_CHAIN:              TECH_T(True, "Group Linked Same End Candidate AI-Chain", EXP_PROFICIENT, 80),
+        T_GL_DC_AI_CHAIN:              TECH_T(True, "Group Linked Different End Candidate AI-Chain", EXP_ACCOMPLISHED, 80),
+        T_GL_DC_IBVC_AI_CHAIN:         TECH_T(True, "Group Linked Different End Candidate Identical BVC AI-Chain", EXP_ACCOMPLISHED, 80),
+        T_GL_EVEN_AI_LOOP:             TECH_T(True, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
+        T_GL_STRONG_AI_LOOP:           TECH_T(True, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
         T_GL_KRAKEN_FINNED_X_WING:     TECH_T(True, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),
-        T_BRUTE_FORCE:              TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
+        T_BRUTE_FORCE:                 TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
         }

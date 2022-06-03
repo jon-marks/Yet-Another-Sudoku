@@ -26,7 +26,7 @@ def tech_remote_pairs(Grid, Step, Cands, Methods):
                 Net.OddEven[r][c] = Lvl = 0
                 Net.Evens.append((r, c))
                 next_net_level(Net, Net.Tree, True, True, True, CellConsidered, Cands, Lvl+1)
-                if len(Net.Odds) > 1 and len(Net.Evens) > 1:  # possibility of remote pair elims
+                if len(Net.Odds) > 1 and len(Net.Evens) > 1:  # possibility of remote pair eliminations
                     Elims = []
                     for r0 in range(9):
                         for c0 in range(9):
@@ -127,21 +127,24 @@ def tech_xy_chains(Grid, Step, Cands, Methods):
             if Status.Tech != T_UNDEF: break
             if not Tree.Branch.Children: Culls.add(Tree)
         if Status.Tech != T_UNDEF:
-            Step.Method = Status.Tech & ~T_PLCMT
+            Step.Method = Status.Tech
             Step.NrLks = Step.NrGrpLks = 0
             Step.Pattern = []; Step.Outcome = []
             for r, c, Candl, Lk in Status.Pattern:
                 Step.Pattern.extend([[P_OP, OP_PARO], [P_VAL, Candl[0]], [P_OP, OP_SLK], [P_VAL, Candl[1]], [P_OP, OP_PARC], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk & 0x000f)]])
                 Step.NrLks += 1
             Step.Pattern.append([P_END, ])
-            if Status.Tech & T_PLCMT:
+            if Status.Tech == T_DC_IBVC_XY_CHAIN:
+                n = 0
                 for r, c, Cand in Status.Outcome:
+                    n += 1
                     Grid[r][c] = Cand
                     Cands[r][c].clear()
                     discard_cand_from_peers(Cand, r, c, Cands)
                     if Step.Outcome: Step.Outcme.append([P_SEP, ])
                     Step.Outcome.extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand]])
                 Step.Outcome.append([P_END, ])
+                return n
             else:
                 for r, c, Cand in Status.Outcome:
                     Cands[r][c].discard(Cand)
@@ -166,218 +169,87 @@ def find_next_xy_child_nodes(Child, Cands, Lvl, Tree, Methods, Status):
             for rx, cx, Candlx, Lkx in Child.Chain:
                 if rx == r1 and cx == c1: break
             else:
-                if Lvl > 1:
+                Lk = how_ccells_linked(r1, c1, Candsl1[1], Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0], Cands)
+                if Lk:  # XY-Loop found
                     if T_XY_LOOP in Methods:
-                        Lk = how_ccells_linked(r1, c1, Candsl1[1], Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0], Cands)
-                        if Lk:  # XY-Loop found
-                            if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
-                            Status.Pattern = []
-                            for i in range(len(Child.Chain)-1):
-                                Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
-                            Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, Lk)])
-                            Status.Outcome = []
-                            for i in range(len(Status.Pattern)-1):
-                                for rx, cx in cells_that_see_all_of([(Status.Pattern[i].r, Status.Pattern[i].c), (Status.Pattern[i+1].r, Status.Pattern[i+1].c)]):
-                                    if Status.Pattern[i].Cand[1] in Cands[rx][cx]: Status.Outcome.append((rx, cx, Status.Pattern[i].Cand[1]))
-                            for rx, cx in cells_that_see_all_of([(Status.Pattern[-1].r, Status.Pattern[-1].c), (Status.Pattern[0].r, Status.Pattern[0].c)]):
-                                if Status.Pattern[-1].Cand[1] in Cands[rx][cx]: Status.Outcome.append((rx, cx, Status.Pattern[-1].Cand[1]))
-                            if Status.Outcome:
-                                Status.Tech = T_XY_LOOP
-                                return
-                    if T_XY_CHAIN in Methods:
-                        if Child.Chain[0].Cand[0] == Candsl1[1]:  # same candidate chain ends
-                            Status.Outcome = []; Status.Tech = T_UNDEF
-                            for rx, cx in cells_that_see_all_of([(r1, c1), (Child.Chain[0].r, Child.Chain[0].c)]):
-                                if Candsl1[1] in Cands[rx][cx]: Status.Outcome.append((rx, cx, Candsl1[1]))
-                            if Status.Outcome: Status.Tech = T_XY_CHAIN
-                        else:  # different candidate chain ends.
-                            if (Child.Chain[0].r == r1 or Child.Chain[0].c == c1 or (Child.Chain[0].r//3 == r1//3 and Child.Chain[0].c//3 == c1//3)) \
-                                    and len(Cands[r1][c1]) == 2 and Cands[Child.Chain[0].r][Child.Chain[0].c] == Cands[r1][c1]:  # Identical BV cells in same house
-                                Status.Outcome = [(Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0]), (r1, c1, Candsl1[1])]
-                            if Status.Outcome: Status.Tech = T_XY_CHAIN | T_PLCMT
+                        if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
+                        Status.Pattern = []
+                        for i in range(len(Child.Chain)-1):
+                            Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
+                        Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, Lk)])
+                        Status.Outcome = []
+                        for i in range(len(Status.Pattern)-1):
+                            if Status.Pattern[i].Lk & 0x000f == LK_WEAK:
+                                Status.Outcome.extend(link_elims(Status.Pattern[i].r, Status.Pattern[i].c, Status.Pattern[i].Cand[1],
+                                                                 Status.Pattern[i+1].r, Status.Pattern[i+1].c, Status.Pattern[i+1].Cand[0],
+                                                                 Cands, False))
+                        if Lk & 0x000f == LK_WEAK:
+                            Status.Outcome.extend(link_elims(Status.Pattern[-1].r, Status.Pattern[-1].c, Status.Pattern[-1].Cand[1],
+                                                             Status.Pattern[0].r, Status.Pattern[0].c, Status.Pattern[0].Cand[0],
+                                                             Cands, False))
                         if Status.Outcome:
-                            Status.Pattern = []
-                            for i in range(len(Child.Chain)-1):
-                                Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
-                            if Lk1 & LK_STRG: Lk1 = (Lk1 & 0x01f0) | LK_WKST
-                            Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, LK_NONE)])
+                            Status.Tech = T_XY_LOOP
                             return
+                #
+                # if Lvl > 1:
+                #     if T_XY_LOOP in Methods:
+                #         Lk = how_ccells_linked(r1, c1, Candsl1[1], Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0], Cands)
+                #         if Lk:  # XY-Loop found
+                #             if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
+                #             Status.Pattern = []
+                #             for i in range(len(Child.Chain)-1):
+                #                 Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
+                #             Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, Lk)])
+                #             Status.Outcome = []
+                #             for i in range(len(Status.Pattern)-1):
+                #                 if Status.Pattern[i] & 0x000f == LK_WEAK:
+                #                     Status.Outcome.extend(link_elims(Status.Pattern[i].r, Status.Pattern[i].c, Status.Pattern[i].Cand[1],
+                #                             Status.Pattern[i+1].r, Status.Pattern[i+1].c, Status.Pattern[i+1].Cand[0],
+                #                             Cands, GrpLks))
+                #             if Status.Pattern[-1].Lk & 0x000f == LK_WEAK:
+                #                 Status.Outcome.extend(link_elims(Status.Pattern[-1].r, Status.Pattern[-1].c, Status.Pattern[-1].Cand[1],
+                #                         Status.Pattern[0].r, Status.Pattern[0].c, Status.Pattern[0].Cand[0],
+                #                         Cands, GrpLks))
+                #             if Status.Outcome:
+                #                 Status.Tech = T_XY_LOOP
+                #                 return
+                else:  # look for XY-Chains
+                    Status.Outcome = []; Status.Tech = T_UNDEF
+                    if Child.Chain[0].Cand[0] == Candsl1[1]:  # same end value.
+                        for r2, c2 in cells_that_see_all_of([(r1, c1), (Child.Chain[0].r, Child.Chain[0].c)]):
+                            if Candsl1[1] in Cands[r2][c2]:  Status.Outcome.append((r2, c2, Candsl1[1]))
+                        if Status.Outcome and T_SC_XY_CHAIN in Methods: Status.Tech = T_SC_XY_CHAIN
+                    elif cells_in_same_house(r1, c1, Child.Chain[0].r, Child.Chain[0].c, False):  # different end value candidates in same house.
+                        if T_DC_IBVC_XY_CHAIN in Methods \
+                                and not(r1 == Child.Chain[0].r and c1 == Child.Chain[0].c) \
+                                and Cands[r1][c1] == Cands[Child.Chain[0].r][Child.Chain[0].c]: Status.Tech = T_DC_IBVC_XY_CHAIN
+                        if Status.Tech != T_UNDEF:
+                            Status.Outcome = [(Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0]), (r1, c1, Candsl1[1])]
+                        elif T_DC_XY_CHAIN in Methods and not(r1== Child.Chain[0].r and c1 == Child.Chain[0].c):
+                            if Candsl1[1] in Cands[Child.Chain[0].r][Child.Chain[0].c]: Status.Outcome.append((Child.Chain[0].r, Child.Chain[0].c, Candsl1[1]))
+                            if Child.Chain[0].Cand[0] in Cands[r1][c1]: Status.Outcome.append((r1, c1, Child.Chain))
+                    if Status.Tech != T_UNDEF and Status.Outcome:
+                        Status.Pattern = []
+                        for i in range(len(Child.Chain)-1):
+                            Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
+                        if Lk1 & LK_STRG: Lk1 = (Lk1 & 0x01f0) | LK_WKST
+                        Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, LK_NONE)])
+                        return
+                    else: Status.Tech = T_UNDEF; Status.Outcome = []
+                    # if T_SC_XY_CHAIN in Methods and Child.Chain[0].Cand[0] == Candsl1[1]:  # same candidate chain ends
+                    #     for rx, cx in cells_that_see_all_of([(r1, c1), (Child.Chain[0].r, Child.Chain[0].c)]):
+                    #         if Candsl1[1] in Cands[rx][cx]: Status.Outcome.append((rx, cx, Candsl1[1]))
+                    #     if Status.Outcome: Status.Tech = T_SC_XY_CHAIN
+                    # elif T_DC_IBVC_XY_CHAIN in Methods and (Child.Chain[0].r == r1 or Child.Chain[0].c == c1 or (Child.Chain[0].r//3 == r1//3 and Child.Chain[0].c//3 == c1//3)) \
+                    #         and len(Cands[r1][c1]) == 2 and Cands[Child.Chain[0].r][Child.Chain[0].c] == Cands[r1][c1]:  # Identical BV cells in same house
+                    #     Status.Outcome = [(Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0]), (r1, c1, Candsl1[1])]
+                    #     if Status.Outcome: Status.Tech = T_DC_IBVC_XY_CHAIN
+                    # if Status.Outcome:
+                    #     Status.Pattern = []
+                    #     for i in range(len(Child.Chain)-1):
+                    #         Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
+                    #     if Lk1 & LK_STRG: Lk1 = (Lk1 & 0x01f0) | LK_WKST
+                    #     Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, LK_NONE)])
+                    #     return
                 # No possible eliminations, grow branches.
                 Child.Children.append(TNODE(r1, c1, Candsl1, Lk1, [*Child.Chain, NL(r1, c1, Candsl1, Lk1)]))
-    # return
-
-
-    # BVL, XYC0 = _find_xy_chain_starts(Cands)
-    # while XYC0:
-    #     XYC1 = []
-    #     for X in XYC0:
-    #         # Find a BV cell to add to the XY chain being built and see if it can connect to the OE (other end)
-    #         for BVC in BVL:
-    #             for Cell in X.UC:
-    #                 if Cell.r == BVC.r and Cell.c == BVC.c: break
-    #             else:  # BVC is not in the UC list.
-    #                 if X.XY[-1].Cand not in BVC.Cands: continue
-    #                 LkT, LkH = how_ccells_linked(X.XY[-1].r, X.XY[-1].c, X.XY[-1].Cand, BVC.r, BVC.c, X.XY[-1].Cand, Cands)
-    #                 if LkT == LK_NONE: continue
-    #                 # BVC is linked to XY, connect it.
-    #                 X1 = deepcopy(X)
-    #                 X1.XY[-1] = NODEP_depreciate(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
-    #                 X1.XY.extend([NODEP_depreciate(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODEP_depreciate(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
-    #                 # Does this newly added BVC connect to the OE.
-    #                 LkT, LkH = how_ccells_linked(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, X1.OE[0].r, X1.OE[0].c, X1.OE[0].Cand, Cands)
-    #                 if LkT == LK_NONE:
-    #                     X1.UC.append(CELL(BVC.r, BVC.c))
-    #                     XYC1.append(X1)
-    #                 else:
-    #                     X1.XY[-1] = NODEP_depreciate(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
-    #                     X1.XY.extend(X.OE)
-    #                     if _xy_chain_elims(X1, Cands, Step): return 0
-    #     XYC0 = XYC1
-    # return -1
-
-# def tech_xy_loops(Grid, Step, Cands, Method = T_UNDEF):
-#
-#     if Method != T_UNDEF and Method != T_XY_LOOP: return -2
-#
-#     BVL, XYL0 = _find_xy_loop_starts(Cands)
-#     while XYL0:
-#         XYL1 = []
-#         for X in XYL0:
-#             for BVC in BVL:
-#                 for Cell in X.UC:
-#                     if Cell.r == BVC.r and Cell.c == BVC.c: break
-#                 else:  # BVC is not in the UC list
-#                     if X.XY[-1].Cand not in BVC.Cands: continue
-#                     LkT, LkH = how_ccells_linked(X.XY[-1].r, X.XY[-1].c, X.XY[-1].Cand, BVC.r, BVC.c, X.XY[-1].Cand, Cands)
-#                     if LkT == LK_NONE: continue
-#                     # BVC is linked to XY, connect it.
-#                     X1 = deepcopy(X)
-#                     X1.XY[-1] = NODEP_depreciate(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
-#                     X1.XY.extend([NODEP_depreciate(BVC.r, BVC.c, X1.XY[-1].Cand, LK_STRG), NODEP_depreciate(BVC.r, BVC.c, (BVC.Cands ^ {X1.XY[-1].Cand}).pop(), -1)])
-#                     # Does this newly added BVC connect to the OE.
-#                     LkT, LkH = how_ccells_linked(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, X1.OE[0].r, X1.OE[0].c, X1.OE[0].Cand, Cands)
-#                     if LkT == LK_NONE:
-#                         X1.UC.append(CELL(BVC.r, BVC.c))
-#                         XYL1.append(X1)
-#                     else:
-#                         X1.XY[-1] = NODEP_depreciate(X1.XY[-1].r, X1.XY[-1].c, X1.XY[-1].Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST)
-#                         X1.XY.extend(X.OE)
-#                         if _xy_loop_elims(X1, Cands, Step): return 0
-#         XYL0 = XYL1
-#     return -1
-#
-# def _find_xy_chain_starts(Cands):
-#
-#     BVL = []
-#     for r in range(9):
-#         for c in range(9):
-#             if len(Cands[r][c]) == 2: BVL.append(BVCELL(r, c, Cands[r][c]))
-#
-#     lenBVL = len(BVL)
-#     XYCStarts = []
-#     for i in range(lenBVL-1):
-#         for j in range(i+1, lenBVL):
-#             UC = []  # Used cells
-#             # EL = []  # Eliminated ccells
-#             for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
-#                 UC = [CELL(BVL[i].r, BVL[i].c), CELL(BVL[j].r, BVL[j].c)]
-#                 EL = []  # Eliminated ccells
-#                 for r0, c0 in cells_that_see_all_of([(BVL[i].r, BVL[i].c), (BVL[j].r, BVL[j].c)]):
-#                     if CELL(r0, c0) not in UC and Cand in Cands[r0][c0]: EL.append(CCELL(r0, c0, Cand))
-#                 if EL:
-#                     X = XYCUC()
-#                     X.XY.extend([NODEP_depreciate(BVL[i].r, BVL[i].c, Cand, LK_STRG),
-#                                  NODEP_depreciate(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
-#                     X.OE.extend([NODEP_depreciate(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
-#                                  NODEP_depreciate(BVL[j].r, BVL[j].c, Cand, LK_NONE)])
-#                     X.UC = UC
-#                     X.EL = EL
-#                     XYCStarts.append(deepcopy(X))
-#     return BVL, XYCStarts
-#
-# def _find_xy_loop_starts(Cands):
-#
-#     BVL = []
-#     for r in range(9):
-#         for c in range(9):
-#             if len(Cands[r][c]) == 2:  BVL.append(BVCELL(r, c, Cands[r][c]))
-#
-#     lenBVL = len(BVL)
-#     XYLStarts = []
-#     for i in range(lenBVL-1):
-#         for j in range(i+1, lenBVL):
-#             UC = []
-#             for Cand in sorted(BVL[i].Cands & BVL[j].Cands):
-#                 UC = [CELL(BVL[i].r, BVL[i].c), CELL(BVL[j].r, BVL[j].c)]
-#                 LkT, LkH = how_ccells_linked(BVL[i].r, BVL[i].c, Cand, BVL[j].r, BVL[j].c, Cand, Cands)
-#                 if LkT == LK_NONE: continue
-#                 X = XYCUC()
-#                 X.XY.extend([NODEP_depreciate(BVL[i].r, BVL[i].c, Cand, LK_STRG),
-#                              NODEP_depreciate(BVL[i].r, BVL[i].c, (BVL[i].Cands ^ {Cand}).pop(), -1)])
-#                 X.OE.extend([NODEP_depreciate(BVL[j].r, BVL[j].c, (BVL[j].Cands ^ {Cand}).pop(), LK_STRG),
-#                              NODEP_depreciate(BVL[j].r, BVL[j].c, Cand, LK_WEAK if LkT == LK_WEAK else LK_WKST),
-#                              NODEP_depreciate(BVL[i].r, BVL[i].c, Cand, LK_NONE)])
-#                 X.UC = UC
-#                 XYLStarts.append(deepcopy(X))
-#     return BVL, XYLStarts
-#
-# def _xy_chain_elims(X, Cands, Step):
-#
-#     for Cc in X.EL:
-#         Cands[Cc.r][Cc.c].discard(Cc.Cand)
-#         if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-#         Step[P_OUTC].extend([[P_ROW, Cc.r], [P_COL, Cc.c], [P_OP, OP_ELIM], [P_VAL, Cc.Cand]])
-#     Step[P_OUTC].append([P_END, ])
-#     Step[P_TECH] = T_Y_WING if len(X.XY) == 6 else T_XY_CHAIN
-#     Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * LK_DIFF
-#     i = 0
-#     while 1:
-#         Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],
-#                              [P_ROW, X.XY[i].r], [P_COL, X.XY[i].c]])
-#         if X.XY[i+1].Lk == LK_NONE: Step[P_PTRN].append([P_END, ]); break
-#         Step[P_PTRN].append([P_OP, OP_WLK if X.XY[i+1].Lk == LK_WEAK else OP_WSLK])
-#         i += 2
-#     return True
-#
-# def _xy_loop_elims(X, Cands, Step):
-#
-#     for i in range(len(X.XY)):
-#         if X.XY[i].Lk & LK_WEAK:  # captures both LK_WEAK and LK_WKST
-#             r = X.XY[i].r; c = X.XY[i].c; Cand = X.XY[i].Cand
-#             if r == X.XY[i+1].r:  # house is a row
-#                 for c in sorted(set(range(9)) - {c, X.XY[i+1].c}):
-#                     if Cand in Cands[r][c]:
-#                         Cands[r][c].discard(Cand)
-#                         if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-#                         Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-#             elif c == X.XY[i+1].c:  # house is a col
-#                 for r in sorted(set(range(9))-{r, X.XY[i+1].r}):
-#                     if Cand in Cands[r][c]:
-#                         Cands[r][c].discard(Cand)
-#                         if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-#                         Step[P_OUTC].extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-#
-#             if r//3  == X.XY[i+1].r//3 and c//3 == X.XY[i+1].c//3:  # house is a box, can also overlap with row or col.
-#             # else:  # house is a box
-#                 for rb in range((r//3)*3, 3):
-#                     for cb in range((c//3)*3, 3):
-#                         if (rb == r and cb == c) or (rb == X.XY[i+1].r and cb == X.XY[i+1].c): continue
-#                         if Cand in Cands[rb][cb]:
-#                             Cands[rb][cb].discard(Cand)
-#                             if Step[P_OUTC]: Step[P_OUTC].append([P_SEP, ])
-#                             Step[P_OUTC].extend([[P_ROW, rb], [P_COL, cb], [P_OP, OP_ELIM], [P_VAL, Cand]])
-#     if Step[P_OUTC]:
-#         Step[P_OUTC].append([P_END, ])
-#         Step[P_TECH] = T_XY_LOOP
-#         Step[P_DIFF] = T[Step[P_TECH]][T_DIFF] + len(X.XY)//2 * LK_DIFF
-#         i = 0
-#         while 1:
-#             Step[P_PTRN].extend([[P_OP, OP_PARO], [P_VAL, X.XY[i].Cand], [P_OP, OP_SLK], [P_VAL, X.XY[i+1].Cand], [P_OP, OP_PARC],
-#                                  [P_ROW, X.XY[i].r], [P_COL, X.XY[i].c]])
-#             Step[P_PTRN].append([P_OP, OP_WLK if X.XY[i+1].Lk == LK_WEAK else OP_WSLK])
-#             if X.XY[i+2].Lk == LK_NONE:
-#                 Step[P_PTRN].extend([[P_VAL, X.XY[0].Cand], [P_ROW, X.XY[0].r], [P_COL, X.XY[0].c], [P_END, ]])
-#                 break
-#             i += 2
-#         return True
-#     return False

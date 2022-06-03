@@ -30,8 +30,8 @@ from solve_ai_chains import *
 # * _kraken_ refers to the technique using an AIC chain as a strong or weak link.
 # * ..._gl refers to the technique using group links in its chains.
 
-LK_DIFF     = 20  # per link difficulty premium
-GRP_LK_DIFF = 50  # per group link difficulty premium.
+LK_DIFF     = 15  # per link difficulty premium
+GRP_LK_DIFF = 20  # per group link difficulty premium.
 
 SLVR = namedtuple('SLVR', ['pFn', 'Mthds'])
 
@@ -66,10 +66,10 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
            SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
            SLVR(tech_x_chains,            [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
-           SLVR(tech_xy_chains,           [T_XY_CHAIN, T_XY_LOOP]),
-           # SLVR(tech_ai_chains,           [T_W_WING, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP]),
+           SLVR(tech_xy_chains,           [T_SC_XY_CHAIN, T_DC_IBVC_XY_CHAIN, T_XY_LOOP]),
+           SLVR(tech_ai_chains,           [T_W_WING, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_DC_IBVC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP]),
            SLVR(tech_gl_x_chains,         [T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH, T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP]),
-           # SLVR(tech_gl_ai_chains,        [T_GL_W_WING, T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP]),
+           SLVR(tech_gl_ai_chains,        [T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_DC_IBVC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP]),
            SLVR(tech_finned_x_wings,      [T_KRAKEN_FINNED_X_WING, T_KRAKEN_SASHIMI_X_WING]),  # kraken fish never before finned fish
            SLVR(tech_finned_swordfish,    [T_KRAKEN_FINNED_SWORDFISH, T_KRAKEN_SASHIMI_SWORDFISH]),
            SLVR(tech_finned_jellyfish,    [T_KRAKEN_FINNED_JELLYFISH, T_KRAKEN_SASHIMI_JELLYFISH]),

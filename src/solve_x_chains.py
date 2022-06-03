@@ -12,7 +12,7 @@ def x_chains(Grid, Step, Cands, Methods, GrpLks = False):
 
     Forest = []
     for Cand in range(1, 10):
-        for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in find_strong_cand_links_btwn_cells(Cand, Cands, GrpLks):
+        for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in list_all_cand_strong_links(Cand, Cands, GrpLks, False):
             Forest.append(TREE(r0, c0, Cand0, None, TNODE(r1, c1, Cand1, Lk1, [NL(r0, c0, Cand0, Lk0), NL(r1, c1, Cand1, Lk1)])))
     # All saplings planted.
     while Forest:
@@ -32,12 +32,13 @@ def x_chains(Grid, Step, Cands, Methods, GrpLks = False):
                     if len(r) > 1: Step.NrGrpLks += 1
                     if len(c) > 1: Step.NrGrpLks += 1
                 Step.Pattern.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk & 0x000f)]])
+            Step.Pattern.append([P_END])
             if Status.Tech in {T_STRONG_X_LOOP, T_GL_STRONG_X_LOOP}:
                 r, c, Cand = Status.Outcome[0]
                 Grid[r][c] = Cand
                 Cands[r][c].clear()
                 discard_cand_from_peers(Cand, r, c, Cands)
-                Step.Outcome = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                Step.Outcome = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END]]
                 return 1
             else:  # Eliminations
                 for r, c, Cand in Status.Outcome:
@@ -65,36 +66,46 @@ def find_next_x_child_nodes(Child, Cands, Lvl, Tree, Methods, Status, GrpLks = F
     else:  # at the leaves, attempt to add the next weak and strong links.
         for r1, c1, Cand1, Lk1 in list_ccells_linked_to(Child.r, Child.c, Child.Cand, Cands, LK_STWK, GrpLks, False):
             for (rx, cx, Candx, Lkx) in Child.Chain:
-                if ccells_intersect(r1, c1, Cand1, rx, cx, Candx): break
+                if ccells_intersect(r1, c1, Cand1, rx, cx, Candx, GrpLks): break
             else:
                 if Lk1 & LK_STRG: Lk1 = (Lk1 & 0x01f0) | LK_WKST
                 else: Lk1 = (Lk1 &0x01f0) | LK_WEAK
                 Node1 = TNODE(r1, c1, Cand1, Lk1, [*Child.Chain, NL(r1, c1, Cand1, Lk1)], Child)
                 for r2, c2, Cand2, Lk2 in list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STRG, GrpLks, False):
-                    if Lvl > 1 and (T_STRONG_X_LOOP in Methods or T_GL_STRONG_X_LOOP in Methods):
+                    if Lvl > 1 and (r2, c2, Cand2) == (Tree.r, Tree.c, Tree.Cand):
                         Status.Outcome = []
-                        if (r2, c2, Cand2) == (Tree.r, Tree.c, Tree.Cand):
-                            if GrpLks:
-                                Status.Outcome = [(list(r1)[0], list(c1)[0], Cand1)]
-                                Status.Tech = T_GL_STRONG_X_LOOP
-                            else:
-                                Status.Outcome = [(r2, c2, Cand1)]
-                                Status.Tech = T_STRONG_X_LOOP
+                        if GrpLks and T_GL_STRONG_X_LOOP in Methods and len(r2) == len(c2) == 1:
+                            Status.Outcome = [(list(r2)[0], list(c2)[0], Cand2)]
+                            Status.Tech = T_GL_STRONG_X_LOOP
+                        elif ~GrpLks and T_STRONG_X_LOOP in Methods:
+                            Status.Outcome = [(r2, c2, Cand2)]
+                            Status.Tech = T_STRONG_X_LOOP
+                        if Status.Outcome:
                             Status.Pattern = []
                             for i in range(len(Node1.Chain)-1):
                                 Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Cand2, Node1.Chain[i+1].Lk))
                             Status.Pattern.append(NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Cand2, Lk2))
-                            # Ch = [*Node1.Chain, NL(r2, c2, Cand2, Lk2)]
-                            # Ch.reverse()
-                            # Status.Pattern = Ch[:-1]
                             return
+                        # if {T_STRONG_X_LOOP, T_GL_STRONG_X_LOOP} & set(Methods):
+                        #     Status.Outcome = []
+                        #     if GrpLks:
+                        #         Status.Outcome = [(list(r2)[0], list(c2)[0], Cand1)]
+                        #         Status.Tech = T_GL_STRONG_X_LOOP
+                        #     else:
+                        #         Status.Outcome = [(r2, c2, Cand1)]
+                        #         Status.Tech = T_STRONG_X_LOOP
+                        #     Status.Pattern = []
+                        #     for i in range(len(Node1.Chain)-1):
+                        #         Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Cand2, Node1.Chain[i+1].Lk))
+                        #     Status.Pattern.append(NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Cand2, Lk2))
+                        #     return
                     for rx, cx, Candx, Lkx in Child.Chain:
-                        if ccells_intersect(r2, c2, Cand2, rx, cx, Candx): break
+                        if ccells_intersect(r2, c2, Cand2, rx, cx, Candx, GrpLks): break
                     else:
-                        if Lvl > 1 and (T_EVEN_X_LOOP in Methods or T_GL_EVEN_X_LOOP in Methods):
-                            Lk = how_ccells_linked(r2, c2, Cand2, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
-                            if Lk:  # Even X-Loop found.
-                                if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
+                        Lk = how_ccells_linked(r2, c2, Cand2, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
+                        if Lk:  # Even X-Loop found.
+                            if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
+                            if {T_EVEN_X_LOOP, T_GL_EVEN_X_LOOP} & set(Methods):
                                 Status.Pattern = []
                                 for i in range(len(Node1.Chain)-1):
                                     Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Node1.Chain[i].Cand, Node1.Chain[i+1].Lk))
@@ -110,28 +121,97 @@ def find_next_x_child_nodes(Child, Cands, Lvl, Tree, Methods, Status, GrpLks = F
                                 if Status.Outcome:  # X-Loop with Elimination found.
                                     Status.Tech = T_GL_EVEN_X_LOOP if GrpLks else T_EVEN_X_LOOP
                                     return
-                        Status.Outcome = []
-                        for r3, c3 in cells_that_see_all_of([(r2, c2), (Tree.r, Tree.c)], GrpLks):
-                            if Cand1 in Cands[r3][c3]: Status.Outcome.append((r3, c3, Cand1))
-                        if Status.Outcome:
-                            Tech = T_UNDEF
-                            if Lvl == 1:
-                                Lk0 = Child.Chain[1].Lk
-                                if Lk0 & Lk1 & Lk2 & LK_LINE: Tech = T_SKYSCRAPER
-                                elif Lk0 & Lk2 & LK_LINE and Lk1 & LK_BOX: Tech = T_TWO_STRING_KITE
-                                else: Tech = T_TURBOT_FISH
-                            else: Tech = T_X_CHAIN
-                            if GrpLks: Tech |= T_GRPLK
-                            if Tech in Methods:
-                                Status.Tech = Tech
-                                Status.Pattern = []
-                                for i in range(len(Node1.Chain)-1):
-                                    Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Node1.Chain[i].Cand, Node1.Chain[i+1].Lk))
-                                Status.Pattern.extend([NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Node1.Chain[1].Cand, Lk2), NL(r2, c2, Cand2, Lk2)])
-                                return
+                        else:  # look for X-Chains
+                            Status.Outcome = []
+                            for r3, c3 in cells_that_see_all_of([(r2, c2), (Tree.r, Tree.c)], GrpLks):
+                                if Cand1 in Cands[r3][c3]: Status.Outcome.append((r3, c3, Cand1))
+                            if Status.Outcome:
+                                Tech = T_UNDEF
+                                if Lvl == 1:
+                                    Lk0 = Child.Chain[1].Lk
+                                    if Lk0 & Lk1 & Lk2 & LK_LINE: Tech = T_SKYSCRAPER
+                                    elif Lk0 & Lk2 & LK_LINE and Lk1 & LK_BOX: Tech = T_TWO_STRING_KITE
+                                    else: Tech = T_TURBOT_FISH
+                                else: Tech = T_X_CHAIN
+                                if GrpLks: Tech |= T_GRPLK
+                                if Tech in Methods:
+                                    Status.Tech = Tech
+                                    Status.Pattern = []
+                                    for i in range(len(Node1.Chain)-1):
+                                        Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Node1.Chain[i].Cand, Node1.Chain[i+1].Lk))
+                                    Status.Pattern.extend([NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Node1.Chain[1].Cand, Lk2), NL(r2, c2, Cand2, LK_NONE)])
+                                    return
                         Node1.Children.append(TNODE(r2, c2, Cand2, Lk2, [*Node1.Chain, NL(r2, c2, Cand2, Lk2)], Node1))
                 if Node1.Children: Child.Children.append(Node1)
         # Soln not found yet, has recursion bottomed out.
         if Lvl > RECURSE_LIM:
             Child.Chldren = []
             return
+
+                        #     if {T_EVEN_X_LOOP, T_GL_EVEN_X_LOOP} & set(Methods):
+                    #         Lk = how_ccells_linked(r2, c2, Cand2, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
+                    #         if Lk:  # Even X-Loop found.
+                    #             if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
+                    #
+                    #
+                    # if Lvl > 1 and {T_STRONG_X_LOOP, T_GL_STRONG_X_LOOP} & set(Methods):
+                    #     Status.Outcome = []
+                    #     if (r2, c2, Cand2) == (Tree.r, Tree.c, Tree.Cand):
+                    #         if GrpLks:
+                    #             Status.Outcome = [(list(r1)[0], list(c1)[0], Cand1)]
+                    #             Status.Tech = T_GL_STRONG_X_LOOP
+                    #         else:
+                    #             Status.Outcome = [(r2, c2, Cand1)]
+                    #             Status.Tech = T_STRONG_X_LOOP
+                    #         Status.Pattern = []
+                    #         for i in range(len(Node1.Chain)-1):
+                    #             Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Cand2, Node1.Chain[i+1].Lk))
+                    #         Status.Pattern.append(NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Cand2, Lk2))
+                    #         return
+                    # for rx, cx, Candx, Lkx in Child.Chain:
+                    #     if ccells_intersect(r2, c2, Cand2, rx, cx, Candx, GrpLks): break
+                    # else:
+                    #     if {T_EVEN_X_LOOP, T_GL_EVEN_X_LOOP} & set(Methods):
+                    #         Lk = how_ccells_linked(r2, c2, Cand2, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
+                    #         if Lk:  # Even X-Loop found.
+                    #             if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
+                    #             Status.Pattern = []
+                    #             for i in range(len(Node1.Chain)-1):
+                    #                 Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Node1.Chain[i].Cand, Node1.Chain[i+1].Lk))
+                    #             Status.Pattern.extend([NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Node1.Chain[1].Cand, Lk2), NL(r2, c2, Cand2, Lk)])
+                    #             Status.Outcome = []
+                    #             for i in range(len(Status.Pattern)-1):
+                    #                 if Status.Pattern[i].Lk & 0x0f == LK_WEAK:
+                    #                     for rx, cx in cells_that_see_all_of([(Status.Pattern[i].r, Status.Pattern[i].c), (Status.Pattern[i+1].r, Status.Pattern[i+1].c)], GrpLks):
+                    #                         if Cand1 in Cands[rx][cx]:  Status.Outcome.append((rx, cx, Cand1))
+                    #             if Status.Pattern[-1].Lk & 0x0f == LK_WEAK:
+                    #                 for rx, cx in cells_that_see_all_of([(Status.Pattern[-1].r, Status.Pattern[-1].c), (Status.Pattern[0].r, Status.Pattern[0].c)], GrpLks):
+                    #                     if Cand1 in Cands[rx][cx]:  Status.Outcome.append((rx, cx, Cand1))
+                    #             if Status.Outcome:  # X-Loop with Elimination found.
+                    #                 Status.Tech = T_GL_EVEN_X_LOOP if GrpLks else T_EVEN_X_LOOP
+                    #                 return
+                    #     Status.Outcome = []
+                    #     for r3, c3 in cells_that_see_all_of([(r2, c2), (Tree.r, Tree.c)], GrpLks):
+                    #         if Cand1 in Cands[r3][c3]: Status.Outcome.append((r3, c3, Cand1))
+                    #     if Status.Outcome:
+                    #         Tech = T_UNDEF
+                    #         if Lvl == 1:
+                    #             Lk0 = Child.Chain[1].Lk
+                    #             if Lk0 & Lk1 & Lk2 & LK_LINE: Tech = T_SKYSCRAPER
+                    #             elif Lk0 & Lk2 & LK_LINE and Lk1 & LK_BOX: Tech = T_TWO_STRING_KITE
+                    #             else: Tech = T_TURBOT_FISH
+                    #         else: Tech = T_X_CHAIN
+                    #         if GrpLks: Tech |= T_GRPLK
+                    #         if Tech in Methods:
+                    #             Status.Tech = Tech
+                    #             Status.Pattern = []
+                    #             for i in range(len(Node1.Chain)-1):
+                    #                 Status.Pattern.append(NL(Node1.Chain[i].r, Node1.Chain[i].c, Node1.Chain[i].Cand, Node1.Chain[i+1].Lk))
+                    #             Status.Pattern.extend([NL(Node1.Chain[-1].r, Node1.Chain[-1].c, Node1.Chain[1].Cand, Lk2), NL(r2, c2, Cand2, Lk2)])
+                    #             return
+        #                 Node1.Children.append(TNODE(r2, c2, Cand2, Lk2, [*Node1.Chain, NL(r2, c2, Cand2, Lk2)], Node1))
+        #         if Node1.Children: Child.Children.append(Node1)
+        # # Soln not found yet, has recursion bottomed out.
+        # if Lvl > RECURSE_LIM:
+        #     Child.Chldren = []
+        #     return

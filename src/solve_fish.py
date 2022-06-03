@@ -748,7 +748,7 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
                 else:
                     Forest[-1].Chain.append([])
                     Forest[-1].Branch.append(TNODE({rf}, {cf}, Cand, LK_NONE, None, None))
-                    for r0, c0, Cand0, Lk0 in list_ccells_linked_to({rf}, {cf}, Cand, Cands, LK_STWK, GrpLks):  # Solving for singles prior to this method ensures LCL cannot be empty.
+                    for r0, c0, Cand0, Lk0 in list_ccells_linked_to({rf}, {cf}, Cand, Cands, LK_STWK, GrpLks, True):  # Solving for singles prior to this method ensures LCL cannot be empty.
                         Forest[-1].Branch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].Branch[-1], None))
     else:  # kraken, non group links.
         # Plant a forest of trees, one for each cover.  Each tree has a main TNode branch and a Chain for each fin.
@@ -767,7 +767,7 @@ def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
                 else:
                     Forest[-1].Chain.append([])
                     Forest[-1].Branch.append(TNODE(rf, cf, Cand, LK_NONE, None, None))
-                    for r0, c0, Cand0, Lk0 in list_ccells_linked_to(rf, cf, Cand, Cands, LK_STWK, GrpLks):  # Solving for singles prior to this method ensures LCL cannot be empty.
+                    for r0, c0, Cand0, Lk0 in list_ccells_linked_to(rf, cf, Cand, Cands, LK_STWK, GrpLks, True):  # Solving for singles prior to this method ensures LCL cannot be empty.
                         Forest[-1].Branch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].Branch[-1], None))
     # walk_the_forest(Forest)
 
@@ -845,7 +845,7 @@ def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
             if not GrandChild.Children: OddPrunes.add(GrandChild)
         for GrandChild in OddPrunes: Child.Children.remove(GrandChild)
     else:  # at the leaves, attempt to add the next odd and even levels
-        for r1, c1, Cand1, Lk1 in list_ccells_linked_to(Child.r, Child.c, Child.Cand, Cands, LK_STRG, GrpLks):
+        for r1, c1, Cand1, Lk1 in list_ccells_linked_to(Child.r, Child.c, Child.Cand, Cands, LK_STRG, GrpLks, True):
             for rx, cx, Candx, Lkx in Child.Chain:  # not allowed to cross the chain.
                 if r1 == rx and c1 == cx and Cand1 == Candx: break
                 # if ccells_match(r1, c1, Cand1, rx, cx, Candx, GrpLks): break
@@ -857,7 +857,7 @@ def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
                     return
                 if Lvl > RECURSE_LIM: return  # Bottomed out
                 # else find even child links
-                for r2, c2, Cand2, Lk2 in list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STWK, GrpLks):
+                for r2, c2, Cand2, Lk2 in list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STWK, GrpLks, True):
                     for rx, cx, Candx, Lkx in Child.Chain:
                         if r2 == rx and c2 == cx and Cand2 == Candx: break
                         # if ccells_match(r2, c2, Cand2, rx, cx, Candx, GrpLks): break
