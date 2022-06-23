@@ -34,44 +34,6 @@ class Puzzle:
             for c in range(9):
                 if self.Givens[r][c]: self.NrGivens += 1
                 if not self.Grid[r][c]: self.NrEmpties += 1
-        # self.Rsteps    = UNDEF  # number of recursion steps (calls) taken to validate puzzle - relates to time
-
-        # if INSTR == PZL_GEN:
-        #     self.Sym = args[0]
-        #     Pzl = PZL(Sym = self.Sym)
-        #     # self.Soln = gen_filled_grid()
-        #     # self.Givens = []
-        #     create_puzzle(Pzl)
-        #     self.Givens = Pzl.Givens
-        #     self.Soln   = Pzl.Soln
-        #     self.Lvl    = Pzl.Lvl
-        #     self.Steps  = Pzl.Steps
-        #
-        #     self.NrGivens = self.NrEmpties = 0
-        #     for r in range(9):
-        #         for c in range(9):
-        #             if self.Givens[r][c]:
-        #                 self.InitGrid[r][c] = self.Grid[r][c] = self.Givens[r][c]
-        #                 self.NrGivens += 1
-        #             if not self.Grid[r][c]:
-        #                 self.NrEmpties += 1
-        # elif INSTR == PZL_VAL:
-        #     oPzl = args[0]
-        #     self.TryFirst  = oPzl[PZL_METH]
-        #     self.NrEmpties = self.NrGivens = 0
-        #     self.Givens    = [[0 for c in range(9)] for r in range(9)]
-        #     for r in range(9):
-        #         for c in range(9):
-        #             self.InitGrid[r][c] = oPzl[PZL_GRID][r][c]
-        #             if self.InitGrid[r][c] < 10:
-        #                 self.Givens[r][c] = self.InitGrid[r][c]
-        #                 if self.Givens[r][c]: self.NrGivens += 1
-        #             self.Grid[r][c] = self.InitGrid[r][c] % 10
-        #             if oPzl[PZL_ELIMS]:
-        #                 self.InitElims[r][c] = copy(oPzl[PZL_ELIMS][r][c])
-        #                 self.Elims[r][c] = copy(self.InitElims[r][c])
-        #             if not self.Grid[r][c]: self.NrEmpties += 1
-
 
     def get_state(self):
         G = [[self.Grid[r][c] for c in range(9)] for r in range(9)]

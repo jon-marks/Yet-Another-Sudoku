@@ -95,7 +95,7 @@ def pzl_str_to_pzl(sPzl, Pzl):
         for sE in lG[1].split(";"):
             r, c, op, Cands = parse_ccell_phrase(sE)
             if r < 0 or op != OP_ELIM:
-                return 0, "Invalid Sudoku value puzzle spec format - elims."
+                return 0, "Invalid Sudoku puzzle string - malformed elims."
 
             Pzl.Elims[r][c] |= Cands
     if lenlG >= 3 and lG[2]:
@@ -103,22 +103,23 @@ def pzl_str_to_pzl(sPzl, Pzl):
             if TInfo.Text == lG[2]:
                 Pzl.Method = Meth
                 break
-        else:
-        #     PgmMsg(f"Invalid Sudoku value puzzle spec format - unrecognised method \"{lG[2]}.",
-        #            "Warning",
-        #            wx.ICON_WARNING | wx.OK)
-            Pzl.Method = T_UNDEF
+        else: Pzl.Method = T_UNDEF
     else: Pzl.Method = T_UNDEF
-    if lenlG >= 5:
-        Pzl.Pattern = lG[3]
-        Pzl.Outcome = lG[4]
-        if lenlG >=6:
-            Pzl.Soln = [[0 for c in range(9)] for r in range(9)]
-            if not grid_str_to_grid(lG[5],  Pzl.Soln, None):
-                Pzl.Soln = None
+    if lenlG >= 4 and lG[3]:
+        for Oride in lG[3].split(";"):
+            if "=" in Oride: Key, Val = Oride.split("=")
+            else: return 0, "Invalid Sudoku puzzle string - malformed overrides."
+            Pzl.Overrides[Key] = Val
+    if lenlG >= 6:
+        Pzl.Pattern = lG[4]
+        Pzl.Outcome = lG[5]
+    if lenlG >=7:
+        Pzl.Soln = [[0 for c in range(9)] for r in range(9)]
+        if not grid_str_to_grid(lG[6],  Pzl.Soln, None):
+            Pzl.Soln = None
     return lenlG, ""
 
-def pzl_to_pzl_str(oPzl):
+def pzl_to_pzl_str(oPzl, sOverrides = None):
 
     sG = grid_to_grid_str(oPzl.Grid, oPzl.Givens)
     if oPzl.Elims:
@@ -132,7 +133,8 @@ def pzl_to_pzl_str(oPzl):
                         sE += f"{v}"
         sG += f"|{sE}"
     if oPzl.Method != T_UNDEF:
-        sG += f"|{Tech[oPzl.Method].Text}"
+        sG += f"|{Tech[oPzl.Method].Text}|"
+        if sOverrides: sG += sOverrides
         sG += f"|{tkns_to_str(oPzl.Pattern)}|{tkns_to_str(oPzl.Outcome)}\n".replace(" ", "").replace(".", "")
     return sG
 
@@ -235,14 +237,18 @@ def tkns_to_str(Tkns):
             St += "."
     return St
 
-def PgmMsg(Type, Msg, Flags = wx.OK):  # wx.OK = 4 if not provided.
+def pgm_msg(Type, Msg, Flags = wx.OK):  # wx.OK = 4 if not provided.
     # Wrapper that will put up a MessageBox if running under wx or
     # prints the message to console.  Only necessary to wrap messages
     # in modules/functions that run in both environments.
 
-    from importlib.util import find_spec
-    if find_spec("wx"): return wx.MessageBox(Type, Msg, Flags)
-    else: print(f"{Type}: {Msg}"); return Flags
+    try:
+        return wx.MessageBox(Type, Msg, Flags)
+    except:
+        print(f"{Type}: {Msg}"); return Flags
+    # if 'wx' in sys.modulesfrom importlib.util import find_spec
+    # if find_spec("wx"): return wx.MessageBox(Type, Msg, Flags)
+    # else: print(f"{Type}: {Msg}"); return Flags
 
 
 # def flist(hl):

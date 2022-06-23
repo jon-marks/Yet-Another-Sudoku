@@ -36,12 +36,11 @@ LK_CELL = 0x0080
 NL = namedtuple('NL', ['r', 'c', 'Cand', 'Lk'])  # Node in a chain with lk to partner
 CCELL = namedtuple('CCELL', ['r', 'c', 'Cand'])
 
-class NODEP_depreciate:  # Node in a chain with link type to partner on right.
-    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
-        self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
+# class NODEP_depreciate:  # Node in a chain with link type to partner on right.
+#     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
+#         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
 
-class TREE:
-    # used to find chains. Tree grows branches.  Chain is the list of nodes from
+class TREE:  # to depreciate    # used to find chains. Tree grows branches.  Chain is the list of nodes from
     # root to leaf that meets the chain's criteria.
     def __init__(self, r = -1, c = -1, Cand = -1, Chain = None, Branch = None):
         self.r = r; self.c = c; self.Cand = Cand
@@ -50,14 +49,28 @@ class TREE:
 
 class TNODE:
     # This is the tree node (branch/child) structure used in constructing chain chains.
-    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, Parent = None, Children = None):  # Chain = None,
+    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, UsedNodes = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
         self.Chain = Chain if Chain else []  # List of path from root to current Node. (NODE(r, c, Cand, Lk_type_to_next)
         self.Parent = Parent
         self.Children = Children if Children else []
 
-class STATUS:
-    def __init__(self, Tech = T_UNDEF, Pattern = None, Outcome = None):
+class ANODE:
+    def __init__(self, Hash = -1, Lk = LK_NONE, DeadEnd = False, Children = None):
+        self.Hash = Hash
+        self.Lk = Lk
+        self.Children = Children if Children else []
+
+class STATE:
+    def __init__(self, SLNodes = None, Tech = T_UNDEF, Pattern = None, Outcome = None):
+        self.SLNodes = SLNodes if SLNodes else []
+        self.Tech = Tech
+        self.Pattern = Pattern if Pattern else []
+        self.Outcome = Outcome if Outcome else []
+
+class STATUS:  # to be depreciated
+    def __init__(self, Tech = T_UNDEF, Pattern = None, Outcome = None,
+                 OddNodes = None, EvenNodes = None, PrunedOddNodes = None, PrunedEvenNodes = None):
         self.Tech = Tech
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
@@ -240,23 +253,23 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             if Cand in Cands[r0][cx]: Grp.add(cx)
             if Cand in Cands[r0][c0]: Grp.add(c0); Lks.append(({r0}, {c0}))
             if Cand in Cands[r0][c1]: Grp.add(c1); Lks.append(({r0}, {c1}))
-            if Grp: Lks.append(({r0}, Grp))
+            if len(Grp) > 1: Lks.append(({r0}, Grp))
             Grp = set()
             if Cand in Cands[r1][cx]: Grp.add(cx)
             if Cand in Cands[r1][c0]: Grp.add(c0); Lks.append(({r1}, {c0}))
             if Cand in Cands[r1][c1]: Grp.add(c1); Lks.append(({r1}, {c1}))
-            if Grp: Lks.append(({r1}, Grp))
+            if len(Grp) > 1: Lks.append(({r1}, Grp))
             # cols in the box.
             Grp = set()
             if Cand in Cands[rx][c0]: Grp.add(rx)
             if Cand in Cands[r0][c0]: Grp.add(r0)
             if Cand in Cands[r1][c0]: Grp.add(r1)
-            if Grp: Lks.append((Grp, {c0}))
+            if len(Grp) > 1: Lks.append((Grp, {c0}))
             Grp = set()
             if Cand in Cands[rx][c1]: Grp.add(rx)
             if Cand in Cands[r0][c1]: Grp.add(r0)
             if Cand in Cands[r1][c1]: Grp.add(r1)
-            if Grp: Lks.append((Grp, {c1}))
+            if len(Grp) > 1: Lks.append((Grp, {c1}))
         elif lr == 1:
             ix = list(r)[0]; i0 = (ix + 1) % 3; i1 = (ix + 2) % 3
             r0 = i0 + rb; r1 = i1 + rb
@@ -264,12 +277,12 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             if Cand in Cands[r0][cb]: Grp.add(cb); Lks.append(({r0}, {cb}))
             if Cand in Cands[r0][cb+1]: Grp.add(cb+1); Lks.append(({r0}, {cb+1}))
             if Cand in Cands[r0][cb+2]: Grp.add(cb+2); Lks.append(({r0}, {cb+2}))
-            if Grp: Lks.append(({r0}, Grp))
+            if len(Grp) > 1: Lks.append(({r0}, Grp))
             Grp = set()
             if Cand in Cands[r1][cb]: Grp.add(cb); Lks.append(({r1}, {cb}))
             if Cand in Cands[r1][cb+1]: Grp.add(cb+1); Lks.append(({r1}, {cb+1}))
             if Cand in Cands[r1][cb+2]: Grp.add(cb+2); Lks.append(({r1}, {cb+2}))
-            if Grp: Lks.append(({r1}, Grp))
+            if len(Grp) > 1: Lks.append(({r1}, Grp))
         elif lc == 1:
             jx = list(c)[0] - cb; j0 = (jx + 1) % 3; j1 = (jx + 2) % 3
             c0 = j0 + cb; c1 = j1 + cb
@@ -277,12 +290,12 @@ def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, Inc
             if Cand in Cands[rb][c0]: Grp.add(rb); Lks.append(({rb}, {c0}))
             if Cand in Cands[rb+1][c0]: Grp.add(rb+1); Lks.append(({rb+1}, {c0}))
             if Cand in Cands[rb+2][c0]: Grp.add(rb+2); Lks.append(({rb+2}, {c0}))
-            if Grp: Lks.append((Grp, {c0}))
+            if len(Grp) > 1: Lks.append((Grp, {c0}))
             Grp = set()
             if Cand in Cands[rb][c1]: Grp.add(rb); Lks.append(({rb}, {c1}))
             if Cand in Cands[rb+1][c1]: Grp.add(rb+1); Lks.append(({rb+1}, {c1}))
             if Cand in Cands[rb+2][c1]: Grp.add(rb+2); Lks.append(({rb+2}, {c1}))
-            if Grp: Lks.append((Grp, {c1}))
+            if len(Grp) > 1: Lks.append((Grp, {c1}))
 
         for r0, c0 in sorted(Lks):
             for b in range(9):
@@ -619,7 +632,7 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                 elif Flr[1] and Flr[2]: Lks.extend([((Flr[1], c, Cand, LK_NONE), (Flr[2], c, Cand, LK_STRG | LK_COL)), ((Flr[2], c, Cand, LK_NONE), (Flr[1], c, Cand, LK_STRG | LK_COL))])
         # #look in boxes
         for br, bc in [(0, 0), (0, 3), (0, 6), (3, 0), (3, 3), (3, 6), (6, 0), (6, 3), (6, 6)]:
-            # 1.  Examine the ccells in the box
+            # Compute box params
             B1 = []
             RB = [set(), set(), set()]; CB = [set(), set(), set()]
             br1 = br+1; br2 = br+2; bc1 = bc+1; bc2 = bc+2
@@ -631,20 +644,29 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                     RB[i].add(c); CB[j].add(r)
             lenRB0 = len(RB[0]); lenRB1 = len(RB[1]); lenRB2 = len(RB[2])
             lenCB0 = len(CB[0]); lenCB1 = len(CB[1]); lenCB2 = len(CB[2])
-            # 2. Check out rows patterns
-            if lenRB0 > 0 and lenRB1 > 0 and lenRB2 == 0:   Lks.extend([((br, RB[0], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, RB[1], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
-            elif lenRB0 > 0 and lenRB1 == 0 and lenRB2 > 0: Lks.extend([((br, RB[0], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
-            elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
-            # 3. Check out col patterns
-            if lenCB0 > 0 and lenCB1 > 0 and lenCB2 == 0:   Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
-            elif lenCB0 > 0 and lenCB1 == 0 and lenCB2 > 0: Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
-            elif lenCB0 == 0 and lenCB1 > 0 and lenCB2 > 0: Lks.extend([((CB[1], bc1, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
-            # 4. Check out row/col patterns
             RP = sorted([lenRB0, lenRB1, lenRB2]); CP = sorted([lenCB0, lenCB1, lenCB2])
+            # 1 Check for 2 two scalars in box.
+            if RP == CP == [0, 1, 1]:
+                # |*  |   |  *| Family
+                # |  +|   |   |
+                # |   |   | + |
+                if lenRB0 > 0 and lenRB1 > 0 and lenRB2 == 0:   Lks.extend([((br, RB[0], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, RB[1], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                elif lenRB0 > 0 and lenRB1 == 0 and lenRB2 > 0: Lks.extend([((br, RB[0], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+            else:
+            # 2.  Check out Row/Row Patterns: RP == [0, n, m] where n and m are 1, 2, or 3
+                if lenRB0 > 0 and lenRB1 > 0 and lenRB2 == 0:   Lks.extend([((br, RB[0], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, RB[1], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                elif lenRB0 > 0 and lenRB1 == 0 and lenRB2 > 0: Lks.extend([((br, RB[0], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
+                elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
+            # 3. Check out Col/Col patterns  CP == [0, n, m] where n and m are 1, 2, or 3
+                if lenCB0 > 0 and lenCB1 > 0 and lenCB2 == 0:   Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+                elif lenCB0 > 0 and lenCB1 == 0 and lenCB2 > 0: Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
+                elif lenCB0 == 0 and lenCB1 > 0 and lenCB2 > 0: Lks.extend([((CB[1], bc1, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
+            # 4.  Check out Row/Col Patterns - not mutually exclusive with Row/Row or Col/Col patterns
             if RP == CP == [1, 1, 2]:
                 # |** |   |* *| Family
-                # |  *|   | * |
-                # |  *|   | * |
+                # |  +|   | + |
+                # |  +|   | + |
                 # filter out invalid [1,1,2] patterns eg /**./ /..*/ /.*./, ie all cands must be covered by a row and a col only.
                 # an invalid pattern is when a cand is not part of a row or a col, ie it is the only candidate in the row and the col.
                 for k in [0, 1, 2]:
@@ -714,16 +736,16 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                 for c in range(9):
                     if len(Cands[r][c])==2 and Cand in Cands[r][c]:
                         Lks.extend([((r, c, Cand, LK_NONE), (r, c, list(Cands[r][c] - {Cand})[0], LK_STRG | LK_CELL))])
-        # cleanup, convert all cell coords to sets and remove duplicates.
+        # cleanup, convert all cell coords to sets.
         for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in Lks:
             R0 = {r0} if isinstance(r0, int) else r0
             C0 = {c0} if isinstance(c0, int) else c0
             R1 = {r1} if isinstance(r1, int) else r1
             C1 = {c1} if isinstance(c1, int) else c1
-
-            for ((Ra, Ca, Canda, Lka), (Rb, Cb, Candb, Lkb)) in Lks1:
-                if ccells_match(Ra, Ca, Canda, R0, C0, Cand0, GrpLks) and ccells_match(Rb, Cb, Candb, R1, C1, Cand1, GrpLks): continue
-            else: Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
+            Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
+            # for ((Ra, Ca, Canda, Lka), (Rb, Cb, Candb, Lkb)) in Lks1:
+            #     if ccells_match(Ra, Ca, Canda, R0, C0, Cand0, GrpLks) and ccells_match(Rb, Cb, Candb, R1, C1, Cand1, GrpLks): break
+            # else: Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
     else:  # No group link
         for r in range(9):
             for c in range(9):
@@ -735,7 +757,9 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                             if c2 >= 0: break
                             else: c2 = c1
                     else:
-                        if c2 >= 0: Lks1.append((NL(r, c, Cand, LK_NONE), NL(r, c2, Cand, LK_STRG | LK_ROW)))
+                        if c2 >= 0:
+                            LkHse = LK_ROW | LK_BOX if c//3 == c2//3 else LK_ROW
+                            Lks1.append((NL(r, c, Cand, LK_NONE), NL(r, c2, Cand, LK_STRG | LkHse)))
                     r2 = -1
                     for r1 in range(9):
                         if Cand in Cands[r1][c]:
@@ -743,13 +767,16 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                             if r2 >= 0: break
                             else: r2 = r1
                     else:
-                        if r2 >= 0: Lks1.append((NL(r, c, Cand, LK_NONE), NL(r2, c, Cand, LK_STRG | LK_COL)))
+                        if r2 >= 0:
+                            LkHse = LK_COL | LK_BOX if r//3 == r2//3 else LK_COL
+                            Lks1.append((NL(r, c, Cand, LK_NONE), NL(r2, c, Cand, LK_STRG | LkHse)))
                     r2 = c2 = -1
                     rb = r//3; cb = c//3
                     for b1 in range(9):
                         r1 = (rb*3) + b1//3; c1 = (cb*3) + b1%3
                         if Cand in Cands[r1][c1]:
                             if r1 == r and c1 == c: continue
+                            if r1 == r or c1 == c: break
                             if r2 >= 0: break
                             else: r2 = r1; c2 = c1
                     else:
@@ -758,36 +785,3 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                         if len(Cands[r][c])==2:
                             Lks1.extend([(NL(r, c, Cand, LK_NONE), NL(r, c, list(Cands[r][c] - {Cand})[0], LK_STRG | LK_CELL))])
     return Lks1
-
-# diagnostic code for walking tree nodes - not used for a while, may have bitrot.
-
-def walk_ai_trees(Orchards, path):
-    # Walks an orchard of AI trees printing out the nodes and their branches.
-    # Trees is list of orchards, one per candidate.  The next level up is the list of trees in the
-    # orchard for that candidate.  The following level up is the first level of branches per tree
-    # which is the start of chains.
-    Lvl = 0
-    with open(path, "wt") as f:
-        for i, Trees in enumerate(Orchards):
-            f.write(f"Candidate {i+1} Orchard\n")
-            for Tree in Trees: traverse_branch(Tree, Lvl, f)
-
-
-def traverse_branch(B, Lvl, f):
-    sLk = ""
-    sL = ""
-    for i in range(Lvl): sL += "| "
-    sL += f"+{ascii_lk(B.Lk)}{B.Cand}r{B.r+1}c{B.c+1}"
-    if B.Chain:
-        sL += f", Chain: "
-        for r, c, Cand, Lk in B.Chain:
-            sL += f"{Cand}r{r+1}c{c+1}{ascii_lk(Lk)}"
-    if B.Parent: sL += f", Parent: {B.Parent.Cand}r{B.Parent.r+1}c{B.Parent.c+1}"
-    f.write(sL + "\n")
-    for SB in B.Children: traverse_branch(SB, Lvl+1, f)
-
-def ascii_lk(Lk):
-    if Lk == LK_WEAK: return "-"
-    elif Lk == LK_STRG or Lk == LK_STWK: return "="
-    elif Lk == LK_WKST: return "~"
-    else: return "*"

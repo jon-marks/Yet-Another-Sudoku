@@ -1,7 +1,21 @@
 from globals import *
-from trc import *
 from misc import tkns_to_str
 from solve_utils import *
+
+class CVR_TREE:
+    def __init__(self, r = -1, c = -1, Cand = -1, FinList = None):
+        self.r = r
+        self.c = c
+        self.Cand = Cand
+        self.FinList = FinList if FinList else []
+
+class FIN_TRUNK:
+    def __init__(self, r = -1, c = -1, Cand = -1, Trunk = None, Chain = None):
+        self.r = r
+        self.c = c
+        self.Cand = Cand
+        self.Trunk = Trunk if Trunk else []
+        self.Chain = Chain if Chain else []
 
 def tech_x_wings(Grid, Step, Cands, Methods):
     # A X-Wing occurs when the same candidate occurs twice each in two separate
@@ -705,22 +719,31 @@ def elim_cands_in_kraken_fish(Cand, BS, CS, Fins, Orient, Cands, Method, Step):
                 if cc in BS: continue
                 for rc in CS:
                     if Cand in Cands[rc][cc]: Cvrs.append((rc, cc))
-    S = STATUS()
-    if Cvrs and find_cover_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, S):
+    S = STATE()
+#    if Cvrs and find_cover_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, S):
+    if Cvrs and new_find_cvr_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, S):
         Step.Method = Method
         if Orient == P_ROW: Step.Pattern = [[P_VAL, Cand], [P_ROW, BS], [P_COL, CS]]
         else: Step.Pattern = [[P_VAL, Cand], [P_COL, BS], [P_ROW, CS]]  # Orient == P_COL
         for r, c in Fins: Step.Pattern.extend([[P_CON, ], [P_ROW, r], [P_COL, c]])
-        Step.Pattern.append([P_SEP, ])
+        # Step.Pattern.append([P_SEP, ])
         Chains = []
         for Ch in S.Pattern:  # one chain for each fin in S.Pattern
-            if Chains: Chains.append([P_SEP, ])
-            for r, c, Cand, Lk, in Ch:
+            # if Chains: Chains.append([P_SEP, ])
+            Chains.append([P_SEP, ])
+            for i in range(len(Ch)-1):
                 Step.NrLks += 1
                 if Method & T_GRPLK:
-                    if len(r) > 1: Step.NrGrpLks += 1
-                    if len(c) > 1: Step.NrGrpLks += 1
-                Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk)]])
+                    if len(Ch[i].r) > 1: Step.NrGrpLks += 1
+                    if len(Ch[i].c) > 1: Step.NrGrpLks += 1
+                Chains.extend([[P_VAL, Ch[i].Cand], [P_ROW, Ch[i].r], [P_COL, Ch[i].c], [P_OP, token_link(Ch[i+1].Lk & 0x0f)]])
+            Chains.extend([[P_VAL, Ch[-1].Cand], [P_ROW, Ch[-1].r], [P_COL, Ch[-1].c], [P_OP, OP_NONE]])
+            # for r, c, Cand, Lk, in Ch:
+            #     Step.NrLks += 1
+            #     if Method & T_GRPLK:
+            #         if len(r) > 1: Step.NrGrpLks += 1
+            #         if len(c) > 1: Step.NrGrpLks += 1
+            #     Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk & 0x0f)]])
         Step.Pattern.extend(Chains); Step.Pattern.append([P_END, ])
         for r, c, Cand in S.Outcome:
             if Method & T_GRPLK: Cands[list(r)[0]][list(c)[0]].discard(Cand)
@@ -731,161 +754,127 @@ def elim_cands_in_kraken_fish(Cand, BS, CS, Fins, Orient, Cands, Method, Step):
         return True
     return False
 
+def new_find_cvr_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, Status):
 
-def find_cover_seeing_all_fins(Fins, Covers, Cand, Cands, Method, Status):
+    GrpLks = Method & T_GRPLK
+    if GrpLks:
+        Fins1 = []; Cvrs1 = []
+        for rc, cc in Cvrs: Cvrs1.append(({rc}, {cc}))
+        for rf, cf in Fins: Fins1.append(({rf}, {cf}))
+        Fins = Fins1; Cvrs = Cvrs1
+
+    SLNodes = {}
+    for Cand2 in range(1, 10):
+        for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in list_all_cand_strong_links(Cand2, Cands, GrpLks, True):
+            Hash = str(Cand0)+str(r0)+str(c0)
+            if Hash not in SLNodes:
+                SLNodes[Hash] = TNODE(r0, c0, Cand0, Lk0)
+            SLNodes[Hash].Children.append(TNODE(r1, c1, Cand1, Lk1))
 
     Forest = []
-    Tree = None
-    GrpLks = Method & T_GRPLK
-    if GrpLks:  # Kraken group links.
-        for rc, cc in Covers:
-            Forest.append(TREE({rc}, {cc}, Cand, None, None))
-            for rf, cf in Fins:
-                Lk = how_ccells_linked({rc}, {cc}, Cand, {rf}, {cf}, Cand, Cands, GrpLks)
-                if Lk:
-                    Forest[-1].Chain.append([({rc}, {cc}, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), ({rf}, {cf}, Cand, LK_NONE)])
-                    Forest[-1].Branch.append([])
-                else:
-                    Forest[-1].Chain.append([])
-                    Forest[-1].Branch.append(TNODE({rf}, {cf}, Cand, LK_NONE, None, None))
-                    for r0, c0, Cand0, Lk0 in list_ccells_linked_to({rf}, {cf}, Cand, Cands, LK_STWK, GrpLks, True):  # Solving for singles prior to this method ensures LCL cannot be empty.
-                        Forest[-1].Branch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].Branch[-1], None))
-    else:  # kraken, non group links.
-        # Plant a forest of trees, one for each cover.  Each tree has a main TNode branch and a Chain for each fin.
-        # The Chain is empty until a one is found for that fin.  The MainBranch of TNodes, is used to build a tree
-        # to find a chain.  Once a chain is found the branch is culled.  Tree's are grown two levels at time (LK_STRG
-        # and LK_WEAK/WKST) at a time across all branches.
-        for rc, cc in Covers:
-        # for i, (rc, cc) in enumerate(Covers):
-            Forest.append(TREE(rc, cc, Cand, None, None))
-            for rf, cf in Fins:
-            # for j, (rf, cf) in enumerate(Fins):
-                Lk = how_ccells_linked(rc, cc, Cand, rf, cf, Cand, Cands)
-                if Lk:
-                    Forest[-1].Chain.append([(rc, cc, Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (rf, cf, Cand, LK_NONE)])
-                    Forest[-1].Branch.append([])
-                else:
-                    Forest[-1].Chain.append([])
-                    Forest[-1].Branch.append(TNODE(rf, cf, Cand, LK_NONE, None, None))
-                    for r0, c0, Cand0, Lk0 in list_ccells_linked_to(rf, cf, Cand, Cands, LK_STWK, GrpLks, True):  # Solving for singles prior to this method ensures LCL cannot be empty.
-                        Forest[-1].Branch[-1].Children.append(TNODE(r0, c0, Cand0, LK_WKST if Lk0 & LK_STRG else LK_WEAK, None, Forest[-1].Branch[-1], None))
-    # walk_the_forest(Forest)
+    for rc, cc in Cvrs:
+        FList = []
+        CvrFound = True  # assumed True until proven False
+        for rf, cf in Fins:
+            FinHash = str(Cand) + str(rf) + str(cf)
+            FinTrunk = FIN_TRUNK(rf, cf, Cand)
+            Lk = how_ccells_linked(rc, cc, Cand, rf, cf, Cand, Cands, GrpLks)
+            if Lk:
+                if Lk & LK_STRG: Lk |= LK_WKST
+                FinTrunk.Chain = [NL(rf, cf, Cand, LK_NONE), NL(rc, cc, Cand, Lk)]
+            else:
+                for r0, c0, Cand0, Lkf in list_ccells_linked_to(rf, cf, Cand, Cands, LK_STWK, GrpLks, True):
+                    Hash = str(Cand0) + str(r0) + str(c0)
+                    if Hash in SLNodes:
+                        SLN = SLNodes[Hash]
+                        ANode = ANODE(Hash, Lkf)
+                        if Lkf & LK_STRG: Lkf |= LK_WKST
+                        for SLNC in SLN.Children:
+                            if (rf, cf, Cand) == (SLNC.r, SLNC.c, SLNC.Cand): continue
+                            Lkc = how_ccells_linked(SLNC.r, SLNC.c, SLNC.Cand, rc, cc, Cand, Cands, GrpLks)
+                            if Lkc:  # Cover and fin see each other through SLN=SLNC
+                                if Lkc & LK_STRG: Lkc |= LK_WKST
+                                FinTrunk.Chain = [NL(rf, cf, Cand, LK_NONE), NL(SLN.r, SLN.c, SLN.Cand, Lkf), NL(SLNC.r, SLNC.c, SLNC.Cand, SLNC.Lk), NL(rc, cc, Cand, Lkc)]
+                                break
+                            else: ANode.Children.append(ANODE(str(SLNC.Cand) + str(SLNC.r) + str(SLNC.c), SLNC.Lk))
+                        if FinTrunk.Chain: break
+                        if ANode.Children: FinTrunk.Trunk.append(ANode)
+            if not FinTrunk.Chain: CvrFound = False
+            FList.append(FinTrunk)
+        if CvrFound:  # Cover sees all fins
+            for Fin in FList: Status.Pattern.append(Fin.Chain)
+            Status.Outcome = [(rc, cc, Cand)]
+            return True
+        if FList: Forest.append(CVR_TREE(rc, cc, Cand, FList))
 
-    # Forest is planted with trees - one for each cover.  Each tree has a main branch for each fin.
-    # Each main branch has EITHER A) grown a first level of branching, one for each weak (or strong masquerading
-    # as weak) link it sees OR B) found a fin/cover link.
-
-    while Forest:  # while there are still trees in the forest
-        Culls = set()  # trees to cull, use set to avoid dups.
-        for Tree in Forest:
-            for Fin in range(len(Fins)):
-                if Tree.Chain[Fin]: continue
+    State = STATE(SLNodes, Method)
+    while Forest:
+        Culls = set()
+        # State.Pattern = []; State.Outcome = []
+        for CTree in Forest:
+            UnproductiveCvr = False
+            CvrFound = True  # assumed True until proven False
+            for Fin in CTree.FinList:
+                if Fin.Chain: continue
+                # CvrFound = False
+                Chain = [NL(Fin.r, Fin.c, Fin.Cand, LK_NONE)]
                 Prunes = set()
-                for Child in Tree.Branch[Fin].Children:
-                    Child.Chain = [(Child.r, Child.c, Child.Cand, Child.Lk), (Tree.Branch[Fin].r, Tree.Branch[Fin].c, Tree.Branch[Fin].Cand, LK_NONE)]
-                    find_next_child_nodes(Child, Cands, 1, Tree, Fin, GrpLks)
-                    # Return conditions, each of FN's chlildren:
-                    #  * Searching
-                    #     - Child's children is a non empty list
-                    #     - Tree.Chain[Fin] is empty
-                    #     - CvrTree.Branch[Fin] contains the starting TNode for this branch.
-                    #  * Chain has been found:
-                    #     - Child's children may or may not be an empty list
-                    #     - Tree.Chain[Fin] contains the chain.
-                    #     - CvrTree.Branch[Fin] points to the starting TNode for this branch
-                    #  * Search has BOTTOMED_OUT (recursion limit) / NOT_FOUND (could not find node to form a link in the chain)
-                    #     - Child's Children is an empty list
-                    #     - CvrTree.Chain[Fin] == NULL
-                    #     - CvrTree.Branch[Fin] points to the main branch for this fin.
-                    if Tree.Chain[Fin]: break  # a chain has been found, exit the loop promptly.
-                    if not Child.Children: Prunes.add(Child)  # prune unproductive Tnode (no children/branches)
-                if Tree.Chain[Fin]: Tree.Branch[Fin] = []; continue  # Cull the Branch
-                for Child in Prunes:
-                    Tree.Branch[Fin].Children.remove(Child)
-                if not Tree.Branch[Fin].Children:
-                    Tree.Branch[Fin] = []  # unproductive Fin and hence cover tree. Prune Fin branch
-            Found = True
-            for Fin in range(len(Fins)):
-                if not Tree.Branch[Fin] and not Tree.Chain[Fin]: Culls.add(Tree)
-                if not Tree.Chain[Fin]: Found = False
-            if Found:
-                # Status.Tech = Method
-                for Chain in Tree.Chain: Status.Pattern.append(Chain)
-                Status.Outcome = [(Tree.r, Tree.c, Tree.Cand)]
+                State.Pattern = []
+                for FTrunk in Fin.Trunk:
+                    kraken_chain_next_level(FTrunk, Chain, Cands, 1, CTree, State, GrpLks)
+                    if State.Pattern:  Fin.Chain = State.Pattern; break  # if chain from fin to cvr is found, it will be placed in Fin.Chain
+                    if not FTrunk.Children: Prunes.add(FTrunk)
+                for FTrunk in Prunes: Fin.Trunk.remove(FTrunk)
+                if not Fin.Chain: CvrFound = False
+                if not Fin.Chain and not Fin.Trunk: UnproductiveCvr = True; break
+            if CvrFound:
+                for Fin in CTree.FinList: Status.Pattern.append(Fin.Chain)
+                Status.Outcome = [(CTree.r, CTree.c, CTree.Cand)]
                 return True
-        for Tree in Culls:  Forest.remove(Tree)
-        # walk_the_forest(Forest)
+            if UnproductiveCvr: Culls.add(CTree)
+        for CTree in Culls: Forest.remove(CTree)
     return False
 
-def find_next_child_nodes(Child, Cands, Lvl, Tree, Fin, GrpLks):
-    # each recursive iteration grows/steps two levels of branches/children at a time. As an even number of nodes
-    # are required with a strong link followed by a weak link.  1st step is odd, second step is even.
-    if Child.Children:
-        OddPrunes = set()
-        for GrandChild in Child.Children:
-            EvenPrunes = set()
-            for GGrandChild in GrandChild.Children:
-                find_next_child_nodes(GGrandChild, Cands, Lvl+1, Tree, Fin, GrpLks)
-                # Return conditions, each of GGrandChild's chlildren:
-                #  * Searching
-                #     - GGrandChild's children is a non empty list
-                #     - Tree.Chain[Fin] is empty
-                #     - CvrTree.Branch[Fin] contains the starting TNode for this branch.
-                #  * Chain has been found:
-                #     - GGrandChild's children may or may not be an empty list
-                #     - Tree.Chain[Fin] contains the chain.
-                #     - Tree.Branch[Fin] points to the starting TNode for this branch
-                #  * Search has BOTTOMED_OUT (recursion limit) / NOT_FOUND (could not find node to form a link in the chain)
-                #     - GGrandChild's Children is an empty list
-                #     - Tree.Chain[Fin] == NULL
-                #     - Tree.Branch[Fin] points to the main branch for this fin.
-                if Tree.Chain[Fin]: return  # A chain has been found, return promptly
-                if not GGrandChild.Children: EvenPrunes.add(GGrandChild)
-            for GGrandChild in EvenPrunes: GrandChild.Children.remove(GGrandChild)
-            if not GrandChild.Children: OddPrunes.add(GrandChild)
-        for GrandChild in OddPrunes: Child.Children.remove(GrandChild)
-    else:  # at the leaves, attempt to add the next odd and even levels
-        for r1, c1, Cand1, Lk1 in list_ccells_linked_to(Child.r, Child.c, Child.Cand, Cands, LK_STRG, GrpLks, True):
-            for rx, cx, Candx, Lkx in Child.Chain:  # not allowed to cross the chain.
-                if r1 == rx and c1 == cx and Cand1 == Candx: break
-                # if ccells_match(r1, c1, Cand1, rx, cx, Candx, GrpLks): break
-            else:
-                # does the r1, c1, Cand1 ccell see the cover.  if so, a chain is formed.
-                Lk = how_ccells_linked(r1, c1, Cand1, Tree.r, Tree.c, Tree.Cand, Cands, GrpLks)
-                if Lk:  # a chain is found; construct the chain and return promptly
-                    Tree.Chain[Fin] = [(Tree.r, Tree.c, Tree.Cand, LK_WKST if Lk & LK_STRG else LK_WEAK), (r1, c1, Cand1, LK_STRG), *Child.Chain]
-                    return
-                if Lvl > RECURSE_LIM: return  # Bottomed out
-                # else find even child links
-                for r2, c2, Cand2, Lk2 in list_ccells_linked_to(r1, c1, Cand1, Cands, LK_STWK, GrpLks, True):
-                    for rx, cx, Candx, Lkx in Child.Chain:
-                        if r2 == rx and c2 == cx and Cand2 == Candx: break
-                        # if ccells_match(r2, c2, Cand2, rx, cx, Candx, GrpLks): break
-                    else:  # odd and even links can be added to the chain
-                        if not Child.Children or not (Child.Children[-1].r == r1 and Child.Children[-1].c == c1 and Child.Children[-1].Cand == Cand1):
-                            Child.Children.append(TNODE(r1, c1, Cand1, LK_STRG, None, Child, None))
-                        Lk2 = LK_WKST if Lk2 & LK_STRG else LK_WEAK
-                        Child.Children[-1].Children.append(TNODE(r2, c2, Cand2, Lk2, [(r2, c2, Cand2, Lk2), (r1, c1, Cand1, LK_STRG), *Child.Chain], Child.Children[-1], None))
+def kraken_chain_next_level(ANode, Chain, Cands, Lvl, CTree, State, GrpLks):
 
-def walk_the_forest(Forest):
-    print("Walking the forest")
-    for Tree in Forest:
-        for Fin in range(len(Tree.Chain)):  # Chain and Branch lists are the same length:
-            if not bool(Tree.Chain[Fin]) ^ bool(Tree.Branch[Fin]): print(f"ERROR: CoverTree :{Tree.Cand}r{Tree.r+1}c{Tree.c+1}: Only one of .FinChain[{Fin}] and .FinBranch[{Fin}] can exist: {Tree.Chain[Fin]}, {Tree.Branch[Fin]}.")
-            if Tree.Chain[Fin]:
-                St = ""
-                for (r, c, Cand, Lk) in Tree.Chain[Fin]:
-                    St += f"{Cand}r{r+1}c{c+1}{OP[TKN_LK[Lk]]}"
-                (r, c, Cand, Lk) = Tree.Chain[Fin][-1]
-                print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, Fin: {Fin}: {Cand}r{r+1}c{c+1}, Chain: {St}")
-            if Tree.Branch[Fin]:
-                print(f"Cover Tree: {Tree.Cand}r{Tree.r+1}c{Tree.c+1}, FinBranch[{Fin}]:")
-                print(f"{Tree.Branch[Fin].Cand}r{Tree.Branch[Fin].r+1}c{Tree.Branch[Fin].c+1}")
-                climb_branch(Tree.Branch[Fin], 1)
-
-def climb_branch(TN, Lvl):
-
-    if TN.Children:
-        for Child in TN.Children:
-            print(f"{' |'*Lvl}{OP[TKN_LK[Child.Lk]]}{Child.Cand}r{Child.r+1}c{Child.c+1}")
-            climb_branch(Child, Lvl+1)
+    SLN = State.SLNodes[ANode.Hash]
+    Chain1 = [*Chain, NL(SLN.r, SLN.c, SLN.Cand, ANode.Lk)]
+    PrunesC = set()
+    for ANChild in ANode.Children:
+        SLNC = State.SLNodes[ANChild.Hash]
+        PrunesGC = set()
+        Chain2 = [*Chain1, NL(SLNC.r, SLNC.c, SLNC.Cand, ANChild.Lk)]
+        if ANChild.Children:  # not at the leaves yet.
+            for ANGChild in ANChild.Children:
+                kraken_chain_next_level(ANGChild, Chain2, Cands, Lvl+1, CTree, State, GrpLks)
+                if State.Pattern: return
+                if not ANGChild.Children: PrunesGC.add(ANGChild)
+            for X in PrunesGC:
+                for i in range(len(ANChild.Children)):
+                    if ANChild.Children[i].Hash == X.Hash: del ANChild.Children[i]; break
+        else:  # at the leaves
+            for r1, c1, Cand1, Lk1 in list_ccells_linked_to(SLNC.r, SLNC.c, SLNC.Cand, Cands, LK_STWK, GrpLks, True):
+                Hash = str(Cand1)+str(r1)+str(c1)
+                if Hash not in State.SLNodes: continue
+                for rx, cx, Candx, Lkx in Chain1:
+                    if ccells_intersect(r1, c1, Cand1, rx, cx, Candx, GrpLks): break
+                else:
+                    if Lk1 & LK_STRG: Lk1 |= LK_WKST
+                    Chain3 = [*Chain2, NL(r1, c1, Cand1, Lk1)]
+                    SLNGC = State.SLNodes[Hash]
+                    ANGChild = ANODE(Hash, Lk1)
+                    for SLNGGC in SLNGC.Children:
+                        for rx, cx, Candx, Lkx in Chain3:
+                            if ccells_intersect(SLNGGC.r, SLNGGC.c, SLNGGC.Cand, rx, cx, Candx, GrpLks): break
+                        else:
+                            Lk2 = how_ccells_linked(SLNGGC.r, SLNGGC.c, SLNGGC.Cand, CTree.r, CTree.c, CTree.Cand, Cands, GrpLks)
+                            if Lk2:
+                                if Lk2 & LK_STRG: Lk2 |= LK_WKST
+                                State.Pattern = [*Chain3, NL(SLNGGC.r, SLNGGC.c, SLNGGC.Cand, SLNGGC.Lk), NL(CTree.r, CTree.c, CTree.Cand, Lk2)]
+                                return
+                            if Lvl < KRAKEN_RECURSE_LIM: ANGChild.Children.append(ANODE(str(SLNGGC.Cand) + str(SLNGGC.r) + str(SLNGGC.c), SLNGGC.Lk))
+                    if ANGChild.Children:  ANChild.Children.append(ANGChild)
+        if not ANChild.Children:  PrunesC.add(ANChild)
+    for X in PrunesC:
+        for i in range(len(ANode.Children)):
+            if ANode.Children[i].Hash == X.Hash: del ANode.Children[i]; break

@@ -23,10 +23,26 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
     # group (either row, col, blk_peers will yield the single if one exists,
     # either hidden or exposed.
 
+    sCand = Step.Overrides.get('Cand')
+    if sCand: CandList = [int(s) for s in sCand.split(",")]
+    else: CandList = list(range(1, 10))
+    sRow = Step.Overrides.get('Row')
+    if sRow: RowList = [int(s)-1 for s in sRow.split(",")]
+    elif sRow == '': RowList = []
+    else: RowList = list(range(9))
+    sCol = Step.Overrides.get('Col')
+    if sCol: ColList = [int(s)-1 for s in sCol.split(",")]
+    elif sCol == '': ColList = []
+    else: ColList = list(range(9))
+    sBox = Step.Overrides.get('Box')
+    if sBox: BoxList = [int(s)-1 for s in sBox.split(",")]
+    elif sBox == '': BoxList = []
+    else: BoxList = list(range(9))
+
     n = c1 = r1 = Cand = 0  # hack to give variables function level scope.
     # scan rows
-    for r in range(9):
-        for Cand in range(1, 10):
+    for r in RowList:  # range(9):
+        for Cand in CandList:  # range(1, 10):
             n = 0
             for c in range(9):
                 if Cand in Cands[r][c]:
@@ -42,8 +58,8 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
                     discard_cand_from_peers(Cand, r, c1, Cands)
                     return 1
     # scan cols
-    for c in range(9):
-        for Cand in range(1, 10):
+    for c in ColList:  # range(9):
+        for Cand in CandList:  # range(1, 10):
             n = 0
             for r in range(9):
                 if Cand in Cands[r][c]:
@@ -59,9 +75,9 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
                     discard_cand_from_peers(Cand, r1, c, Cands)
                     return 1
     #scan boxs
-    for h in range(9):
+    for h in BoxList:  # range(9):
         br = (h//3)*3; bc = (h%3)*3
-        for Cand in range(1, 10):
+        for Cand in CandList:  # range(1, 10):
             n = 0
             for b in range(9):
                 r = br + b//3; c = bc + b%3

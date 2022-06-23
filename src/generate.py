@@ -4,7 +4,7 @@ from random import randint, randrange, shuffle, seed
 import sys
 
 from globals import *  # globals imports os and wx.
-from trc import TRCX
+# from trc import TRCX
 
 from solve_utils import cell_val_has_no_conflicts
 

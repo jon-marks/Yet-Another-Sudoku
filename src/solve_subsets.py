@@ -11,8 +11,21 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
     # exposed pair and the these candidates can be eliminated from the balance
     # of cells in the box and row/col.
 
+    sRow = Step.Overrides.get('Row')
+    if sRow: RowList = [int(s)-1 for s in sRow.split(",")]
+    elif sRow == '': RowList = []
+    else: RowList = list(range(9))
+    sCol = Step.Overrides.get('Col')
+    if sCol: ColList = [int(s)-1 for s in sCol.split(",")]
+    elif sCol == '': ColList = []
+    else: ColList = list(range(9))
+    sBox = Step.Overrides.get('Box')
+    if sBox: BoxList = [int(s)-1 for s in sBox.split(",")]
+    elif sBox == '': BoxList = []
+    else: BoxList = list(range(9))
+
     # Scan the rows first.
-    for r in range(9):
+    for r in RowList:
         for c in range(8):
             if len(Cands[r][c]) != 2: continue
             for c1 in range(c+1, 9):
@@ -46,7 +59,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                     Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END, ]]
                     return 0
     # then scan the cols.
-    for c in range(9):
+    for c in ColList:
         for r in range(8):
             if len(Cands[r][c]) != 2: continue
             for r1 in range(r+1, 9):
@@ -81,29 +94,29 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                     Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END, ]]
                     return 0
     # and finally scan the blocks.
-    for br in range(0, 9, 3):
-        for bc in range(0, 9, 3):
-            for rc in range(8):
-                r = br+(rc//3); c = bc+(rc%3)
-                if len(Cands[r][c]) != 2: continue
-                for rc1 in range(rc+1, 9):
-                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                    if Cands[r][c] != Cands[r1][c1]: continue
-                    # Found an exposed pair in a box, discard matching
-                    # candidates from remaining cells in the box.
-                    for rc2 in set(range(9)) - {rc, rc1}:
-                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                        if len(Cands[r2][c2]) == 0: continue
-                        for Cand in Cands[r][c]:
-                            if Cand in Cands[r2][c2]:
-                                Cands[r2][c2].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                    if Step.Outcome:
-                        Step.Method = T_EXPOSED_PAIR
-                        Step.Outcome.append([P_END, ])
-                        Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
-                        return 0
+    for h in BoxList:  # range BoxList:
+        br = (h//3)*3; bc = (h%3)*3
+        for rc in range(8):
+            r = br+(rc//3); c = bc+(rc%3)
+            if len(Cands[r][c]) != 2: continue
+            for rc1 in range(rc+1, 9):
+                r1 = br+(rc1//3); c1 = bc+(rc1%3)
+                if Cands[r][c] != Cands[r1][c1]: continue
+                # Found an exposed pair in a box, discard matching
+                # candidates from remaining cells in the box.
+                for rc2 in set(range(9)) - {rc, rc1}:
+                    r2 = br+(rc2//3); c2 = bc+(rc2%3)
+                    if len(Cands[r2][c2]) == 0: continue
+                    for Cand in Cands[r][c]:
+                        if Cand in Cands[r2][c2]:
+                            Cands[r2][c2].discard(Cand)
+                            if Step.Outcome: Step.Outcome.append((P_SEP,))
+                            Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                if Step.Outcome:
+                    Step.Method = T_EXPOSED_PAIR
+                    Step.Outcome.append([P_END, ])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
+                    return 0
     return -1
 
 def tech_hidden_pairs(Grid, Step, Cands, Methods):
@@ -202,8 +215,21 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
     # and a row/col, this is a locked exposed triple and the candidates can be
     # eliminated from the other cells in that box too.
 
+    sRow = Step.Overrides.get('Row')
+    if sRow: RowList = [int(s)-1 for s in sRow.split(",")]
+    elif sRow == '': RowList = []
+    else: RowList = list(range(9))
+    sCol = Step.Overrides.get('Col')
+    if sCol: ColList = [int(s)-1 for s in sCol.split(",")]
+    elif sCol == '': ColList = []
+    else: ColList = list(range(9))
+    sBox = Step.Overrides.get('Box')
+    if sBox: BoxList = [int(s)-1 for s in sBox.split(",")]
+    elif sBox == '': BoxList = []
+    else: BoxList = list(range(9))
+
     # Scan the rows first
-    for r in range(9):
+    for r in RowList:  # range(9):
         for c in range(7):
             if not 2 <= len(Cands[r][c]) <= 3: continue
             for c1 in range(c+1, 8):
@@ -248,7 +274,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                             [P_ROW, r], [P_COL, c2], [P_END, ]]
                             return 0
     # scan the cols
-    for c in range(9):
+    for c in ColList:  # range(9):
         for r in range(7):
             if not 2 <= len(Cands[r][c]) <= 3: continue
             for r1 in range(r+1, 8):
@@ -293,39 +319,39 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                             [P_ROW, r2], [P_COL, c], [P_END, ]]
                             return 0
     # the scan the blocks.
-    for br in range(0, 9, 3):
-        for bc in range(0, 9, 3):
-            for rc in range(7):
-                r = br+(rc//3); c = bc+(rc%3)
-                if not 2 <= len(Cands[r][c]) <= 3: continue
-                for rc1 in range(rc+1, 8):
-                    r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                    if not 2 <= len(Cands[r1][c1]) <= 3: continue
-                    for rc2 in range(rc1+1, 9):
-                        r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                        if not 2 <= len(Cands[r2][c2]) <= 3:
-                            continue
-                        D = Cands[r][c] | Cands[r1][c1] | Cands[r2][c2]
-                        if len(D) == 3:
-                            # An exposed triple is found
-                            for rc3 in set(range(9)) - {rc, rc1, rc2}:
-                                r3 = br+(rc3//3); c3 = bc+(rc3%3)
-                                if Grid[r3][c3]: continue
-                                for Cand in D:
-                                    if Cand in Cands[r3][c3]:
-                                        Cands[r3][c3].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                        Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                            if Step.Outcome:
-                                Step.Method = T_EXPOSED_TRIPLE
-                                Step.Outcome.append([P_END, ])
-                                Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
-                                                [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
-                                                [P_ROW, r1], [P_COL, c1], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ],
-                                                [P_ROW, r2], [P_COL, c2], [P_END, ]]
-                                return 0
+    for h in BoxList:  # range BoxList:
+        br = (h//3)*3; bc = (h%3)*3
+        for rc in range(7):
+            r = br+(rc//3); c = bc+(rc%3)
+            if not 2 <= len(Cands[r][c]) <= 3: continue
+            for rc1 in range(rc+1, 8):
+                r1 = br+(rc1//3); c1 = bc+(rc1%3)
+                if not 2 <= len(Cands[r1][c1]) <= 3: continue
+                for rc2 in range(rc1+1, 9):
+                    r2 = br+(rc2//3); c2 = bc+(rc2%3)
+                    if not 2 <= len(Cands[r2][c2]) <= 3:
+                        continue
+                    D = Cands[r][c] | Cands[r1][c1] | Cands[r2][c2]
+                    if len(D) == 3:
+                        # An exposed triple is found
+                        for rc3 in set(range(9)) - {rc, rc1, rc2}:
+                            r3 = br+(rc3//3); c3 = bc+(rc3%3)
+                            if Grid[r3][c3]: continue
+                            for Cand in D:
+                                if Cand in Cands[r3][c3]:
+                                    Cands[r3][c3].discard(Cand)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                    Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        if Step.Outcome:
+                            Step.Method = T_EXPOSED_TRIPLE
+                            Step.Outcome.append([P_END, ])
+                            Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
+                                            [P_ROW, r], [P_COL, c], [P_CON, ],
+                                            [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
+                                            [P_ROW, r1], [P_COL, c1], [P_CON, ],
+                                            [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ],
+                                            [P_ROW, r2], [P_COL, c2], [P_END, ]]
+                            return 0
     return -1
 
 def tech_hidden_triples(Grid, Step, Cands, Methods):
@@ -334,11 +360,24 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
     # Here we can eliminate candidates from those three cells that are not the
     # same three candidates, thereby exposing the hidden triple.
 
+    sRow = Step.Overrides.get('Row')
+    if sRow: RowList = [int(s)-1 for s in sRow.split(",")]
+    elif sRow == '': RowList = []
+    else: RowList = list(range(9))
+    sCol = Step.Overrides.get('Col')
+    if sCol: ColList = [int(s)-1 for s in sCol.split(",")]
+    elif sCol == '': ColList = []
+    else: ColList = list(range(9))
+    sBox = Step.Overrides.get('Box')
+    if sBox: BoxList = [int(s)-1 for s in sBox.split(",")]
+    elif sBox == '': BoxList = []
+    else: BoxList = list(range(9))
+
     for Cand0 in range(1, 8):
         for Cand1 in range(Cand0+1, 9):
             for Cand2 in range(Cand1+1, 10):
                 # scan rows
-                for r0 in range(9):
+                for r0 in RowList:  # range(9):
                     n0 = 0; C = []; U = set()
                     for c0 in range(9):
                         if Grid[r0][c0]: continue
@@ -365,7 +404,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             Step.Pattern.append([P_END, ])
                             return 0
                 # scan cols
-                for c0 in range(9):
+                for c0 in ColList:  # range(9):
                     n0 = 0; R = []; U = set()
                     for r0 in range(9):
                         if Grid[r0][c0]: continue
@@ -392,7 +431,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             Step.Pattern.append([P_END, ])
                             return 0
                 # scan boxes
-                for h0 in range(9):
+                for h0 in BoxList:  # range(9):
                     br = (h0//3)*3; bc = (h0%3)*3
                     n0 = 0; B = []; U = set()
                     for b0 in range(9):

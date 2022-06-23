@@ -2,7 +2,8 @@ from copy import copy
 from collections import namedtuple
 
 from globals import *
-from trc import TRCX
+from misc import pgm_msg
+# from trc import TRCX
 
 # from solve_utils import *  # remove dependency on this file, it should only be imported
 #                              by the tech modules below.
@@ -66,7 +67,7 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
            SLVR(tech_remote_pairs,        [T_REMOTE_PAIR]),
            SLVR(tech_x_chains,            [T_X_CHAIN, T_EVEN_X_LOOP, T_STRONG_X_LOOP]),# and loops, never before three link X-Chains
-           SLVR(tech_xy_chains,           [T_SC_XY_CHAIN, T_DC_IBVC_XY_CHAIN, T_XY_LOOP]),
+           SLVR(tech_xy_chains,           [T_SC_XY_CHAIN, T_DC_XY_CHAIN, T_DC_IBVC_XY_CHAIN, T_XY_LOOP]),
            SLVR(tech_ai_chains,           [T_W_WING, T_SC_AI_CHAIN, T_DC_AI_CHAIN, T_DC_IBVC_AI_CHAIN, T_EVEN_AI_LOOP, T_STRONG_AI_LOOP]),
            SLVR(tech_gl_x_chains,         [T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH, T_GL_X_CHAIN, T_GL_EVEN_X_LOOP, T_GL_STRONG_X_LOOP]),
            SLVR(tech_gl_ai_chains,        [T_GL_SC_AI_CHAIN, T_GL_DC_AI_CHAIN, T_GL_DC_IBVC_AI_CHAIN, T_GL_EVEN_AI_LOOP, T_GL_STRONG_AI_LOOP]),
@@ -79,10 +80,21 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_brute_force,         [T_BRUTE_FORCE])
            ]
 
-def method_solver(Tech):
+SlvrLU = {}
+for T in Tech.keys():
     for Slvr in Solvers:
-        if Tech in Slvr.Mthds: return Slvr.pFn
-    else: return None
+        if T in Slvr.Mthds: SlvrLU[T] = Slvr.pFn; break
+    else:
+        if T != T_UNDEF: pgm_msg("Warning", f"Method: {Tech[T].Text} does not have a solver")
+
+EnSlvrs = []
+for pFn, Mthds in Solvers:
+    EnMthds = []
+    for T in Mthds:
+        if T in Tech.keys():
+            if Tech[T].Enabled: EnMthds.append(T)
+        else: pgm_msg("Warning", f"Unknown Method Enumeration: {T}\n")
+    if EnMthds: EnSlvrs.append(SLVR(pFn, EnMthds))
 
 def check_puzzle_step(Grid, Cands, Soln):
     for r in range(9):
@@ -95,7 +107,7 @@ def check_puzzle_step(Grid, Cands, Soln):
                     return f"Invalid Elimination: r{r+1}c{c+1}-={Soln[r][c]}."
     return None
 
-def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
+def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None, StepOverrides = None):
     # Solve the puzzle passed in grid, returning the ordered list of logic
     # solution steps.
     #
@@ -110,40 +122,34 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None):
     MaxExpertise = 0
     if Meth != T_UNDEF and NrEmpties > 0:
         Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
+                    Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)],
+                    Overrides = StepOverrides)
+        NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
+        if NrSlvd >= 0:
+            Steps.append(Step)
+            if Tech[Meth].Expertise > MaxExpertise: MaxExpertise = Tech[Meth].Expertise
+            NrEmpties -= NrSlvd
+            if Soln:
+                Err = check_puzzle_step(Grid1, Cands, Soln)
+                if Err: return UNDEF, Steps, Err
+    while NrEmpties > 0:
+        Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
                     Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
-        pFn = method_solver(Meth)
-        if pFn:
-            NrSlvd = pFn(Grid1, Step, Cands, [Meth])
+        for pFn, Meths in EnSlvrs:
+            NrSlvd = pFn(Grid1, Step, Cands, Meths)
             if NrSlvd >= 0:
                 Steps.append(Step)
-                if Tech[Meth].Expertise > MaxExpertise: MaxExpertise = Tech[Meth].Expertise
+                if Tech[Step.Method].Expertise > MaxExpertise: MaxExpertise = Tech[Step.Method].Expertise
                 NrEmpties -= NrSlvd
                 if Soln:
                     Err = check_puzzle_step(Grid1, Cands, Soln)
                     if Err: return UNDEF, Steps, Err
-
-    while NrEmpties > 0:
-        Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
-                    Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
-        for Slvr in Solvers:
-            EnMthds = []; NrSlvd = -1
-            for Mthd in Slvr.Mthds:
-                if Tech[Mthd].Enabled: EnMthds.append(Mthd)
-            if EnMthds:
-                NrSlvd = Slvr.pFn(Grid1, Step, Cands, EnMthds)
-                if NrSlvd >= 0:
-                    Steps.append(Step)
-                    if Tech[Step.Method].Expertise > MaxExpertise: MaxExpertise = Tech[Step.Method].Expertise
-                    NrEmpties -= NrSlvd
-                    if Soln:
-                        Err = check_puzzle_step(Grid1, Cands, Soln)
-                        if Err: return UNDEF, Steps, Err
-                    break
+                break
         else:
             return UNDEF, Steps, "Can't solve step"
     return MaxExpertise, Steps, ""
 
-def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, OverrideEnableMthds = False):
+def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, MethodEnableOverride = False, StepOverrides = None):
     # Find the solution for the next step, used in providing hints to users.
     # Hints cannot be taken from the solution list as the user more than likely
     # solved the puzzle to this point taking a different path to that of the
@@ -156,22 +162,66 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, OverrideEna
     Grid1 = [[Grid[r][c] for c in range(9)] for r in range(9)]
     Step = STEP()
     if Meth != T_UNDEF:
-        pFn = method_solver(Meth)
-        if pFn: NrSlvd = pFn(Grid1, Step, Cands, [Meth])
-        else: return Step, f"Unknown Method: 0x{Meth:4x}"
+        Step.Overrides = StepOverrides
+        NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
+        # pFn = method_solver(Meth)
+        # if pFn: NrSlvd = pFn(Grid1, Step, Cands, [Meth])
+        # else: return Step, f"Unknown Method: 0x{Meth:4x}"
         if NrSlvd >= 0:
             if Soln:
                 Err = check_puzzle_step(Grid1, Cands, Soln)
                 if Err: return Step, Err,
             return Step, ""
-    for Slvr in Solvers:
-        EnMthds = []; NrSlvd = -1
-        for Mthd in Slvr.Mthds:
-            if Tech[Mthd].Enabled or OverrideEnableMthds: EnMthds.append(Mthd)
-        if EnMthds: NrSlvd = Slvr.pFn(Grid1, Step, Cands, EnMthds)
+    Step.OVerrides = {}
+    for pFn, Meths in Solvers if MethodEnableOverride else EnSlvrs:
+        NrSlvd = pFn(Grid1, Step, Cands, Meths)
         if NrSlvd >= 0:
             if Soln:
                 Err = check_puzzle_step(Grid1, Cands, Soln)
                 if Err: return Step, Err
             return Step, ""
     else: return Step, "Can't solve step"
+
+def pattern_search(oPzl, Meths, Meth, Overrides):
+
+    NrEmpties = oPzl.NrEmpties
+    Cands = [[copy(oPzl.Cands[r][c]) for c in range(9)] for r in range(9)]
+    Grid1 = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
+    Steps = []; Step = STEP()
+    while NrEmpties > 0:
+        for m in Meths:  #pFn, Meths in EnSlvrs:
+            Step.Pattern = []; Step.Outcome = []
+            NrSlvd = SlvrLU[m](Grid1, Step, Cands, Meths)
+            if NrSlvd >= 0:
+                NrEmpties -= NrSlvd
+                Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
+                if Err: return UNDEF, Steps, Err
+                break
+        else:
+            if NrEmpties > 0:
+                Step.Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
+                Step.Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)],
+                Step.Overrides = Overrides
+                Step.Pattern = []; Step.Outcome = []
+                NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
+                if NrSlvd >= 0:
+                    Steps.append(Step)
+                    Step = STEP()
+                    NrEmpties -= NrSlvd
+                    Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
+                    if Err: return UNDEF, Steps, Err
+                else:
+                    Step.OVerrides = {}
+                    for pFn, Meths1 in Solvers:
+                        Meths2 = []
+                        for Meth1 in Meths1:
+                            if Meth1 not in Meths: Meths2.append(Meth1)
+                        if not Meths2: continue
+                        Step.Pattern = []; Step.Outcome = []
+                        NrSlvd = pFn(Grid1, Step, Cands, Meths2)
+                        if NrSlvd >= 0:
+                            NrEmpties -= NrSlvd
+                            Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
+                            if Err: return Steps, Err
+                            break
+    return Steps, ""

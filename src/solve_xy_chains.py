@@ -190,29 +190,6 @@ def find_next_xy_child_nodes(Child, Cands, Lvl, Tree, Methods, Status):
                         if Status.Outcome:
                             Status.Tech = T_XY_LOOP
                             return
-                #
-                # if Lvl > 1:
-                #     if T_XY_LOOP in Methods:
-                #         Lk = how_ccells_linked(r1, c1, Candsl1[1], Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0], Cands)
-                #         if Lk:  # XY-Loop found
-                #             if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
-                #             Status.Pattern = []
-                #             for i in range(len(Child.Chain)-1):
-                #                 Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
-                #             Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, Lk)])
-                #             Status.Outcome = []
-                #             for i in range(len(Status.Pattern)-1):
-                #                 if Status.Pattern[i] & 0x000f == LK_WEAK:
-                #                     Status.Outcome.extend(link_elims(Status.Pattern[i].r, Status.Pattern[i].c, Status.Pattern[i].Cand[1],
-                #                             Status.Pattern[i+1].r, Status.Pattern[i+1].c, Status.Pattern[i+1].Cand[0],
-                #                             Cands, GrpLks))
-                #             if Status.Pattern[-1].Lk & 0x000f == LK_WEAK:
-                #                 Status.Outcome.extend(link_elims(Status.Pattern[-1].r, Status.Pattern[-1].c, Status.Pattern[-1].Cand[1],
-                #                         Status.Pattern[0].r, Status.Pattern[0].c, Status.Pattern[0].Cand[0],
-                #                         Cands, GrpLks))
-                #             if Status.Outcome:
-                #                 Status.Tech = T_XY_LOOP
-                #                 return
                 else:  # look for XY-Chains
                     Status.Outcome = []; Status.Tech = T_UNDEF
                     if Child.Chain[0].Cand[0] == Candsl1[1]:  # same end value.
@@ -236,20 +213,5 @@ def find_next_xy_child_nodes(Child, Cands, Lvl, Tree, Methods, Status):
                         Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, LK_NONE)])
                         return
                     else: Status.Tech = T_UNDEF; Status.Outcome = []
-                    # if T_SC_XY_CHAIN in Methods and Child.Chain[0].Cand[0] == Candsl1[1]:  # same candidate chain ends
-                    #     for rx, cx in cells_that_see_all_of([(r1, c1), (Child.Chain[0].r, Child.Chain[0].c)]):
-                    #         if Candsl1[1] in Cands[rx][cx]: Status.Outcome.append((rx, cx, Candsl1[1]))
-                    #     if Status.Outcome: Status.Tech = T_SC_XY_CHAIN
-                    # elif T_DC_IBVC_XY_CHAIN in Methods and (Child.Chain[0].r == r1 or Child.Chain[0].c == c1 or (Child.Chain[0].r//3 == r1//3 and Child.Chain[0].c//3 == c1//3)) \
-                    #         and len(Cands[r1][c1]) == 2 and Cands[Child.Chain[0].r][Child.Chain[0].c] == Cands[r1][c1]:  # Identical BV cells in same house
-                    #     Status.Outcome = [(Child.Chain[0].r, Child.Chain[0].c, Child.Chain[0].Cand[0]), (r1, c1, Candsl1[1])]
-                    #     if Status.Outcome: Status.Tech = T_DC_IBVC_XY_CHAIN
-                    # if Status.Outcome:
-                    #     Status.Pattern = []
-                    #     for i in range(len(Child.Chain)-1):
-                    #         Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
-                    #     if Lk1 & LK_STRG: Lk1 = (Lk1 & 0x01f0) | LK_WKST
-                    #     Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, LK_NONE)])
-                    #     return
                 # No possible eliminations, grow branches.
                 Child.Children.append(TNODE(r1, c1, Candsl1, Lk1, [*Child.Chain, NL(r1, c1, Candsl1, Lk1)]))

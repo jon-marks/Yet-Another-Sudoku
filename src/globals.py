@@ -23,8 +23,11 @@ VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 # Generic enumerations
 UNDEF   = -1
-RECURSE_LIM = 5    # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
-                    # Equivalent to (n+1)*2 chain nodes.
+AIC_RECURSE_LIM = 5     # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
+                        # equivalent to (n+1)*2 chain nodes.
+KRAKEN_RECURSE_LIM = 4  # the limit of recursion for kraken fish
+                        # equivalent to (n+2)*2 chain nodes
+
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
                     "Sudoku value files (*.svl)|*.svl"
 MAX_SVL_FILE_SIZE = 4096  # even this value is generous
@@ -366,27 +369,12 @@ OP = ["",    # OP_NONE
 
 TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
-# # Puzzle Solution attributes
-# S_FOUND = 0  # True if found, false otherwise
-# S_GRID  = 1  # The solved grid if not None.
-# S_RSTP  = 2  # Number of recursive steps (recursion calls) to find solution
-
 # Puzzle properties histogram attribute enums
 HT_NR    = 0  # Count of logic technique used
 HT_TXT   = 1  # Textual name of logic technique
 HT_LVL   = 2  # Expertise level of technique
 HT_DIFF  = 3  # Difficulty score of the technique
 HT_ADIFF = 4  # Accumulated difficulty score
-
-# # Puzzle properties
-# # PR_REQ_LVL    = 0  # Requested level of expertise
-# PR_LVL         = 1  # Actual level of expertise
-# # PR_NR_HOLES   = 2  # The total number of holes dug
-# PR_GVNS_HISTO  = 3  # Value histogram of the givens
-# PR_STEPS       = 4  # The list of steps a solution path
-# PR_STEPS_HISTO = 5  # Solution steps histogram
-# PR_DIFF        = 6  # The difficulty of the puzzle.
-# PR_NR_GVNS     = 7  # Grid containing only givens
 
 TRC = True if path[-1] == ".trc_true" else False
 
@@ -398,13 +386,15 @@ class PZL:
                  Givens = None,     # Puzzle givens, int[9][9]
                  Steps = None,      # Sequence of steps to solve puzzle, [Step1, Step2, ...]
                  Lvl = UNDEF,       # level of expertise enum.
-                 Sym = UNDEF,       # Symetry pattern enum
+                 Sym = UNDEF,       # Symmetry pattern enum
                  Grid = None,       # Givens and placed - placed offset by 10 int[9][9]
                  Elims = None,      # Solved eliminations.
-                 Cands = None,      # Only used when Sudoku.AssistCands = False
+                 Cands = None,      # Candidates temporary store or to keep track of human solved cands
                  Method = T_UNDEF,  # Next step method enum
+                 Overrides = None,  # Key/Val dict of pattern/test overrides
                  Pattern = None,    # Next step pattern string
-                 Outcome = None     # Mext step Outcome string
+                 Outcome = None,     # Mext step Outcome string
+                 NrEmpties = -1
                  ):
         self.Soln = Soln
         self.Givens = Givens
@@ -415,8 +405,10 @@ class PZL:
         self.Elims = Elims
         self.Cands = Cands
         self.Method = Method
+        self.Overrides = Overrides if Overrides else {}
         self.Pattern = Pattern if Pattern else []
         self.Outcome = Outcome if Outcome else []
+        self.NrEmpties = NrEmpties
 
 class STEP:
     def __init__(self,
@@ -427,7 +419,8 @@ class STEP:
                  Cands      = None,
                  NrLks      = 0,
                  NrGrpLks   = 0,
-                 Difficulty = 0
+                 Difficulty = 0,
+                 Overrides  = None
                  ):
         self.Method     = Method
         self.Pattern    = Pattern if Pattern else []
@@ -437,6 +430,7 @@ class STEP:
         self.NrLks      = NrLks
         self.NrGrpLks   = NrGrpLks
         self.Difficulty = Difficulty
+        self.Overrides = Overrides if Overrides else {}
 
 class PZL_PROPS:
     def __init__(self,

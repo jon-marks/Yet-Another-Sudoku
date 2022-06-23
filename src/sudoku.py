@@ -444,7 +444,7 @@ class Sudoku:
         self.StatusBar.update_0("Grading Puzzle, may take some time. . .")
         self.update_board(ST_SLV, oPzl)  # Change board colouring from Enter mode to Solve mode
         # TRCX("Begin Solve")
-        oPzl.Lvl, oPzl.Steps, Err = logic_solve_puzzle(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln)
+        oPzl.Lvl, oPzl.Steps, Err = logic_solve_puzzle(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, oPzl.Overrides)
         # TRCX("End Solve")
         if oPzl.Lvl < 0:
             wx.MessageBox(f"Cannot solve puzzle: {Err}\n"
