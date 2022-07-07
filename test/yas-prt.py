@@ -16,44 +16,47 @@ chdir(Root)
 path.insert(0, f"{join(Root, SrcDir)}")
 
 from globals import *
-# from trc import *
 from generate import *
 from misc import *
 from solve import *
 from solve_utils import *
 
-
-
 def yas_prt():
 
-    print(f"YAS Pattern Regression Tester.  Run start: {datetime.now()}.", flush = True)  # , using {Code} code.", flush = True)
+    print(f"YAS Pattern Regression Tester.")
+    print(VERSION)
+    print(f"Run start: {datetime.now()}.", flush = True)  # , using {Code} code.", flush = True)
     TestDataDir = join(join(Root, TestDir), TestDDir)
     Src = join(TestDataDir, SrcFile+FileExt)
     Dst = join(TestDataDir, SrcFile+DstSuff+FileExt)
     Begin = 0; End = 9999999
     for i in range(1, len(argv)):
-        if argv[i][:2] in ["i=", "I="]: Src = argv[i][2:]
-        elif argv[i][:2] in ["o=", "O="]: Dst = argv[i][2:]
+        if argv[i][:2] in ["i=", "I="]:
+            if argv[i][:2]: Src = argv[i][2:]
+        elif argv[i][:2] in ["o=", "O="]:
+            if argv[i][:2]: Dst = argv[i][2:]
         elif argv[i][:2] in ["b=", "B="]: Begin = int(argv[i][2:])
         elif argv[i][:2] in ["e=", "E="]: End = int(argv[i][2:])
         else:
             print(f"Syntax: next_step.py [i=<input file path>] [o=<output file path>] [s=<n>] [e=<m>]\n"
-                  f"  i=<path>:  (optional) input file path, default: {Src}\n"
-                  f"  o=<path>:  (optional) output file path, default: {Dst}\n"
+                  f"  i=<path>:  (optional) input file path,"
+                  f"             default: {Src}\n"
+                  f"  o=<path>:  (optional) output file path,"
+                  f"             default: {Dst}\n"
                   f"  b=<n>:     (optional) begin testing from file line number, default: {Begin}\n"
                   f"  e=<m>:     (optional) stop testing after line number, default: {End}.\n")
             exit()
 
-    i = 0; Test = 0; Diffs = 0; Errs = 0
+    nLine = 0; nPzl = 0; Diffs = 0; Errs = 0
     with open(Src, "rt") as f:
         with open(Dst, "wt") as f1:
             while 1:
+                StTime = perf_counter()
                 Line = f.readline()
                 if not Line: break
-                i += 1
-                if not Begin <= i <= End: continue
-                if Line[:3] == "## ": print(f"\n{perf_counter():07f}: Line: {i}, Test: {Test}, {Line[0:-1]}", flush = True)
-
+                nLine += 1
+                if not Begin <= nLine <= End: continue
+                if Line[:3] == "## ": print(f"\n{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[0:-1]}", flush = True)
                 if Line == "\n" or Line[0] == "#":
                     f1.write(Line); f1.flush()
                     continue
@@ -61,10 +64,10 @@ def yas_prt():
                 NrFlds, sErr = pzl_str_to_pzl(Line, oPzl)
                 if not NrFlds:
                     f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
-                    print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Error: {sErr}", flush = True)
+                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                     Errs += 1
                     continue
-                Test += 1
+                nPzl += 1
                 TD = Line.rstrip(" \n").split("|")
                 lenTD = len(TD)
                 if not oPzl.Soln:
@@ -73,22 +76,16 @@ def yas_prt():
                     else:
                         St = f"Invalid Puzzle:  {Found} solutions found: {Line}"
                         f1.write(St); f1.flush()
-                        print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Error: {St}", flush = True)
+                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {St}", flush = True)
                         Errs += 1
                         continue
                 else: sSoln = TD[6]  # if lenTD >= 6 else ""
                 Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True, oPzl.Overrides)
                 if Err:
                     f1.write(f"# Warning: Error encountered: {Err}, Solving:  {Line}")
-                    print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
+                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Expected: {sExpMeth}| Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
                     Errs += 1
                     continue
-                    # Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True)
-                    # if Err:
-                    #     f1.write(f"# Warning: Error encountered: {Err}, Solving:  {Line}")
-                    #     print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Expected: {sExpMeth}, Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
-                    #     Errs += 1
-                    #     continue
 
                 sActMeth = Tech[Step.Method].Text
                 sCond = tkns_to_str(Step.Pattern).replace(" ", "").replace(".", "")
@@ -107,19 +104,25 @@ def yas_prt():
                         if set(sExpCond.split(";")) != set(sCond.split(";")): Match = False
                     if sExpOutc:
                         if set(sExpOutc.split(";")) != set(sOutc.split(";")): Match = False
-                if Match: print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, {sActMeth}", flush = True)
+                if Match: print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sActMeth}", flush = True)
                 else:
-                    if (sExpMeth != sActMeth):  sWarn = "Different Method"
-                    elif (sExpOutc != sOutc):   sWarn = "Different Outcome"
-                    elif (sExpCond != sCond):   sWarn = "Different Pattern"
+                    if sExpMeth != sActMeth:  sWarn = "Different Method"
+                    elif sExpOutc != sOutc:   sWarn = "Different Outcome"
+                    elif sExpCond != sCond:   sWarn = "Different Pattern"
                     f1.write(f"# Warning: {sWarn} found for: {Line}")
-                    print(f"{perf_counter():07f}: Line: {i}, Test: {Test}, Warning: {sWarn}: {sExpMeth}|{sExpCond}|{sExpOutc}, Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
+                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Warning: {sWarn}| {sExpMeth}|{sExpCond}|{sExpOutc}| Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
                     Diffs += 1
                 f1.write(f"{sGr}|{sElims}|{sActMeth}|{sOverrides}|{sCond}|{sOutc}|{sSoln}\n")
                 f1.flush()
-    print(f"{perf_counter():07f}: End Run, Lines: {i}, Tests: {Test},  Differences: {Diffs}, Errors: {Errs}.")
+    print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Differences: {Diffs}, Errors: {Errs}.")
 
+def time_str(STime = 0):
+
+    ETime = perf_counter()
+    DTime = ETime - STime
+    ESecs = ETime % 60; EMins = int((ETime//60)%60); EHrs = int(ETime//3600)
+    DSecs = DTime % 60; DMins = int((DTime//60)%60); DHrs = int(DTime//3600)
+    return f"{EHrs:02d}:{EMins:02d}:{ESecs:07.4f}|{DHrs:02d}:{DMins:02d}:{DSecs:07.4f}"
 
 if __name__ == "__main__":
     yas_prt()
-

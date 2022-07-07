@@ -173,20 +173,19 @@ def find_next_xy_child_nodes(Child, Cands, Lvl, Tree, Methods, Status):
                 if Lk:  # XY-Loop found
                     if T_XY_LOOP in Methods:
                         if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
-                        Status.Pattern = []
+                        Status.Pattern = []; Status.Outcome = []
                         for i in range(len(Child.Chain)-1):
                             Status.Pattern.append(NL(Child.Chain[i].r, Child.Chain[i].c, Child.Chain[i].Cand, Child.Chain[i+1].Lk))
                         Status.Pattern.extend([NL(Child.Chain[-1].r, Child.Chain[-1].c, Child.Chain[-1].Cand, Lk1), NL(r1, c1, Candsl1, Lk)])
-                        Status.Outcome = []
-                        for i in range(len(Status.Pattern)-1):
-                            if Status.Pattern[i].Lk & 0x000f == LK_WEAK:
-                                Status.Outcome.extend(link_elims(Status.Pattern[i].r, Status.Pattern[i].c, Status.Pattern[i].Cand[1],
-                                                                 Status.Pattern[i+1].r, Status.Pattern[i+1].c, Status.Pattern[i+1].Cand[0],
-                                                                 Cands, False))
-                        if Lk & 0x000f == LK_WEAK:
-                            Status.Outcome.extend(link_elims(Status.Pattern[-1].r, Status.Pattern[-1].c, Status.Pattern[-1].Cand[1],
-                                                             Status.Pattern[0].r, Status.Pattern[0].c, Status.Pattern[0].Cand[0],
-                                                             Cands, False))
+                        for r in range(9):
+                            for c in range(9):
+                                for Cand in Cands[r][c]:
+                                    Odd = Even = False
+                                    for rn, cn, Candn, Lkn in Status.Pattern:
+                                        if (r, c) == (rn, cn) and Cand in Candn: break
+                                        if how_ccells_linked(r, c, Cand, rn, cn, Candn[0], Cands):  Even = True
+                                        elif how_ccells_linked(r, c, Cand, rn, cn, Candn[1], Cands): Odd = True
+                                        if Odd and Even: Status.Outcome.append((r, c, Cand)); break
                         if Status.Outcome:
                             Status.Tech = T_XY_LOOP
                             return

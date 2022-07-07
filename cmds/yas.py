@@ -17,19 +17,11 @@ Trc = False
 # Mods = INT | PROD
 # nArgs = min(3, len(argv))
 for i in range(1, len(argv)):  # nArgs):
-    # if argv[i] in ["INT", "Int", "int"]: Mods = INT; sRun = ""
-    # elif argv[i] in ["PROD", "Prod", "prod"]: Mods = INT | PROD; sRun = " - Production Build"
-    # elif argv[i] in ["DEV", "Dev", "dev"]: Mods = INT | PROD | DEV; sRun = " - Development Build"
     if argv[i] in ["t", "T", "-t", "/t"]: Trc = True
     else:
         print("Incorrect syntax!\n"
               "Syntax: yas.py [t]\n"
               "     t:      (optional) activated TRCX functionality.\n")
-              # "                 INT:  use only interpreted Python code.\n"
-              # "                 DEV:  use existing development Cython compiled binaries instead\n"
-              # "                       of interpreted code (unoptimised and line trace support).\n"
-              # "                 PROD: use existing production Cython compiled binaries instead of\n"
-              # "                       interpreted code (optimised and no line trace support).")
         exit()
 
 Root  = dirname(dirname(argv[0]))

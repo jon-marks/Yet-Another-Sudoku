@@ -8,19 +8,6 @@ def tech_ai_chains(Grid, Step, Cands, Methods):
 def tech_gl_ai_chains(Grid, Step, Cands, Methods):
     return ai_chains(Grid, Step, Cands, Methods, True)
 
-# class ANODE:
-#     def __init__(self, Hash = -1, Lk = LK_NONE, DeadEnd = False, Children = None):
-#         self.Hash = Hash
-#         self.Lk = Lk
-#         self.Children = Children if Children else []
-#
-# class STATE:
-#     def __init__(self, SLNodes = None, Tech = T_UNDEF, Pattern = None, Outcome = None):
-#         self.SLNodes = SLNodes if SLNodes else []
-#         self.Tech = Tech
-#         self.Pattern = Pattern if Pattern else []
-#         self.Outcome = Outcome if Outcome else []
-
 def ai_chains(Grid, Step, Cands, Methods, GrpLks = False):
 
     SLNodes = {}
@@ -115,7 +102,7 @@ def ai_chain_next_level(ANode, Chain, Cands, Lvl, Methods, State, GrpLks):
                             if resolve_other_ai_chain_patterns([*Chain3, NL(SLNGGC.r, SLNGGC.c, SLNGGC.Cand, SLNGGC.Lk)], Cands, Methods, GrpLks, State): return
                             if Lvl <= AIC_RECURSE_LIM: ANGChild.Children.append(ANODE(str(SLNGGC.Cand) + str(SLNGGC.r) + str(SLNGGC.c), SLNGGC.Lk))
                     if ANGChild.Children:  ANChild.Children.append(ANGChild)
-        if not ANChild.Children:  PrunesC.add(ANChild)
+        if not ANChild.Children or Lvl > AIC_RECURSE_LIM:  PrunesC.add(ANChild)
     for X in PrunesC:
         for i in range(len(ANode.Children)):
             if ANode.Children[i].Hash == X.Hash: del ANode.Children[i]; break
@@ -142,19 +129,36 @@ def resolve_other_ai_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
 
     Status.Tech = T_UNDEF
     Lk = how_ccells_linked(Chain[0].r, Chain[0].c, Chain[0].Cand, Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Cands, GrpLks)
-    if {T_EVEN_AI_LOOP, T_GL_EVEN_AI_LOOP} & set(Methods) and Lk:  # Even AI-Loop
+    if {T_EVEN_AI_LOOP, T_GL_EVEN_AI_LOOP} & set(Methods) and Lk:  # Even AI-Loop found
         if Lk & LK_STRG: Lk |= LK_WKST
         Status.Pattern = []; Status.Outcome = []
-        for i in range(len(Chain)-1):
-            Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
-            if i & 0x0001 and Chain[i+1].Lk & 0x07 == LK_WEAK:
-                Status.Outcome.extend(link_elims(Chain[i].r, Chain[i].c, Chain[i].Cand,
-                                                 Chain[i+1].r, Chain[i+1].c, Chain[i+1].Cand, Cands, GrpLks))
-        Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Lk))
-        if Lk & 0x07 == LK_WEAK:
-            Status.Outcome.extend(link_elims(Chain[-1].r, Chain[-1].c, Chain[-1].Cand,
-                                             Chain[0].r, Chain[0].c, Chain[0].Cand, Cands, GrpLks))
-        if Status.Outcome:  # AI-Loop with Elimination found.
+        # Search for ccells that are not part of the chain and can see both an odd and even chain node.
+        if GrpLks:
+            for r in range(9):
+                for c in range(9):
+                    for Cand in Cands[r][c]:
+                        Odd = Even = False
+                        for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
+                            if ccells_intersect({r}, {c}, Cand, rn, cn, Candn, GrpLks): break
+                            if how_ccells_linked({r}, {c}, Cand, rn, cn, Candn, Cands, GrpLks):
+                                if i & 0x01: Odd = True
+                                else: Even = True
+                                if Odd and Even: Status.Outcome.append((r, c, Cand)); break
+        else:
+            for r in range(9):
+                for c in range(9):
+                    for Cand in Cands[r][c]:
+                        Odd = Even = False
+                        for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
+                            if (r, c, Cand) == (rn, cn, Candn): break
+                            if how_ccells_linked(r, c, Cand, rn, cn, Candn, Cands, GrpLks):
+                                if i & 0x01: Odd = True
+                                else: Even = True
+                                if Odd and Even: Status.Outcome.append((r, c, Cand)); break
+        if Status.Outcome:
+            for i in range(len(Chain)-1):
+                Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
+            Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Lk))
             Status.Tech = T_GL_EVEN_AI_LOOP if GrpLks else T_EVEN_AI_LOOP
             return True
     else:
@@ -169,12 +173,14 @@ def resolve_other_ai_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
         elif cells_in_same_house(Chain[0].r, Chain[0].c, Chain[-1].r, Chain[-1].c, GrpLks):
             if T_DC_IBVC_AI_CHAIN in Methods and ~GrpLks \
                     and (Chain[0].r != Chain[-1].r or Chain[0].c != Chain[-1].c) \
+                    and len(Cands[Chain[0].r][Chain[0].c]) == 2 \
                     and Cands[Chain[0].r][Chain[0].c] == Cands[Chain[-1].r][Chain[-1].c]:
                 Status.Tech = T_DC_IBVC_AI_CHAIN
                 Status.Outcome = [(Chain[0].r, Chain[0].c, Chain[0].Cand), (Chain[-1].r, Chain[-1].c, Chain[-1].Cand)]
             elif T_GL_DC_IBVC_AI_CHAIN in Methods and GrpLks \
                     and (Chain[0].r != Chain[-1].r or Chain[0].c != Chain[-1].c) \
                     and len(Chain[0].r) == len(Chain[-1].r) == len(Chain[0].c) == len(Chain[-1].c) == 1 \
+                    and len(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]]) == 2 \
                     and Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]] == Cands[list(Chain[-1].r)[0]][list(Chain[-1].c)[0]]:
                 Status.Tech = T_GL_DC_IBVC_AI_CHAIN
                 Status.Outcome = [(list(Chain[0].r)[0], list(Chain[0].c)[0], Chain[0].Cand), (list(Chain[-1].r)[0], list(Chain[-1].c)[0], Chain[-1].Cand)]

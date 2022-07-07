@@ -872,9 +872,9 @@ def kraken_chain_next_level(ANode, Chain, Cands, Lvl, CTree, State, GrpLks):
                                 if Lk2 & LK_STRG: Lk2 |= LK_WKST
                                 State.Pattern = [*Chain3, NL(SLNGGC.r, SLNGGC.c, SLNGGC.Cand, SLNGGC.Lk), NL(CTree.r, CTree.c, CTree.Cand, Lk2)]
                                 return
-                            if Lvl < KRAKEN_RECURSE_LIM: ANGChild.Children.append(ANODE(str(SLNGGC.Cand) + str(SLNGGC.r) + str(SLNGGC.c), SLNGGC.Lk))
+                            if Lvl <= KRAKEN_RECURSE_LIM: ANGChild.Children.append(ANODE(str(SLNGGC.Cand) + str(SLNGGC.r) + str(SLNGGC.c), SLNGGC.Lk))
                     if ANGChild.Children:  ANChild.Children.append(ANGChild)
-        if not ANChild.Children:  PrunesC.add(ANChild)
+        if not ANChild.Children or Lvl > KRAKEN_RECURSE_LIM:  PrunesC.add(ANChild)
     for X in PrunesC:
         for i in range(len(ANode.Children)):
             if ANode.Children[i].Hash == X.Hash: del ANode.Children[i]; break

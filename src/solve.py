@@ -172,7 +172,7 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, MethodEnabl
                 Err = check_puzzle_step(Grid1, Cands, Soln)
                 if Err: return Step, Err,
             return Step, ""
-    Step.OVerrides = {}
+    Step.Overrides = {}
     for pFn, Meths in Solvers if MethodEnableOverride else EnSlvrs:
         NrSlvd = pFn(Grid1, Step, Cands, Meths)
         if NrSlvd >= 0:
@@ -199,8 +199,8 @@ def pattern_search(oPzl, Meths, Meth, Overrides):
                 break
         else:
             if NrEmpties > 0:
-                Step.Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
-                Step.Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)],
+                Step.Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)]
+                Step.Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)]
                 Step.Overrides = Overrides
                 Step.Pattern = []; Step.Outcome = []
                 NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
@@ -211,7 +211,7 @@ def pattern_search(oPzl, Meths, Meth, Overrides):
                     Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
                     if Err: return UNDEF, Steps, Err
                 else:
-                    Step.OVerrides = {}
+                    Step.Overrides = {}
                     for pFn, Meths1 in Solvers:
                         Meths2 = []
                         for Meth1 in Meths1:

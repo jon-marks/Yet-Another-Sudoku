@@ -11,15 +11,26 @@ Audit:
 
 """
 
-from sys import path
+from sys import path, version
+from git import Repo
+from time import strftime, gmtime
+
 
 import wx
 
 TITLE   = 'Yet Another Sudoku'
-BLURB   = '*  Feature rich, with a\n'\
+BLURB   = '*  Feature rich with a\n' \
           '*  Simple and minimal user interface'
 
 VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
+
+# TODO: This must be moved to PyInstaller when I get that working.
+oRepo = Repo(".")
+sDirty = "-Dirty" if oRepo.is_dirty() else ""
+sTimeStamp = strftime("%d %b %Y, %H:%M:%S", gmtime(oRepo.head.commit.committed_date))
+sVers = f"V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}, {sTimeStamp}."
+VERSION = f"    {sVers}\n" \
+          f"    Python {version}"
 
 # Generic enumerations
 UNDEF   = -1
@@ -499,9 +510,9 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_DC_IBVC_AI_CHAIN:         TECH_T(True, "Different End Candidate Identical BVC AI-Chain", EXP_ACCOMPLISHED, 80),
         T_EVEN_AI_LOOP:             TECH_T(True, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
         T_STRONG_AI_LOOP:           TECH_T(True, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
-        T_KRAKEN_FINNED_X_WING:     TECH_T(True, "Kraken X-Wing",             EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Kraken Swordfish",          EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Kraken Jellyfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_X_WING:     TECH_T(True, "Kraken Finned X-Wing",             EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Kraken Finned Swordfish",          EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Kraken Finned Jellyfish",          EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_X_WING:       TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_SWORDFISH:    TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_JELLYFISH:    TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
@@ -515,9 +526,9 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_GL_DC_IBVC_AI_CHAIN:         TECH_T(True, "Group Linked Different End Candidate Identical BVC AI-Chain", EXP_ACCOMPLISHED, 80),
         T_GL_EVEN_AI_LOOP:             TECH_T(True, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
         T_GL_STRONG_AI_LOOP:           TECH_T(True, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
-        T_GL_KRAKEN_FINNED_X_WING:     TECH_T(True, "Group Linked Kraken X-Wing", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Group Linked Kraken Swordfish", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Group Linked Kraken Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_X_WING:     TECH_T(True, "Group Linked Kraken Finned X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Group Linked Kraken Finned Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Group Linked Kraken Finned Jellyfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),

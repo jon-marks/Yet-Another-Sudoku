@@ -532,8 +532,6 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
             rb0 = list(F)[0]; cb0 = list(T)[0]
             for b0 in range(9):
                 rb = rb0 + b0//3; cb = cb0 + b0%3
-            # rb0 = list(F)[0]; rb1 = rb0+1; rb2 = rb0+2; cb0 = list(T)[0]; cb1 = cb0+1; cb2 = cb0+2
-            # for rb, cb in [(rb0, cb0), (rb0, cb1), (rb0, cb2), (rb1, cb0), (rb1, cb1), (rb1, cb2), (rb2, cb0), (rb2, cb1), (rb2, cb2)]:
                 if (rb in r0 | r1) and (cb in c0 | c1): continue
                 if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
             return LK_STWK | LK_BOX
@@ -570,31 +568,6 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
                 if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
             return LK_STWK | LK_BOX
         return LK_NONE
-
-        #     for rb in [rb0, rb0+1, rb0+2]:
-        #         for cb in [cb0, cb0+1, cb0+2]:
-        #             if (rb, cb) in {(r0, c0), (r1, c1)}: continue
-        #             if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
-        #     return LK_STWK | LK_BOX
-        # return LK_NONE
-
-
-    # rb = (r//3)*3; cb = (c//3)*3
-    # n = 0
-    # for b0 in range(9):
-    #     r0 = rb + b0//3; c0 = cb + b0%3
-    #     if not(r == r0 or c == c0) and len(Cands[r0][c0]) == 2 and Cand in Cands[r0][c0]: L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
-    #     if not(r == r0 and c == c0) and Cand in Cands[r0][c0]: n += 1
-    # Lk0 = (LK_WEAK if n > 1 else LK_WKST) | LK_BOX
-    # #     if r == r0 or c == c0 or len(Cands[r0][c0]) != 2 or Cand not in Cands[r0][c0]: continue
-    # #     L.append((r0, c0, [Cand, list(Cands[r0][c0] ^ {Cand})[0]]))
-    # # Lk0 = Lk0 = (LK_WEAK if len(L) > 1 else LK_WKST) | LK_BOX
-    # for r0, c0, Candsl0 in L: LCL.append((r0, c0, Candsl0, Lk0))
-    # return LCL
-
-
-
-
 
 def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
     # Finds all the strong links for a candidate and enters makes two entries

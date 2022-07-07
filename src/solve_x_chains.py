@@ -52,7 +52,7 @@ def x_chains(Grid, Step, Cands, Methods, GrpLks = False):
                     Step.Outcome.append([P_END, ])
                     return 0
             if not Tree.Children: Culls.add(Hash)
-        for Hash in Culls:  del Forest[Hash]
+        for Hash in Culls: del Forest[Hash]
     return -1
 
 def x_chain_next_level(ANode, Chain, Cands, Lvl, Methods, State, GrpLks):
@@ -91,7 +91,7 @@ def x_chain_next_level(ANode, Chain, Cands, Lvl, Methods, State, GrpLks):
                             if resolve_other_x_chain_patterns([*Chain3, NL(SLNGGC.r, SLNGGC.c, SLNGGC.Cand, SLNGGC.Lk)], Cands, Methods, GrpLks, State): return
                             if Lvl <= AIC_RECURSE_LIM: ANGChild.Children.append(ANODE(str(SLNGGC.Cand) + str(SLNGGC.r) + str(SLNGGC.c), SLNGGC.Lk))
                     if ANGChild.Children:  ANChild.Children.append(ANGChild)
-        if not ANChild.Children:  PrunesC.add(ANChild)
+        if not ANChild.Children or Lvl > AIC_RECURSE_LIM:  PrunesC.add(ANChild)
     for X in PrunesC:
         for i in range(len(ANode.Children)):
             if ANode.Children[i].Hash == X.Hash: del ANode.Children[i]; break
@@ -119,16 +119,33 @@ def resolve_other_x_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
     if {T_EVEN_X_LOOP, T_GL_EVEN_X_LOOP} & set(Methods) and Lk:  # Even X-Loop
         if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
         Status.Pattern = []; Status.Outcome = []
-        for i in range(len(Chain)-1):
-            Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
-            if i & 0x0001 and Chain[i+1].Lk & 0x07 == LK_WEAK:
-                Status.Outcome.extend(link_elims(Chain[i].r, Chain[i].c, Chain[i].Cand,
-                        Chain[i+1].r, Chain[i+1].c, Chain[i+1].Cand, Cands, GrpLks))
-        Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Lk))
-        if Lk & 0x07 == LK_WEAK:
-            Status.Outcome.extend(link_elims(Chain[-1].r, Chain[-1].c, Chain[-1].Cand,
-                    Chain[0].r, Chain[0].c, Chain[0].Cand, Cands, GrpLks))
-        if Status.Outcome:  # AI-Loop with Elimination found.
+        # Search for ccells that are not part of the chain and can see both an odd and even chain node.
+        if GrpLks:
+            for r in range(9):
+                for c in range(9):
+                    for Cand in Cands[r][c]:
+                        Odd = Even = False
+                        for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
+                            if ccells_intersect({r}, {c}, Cand, rn, cn, Candn, GrpLks): break
+                            if how_ccells_linked({r}, {c}, Cand, rn, cn, Candn, Cands, GrpLks):
+                                if i & 0x01: Odd = True
+                                else: Even = True
+                                if Odd and Even: Status.Outcome.append((r, c, Cand)); break
+        else:
+            for r in range(9):
+                for c in range(9):
+                    for Cand in Cands[r][c]:
+                        Odd = Even = False
+                        for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
+                            if (r, c, Cand) == (rn, cn, Candn): break
+                            if how_ccells_linked(r, c, Cand, rn, cn, Candn, Cands, GrpLks):
+                                if i & 0x01: Odd = True
+                                else: Even = True
+                                if Odd and Even: Status.Outcome.append((r, c, Cand)); break
+        if Status.Outcome:
+            for i in range(len(Chain)-1):
+                Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
+            Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Lk))
             Status.Tech = T_GL_EVEN_X_LOOP if GrpLks else T_EVEN_X_LOOP
             return True
     else:

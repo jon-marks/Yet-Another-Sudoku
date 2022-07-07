@@ -64,7 +64,7 @@ def save_puzzle(Fp, oPzl):
 
 def copy_puzzle_to_clipboard(oPzl):
 
-    sG = pzl_to_pzl_str(oPzl)
+    sG = pzl_to_pzl_str(oPzl) + "\n"
 
     if wx.TheClipboard.Open():
         wx.TheClipboard.SetData(wx.TextDataObject(sG))
@@ -119,7 +119,7 @@ def pzl_str_to_pzl(sPzl, Pzl):
             Pzl.Soln = None
     return lenlG, ""
 
-def pzl_to_pzl_str(oPzl, sOverrides = None):
+def pzl_to_pzl_str(oPzl, sOverrides = None, sSoln = None):  #, CR = True):
 
     sG = grid_to_grid_str(oPzl.Grid, oPzl.Givens)
     if oPzl.Elims:
@@ -135,7 +135,13 @@ def pzl_to_pzl_str(oPzl, sOverrides = None):
     if oPzl.Method != T_UNDEF:
         sG += f"|{Tech[oPzl.Method].Text}|"
         if sOverrides: sG += sOverrides
-        sG += f"|{tkns_to_str(oPzl.Pattern)}|{tkns_to_str(oPzl.Outcome)}\n".replace(" ", "").replace(".", "")
+        sG += f"|{tkns_to_str(oPzl.Pattern)}|{tkns_to_str(oPzl.Outcome)}".replace(" ", "").replace(".", "")
+    else: sG += "||||"
+    if oPzl.Soln:
+        sG += f"|{grid_to_grid_str(oPzl.Soln, oPzl.Givens)}"
+    elif sSoln: sG += f"|{sSoln}"
+    else: sG += "|"
+#    if CR: sG += "\n"
     return sG
 
 def parse_ccell_phrase(St):

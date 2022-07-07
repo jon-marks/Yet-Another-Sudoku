@@ -4,7 +4,6 @@ from random import randint, randrange, shuffle, seed
 import sys
 
 from globals import *  # globals imports os and wx.
-# from trc import TRCX
 
 from solve_utils import cell_val_has_no_conflicts
 
@@ -96,7 +95,7 @@ def gen_filled_grid(Grid = None, cell = 0):
     return False
 
 def scramble_puzzle(grid):
-    # TODO:  Implement selective scrapling.  Select scrambling steps to apply.
+    # TODO:  Implement selective scrambling.  Select scrambling steps to apply.
     # Creates a mathematically equivalent puzzle by shuffling the puzzle.
     # grid:  In: The Sudoku puzzle to scramble.
     #        Out: a partially scrambled puzzle.
@@ -159,14 +158,14 @@ def scramble_puzzle(grid):
         return [[v[grid1[8-c][8-r]] for c in range(9)] for r in range(9)]
 
 def minimalise_puzzle(G, T_H = None):
-    # T_H passes a pre-shuffled array for benchmarking and unit testig.
+    # T_H passes a pre-shuffled array for benchmarking and unit testing.
 
     H = []
     for r in range(9):
         for c in range(9):
             if G[r][c] != 0:
                 H.append((r, c))
-
+    if len(H) <= 17: return G  # 17 Givens is the minimum for a valid puzzle
     shuffle(H)
     if T_H: H = T_H
     G1 = [[G[r][c] for c in range(9)] for r in range(9)]
@@ -508,81 +507,3 @@ CreatePuzzle = [create_random_puzzle,
                 create_diag_bot_left_rotated_puzzle,
                 create_horz_bot_left_mirrored_puzzle]
 
-"""
-Not so sure we don't need these functions so I'll hang on to them for the time
-being . . .
-
-@staticmethod
-def solve_puzzle_backtrack(grid, cell = 0):
-    #  Recursive backtracking function to find a Sudoku puzzle. If the
-    #  puzzle is not a valid sudoku either the first solution found will be
-    #  in grid, or returns False if no solution found.
-    #  grid: In:  A sudoku puzzle (can process invalid puzzles too)
-    #        Recursive call:  Partially solved puzzle
-    #        Out:  completed puzzle if function returns True
-    #  cell: In: Optional: - must be 0 if not called recursively
-    #        Recursive call: The current cell position
-    #  Returns:  True: a solution found - does not imply a valid puzzle
-    #            False: no solution found - implies invalid puzzle
-
-    #  Find the next hole in the puzzle.
-    while cell < 81:
-        r = cell // 9
-        c = cell % 9
-        if grid[r][c] != 0:
-            cell += 1
-        else:
-            break
-    else:
-        return True  # All cells successfully filled
-
-    vals = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    for v in vals:
-        if _cell_val_has_no_conflicts(v, grid, r, c):
-            grid[r][c] = v
-            if solve_puzzle_backtrack(grid, cell + 1):
-                return True
-    grid[r][c] = 0
-    return False
-
-@staticmethod
-def test_puzzle_givens(grid):
-    #  Ensures that the givens obey Sudoku rules.
-    #  grid:     In:  Puzzle to test, populated with givens.
-    #  Returns:  True:  if a valid puzzle
-    #            False: if an invalid puzzle
-
-    #  Check that the givens obey Sudoku rules.
-    for bi in range(0, 9):
-        br = (bi // 3) * 3
-        bc = (bi % 3) * 3
-        row = [[grid[bi][0:8]]]
-        row = [x for x in row if x != 0]  # remove 0 from list
-        if len(row) != len(set(row)):
-            return False
-        col = [[grid[0][bi], grid[1][bi], grid[2][bi], grid[3][bi], grid[4][bi],
-                grid[5][bi], grid[6][bi], grid[7][bi], grid[8][bi]]]
-        col = [x for x in col if x != 0]  # remove 0 from list
-        if len(col) != len(set(col)):
-            return False
-        box = [[grid[br][bc:bc + 3] + grid[br + 1][bc:bc + 3]
-                + grid[br + 2][bc:bc + 3]]]
-        box = [x for x in box if x != 0]  # remove 0 from list
-        if len(box) != len(set(box)):
-            return False
-    return True
-
-@staticmethod
-def test_puzzle(grid):
-    #  Checks that the givens obey Sudoku rules and that there is only one
-    #  unique solution.
-    #  grid:    In:  The puzzle to test, grid is preserved on return.
-    #  Returns:  True:  a valid puzzle
-    #            False: an invalid puzzle
-
-    if test_puzzle_givens(grid):
-        grid1 = deepcopy(grid)  # preserve puzzle
-        return _check_puzzle(grid1, Soln)
-    return False
-
-"""
