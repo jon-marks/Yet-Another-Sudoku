@@ -30,6 +30,7 @@ def yas_prt():
     Src = join(TestDataDir, SrcFile+FileExt)
     Dst = join(TestDataDir, SrcFile+DstSuff+FileExt)
     Begin = 0; End = 9999999
+    Methods = []; Ignore = False
     for i in range(1, len(argv)):
         if argv[i][:2] in ["i=", "I="]:
             if argv[i][:2]: Src = argv[i][2:]
@@ -37,6 +38,8 @@ def yas_prt():
             if argv[i][:2]: Dst = argv[i][2:]
         elif argv[i][:2] in ["b=", "B="]: Begin = int(argv[i][2:])
         elif argv[i][:2] in ["e=", "E="]: End = int(argv[i][2:])
+        elif argv[i][:2] in ["m=", "M="]: Methods = argv[i][2:].replace(" ", "").split(",")
+        elif argv[i] in ["g", "g"]: Ignore = True
         else:
             print(f"Syntax: next_step.py [i=<input file path>] [o=<output file path>] [s=<n>] [e=<m>]\n"
                   f"  i=<path>:  (optional) input file path,"
@@ -44,7 +47,9 @@ def yas_prt():
                   f"  o=<path>:  (optional) output file path,"
                   f"             default: {Dst}\n"
                   f"  b=<n>:     (optional) begin testing from file line number, default: {Begin}\n"
-                  f"  e=<m>:     (optional) stop testing after line number, default: {End}.\n")
+                  f"  e=<m>:     (optional) stop testing after line number, default: {End}\n"
+                  f"  m=<Mthds>: (optional) A list of comma separated methods to filter\n"
+                  f"  g:         (optional) iGgnore Method and overrides in puzzle specs.\n")
             exit()
 
     nLine = 0; nPzl = 0; Diffs = 0; Errs = 0
@@ -70,6 +75,11 @@ def yas_prt():
                 nPzl += 1
                 TD = Line.rstrip(" \n").split("|")
                 lenTD = len(TD)
+                if Methods and lenTD > 2 and TD[2] and TD[2] not in Methods: continue
+                if Ignore:
+                    if lenTD > 2: TD[2] = ""
+                    if lenTD > 3: TD[3] = ""
+                    oPzl.Method = T_UNDEF
                 if not oPzl.Soln:
                     Found, oPzl.Soln = check_puzzle(oPzl.Grid)
                     if Found == 1: sSoln = grid_to_grid_str(oPzl.Soln, oPzl.Givens)
@@ -104,13 +114,13 @@ def yas_prt():
                         if set(sExpCond.split(";")) != set(sCond.split(";")): Match = False
                     if sExpOutc:
                         if set(sExpOutc.split(";")) != set(sOutc.split(";")): Match = False
-                if Match: print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sActMeth}", flush = True)
+                if Match or Ignore: print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sActMeth}", flush = True)
                 else:
                     if sExpMeth != sActMeth:  sWarn = "Different Method"
                     elif sExpOutc != sOutc:   sWarn = "Different Outcome"
                     elif sExpCond != sCond:   sWarn = "Different Pattern"
                     f1.write(f"# Warning: {sWarn} found for: {Line}")
-                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Warning: {sWarn}| {sExpMeth}|{sExpCond}|{sExpOutc}| Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
+                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Warning: {sWarn}|{sExpMeth}|{sExpCond}|{sExpOutc}| Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
                     Diffs += 1
                 f1.write(f"{sGr}|{sElims}|{sActMeth}|{sOverrides}|{sCond}|{sOutc}|{sSoln}\n")
                 f1.flush()

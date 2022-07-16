@@ -127,7 +127,7 @@ def resolve_other_x_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
                         Odd = Even = False
                         for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
                             if ccells_intersect({r}, {c}, Cand, rn, cn, Candn, GrpLks): break
-                            if how_ccells_linked({r}, {c}, Cand, rn, cn, Candn, Cands, GrpLks):
+                            if ccells_see_each_other({r}, {c}, Cand, rn, cn, Candn, GrpLks):
                                 if i & 0x01: Odd = True
                                 else: Even = True
                                 if Odd and Even: Status.Outcome.append((r, c, Cand)); break
@@ -138,7 +138,7 @@ def resolve_other_x_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
                         Odd = Even = False
                         for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
                             if (r, c, Cand) == (rn, cn, Candn): break
-                            if how_ccells_linked(r, c, Cand, rn, cn, Candn, Cands, GrpLks):
+                            if ccells_see_each_other(r, c, Cand, rn, cn, Candn, GrpLks):
                                 if i & 0x01: Odd = True
                                 else: Even = True
                                 if Odd and Even: Status.Outcome.append((r, c, Cand)); break

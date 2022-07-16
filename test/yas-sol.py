@@ -38,18 +38,21 @@ def yas_sol():
     Db   = join(TestDataDir, SrcFile+DbExt)
     Mth  = join(TestDataDir, MthFile+FileExt)
     sPat = "Undefined"; Meth = -1
+    sPzl = ""
     Begin = 0; End = 999999
     sOverrides = ""; Overrides = {}
     Mode = M_SLVR
+    Add = False
     for i in range(1, len(argv)):
-        if argv[i][:2] in ["i=", "I="]:
+        if   argv[i][:2] in ["s=", "S="]: sPzl = argv[i][2:]
+        elif argv[i][:2] in ["i=", "I="]:
             if argv[i][:2]: Src = argv[i][2:]
         elif argv[i][:2] in ["o=", "O="]:
             if argv[i][:2]: Dst = argv[i][2:]
         elif argv[i][:2] in ["b=", "B="]: Begin = int(argv[i][2:])
         elif argv[i][:2] in ["e=", "E="]: End = int(argv[i][2:])
         elif argv[i][:2] in ["d=", "D="]: Db = argv[i][2:]
-        elif argv[i][:2] in ["a=", "A="]: Add = argV[i][2:]
+        elif argv[i][0] in ["a", "A"]: Add = True
         elif argv[i][:2] in ["m=", "M="]:
             Mode = M_SRCH
             if argv[i][2:]: Mth = argv[i][2:]
@@ -57,6 +60,8 @@ def yas_sol():
         elif argv[i][:2] in ["v=", "V="]: sOverrides = argv[i][2:]
         else:
             print(f"Syntax: yas-sol.py [i=<input file path>] [o=<output file path>] [s=<n>] [e=<m>]\n"
+                  f"  s=<str>    (optional) puzzle string of individual puzzle to solve instead of i= switch\n"
+                  f"             only recognises givens in puzzle string\n"
                   f"  i=<path>:  (optional) input file path,\n"
                   f"             default: {Src}\n"
                   f"  o=<path>:  (optional) output file path,\n"
@@ -66,14 +71,13 @@ def yas_sol():
                   "Complete Solver Mode Commands\n"
                   f"  d=<path>:  (optional) database file to create or append, if <path> not specified,\n"
                   f"             default: {Db}\n"
-                  f"  a=<[e|d]>: (optional) additional fields - e: expertise level, d: difficulty\n"
+                  f"  a:         (optional) additional fields - e: expertise level, d: difficulty\n"
                   "Selected Method Pattern Searcher Commands\n"
                   f"  m=<path>:  (required for this mode), file with ordered selected methods to use till stumped\n"
                   f"             default (empty value): {Mth}\n"
                   f"  p=<Meth>:  (required for this mode) Method pattern to search\n"
                   f"  v=<kvp>:   (optional) Override key=value pairs separated by semicolon suported by the method to constrain search\n")
             exit()
-    # i = 0; Test = 0; Found = 0; Errs = 0
     nLine = nPzl = Found = Errs = 0
     if Mode == M_SRCH:  # Selected Method Pattern Searcher Mode:
         print("    Pattern Searcher Mode", flush = True)
@@ -143,9 +147,29 @@ def yas_sol():
                         Found += 1
                     else:
                         if not Steps: print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Nothing found")
-
+        print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Found: {Found}, Errors: {Errs}.")
     else:  # Complete Solve Mode.
         print("Complete Solve Mode:")
+        if sPzl:
+            StTime = perf_counter()
+            oPzl = PZL()
+            nFlds, sErr = pzl_str_to_pzl(sPzl, oPzl)
+            if nFlds:
+                nFound, oPzl.Soln = check_puzzle(oPzl.Givens)
+                if nFound == 1:
+                    Expertise, Steps, sErr = logic_solve_puzzle(Grid = oPzl.Givens, Soln = oPzl.Soln)
+                    if not sErr:
+                        Difficulty = 0
+                        for Step in Steps:
+                            Step.Difficulty = Tech[Step.Method].Difficulty+(Step.NrLks-Step.NrGrpLks)*LK_DIFF+Step.NrGrpLks*GRP_LK_DIFF
+                            Difficulty += Step.Difficulty
+                        sOut = f"{pzl_to_pzl_str(PZL(Givens = oPzl.Givens, Grid = oPzl.Grid, Soln = oPzl.Soln))}|{EXPS[Expertise]}|{Difficulty}"
+                        sOut = sOut.replace("+", "")
+                        print(f"{time_str(StTime)}|{sOut}")
+                        exit()
+                else: sErr = f"Invalid puzzle, {nFound} solutions"
+            print(f"{time_str(StTime)}|Error: {sErr}")
+            exit()
         with open(Src, "rt") as f:
             with open(Dst, "wt") as f1:
                 # nPzl = nLine = 0
@@ -179,16 +203,18 @@ def yas_sol():
                         print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {Err}:", flush = True)
                         Errs += 1
                         continue
-                    Difficulty = 0
-                    for Step in Steps:
-                        Step.Difficulty = Tech[Step.Method].Difficulty+(Step.NrLks-Step.NrGrpLks)*LK_DIFF+Step.NrGrpLks*GRP_LK_DIFF
-                        Difficulty     += Step.Difficulty
-                    sOut = f"{pzl_to_pzl_str(PZL(Givens = oPzl.Givens, Grid = oPzl.Grid, Soln = oPzl.Soln))}|{EXPS[Expertise]}|{Difficulty}"
+                    sAdd = ""
+                    if Add:
+                        Difficulty = 0
+                        for Step in Steps:
+                            Step.Difficulty = Tech[Step.Method].Difficulty+(Step.NrLks-Step.NrGrpLks)*LK_DIFF+Step.NrGrpLks*GRP_LK_DIFF
+                            Difficulty     += Step.Difficulty
+                        sAdd = f"|{EXPS[Expertise]}|{Difficulty}"
+                    sOut = f"{pzl_to_pzl_str(PZL(Givens = oPzl.Givens, Grid = oPzl.Grid, Soln = oPzl.Soln))}{sAdd}"
                     sOut = sOut.replace("+", "")
                     f1.write(sOut + "\n"); f1.flush()
                     print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}|{sOut}", flush = True)
-
-    print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Found: {Found}, Errors: {Errs}.")
+        print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl}, Errors: {Errs}.")
 
 def time_str(STime = 0):
 

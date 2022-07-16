@@ -36,27 +36,26 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                     # Yes, it is a locked pair too.
                     br = (r//3)*3; bc = (c//3)*3
                     for r2 in [br, br+1, br+2]:
+                        if r2 == r: continue
                         for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0: continue
-                            if (r2 == r and c2 == c) or (r2 == r and c2 == c1): continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            if Grid[r2][c2]: continue
+                            Elims = Cands[r2][c2] & Cands[r][c]
+                            if Elims:
+                                Cands[r2][c2] -= Cands[r][c]
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
                 if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                # else: Step.Method = T_EXPOSED_PAIR
                 for c2 in set(range(9)) - {c, c1}:
-                    if len(Cands[r][c2]) == 0: continue
-                    for Cand in Cands[r][c]:
-                        if Cand in Cands[r][c2]:
-                            Cands[r][c2].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                            Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    if Grid[r][c2]: continue
+                    Elims = Cands[r][c2] & Cands[r][c]
+                    if Elims:
+                        Cands[r][c2] -= Cands[r][c]
+                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                        Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
                 if Step.Outcome:  # Candidates were eliminated
                     if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
-                    Step.Outcome.append([P_END, ])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END, ]]
+                    Step.Outcome.append([P_END])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END]]
                     return 0
     # then scan the cols.
     for c in ColList:
@@ -69,29 +68,27 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                 if (r//3) == (r1//3):  # both cells in same blk
                     # Yes, it is a locked pair too.
                     br = (r//3)*3; bc = (c//3)*3
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0: continue
-                            if (r2 == r and c2 == c) or (r2 == r1 and c2 == c): continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    for c2 in [bc, bc+1, bc+2]:
+                        if c2 == c: continue
+                        for r2 in [br, br+1, br+2]:
+                            if Grid[r2][c2]: continue
+                            Elims = Cands[r2][c2] & Cands[r][c]
+                            if Elims:
+                                Cands[r2][c2] -= Cands[r][c]
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
                 if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                # else: Step.Method = T_EXPOSED_PAIR
                 for r2 in set(range(9)) - {r, r1}:
-                    if len(Cands[r2][c]) == 0: continue
-                    if (r2 != r1) and (r2 != r):
-                        for Cand in Cands[r][c]:
-                            if Cand in Cands[r2][c]:
-                                Cands[r2][c].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    if Grid[r2][c]: continue
+                    Elims = Cands[r2][c] & Cands[r][c]
+                    if Elims:
+                        Cands[r2][c] -= Cands[r][c]
+                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                        Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
                 if Step.Outcome:  # Candidates were eliminated
                     if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
-                    Step.Outcome.append([P_END, ])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END, ]]
+                    Step.Outcome.append([P_END])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END]]
                     return 0
     # and finally scan the blocks.
     for h in BoxList:  # range BoxList:
@@ -106,16 +103,16 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                 # candidates from remaining cells in the box.
                 for rc2 in set(range(9)) - {rc, rc1}:
                     r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                    if len(Cands[r2][c2]) == 0: continue
-                    for Cand in Cands[r][c]:
-                        if Cand in Cands[r2][c2]:
-                            Cands[r2][c2].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append((P_SEP,))
-                            Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    if Grid[r2][c2]: continue
+                    Elims = Cands[r2][c2] & Cands[r][c]
+                    if Elims:
+                        Cands[r2][c2] -= Cands[r][c]
+                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                        Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
                 if Step.Outcome:
                     Step.Method = T_EXPOSED_PAIR
-                    Step.Outcome.append([P_END, ])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
+                    Step.Outcome.append([P_END])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON], [P_ROW, r1], [P_COL, c1], [P_END]]
                     return 0
     return -1
 
@@ -145,14 +142,15 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
                     if n0 != 2: continue
                     # found a hidden Pair in row
                     for c0 in C:
-                        for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1}):
-                            Cands[r0][c0].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        Elims = Cands[r0][c0] - {Cand0, Cand1}
+                        if Elims:
+                            Cands[r0][c0] = {Cand0, Cand1}
+                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                     if Step.Outcome:
-                        Step.Outcome.append([P_END, ])
+                        Step.Outcome.append([P_END])
                         Step.Method = T_HIDDEN_PAIR
-                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, C], [P_END, ]]
+                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_ROW, r0], [P_COL, C], [P_END]]
                         return 0
             # scan cols
             for c0 in range(9):
@@ -168,14 +166,15 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
                     if n0 != 2: continue
                     # found a hidden pair in col
                     for r0 in R:
-                        for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1}):
-                            Cands[r0][c0].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        Elims = Cands[r0][c0] - {Cand0, Cand1}
+                        if Elims:
+                            Cands[r0][c0] = {Cand0, Cand1}
+                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                     if Step.Outcome:
-                        Step.Outcome.append([P_END, ])
+                        Step.Outcome.append([P_END])
                         Step.Method = T_HIDDEN_PAIR
-                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_ROW, R], [P_COL, c0], [P_END, ]]
+                        Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_ROW, R], [P_COL, c0], [P_END]]
                         return 0
             # scan boxes
             for h0 in range(9):
@@ -193,17 +192,18 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
                     if n0 != 2: continue
                     # found a hidden pair in block
                     for r0, c0 in B:
-                        for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1}):
-                            Cands[r0][c0].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                        Elims = Cands[r0][c0] - {Cand0, Cand1}
+                        if Elims:
+                            Cands[r0][c0] = {Cand0, Cand1}
+                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                     if Step.Outcome:
-                        Step.Outcome.append([P_END, ])
+                        Step.Outcome.append([P_END])
                         Step.Method = T_HIDDEN_PAIR
                         Step.Pattern = [[P_VAL, Cand0, Cand1], [P_OP, OP_CNT, 2], [P_BOX, h0]]
                         for r0, c0 in B:
-                            Step.Pattern.extend([[P_CON, ], [P_ROW, r0], [P_COL, c0]])
-                        Step.Pattern.append([P_END, ])
+                            Step.Pattern.extend([[P_CON], [P_ROW, r0], [P_COL, c0]])
+                        Step.Pattern.append([P_END])
                         return 0
     return -1
 
@@ -248,30 +248,29 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                     if r3 == r: continue
                                     for c3 in range(bc, bc+3):
                                         if Grid[r3][c3]: continue
-                                        for Cand in D:
-                                            if Cand in Cands[r3][c3]:
-                                                Cands[r3][c3].discard(Cand)
-                                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                        Elims = Cands[r3][c3] & D
+                                        if Elims:
+                                            Cands[r3][c3] -= D
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                                            Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:  Step.Method = T_LOCKED_EXPOSED_TRIPLE
-                        # else: Step.Method = T_EXPOSED_TRIPLE
                         for c3 in range(9):
-                            if c3 == c or c3 == c1 or c3 == c2: continue
+                            if c3 in [c, c1, c2]: continue
                             if Grid[r][c3]: continue
-                            for Cand in D:
-                                if Cand in Cands[r][c3]:
-                                    Cands[r][c3].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            Elims = Cands[r][c3] & D
+                            if Elims:
+                                Cands[r][c3] -= D
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:
                             if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
-                            Step.Outcome.append([P_END, ])
+                            Step.Outcome.append([P_END])
                             Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
-                                            [P_ROW, r], [P_COL, c], [P_CON, ],
+                                            [P_ROW, r], [P_COL, c], [P_CON],
                                             [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ],
-                                            [P_ROW, r], [P_COL, c1], [P_CON, ],
+                                            [P_ROW, r], [P_COL, c1], [P_CON],
                                             [P_VAL, sorted(Cands[r][c2])], [P_OP, OP_EQ],
-                                            [P_ROW, r], [P_COL, c2], [P_END, ]]
+                                            [P_ROW, r], [P_COL, c2], [P_END]]
                             return 0
     # scan the cols
     for c in ColList:  # range(9):
@@ -293,30 +292,30 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                     if c3 == c: continue
                                     for r3 in range(br, br+3):
                                         if Grid[r3][c3]: continue
-                                        for Cand in D:
-                                            if Cand in Cands[r3][c3]:
-                                                Cands[r3][c3].discard(Cand)
-                                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                        Elims = Cands[r3][c3] & D
+                                        if Elims:
+                                            Cands[r3][c3] -= D
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                                            Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:  Step.Method = T_LOCKED_EXPOSED_TRIPLE
                         # else: Step.Method = T_EXPOSED_TRIPLE
                         for r3 in range(9):
-                            if r3 == r or r3 == r1 or r3 == r2: continue
+                            if r3 in [r, r1, r2]: continue
                             if Grid[r3][c]: continue
-                            for Cand in D:
-                                if Cand in Cands[r3][c]:
-                                    Cands[r3][c].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                    Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            Elims = Cands[r3][c] & D
+                            if Elims:
+                                Cands[r3][c] -= D
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:  # Candidates were eliminated
                             if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
-                            Step.Outcome.append([P_END, ])
+                            Step.Outcome.append([P_END])
                             Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
-                                            [P_ROW, r], [P_COL, c], [P_CON, ],
+                                            [P_ROW, r], [P_COL, c], [P_CON],
                                             [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ],
-                                            [P_ROW, r1], [P_COL, c], [P_CON, ],
+                                            [P_ROW, r1], [P_COL, c], [P_CON],
                                             [P_VAL, sorted(Cands[r2][c])], [P_OP, OP_EQ],
-                                            [P_ROW, r2], [P_COL, c], [P_END, ]]
+                                            [P_ROW, r2], [P_COL, c], [P_END]]
                             return 0
     # the scan the blocks.
     for h in BoxList:  # range BoxList:
@@ -337,20 +336,20 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                         for rc3 in set(range(9)) - {rc, rc1, rc2}:
                             r3 = br+(rc3//3); c3 = bc+(rc3%3)
                             if Grid[r3][c3]: continue
-                            for Cand in D:
-                                if Cand in Cands[r3][c3]:
-                                    Cands[r3][c3].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            Elims = Cands[r3][c3] & D
+                            if Elims:
+                                Cands[r3][c3] -= D
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:
                             Step.Method = T_EXPOSED_TRIPLE
-                            Step.Outcome.append([P_END, ])
+                            Step.Outcome.append([P_END])
                             Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ],
-                                            [P_ROW, r], [P_COL, c], [P_CON, ],
+                                            [P_ROW, r], [P_COL, c], [P_CON],
                                             [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ],
-                                            [P_ROW, r1], [P_COL, c1], [P_CON, ],
+                                            [P_ROW, r1], [P_COL, c1], [P_CON],
                                             [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ],
-                                            [P_ROW, r2], [P_COL, c2], [P_END, ]]
+                                            [P_ROW, r2], [P_COL, c2], [P_END]]
                             return 0
     return -1
 
@@ -390,18 +389,19 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if n0 != 3 or len(U) != 3: continue
                         # hidden trip found in r0
                         for c0, X in C:
-                            for Cand in sorted(Cands[r0][c0]-{Cand0, Cand1, Cand2}):
-                                Cands[r0][c0].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2}
+                            if Elims:
+                                Cands[r0][c0] = X
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:
-                            Step.Outcome.append([P_END, ])
+                            Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
                             Step.Pattern = []
                             for c0, X in C:
-                                if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                if Step.Pattern: Step.Pattern.append([P_CON])
                                 Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-                            Step.Pattern.append([P_END, ])
+                            Step.Pattern.append([P_END])
                             return 0
                 # scan cols
                 for c0 in ColList:  # range(9):
@@ -417,18 +417,19 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if n0 != 3 or len(U) != 3: continue
                         # hidden trip found in r0
                         for r0, X in R:
-                            for Cand in sorted(Cands[r0][c0]-{Cand0, Cand1, Cand2}):
-                                Cands[r0][c0].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2}
+                            if Elims:
+                                Cands[r0][c0] = X
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:
-                            Step.Outcome.append([P_END, ])
+                            Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
                             Step.Pattern = []
                             for r0, X in R:
-                                if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                if Step.Pattern: Step.Pattern.append([P_CON])
                                 Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-                            Step.Pattern.append([P_END, ])
+                            Step.Pattern.append([P_END])
                             return 0
                 # scan boxes
                 for h0 in BoxList:  # range(9):
@@ -446,18 +447,19 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if n0 != 3 or len(U) != 3: continue
                         # found a hidden trip in block
                         for r0, c0, X in B:
-                            for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1, Cand2}):
-                                Cands[r0][c0].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2}
+                            if Elims:
+                                Cands[r0][c0] = X
+                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                         if Step.Outcome:
-                            Step.Outcome.append([P_END, ])
+                            Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
                             Step.Pattern = []
                             for r0, c0, X in B:
-                                if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                if Step.Pattern: Step.Pattern.append([P_CON])
                                 Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-                            Step.Pattern.append([P_END, ])
+                            Step.Pattern.append([P_END])
                             return 0
     return -1
 
@@ -482,19 +484,19 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
                         if len(D) == 4:
                             # An exposed quad is found
                             for c4 in set(range(9)) - {c, c1, c2, c3}:
-                                if len(Cands[r][c4]) == 0: continue
-                                for Cand in D:
-                                    if Cand in Cands[r][c4]:
-                                        Cands[r][c4].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                        Step.Outcome.extend([[P_ROW, r], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                if Grid[r][c4]: continue
+                                Elims = Cands[r][c4] & D
+                                if Elims:
+                                    Cands[r][c4] -= D
+                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
+                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Elims]])
                             if Step.Outcome:  # Candidates were eliminated
                                 Step.Method = T_EXPOSED_QUAD
-                                Step.Outcome.append([P_END, ])
-                                Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c1], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r][c2])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c2], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r][c3])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c3], [P_END, ]]
+                                Step.Outcome.append([P_END])
+                                Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c1], [P_CON],
+                                                [P_VAL, sorted(Cands[r][c2])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c2], [P_CON],
+                                                [P_VAL, sorted(Cands[r][c3])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c3], [P_END]]
                                 return 0
     # then scan the cols
     for c in range(9):
@@ -510,19 +512,19 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
                         if len(D) == 4:
                             # An exposed quad is found
                             for r4 in set(range(9)) - {r, r1, r2, r3}:
-                                if len(Cands[r4][c]) == 0: continue
-                                for Cand in D:
-                                    if Cand in Cands[r4][c]:
-                                        Cands[r4][c].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                        Step.Outcome.extend([[P_ROW, r4], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                if Grid[r4][c]: continue
+                                Elims = Cands[r4][c] & D
+                                if Elims:
+                                    Cands[r4][c] -= D
+                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
+                                    Step.Outcome.extend([[P_ROW, r4], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
                             if Step.Outcome:  # Candidates were eliminated
                                 Step.Method = T_EXPOSED_QUAD
-                                Step.Outcome.append([P_END, ])
-                                Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ], [P_ROW, r1], [P_COL, c], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r2][c])], [P_OP, OP_EQ], [P_ROW, r2], [P_COL, c], [P_CON, ],
-                                                [P_VAL, sorted(Cands[r3][c])], [P_OP, OP_EQ], [P_ROW, r3], [P_COL, c], [P_END, ]]
+                                Step.Outcome.append([P_END])
+                                Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ], [P_ROW, r1], [P_COL, c], [P_CON],
+                                                [P_VAL, sorted(Cands[r2][c])], [P_OP, OP_EQ], [P_ROW, r2], [P_COL, c], [P_CON],
+                                                [P_VAL, sorted(Cands[r3][c])], [P_OP, OP_EQ], [P_ROW, r3], [P_COL, c], [P_END]]
                                 return 0
     # the scan the blocks.
     for br in range(0, 9, 3):
@@ -544,19 +546,19 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
                                 # An exposed quad is found
                                 for rc4 in set(range(9)) - {rc, rc1, rc2, rc3}:
                                     r4 = br+(rc4//3); c4 = bc+(rc4%3)
-                                    if len(Cands[r4][c4]) == 0: continue
-                                    for Cand in D:
-                                        if Cand in Cands[r4][c4]:
-                                            Cands[r4][c4].discard(Cand)
-                                            if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                            Step.Outcome.extend([[P_ROW, r4], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                    if Grid[r4][c4]: continue
+                                    Elims = Cands[r4][c4] & D
+                                    if Elims:
+                                        Cands[r4][c4] -= D
+                                        if Step.Outcome: Step.Outcome.append((P_SEP,))
+                                        Step.Outcome.extend([[P_ROW, r4], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                 if Step.Outcome:
                                     Step.Method = T_EXPOSED_QUAD
-                                    Step.Outcome.append([P_END, ])
-                                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON, ],
-                                                    [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ], [P_ROW, r1], [P_COL, c1], [P_CON, ],
-                                                    [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ], [P_ROW, r2], [P_COL, c2], [P_CON, ],
-                                                    [P_VAL, sorted(Cands[r3][c3])], [P_OP, OP_EQ], [P_ROW, r3], [P_COL, c3], [P_END, ]]
+                                    Step.Outcome.append([P_END])
+                                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                    [P_VAL, sorted(Cands[r1][c1])], [P_OP, OP_EQ], [P_ROW, r1], [P_COL, c1], [P_CON],
+                                                    [P_VAL, sorted(Cands[r2][c2])], [P_OP, OP_EQ], [P_ROW, r2], [P_COL, c2], [P_CON],
+                                                    [P_VAL, sorted(Cands[r3][c3])], [P_OP, OP_EQ], [P_ROW, r3], [P_COL, c3], [P_END]]
                                     return 0
     return -1
 
@@ -583,19 +585,20 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                         else:
                             if n0 != 4 or len(U) != 4: continue
                             # hidden quad found
-                            for c0, x in C:
-                                for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}):
-                                    Cands[r0][c0].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                            for c0, X in C:
+                                Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}
+                                if Elims:
+                                    Cands[r0][c0] = X
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                             if Step.Outcome:
-                                Step.Outcome.append([P_END, ])
+                                Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
                                 Step.Pattern = []
                                 for c0, X in C:
-                                    if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                    if Step.Pattern: Step.Pattern.append([P_CON])
                                     Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-                                Step.Pattern.append([P_END, ])
+                                Step.Pattern.append([P_END])
                                 return 0
                     # Scan cols
                     for c0 in range(9):
@@ -611,18 +614,19 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                             if n0 != 4 or len(U) != 4: continue
                             # hidden trip found in r0
                             for r0, X in R:
-                                for Cand in sorted(Cands[r0][c0]-{Cand0, Cand1, Cand2, Cand3}):
-                                    Cands[r0][c0].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}
+                                if Elims:
+                                    Cands[r0][c0] = X
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                             if Step.Outcome:
-                                Step.Outcome.append([P_END, ])
+                                Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
                                 Step.Pattern = []
                                 for r0, X in R:
-                                    if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                    if Step.Pattern: Step.Pattern.append([P_CON])
                                     Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-                                Step.Pattern.append([P_END, ])
+                                Step.Pattern.append([P_END])
                                 return 0
                     # scan boxes
                     for h0 in range(9):
@@ -640,17 +644,19 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                             if n0 != 4 or len(U) != 4: continue
                             # found a hidden quad in block
                             for r0, c0, X in B:
-                                for Cand in sorted(Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}):
-                                    Cands[r0][c0].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}
+                                if Elims:
+                                    Cands[r0][c0] = X
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                             if Step.Outcome:
-                                Step.Outcome.append([P_END, ])
+                                Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
                                 Step.Pattern = []
                                 for r0, c0, X in B:
-                                    if Step.Pattern: Step.Pattern.append([P_CON, ])
+                                    if Step.Pattern: Step.Pattern.append([P_CON])
                                     Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-                                Step.Pattern.append([P_END, ])
+                                Step.Pattern.append([P_END])
                                 return 0
     return -1
+

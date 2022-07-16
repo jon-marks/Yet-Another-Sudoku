@@ -15,9 +15,8 @@ if TRC: seed(0)
 else: seed()
 
 def check_puzzle(Grid):
-    # This function wraps the recursive check_puzzle_rcs, because the callers
-    # want St returned, rather than passed, and that interferes with the the
-    # returning true or false through the recursion.
+    # This function wraps the recursive check_puzzle_rcs
+    # Grid is undefined if the puzzle is invalid, else Grid remains intact.
 
     St = SOLN()
     check_puzzle_rcs(Grid, St)
@@ -25,21 +24,6 @@ def check_puzzle(Grid):
 
 def check_puzzle_rcs(Grid, Soln, cell = 0):
     #  Recursive backtracking function to solve a Sudoku puzzle as a check.
-    #  Returns True if only one solution is found, returns False if there is no
-    #  solution or more than one solution.
-    #  The information in Grid is not preserved.
-    #  Grid:  In:  A sudoku puzzle to check
-    #         Recursive call:  Partially tested
-    #         Out:  Preserved Grid as passed if puzzle has a valid solution
-    #  cell:  In: Optional: - must be 0 if not called recursively
-    #         Recursive call: The current cell position
-    #  Soln[S_FOUND]: In: Don't Care
-    #                 Out: 1 - Puzzle is valid
-    #                      else - Puzzle is invalid
-    #  Soln[S_GRID]:  In:  None
-    #                 Out: Solved puzzle grid if Soln[S_FOUND] == 1
-    #                 Out: undefined.
-    #  Returns:  Undefined.
 
     #  Find the next hole in the puzzle.
     while cell < 81:
@@ -165,16 +149,20 @@ def minimalise_puzzle(G, T_H = None):
         for c in range(9):
             if G[r][c] != 0:
                 H.append((r, c))
-    if len(H) <= 17: return G  # 17 Givens is the minimum for a valid puzzle
+    nGivens = len(H)
+    if nGivens <= 17: return G  # 17 Givens is the minimum for a valid puzzle
     shuffle(H)
     if T_H: H = T_H
     G1 = [[G[r][c] for c in range(9)] for r in range(9)]
     for r, c in H:
         v = G1[r][c]
         G1[r][c] = 0
-        NrFound, Soln = check_puzzle(G1)
-        if NrFound == 1: G[r][c] = 0
-        else: G1[r][c] = v
+        if nGivens > 41:
+            G[r][c] = 0; nGivens -= 1 # All puzzles with 40 or more givens are unique
+        else:
+            NrFound, Soln = check_puzzle(G1)
+            if NrFound == 1: G[r][c] = 0; nGivens -= 1
+            else: G1[r][c] = v
     return G
 
 def create_puzzle(Pzl, T_H = None, T_G = None):

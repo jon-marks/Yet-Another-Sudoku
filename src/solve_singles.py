@@ -13,8 +13,8 @@ def tech_exposed_singles(Grid, Step, Cands, Methods):
                 Step.Method     = T_EXPOSED_SINGLE
                 Grid[r][c]      = Cands[r][c].pop()
                 discard_cand_from_peers(Grid[r][c], r, c, Cands)
-                Step.Pattern    = [[P_VAL, Grid[r][c]], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_END, ]]
-                Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
+                Step.Pattern    = [[P_VAL, Grid[r][c]], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_END]]
+                Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END]]
                 return 1
     return -1
 
@@ -52,8 +52,8 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
                 if n:
                     Step.Method = T_HIDDEN_SINGLE
                     Grid[r][c1] = Cand
-                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_ROW, r], [P_CON, ], [P_ROW, r], [P_COL, c1], [P_END, ]]
-                    Step.Outcome = [[P_ROW, r], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_ROW, r], [P_CON], [P_ROW, r], [P_COL, c1], [P_END]]
+                    Step.Outcome = [[P_ROW, r], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END]]
                     Cands[r][c1].clear()
                     discard_cand_from_peers(Cand, r, c1, Cands)
                     return 1
@@ -69,8 +69,8 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
                 if n:
                     Step.Method = T_HIDDEN_SINGLE
                     Grid[r1][c] = Cand
-                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_COL, c], [P_CON, ], [P_ROW, r1], [P_COL, c], [P_END, ]]
-                    Step.Outcome = [[P_ROW, r1], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_COL, c], [P_CON], [P_ROW, r1], [P_COL, c], [P_END]]
+                    Step.Outcome = [[P_ROW, r1], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END]]
                     Cands[r1][c].clear()
                     discard_cand_from_peers(Cand, r1, c, Cands)
                     return 1
@@ -88,8 +88,8 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
                 if n:
                     Step.Method = T_HIDDEN_SINGLE
                     Grid[r1][c1] = Cand
-                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_BOX, h], [P_CON, ], [P_ROW, r1], [P_COL, c1], [P_END, ]]
-                    Step.Outcome = [[P_ROW, r1], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END, ]]
+                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, 1], [P_BOX, h], [P_CON], [P_ROW, r1], [P_COL, c1], [P_END]]
+                    Step.Outcome = [[P_ROW, r1], [P_COL, c1], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END]]
                     Cands[r1][c1].clear()
                     discard_cand_from_peers(Cand, r1, c1, Cands)
                     return 1
@@ -133,16 +133,16 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                 for c in C2:  # set(range(9)) - {bc, bc1, bc2}:
                                     if Cand in Cands[r0][c]:
                                         Cands[r0][c].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, r0], [P_COL, c],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method  = T_POINTING_LOCKED_SINGLE
-                                    Step.Outcome.append([P_END, ])
+                                    Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
-                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
                                                     [P_ROW, Rx], [P_COL, bc, bc1, bc2],
-                                                    [P_END, ]]
+                                                    [P_END]]
                                     return 0
                         # else check claiming
                         if (T_CLAIMING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
@@ -156,15 +156,15 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                     for x in Rx:  # or1, or2]:
                                         if Cand in Cands[x][c]:
                                             Cands[x][c].discard(Cand)
-                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
                                             Step.Outcome.extend([[P_ROW, x], [P_COL, c],
                                                                  [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method = T_CLAIMING_LOCKED_SINGLE
-                                    Step.Outcome.append([P_END, ])
+                                    Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
-                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                    [P_ROW, r0], [P_COL, C2], [P_END, ]]
+                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_ROW, r0], [P_COL, C2], [P_END]]
                                     return 0
             # then scan the columns
             for c0, oc1, oc2 in zip([bc, bc1, bc2], [bc1, bc2, bc], [bc2, bc, bc1]):
@@ -188,16 +188,16 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                 for r in R2:  # set(range(9)) - {br, br1, br2}:
                                     if Cand in Cands[r][c0]:
                                         Cands[r][c0].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, r], [P_COL, c0],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method = T_POINTING_LOCKED_SINGLE
-                                    Step.Outcome.append([P_END, ])
+                                    Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
-                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
                                                     [P_ROW, br, br1, br2], [P_COL, Cx],
-                                                    [P_END, ]]
+                                                    [P_END]]
                                     return 0
                         # else check claiming
                         if (T_CLAIMING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
@@ -211,15 +211,15 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                     for x in Cx:
                                         if Cand in Cands[r][x]:
                                             Cands[r][x].discard(Cand)
-                                            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
                                             Step.Outcome.extend([[P_ROW, r], [P_COL, x],
                                                                  [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method = T_CLAIMING_LOCKED_SINGLE
-                                    Step.Outcome.append([P_END, ])
+                                    Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
-                                                    [P_SEP, ], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                    [P_ROW, R2], [P_COL, c0], [P_END, ]]
+                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
+                                                    [P_ROW, R2], [P_COL, c0], [P_END]]
                                     return 0
     return -1
 
@@ -276,14 +276,14 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
                                     Step.Method = T_EMPTY_RECT
                                     for r3, c3 in Elim:
                                         Cands[r3][c3].discard(Cand)
-                                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, r3], [P_COL, c3],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    Step.Outcome.append([P_END, ])
+                                    Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, len(BC)], [P_BOX, (rb//3)*3+cb//3]]
                                     for r3, c3 in BC:
-                                        Step.Pattern.extend([[P_CON, ], [P_ROW, r3], [P_COL, c3]])
-                                    Step.Pattern.append([P_END, ])
+                                        Step.Pattern.extend([[P_CON], [P_ROW, r3], [P_COL, c3]])
+                                    Step.Pattern.append([P_END])
                                     return 0
     return -1
 
@@ -299,8 +299,8 @@ def tech_brute_force(Grid, Step, Cands, Methods):
     if _solve_puzzle_backtrack(G):
         Step.Method     = T_BRUTE_FORCE
         Grid[r][c]      = G[r][c]
-        Step.Pattern    = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END, ]]
-        Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END, ]]
+        Step.Pattern    = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END]]
+        Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END]]
         Cands[r][c].clear()
         discard_cand_from_peers(Grid[r][c], r, c, Cands)
         return 1

@@ -2,16 +2,8 @@ from globals import *
 from solve_utils import *
 
 def tech_bent_exposed_triples(Grid, Step, Cands, Methods):
-    # a bent (exposed) triple can only be either a Y-Wing or a XYZ-Wing.
-    # Note that in a bent triple, the pincers (URC) cells can only have 2 pincers
-    # for the pattern to be valid.  If there are three candidates in either/both
-    # pincer cells, then there is more than one URC in the pattern invalidating it
-    # as a bent triple.
-
-    # The row column search is only applicable to Y wings (each of the three cells
-    # only has 2 cands) and each cell is in a separate box.  If the there is a
-    # common chute then it will be found in the line/box searches.
-
+    # A bent exposed triple (BET) can only be a Y-Wing or a XYZ-Wing, comprising
+    # a pivot and two pincers.
 
     # look for row -> box/col patterns.
     for r in range(9):
@@ -188,20 +180,9 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Methods):
     return -1
 
 def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
-    # Checks
-    # 1.  only 1 URC
+    # 1.  Check for only 1 URC
     # 2   ID intersecting cells
-    # 3  elim URC from in
-    #
-    # The candidate that does not see all its same value cands in the pattern is the unrestricted candidate (URC)
-    # and there can only be one URC in the bent subset pattern to make eliminations.
-
-    # # Ensure all cands have multiple occurances in the pattern
-    # i = 0
-    # for (r, c, Candc) in Cells:
-    #     for Cand in UCands:
-    #         if Cand in Candc: i += 1
-    #     if i < 2: return false
+    # 3   Elim cells outside the pattern that see the URC
 
     NrCells = len(Cells)
     NrURC = 0
@@ -256,3 +237,126 @@ def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
         Step.Pattern.append([P_END, ])
         return True
     return False
+
+def tech_grouped_bent_pairs(Grid, Step, Cands, Methods):
+
+    # Exposed row, hidden box.
+    for r in RowList:
+        for c in range(8):
+            if len(Cands[r][c]) != 2: continue
+            # found a pair in a cell in a row.
+            t0 = (c//3)*3; f0 = (r//3)*3
+            for t1 in range(0, 9, 3):
+                if t1 == t0: continue
+                GrpCands = Cands[r][t1] | Cands[r][t1+1] | Cands[r][t1+2]
+                if Cands[r][c] <= GrpCands:  # Almost pair found in row:
+                    rb1 = f0+(r-f0+1)%3; rb2 = f0+(r+f0+2)%3
+                    n = 0
+                    for rb, cb in range[(rb1, t0), (rb1, t0+1), (rb1, t0+2), (rb2, t0), (rb2, t0+1), (rb2, t0+2)]:
+                        if Cands[r][c] <= Cands[rb][cb]:
+                            if n: break;
+                            n += 1; rb0 = rb; cb0 = cb
+                    else:  # Grouped bent pair found, how productive is it?
+                        for r1 in range(9):
+                            if r1 in [r, t1, t1+1, t1+2]: continue
+
+
+
+
+
+
+
+
+                    rb1 = ((r+1)%3)*3; rb2 = ((r+2)%3)*3
+
+            for c1 in range(c+1, 9):
+                if Cands[r][c] != Cands[r][c1]: continue
+                # Found an exposed pair in the row. Could it perhaps
+                # be a locked pair too?
+                if (c//3) == (c1//3):  # both cells in same blk
+                    # Yes, it is a locked pair too.
+                    br = (r//3)*3; bc = (c//3)*3
+                    for r2 in [br, br+1, br+2]:
+                        for c2 in [bc, bc+1, bc+2]:
+                            if len(Cands[r2][c2]) == 0: continue
+                            if (r2 == r and c2 == c) or (r2 == r and c2 == c1): continue
+                            for Cand in Cands[r][c]:
+                                if Cand in Cands[r2][c2]:
+                                    Cands[r2][c2].discard(Cand)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
+                # else: Step.Method = T_EXPOSED_PAIR
+                for c2 in set(range(9)) - {c, c1}:
+                    if len(Cands[r][c2]) == 0: continue
+                    for Cand in Cands[r][c]:
+                        if Cand in Cands[r][c2]:
+                            Cands[r][c2].discard(Cand)
+                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                            Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                if Step.Outcome:  # Candidates were eliminated
+                    if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
+                    Step.Outcome.append([P_END])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END]]
+                    return 0
+    # then scan the cols.
+    for c in ColList:
+        for r in range(8):
+            if len(Cands[r][c]) != 2: continue
+            for r1 in range(r+1, 9):
+                if Cands[r][c] != Cands[r1][c]: continue
+                # Found an exposed pair in the col. Could it perhaps
+                # be a locked pair too?
+                if (r//3) == (r1//3):  # both cells in same blk
+                    # Yes, it is a locked pair too.
+                    br = (r//3)*3; bc = (c//3)*3
+                    for r2 in [br, br+1, br+2]:
+                        for c2 in [bc, bc+1, bc+2]:
+                            if len(Cands[r2][c2]) == 0: continue
+                            if (r2 == r and c2 == c) or (r2 == r1 and c2 == c): continue
+                            for Cand in Cands[r][c]:
+                                if Cand in Cands[r2][c2]:
+                                    Cands[r2][c2].discard(Cand)
+                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
+                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
+                # else: Step.Method = T_EXPOSED_PAIR
+                for r2 in set(range(9)) - {r, r1}:
+                    if len(Cands[r2][c]) == 0: continue
+                    if (r2 != r1) and (r2 != r):
+                        for Cand in Cands[r][c]:
+                            if Cand in Cands[r2][c]:
+                                Cands[r2][c].discard(Cand)
+                                if Step.Outcome: Step.Outcome.append((P_SEP,))
+                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                if Step.Outcome:  # Candidates were eliminated
+                    if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
+                    Step.Outcome.append([P_END])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END]]
+                    return 0
+    # and finally scan the blocks.
+    for h in BoxList:  # range BoxList:
+        br = (h//3)*3; bc = (h%3)*3
+        for rc in range(8):
+            r = br+(rc//3); c = bc+(rc%3)
+            if len(Cands[r][c]) != 2: continue
+            for rc1 in range(rc+1, 9):
+                r1 = br+(rc1//3); c1 = bc+(rc1%3)
+                if Cands[r][c] != Cands[r1][c1]: continue
+                # Found an exposed pair in a box, discard matching
+                # candidates from remaining cells in the box.
+                for rc2 in set(range(9)) - {rc, rc1}:
+                    r2 = br+(rc2//3); c2 = bc+(rc2%3)
+                    if len(Cands[r2][c2]) == 0: continue
+                    for Cand in Cands[r][c]:
+                        if Cand in Cands[r2][c2]:
+                            Cands[r2][c2].discard(Cand)
+                            if Step.Outcome: Step.Outcome.append((P_SEP,))
+                            Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                if Step.Outcome:
+                    Step.Method = T_EXPOSED_PAIR
+                    Step.Outcome.append([P_END])
+                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON], [P_ROW, r1], [P_COL, c1], [P_END]]
+                    return 0
+    return -1
+

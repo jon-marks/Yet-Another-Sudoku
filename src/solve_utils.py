@@ -49,7 +49,9 @@ class TREE:  # to depreciate    # used to find chains. Tree grows branches.  Cha
 
 class TNODE:
     # This is the tree node (branch/child) structure used in constructing chain chains.
-    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, UsedNodes = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
+    # def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, UsedNodes = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
+    def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
+
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
         self.Chain = Chain if Chain else []  # List of path from root to current Node. (NODE(r, c, Cand, Lk_type_to_next)
         self.Parent = Parent
@@ -568,6 +570,49 @@ def how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands, GrpLks = False):
                 if Cand0 in Cands[rb][cb]: return LK_WEAK | LK_BOX
             return LK_STWK | LK_BOX
         return LK_NONE
+
+def ccells_see_each_other(r0, c0, Cand0, r1, c1, Cand1, GrpLks = False):
+    # returns LkType, LkHouse
+    #    Where: LkType is one of: LK_NONE, LK_WEAK, or LK_STWK
+    #           LkHouse is one of: LK_NONE, LK_ROW, LK_COL, LK_BOX, LK_ROW | LK_BOX, LK_ROW | LK_BOX
+    # Two ccells are directly linked if:
+    #   * they are two different candidates in the same cell, or
+    #     +  strongly if they are the only two candidates in that cell.
+    #     +  weakly if there are other candidates in that cell
+    #   * they are same value candidates in different cells in a common house.
+    #     +  strongly if they are the only occurrences of that candidate value
+    #        in the house.
+    #     +  weakly if there other candidate values in that cell.
+    # Note that a strong link can masquerade as a weak link, but a weak link
+    # cannot masquerade as a strong link.
+
+    if GrpLks:
+        if len(r0 & r1) and len(c0 & c1) and Cand0 == Cand1: return False  # ccells intersect
+        lenr0 = len(r0); lenc0 = len(c0); lenr1 = len(r1); lenc1 = len(c1)
+        r00 = list(r0)[0]; c00 = list(c0)[0]; r10 = list(r1)[0]; c10 = list(c1)[0]
+        if lenr0 == lenr1 == lenc0 == lenc1 == 1:  # no grouped ccells
+            if not (r0 ^ r1 or c0 ^ c1):  # same cell.
+                if Cand0 == Cand1: return False
+                else: return True
+        # different cells, grouped or ungrouped
+        if Cand0 != Cand1: return False
+        if lenr0 == lenr1 == 1 and r00 == r10: return True # house is a row
+        if lenc0 == lenc1 == 1 and c00 == c10: return True # house is a column
+        F = set(); T = set()
+        for r in r0 | r1: F.add(r//3)
+        for c in c0 | c1: T.add(c//3)
+        if len(F) == len(T) == 1: return True  # house is a box.
+    else:
+        if r0 == r1 and c0 == c1:
+            if Cand0 == Cand1: return False  # ccells cannot link on themselves
+            else: return True
+        # different cells, therefore linked by same candidate
+        if Cand0 != Cand1: return False
+        if r0 == r1: return True  # house is a row
+        if c0 == c1: return True  # house is a column
+        rb0 = r0//3; cb0 = c0//3; rb1 = r1//3; cb1 = c1//3
+        if rb0 == rb1 and cb0 == cb1: return True # house is a box
+    return False
 
 def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
     # Finds all the strong links for a candidate and enters makes two entries

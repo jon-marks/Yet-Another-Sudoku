@@ -203,7 +203,7 @@ def yas_gen():
                     C1 = [(), (), ()]
                     for c0, c1 in Val[1:]:
                         ct0 = c0//3; ct1 = c1//3
-                        if ct0 == ct1: print("Columns to shuffle can't be in different towers"); exit()
+                        if ct0 != ct1: print("Columns to shuffle can't be in different towers"); exit()
                         C1[ct0] = (c0, c1)
                     for i, CX in enumerate(C1):
                         if CX: c0, c1 = CX; Cols[i][c0%3] = c1; Cols[i][c1%3] = c0
@@ -232,7 +232,7 @@ def yas_gen():
                             else: rr = l-1
                             l -= 1
                             t = Digits[l]; Digits[l] = Digits[rr]; Digits[rr] = t
-                    else: shuffle(Digits)
+                    elif Val[0]: shuffle(Digits)
                 elif Key == XPS:
                     Xps = Val
 

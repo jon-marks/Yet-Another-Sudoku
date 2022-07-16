@@ -183,8 +183,8 @@ def find_next_xy_child_nodes(Child, Cands, Lvl, Tree, Methods, Status):
                                     Odd = Even = False
                                     for rn, cn, Candn, Lkn in Status.Pattern:
                                         if (r, c) == (rn, cn) and Cand in Candn: break
-                                        if how_ccells_linked(r, c, Cand, rn, cn, Candn[0], Cands):  Even = True
-                                        elif how_ccells_linked(r, c, Cand, rn, cn, Candn[1], Cands): Odd = True
+                                        if ccells_see_each_other(r, c, Cand, rn, cn, Candn[0]):  Even = True
+                                        elif ccells_see_each_other(r, c, Cand, rn, cn, Candn[1]): Odd = True
                                         if Odd and Even: Status.Outcome.append((r, c, Cand)); break
                         if Status.Outcome:
                             Status.Tech = T_XY_LOOP

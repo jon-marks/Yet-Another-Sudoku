@@ -287,19 +287,20 @@ T_W_WING                    = 23
 T_XYZ_WING                  = 24
 T_WXYZ_WING                 = 25
 T_BENT_EXPOSED_QUAD         = 26
-T_EMPTY_RECT                = 27
-T_X_CHAIN                   = 28
-T_EVEN_X_LOOP               = 29
-T_STRONG_X_LOOP             = 30
-T_SC_XY_CHAIN               = 31
-T_DC_XY_CHAIN               = 32
-T_DC_IBVC_XY_CHAIN          = 33
-T_XY_LOOP                   = 34
-T_SC_AI_CHAIN               = 35
-T_DC_AI_CHAIN               = 36
-T_DC_IBVC_AI_CHAIN          = 37
-T_EVEN_AI_LOOP              = 38
-T_STRONG_AI_LOOP            = 39
+T_MEDUSA                    = 27
+T_EMPTY_RECT                = 28
+T_X_CHAIN                   = 29
+T_EVEN_X_LOOP               = 30
+T_STRONG_X_LOOP             = 31
+T_SC_XY_CHAIN               = 32
+T_DC_XY_CHAIN               = 33
+T_DC_IBVC_XY_CHAIN          = 34
+T_XY_LOOP                   = 35
+T_SC_AI_CHAIN               = 36
+T_DC_AI_CHAIN               = 37
+T_DC_IBVC_AI_CHAIN          = 38
+T_EVEN_AI_LOOP              = 39
+T_STRONG_AI_LOOP            = 40
 
 T_KRAKEN_FINNED_X_WING      = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_FINNED_SWORDFISH   = T_FINNED_SWORDFISH + T_KRAKEN
@@ -496,6 +497,7 @@ Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UN
         T_XYZ_WING:                 TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
         T_WXYZ_WING:                TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
         T_BENT_EXPOSED_QUAD:        TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
+        T_MEDUSA:                   TECH_T(True, "Medusa",                    EXP_PROFICIENT,         60),
         T_X_CHAIN:                  TECH_T(True, "X-Chain",                   EXP_PROFICIENT,         70),
         T_EVEN_X_LOOP:              TECH_T(True, "Even X-Loop",               EXP_PROFICIENT,         70),
         T_STRONG_X_LOOP:            TECH_T(True, "Strong X-Loop",             EXP_PROFICIENT,         70),
