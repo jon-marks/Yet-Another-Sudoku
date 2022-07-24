@@ -30,7 +30,7 @@ def yas_prt():
     Src = join(TestDataDir, SrcFile+FileExt)
     Dst = join(TestDataDir, SrcFile+DstSuff+FileExt)
     Begin = 0; End = 9999999
-    Methods = []; Ignore = False
+    Methods = []; Firsts = []; Ignore = False
     for i in range(1, len(argv)):
         if argv[i][:2] in ["i=", "I="]:
             if argv[i][:2]: Src = argv[i][2:]
@@ -39,6 +39,7 @@ def yas_prt():
         elif argv[i][:2] in ["b=", "B="]: Begin = int(argv[i][2:])
         elif argv[i][:2] in ["e=", "E="]: End = int(argv[i][2:])
         elif argv[i][:2] in ["m=", "M="]: Methods = argv[i][2:].replace(" ", "").split(",")
+        elif argv[i][:2] in ["f=", "F="]: Firsts = argv[i][2:].split(",")
         elif argv[i] in ["g", "g"]: Ignore = True
         else:
             print(f"Syntax: next_step.py [i=<input file path>] [o=<output file path>] [s=<n>] [e=<m>]\n"
@@ -48,9 +49,18 @@ def yas_prt():
                   f"             default: {Dst}\n"
                   f"  b=<n>:     (optional) begin testing from file line number, default: {Begin}\n"
                   f"  e=<m>:     (optional) stop testing after line number, default: {End}\n"
-                  f"  m=<Mthds>: (optional) A list of comma separated methods to filter\n"
+                  f"  m=<Mthds>: (optional) A list of comma separated methods to filter puzzle specs by\n"
+                  f"  f=<Mthds>: (optional) A list of comma separated methods to try first for each puzzle spec"
                   f"  g:         (optional) iGgnore Method and overrides in puzzle specs.\n")
             exit()
+
+    lMeths = []
+    for sMethod in Firsts:
+        sM = sMethod.strip()
+        for Meth, TInfo in Tech.items():  # m in range(len(T):
+            if TInfo.Text == sM:
+                if Meth not in lMeths: lMeths.append(Meth)
+                break
 
     nLine = 0; nPzl = 0; Diffs = 0; Errs = 0
     with open(Src, "rt") as f:
@@ -90,7 +100,12 @@ def yas_prt():
                         Errs += 1
                         continue
                 else: sSoln = TD[6]  # if lenTD >= 6 else ""
-                Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True, oPzl.Overrides)
+
+                for Meth in [*lMeths, oPzl.Method]:
+                    Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, Meth, oPzl.Soln, True, oPzl.Overrides, JustThisMeth = True)
+                    if Err or Step.Method == Meth: break
+                else:
+                    Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True, oPzl.Overrides)
                 if Err:
                     f1.write(f"# Warning: Error encountered: {Err}, Solving:  {Line}")
                     print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Expected: {sExpMeth}| Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)

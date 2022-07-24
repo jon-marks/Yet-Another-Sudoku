@@ -7,7 +7,7 @@ class TREE:
         self.Evens = []
         self.Trunk = Trunk
 
-def tech_medusa(Grid, Step, Cands, Methods):
+def tech_strong_linked_nets(Grid, Step, Cands, Methods):
 
     SLNodes = {}
     for Cand in range(1, 10):
@@ -29,44 +29,48 @@ def tech_medusa(Grid, Step, Cands, Methods):
             lenEvens = len(Tree.Evens); lenOdds = len(Tree.Odds)
             if lenEvens < 2 or lenOdds < 2: continue  # must be at least two odd and two even nodes
             Elims = {}; Plcmts = []
-            # 2 Even nodes see each other
-            for i in range(lenEvens-1):
-                for j in range(1, lenEvens):
-                    r0, c0, Cand0 = Tree.Evens[i]; r1, c1, Cand1 = Tree.Evens[j]
-                    Lk = how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands)
-                    if Lk:
-                        if Lk & LK_STRG: Lk |= Lk_WKST
-                        Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1]]
-                        for r2, c2, Cand2 in Tree.Evens:
-                            K = str(r2)+str(c2)
-                            if K in Elims.keys(): Elims[K].append(Cand2)
-                            else: Elims[K] = [Cand2]
-                        Plcmts = Tree.Odds
-                        break
-                if Elims: break
-            if not Elims:
-                # 2 odd nodes see each other
-                for i in range(lenOdds-1):
-                    for j in range(1, lenOdds):
-                        r0, c0, Cand0 = Tree.Odds[i]; r1, c1, Cand1 = Tree.Odds[j]
+            if T_STRONG_LINKED_NET_T1 in Methods:
+                # 2 Even nodes see each other
+                for i in range(lenEvens-1):
+                    r0, c0, Cand0 = Tree.Evens[i]
+                    for j in range(i+1, lenEvens):
+                        r1, c1, Cand1 = Tree.Evens[j]
                         Lk = how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands)
                         if Lk:
                             if Lk & LK_STRG: Lk |= Lk_WKST
                             Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1]]
-                            for r2, c2, Cand2 in Tree.Odds:
+                            for r2, c2, Cand2 in Tree.Evens:
                                 K = str(r2)+str(c2)
                                 if K in Elims.keys(): Elims[K].append(Cand2)
                                 else: Elims[K] = [Cand2]
-                            Plcmts = Tree.Evens
+                            Plcmts = Tree.Odds
+                            Step.Method = T_STRONG_LINKED_NET_T1
                             break
                     if Elims: break
-            if not Elims:
+                if not Elims:
+                    # 2 odd nodes see each other
+                    for i in range(lenOdds-1):
+                        r0, c0, Cand0 = Tree.Odds[i]
+                        for j in range(i+1, lenOdds):
+                            r1, c1, Cand1 = Tree.Odds[j]
+                            Lk = how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands)
+                            if Lk:
+                                if Lk & LK_STRG: Lk |= Lk_WKST
+                                Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1]]
+                                for r2, c2, Cand2 in Tree.Odds:
+                                    K = str(r2)+str(c2)
+                                    if K in Elims.keys(): Elims[K].append(Cand2)
+                                    else: Elims[K] = [Cand2]
+                                Plcmts = Tree.Evens
+                                Step.Method = T_STRONG_LINKED_NET_T1
+                                break
+                        if Elims: break
+            if not Elims and T_STRONG_LINKED_NET_T2 in Methods:
                 Links = []
                 for r in range(9):
                     for c in range(9):
-                        if Grid[r][c]: continue
-                        Links = []  # even parity ccells see each other, either cell or house
-                        for Cand in (Cands[r][c]):
+                        Links = []  # All cands in cell see even parity nodes
+                        for Cand in Cands[r][c]:
                             if (r, c, Cand) in Tree.Evens: break
                             for re, ce, Cande in Tree.Evens:
                                 Lke = how_ccells_linked(r, c, Cand, re, ce, Cande, Cands)
@@ -74,15 +78,16 @@ def tech_medusa(Grid, Step, Cands, Methods):
                                     if Lke & LK_STRG: Lke |= LK_WKST
                                     Links.append([NL(r, c, Cand, Lke), NL(re, ce, Cande, LK_NONE)])
                                     break
-                        if len(Links) == len(Cands[r][c]):
+                            else: break
+                        if Links and len(Links) == len(Cands[r][c]):
                             for r2, c2, Cand2 in Tree.Evens:
                                 K = str(r2)+str(c2)
                                 if K in Elims.keys(): Elims[K].append(Cand2)
                                 else: Elims[K] = [Cand2]
                             Plcmts = Tree.Odds
                         else:
-                            Links = [] # odd parity ccells see each other, either cell or house
-                            for Cand in sorted(Cands[r][c]):
+                            Links = []  # All cands in cell see odd parity nodes
+                            for Cand in Cands[r][c]:
                                 if (r, c, Cand) in Tree.Odds: break
                                 for ro, co, Cando in Tree.Odds:
                                     Lko = how_ccells_linked(r, c, Cand, ro, co, Cando, Cands)
@@ -91,7 +96,7 @@ def tech_medusa(Grid, Step, Cands, Methods):
                                         Links.append([NL(r, c, Cand, Lko), NL(ro, co, Cando, LK_NONE)])
                                         break
                                 else: break
-                            if len(Links) == len(Cands[r][c]):
+                            if Links and len(Links) == len(Cands[r][c]):
                                 for r2, c2, Cand2 in Tree.Odds:
                                     K = str(r2)+str(c2)
                                     if K in Elims.keys(): Elims[K].append(Cand2)
@@ -99,17 +104,18 @@ def tech_medusa(Grid, Step, Cands, Methods):
                                 Plcmts = Tree.Evens
                         if Elims:
                             for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in Links:
-                                if Pattern: Pattern.append([P_SEP])
+                                if Pattern: Pattern.append([P_CON])
                                 Pattern.extend([[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk0 & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1]])
+                                Step.Method = T_STRONG_LINKED_NET_T2
                             break
                     if Elims: break
-            if not Elims:
+            if not Elims and T_STRONG_LINKED_NET_T3 in Methods:
                 # look for cells that are not part of the net that can see both an odd and even node.
                 Pattern = []
                 for r in range(9):
                     for c in range(9):
-                        if Grid[r][c]: continue
                         for Cand in sorted(Cands[r][c]):
+                            Done = False
                             if (r, c, Cand) in [*Tree.Evens, *Tree.Odds]: continue
                             for re, ce, Cande in Tree.Evens:
                                 Lke = how_ccells_linked(r, c, Cand, re, ce, Cande, Cands)
@@ -119,12 +125,16 @@ def tech_medusa(Grid, Step, Cands, Methods):
                                         Lko = how_ccells_linked(r, c, Cand, ro, co, Cando, Cands)
                                         if Lko:
                                             if Lko & LK_STRG: Lko |= LK_WKST
-                                            if Pattern:  Pattern.append([P_SEP])
-                                            Pattern.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lke & 0x000f)], [P_VAL, Cande], [P_ROW, re], [P_COL, ce], [P_CON],
-                                                       [P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lko & 0x000f)], [P_VAL, Cando], [P_ROW, ro], [P_COL, co]])
+                                            if Pattern:  Pattern.append([P_CON])
+                                            Pattern.extend([[P_VAL, Cando], [P_ROW, re], [P_COL, ce], [P_OP, token_link(Lke & 0x000f)], [P_VAL, Cand], [P_ROW, r], [P_COL, c],
+                                                            [P_OP, token_link(Lko & 0x000f)], [P_VAL, Cando], [P_ROW, ro], [P_COL, co]])
                                             K = str(r)+str(c)
-                                            if K in Elims.keys(): Elims[K].append(Cand)
+                                            if K in Elims.keys():
+                                                if Cand not in Elims[K]: Elims[K].append(Cand)
                                             else: Elims[K] = [Cand]
+                                            Step.Method = T_STRONG_LINKED_NET_T3
+                                            Done = True; break
+                                if Done: break
             Step.Outcome = []
             for r, c, Cand in Plcmts:
                 Grid[r][c] = Cand
@@ -145,9 +155,8 @@ def tech_medusa(Grid, Step, Cands, Methods):
                 Step.Pattern = [[P_VAL, Tree.Trunk.Cand], [P_ROW, Tree.Trunk.r], [P_COL, Tree.Trunk.c]]
                 Step.NrLks += 1
                 climb_branch(Tree.Trunk, Step)
-                if Pattern: Step.Pattern = [*Step.Pattern, [P_SEP], *Pattern]
+                if Pattern: Step.Pattern = [*Step.Pattern, [P_CON], *Pattern]
                 Step.Pattern.append([P_END])
-                Step.Method = T_MEDUSA
                 return len(Plcmts)
     return -1
 

@@ -720,16 +720,13 @@ def elim_cands_in_kraken_fish(Cand, BS, CS, Fins, Orient, Cands, Method, Step):
                 for rc in CS:
                     if Cand in Cands[rc][cc]: Cvrs.append((rc, cc))
     S = STATE()
-#    if Cvrs and find_cover_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, S):
     if Cvrs and new_find_cvr_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, S):
         Step.Method = Method
         if Orient == P_ROW: Step.Pattern = [[P_VAL, Cand], [P_ROW, BS], [P_COL, CS]]
         else: Step.Pattern = [[P_VAL, Cand], [P_COL, BS], [P_ROW, CS]]  # Orient == P_COL
         for r, c in Fins: Step.Pattern.extend([[P_CON, ], [P_ROW, r], [P_COL, c]])
-        # Step.Pattern.append([P_SEP, ])
         Chains = []
         for Ch in S.Pattern:  # one chain for each fin in S.Pattern
-            # if Chains: Chains.append([P_SEP, ])
             Chains.append([P_SEP, ])
             for i in range(len(Ch)-1):
                 Step.NrLks += 1
@@ -738,14 +735,8 @@ def elim_cands_in_kraken_fish(Cand, BS, CS, Fins, Orient, Cands, Method, Step):
                     if len(Ch[i].c) > 1: Step.NrGrpLks += 1
                 Chains.extend([[P_VAL, Ch[i].Cand], [P_ROW, Ch[i].r], [P_COL, Ch[i].c], [P_OP, token_link(Ch[i+1].Lk & 0x0f)]])
             Chains.extend([[P_VAL, Ch[-1].Cand], [P_ROW, Ch[-1].r], [P_COL, Ch[-1].c], [P_OP, OP_NONE]])
-            # for r, c, Cand, Lk, in Ch:
-            #     Step.NrLks += 1
-            #     if Method & T_GRPLK:
-            #         if len(r) > 1: Step.NrGrpLks += 1
-            #         if len(c) > 1: Step.NrGrpLks += 1
-            #     Chains.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk & 0x0f)]])
         Step.Pattern.extend(Chains); Step.Pattern.append([P_END, ])
-        for r, c, Cand in S.Outcome:
+        for r, c, Cand in S.Elims:
             if Method & T_GRPLK: Cands[list(r)[0]][list(c)[0]].discard(Cand)
             else: Cands[r][c].discard(Cand)
             if Step.Outcome: Step.Outcome.append([P_SEP, ])
@@ -803,20 +794,18 @@ def new_find_cvr_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, Status):
             FList.append(FinTrunk)
         if CvrFound:  # Cover sees all fins
             for Fin in FList: Status.Pattern.append(Fin.Chain)
-            Status.Outcome = [(rc, cc, Cand)]
+            Status.Elims = [(rc, cc, Cand)]
             return True
         if FList: Forest.append(CVR_TREE(rc, cc, Cand, FList))
 
     State = STATE(SLNodes, Method)
     while Forest:
         Culls = set()
-        # State.Pattern = []; State.Outcome = []
         for CTree in Forest:
             UnproductiveCvr = False
             CvrFound = True  # assumed True until proven False
             for Fin in CTree.FinList:
                 if Fin.Chain: continue
-                # CvrFound = False
                 Chain = [NL(Fin.r, Fin.c, Fin.Cand, LK_NONE)]
                 Prunes = set()
                 State.Pattern = []
@@ -829,7 +818,7 @@ def new_find_cvr_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, Status):
                 if not Fin.Chain and not Fin.Trunk: UnproductiveCvr = True; break
             if CvrFound:
                 for Fin in CTree.FinList: Status.Pattern.append(Fin.Chain)
-                Status.Outcome = [(CTree.r, CTree.c, CTree.Cand)]
+                Status.Elims = [(CTree.r, CTree.c, CTree.Cand)]
                 return True
             if UnproductiveCvr: Culls.add(CTree)
         for CTree in Culls: Forest.remove(CTree)

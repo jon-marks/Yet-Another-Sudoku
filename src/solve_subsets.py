@@ -84,7 +84,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                     if Elims:
                         Cands[r2][c] -= Cands[r][c]
                         if Step.Outcome: Step.Outcome.append([P_SEP])
-                        Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                        Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                 if Step.Outcome:  # Candidates were eliminated
                     if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
                     Step.Outcome.append([P_END])
@@ -108,7 +108,7 @@ def tech_exposed_pairs(Grid, Step, Cands, Methods):
                     if Elims:
                         Cands[r2][c2] -= Cands[r][c]
                         if Step.Outcome: Step.Outcome.append([P_SEP])
-                        Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                        Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                 if Step.Outcome:
                     Step.Method = T_EXPOSED_PAIR
                     Step.Outcome.append([P_END])
@@ -146,7 +146,7 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
                         if Elims:
                             Cands[r0][c0] = {Cand0, Cand1}
                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                     if Step.Outcome:
                         Step.Outcome.append([P_END])
                         Step.Method = T_HIDDEN_PAIR
@@ -170,7 +170,7 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
                         if Elims:
                             Cands[r0][c0] = {Cand0, Cand1}
                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                     if Step.Outcome:
                         Step.Outcome.append([P_END])
                         Step.Method = T_HIDDEN_PAIR
@@ -196,7 +196,7 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
                         if Elims:
                             Cands[r0][c0] = {Cand0, Cand1}
                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                            Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                     if Step.Outcome:
                         Step.Outcome.append([P_END])
                         Step.Method = T_HIDDEN_PAIR
@@ -252,7 +252,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                         if Elims:
                                             Cands[r3][c3] -= D
                                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                                            Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:  Step.Method = T_LOCKED_EXPOSED_TRIPLE
                         for c3 in range(9):
                             if c3 in [c, c1, c2]: continue
@@ -261,7 +261,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                             if Elims:
                                 Cands[r][c3] -= D
                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:
                             if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
                             Step.Outcome.append([P_END])
@@ -296,7 +296,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                                         if Elims:
                                             Cands[r3][c3] -= D
                                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                                            Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:  Step.Method = T_LOCKED_EXPOSED_TRIPLE
                         # else: Step.Method = T_EXPOSED_TRIPLE
                         for r3 in range(9):
@@ -306,7 +306,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                             if Elims:
                                 Cands[r3][c] -= D
                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:  # Candidates were eliminated
                             if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_TRIPLE
                             Step.Outcome.append([P_END])
@@ -340,7 +340,7 @@ def tech_exposed_triples(Grid, Step, Cands, Methods):
                             if Elims:
                                 Cands[r3][c3] -= D
                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Step.Outcome.extend([[P_ROW, r3], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:
                             Step.Method = T_EXPOSED_TRIPLE
                             Step.Outcome.append([P_END])
@@ -393,14 +393,14 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             if Elims:
                                 Cands[r0][c0] = X
                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:
                             Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
                             Step.Pattern = []
                             for c0, X in C:
                                 if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                             Step.Pattern.append([P_END])
                             return 0
                 # scan cols
@@ -421,14 +421,14 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             if Elims:
                                 Cands[r0][c0] = X
                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:
                             Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
                             Step.Pattern = []
                             for r0, X in R:
                                 if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                             Step.Pattern.append([P_END])
                             return 0
                 # scan boxes
@@ -451,14 +451,14 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             if Elims:
                                 Cands[r0][c0] = X
                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                         if Step.Outcome:
                             Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
                             Step.Pattern = []
                             for r0, c0, X in B:
                                 if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                             Step.Pattern.append([P_END])
                             return 0
     return -1
@@ -489,7 +489,7 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
                                 if Elims:
                                     Cands[r][c4] -= D
                                     if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                             if Step.Outcome:  # Candidates were eliminated
                                 Step.Method = T_EXPOSED_QUAD
                                 Step.Outcome.append([P_END])
@@ -517,7 +517,7 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
                                 if Elims:
                                     Cands[r4][c] -= D
                                     if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                    Step.Outcome.extend([[P_ROW, r4], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                    Step.Outcome.extend([[P_ROW, r4], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                             if Step.Outcome:  # Candidates were eliminated
                                 Step.Method = T_EXPOSED_QUAD
                                 Step.Outcome.append([P_END])
@@ -551,7 +551,7 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
                                     if Elims:
                                         Cands[r4][c4] -= D
                                         if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                        Step.Outcome.extend([[P_ROW, r4], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        Step.Outcome.extend([[P_ROW, r4], [P_COL, c4], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                                 if Step.Outcome:
                                     Step.Method = T_EXPOSED_QUAD
                                     Step.Outcome.append([P_END])
@@ -590,14 +590,14 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 if Elims:
                                     Cands[r0][c0] = X
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
-                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                             if Step.Outcome:
                                 Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
                                 Step.Pattern = []
                                 for c0, X in C:
                                     if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                                 Step.Pattern.append([P_END])
                                 return 0
                     # Scan cols
@@ -618,14 +618,14 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 if Elims:
                                     Cands[r0][c0] = X
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
-                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                             if Step.Outcome:
                                 Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
                                 Step.Pattern = []
                                 for r0, X in R:
                                     if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                                 Step.Pattern.append([P_END])
                                 return 0
                     # scan boxes
@@ -648,15 +648,14 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 if Elims:
                                     Cands[r0][c0] = X
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
-                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, sorted(Elims)]])
                             if Step.Outcome:
                                 Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
                                 Step.Pattern = []
                                 for r0, c0, X in B:
                                     if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
+                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                                 Step.Pattern.append([P_END])
                                 return 0
     return -1
-

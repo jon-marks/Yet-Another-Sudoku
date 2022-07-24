@@ -256,6 +256,22 @@ T_KRAKEN                    = 0x00000100
 T_GRPLK                     = 0x00000200
 T_SASHIMI                   = 0x00000400
 
+# Technique Extensions for Grouped Bent Subsets
+T_EXPOSED_ROW       = 0x00000000  # Exposed subset in row, hidden subset in box
+T_EXPOSED_COL       = 0x00001000  # Exposed subset in col, hidden subset in box
+T_HIDDEN_ROW        = 0x00002000  # Exposed subset in box, hidden subset in row
+T_HIDDEN_COL        = 0x00003000  # Exposed subset in box, hidden subset in col
+
+# Technique Extensions for Strong Link pattern resolutions
+T_SAME_PARITY_NODES         = 0x00000000  # Type 1: Two same parity nodes see each other - same house or cell
+T_ALL_SEE_SAME_PARITY_NODES = 0x00001000  # Type 2: All candidates in a cell see same parity nodes
+T_SEE_OPPOSING_PARITY_NODES = 0x00002000  # Type 3: Ccell sees both an odd and an even parity node
+
+# Technique Extensions for XY- and AI-Chain End pattern resolutions
+T_SAME_CANDS                = 0x00000000  # Type 1: Same Value candidates
+T_DIFF_CANDS                = 0x00001000  # Type 2: Different candidate values
+T_ALT_EXPOSED_PAIR_CANDS    = 0x00002000  # Type 3: Opposing values of an Exposed pair
+
 T_UNDEF                     = -1
 T_EXPOSED_SINGLE            = 0
 T_HIDDEN_SINGLE             = 1
@@ -281,54 +297,68 @@ T_SASHIMI_JELLYFISH         = T_FINNED_JELLYFISH + T_SASHIMI
 T_SKYSCRAPER                = 18
 T_TWO_STRING_KITE           = 19
 T_TURBOT_FISH               = 20
-T_REMOTE_PAIR               = 21
+T_REMOTE_PAIR_T3            = 21 + T_SEE_OPPOSING_PARITY_NODES
 T_Y_WING                    = 22
 T_W_WING                    = 23
 T_XYZ_WING                  = 24
 T_WXYZ_WING                 = 25
 T_BENT_EXPOSED_QUAD         = 26
-T_MEDUSA                    = 27
+T_STRONG_LINKED_NET_T1      = 27 + T_SAME_PARITY_NODES
+T_STRONG_LINKED_NET_T2      = 27 + T_ALL_SEE_SAME_PARITY_NODES
+T_STRONG_LINKED_NET_T3      = 27 + T_SEE_OPPOSING_PARITY_NODES
 T_EMPTY_RECT                = 28
-T_X_CHAIN                   = 29
-T_EVEN_X_LOOP               = 30
-T_STRONG_X_LOOP             = 31
-T_SC_XY_CHAIN               = 32
-T_DC_XY_CHAIN               = 33
-T_DC_IBVC_XY_CHAIN          = 34
-T_XY_LOOP                   = 35
-T_SC_AI_CHAIN               = 36
-T_DC_AI_CHAIN               = 37
-T_DC_IBVC_AI_CHAIN          = 38
-T_EVEN_AI_LOOP              = 39
+T_GROUPED_BENT_PAIR_ER      = 29 + T_EXPOSED_ROW
+T_GROUPED_BENT_PAIR_EC      = 29 + T_EXPOSED_COL
+T_GROUPED_BENT_PAIR_HR      = 29 + T_HIDDEN_ROW
+T_GROUPED_BENT_PAIR_HC      = 29 + T_HIDDEN_COL
+T_GROUPED_BENT_TRIPLE_ER    = 30 + T_EXPOSED_ROW
+T_GROUPED_BENT_TRIPLE_EC    = 30 + T_EXPOSED_COL
+T_GROUPED_BENT_TRIPLE_HR    = 30 + T_HIDDEN_ROW
+T_GROUPED_BENT_TRIPLE_HC    = 30 + T_HIDDEN_COL
+T_GROUPED_BENT_QUAD_ER      = 31 + T_EXPOSED_ROW
+T_GROUPED_BENT_QUAD_EC      = 31 + T_EXPOSED_COL
+T_GROUPED_BENT_QUAD_HR      = 31 + T_HIDDEN_ROW
+T_GROUPED_BENT_QUAD_HC      = 31 + T_HIDDEN_COL
+T_BENT_HIDDEN_TRIPLE        = 32
+T_X_CHAIN_T1                = 33
+T_EVEN_X_LOOP_T3            = 34 + T_SEE_OPPOSING_PARITY_NODES
+T_STRONG_X_LOOP             = 35
+T_XY_CHAIN_T1               = 36 + T_SAME_CANDS
+T_XY_CHAIN_T2               = 36 + T_DIFF_CANDS
+T_XY_CHAIN_T3               = 36 + T_ALT_EXPOSED_PAIR_CANDS
+T_EVEN_XY_LOOP_T2           = 37 + T_ALL_SEE_SAME_PARITY_NODES
+T_EVEN_XY_LOOP_T3           = 37 + T_SEE_OPPOSING_PARITY_NODES
+T_AI_CHAIN_T1               = 38 + T_SAME_CANDS
+T_AI_CHAIN_T2               = 38 + T_DIFF_CANDS
+T_AI_CHAIN_T3               = 38 + T_ALT_EXPOSED_PAIR_CANDS
+T_EVEN_AI_LOOP_T1           = 39 + T_SAME_PARITY_NODES
+T_EVEN_AI_LOOP_T2           = 39 + T_ALL_SEE_SAME_PARITY_NODES
+T_EVEN_AI_LOOP_T3           = 39 + T_SEE_OPPOSING_PARITY_NODES
 T_STRONG_AI_LOOP            = 40
-
 T_KRAKEN_FINNED_X_WING      = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_FINNED_SWORDFISH   = T_FINNED_SWORDFISH + T_KRAKEN
 T_KRAKEN_FINNED_JELLYFISH   = T_FINNED_JELLYFISH + T_KRAKEN
 T_KRAKEN_SASHIMI_X_WING     = T_SASHIMI_X_WING + T_KRAKEN
 T_KRAKEN_SASHIMI_SWORDFISH  = T_SASHIMI_SWORDFISH + T_KRAKEN
 T_KRAKEN_SASHIMI_JELLYFISH  = T_SASHIMI_JELLYFISH + T_KRAKEN
-
-T_GL_W_WING                 = T_W_WING + T_GRPLK
-T_GL_SKYSCRAPER             = T_SKYSCRAPER + T_GRPLK
 T_GL_TWO_STRING_KITE        = T_TWO_STRING_KITE + T_GRPLK
 T_GL_TURBOT_FISH            = T_TURBOT_FISH + T_GRPLK
-T_GL_X_CHAIN                = T_X_CHAIN + T_GRPLK
-T_GL_EVEN_X_LOOP            = T_EVEN_X_LOOP + T_GRPLK
+T_GL_X_CHAIN_T1             = T_X_CHAIN_T1 + T_GRPLK
+T_GL_EVEN_X_LOOP_T3         = T_EVEN_X_LOOP_T3 + T_GRPLK
 T_GL_STRONG_X_LOOP          = T_STRONG_X_LOOP + T_GRPLK
-T_GL_SC_AI_CHAIN            = T_SC_AI_CHAIN + T_GRPLK
-T_GL_DC_AI_CHAIN            = T_DC_AI_CHAIN + T_GRPLK
-T_GL_DC_IBVC_AI_CHAIN       = T_DC_IBVC_AI_CHAIN+T_GRPLK
-T_GL_EVEN_AI_LOOP           = T_EVEN_AI_LOOP + T_GRPLK
+T_GL_AI_CHAIN_T1            = T_AI_CHAIN_T1 + T_GRPLK
+T_GL_AI_CHAIN_T2            = T_AI_CHAIN_T2  + T_GRPLK
+T_GL_AI_CHAIN_T3            = T_AI_CHAIN_T3 + T_GRPLK
+T_GL_EVEN_AI_LOOP_T1        = T_EVEN_AI_LOOP_T1 + T_GRPLK
+T_GL_EVEN_AI_LOOP_T2        = T_EVEN_AI_LOOP_T2 + T_GRPLK
+T_GL_EVEN_AI_LOOP_T3        = T_EVEN_AI_LOOP_T3 + T_GRPLK
 T_GL_STRONG_AI_LOOP         = T_STRONG_AI_LOOP + T_GRPLK
-
 T_GL_KRAKEN_FINNED_X_WING     = T_KRAKEN_FINNED_X_WING + T_GRPLK
 T_GL_KRAKEN_FINNED_SWORDFISH  = T_KRAKEN_FINNED_SWORDFISH + T_GRPLK
 T_GL_KRAKEN_FINNED_JELLYFISH  = T_KRAKEN_FINNED_JELLYFISH + T_GRPLK
 T_GL_KRAKEN_SASHIMI_X_WING    = T_KRAKEN_SASHIMI_X_WING + T_GRPLK
 T_GL_KRAKEN_SASHIMI_SWORDFISH = T_KRAKEN_SASHIMI_SWORDFISH + T_GRPLK
 T_GL_KRAKEN_SASHIMI_JELLYFISH = T_KRAKEN_SASHIMI_JELLYFISH + T_GRPLK
-
 T_BRUTE_FORCE               = 0x000000FF  # 255
 
 # The lexical token identifiers for cell grammar elements
@@ -359,25 +389,33 @@ OP_PARO = 13  # "("  Opening parenthesis
 OP_PARC = 14  # ")"  Closing parenthesis
 OP_BRCO = 15  # "{"  Opening brace
 OP_BRCC = 16  # "}"  Closing brace
-OP_NR_OPS = 17
+OP_U    = 17  # "U"  Union
+OP_CWLK = 18  # "|-|"  Weak AIC  AIC with weak link ends
+OP_CSLK = 19  # "|=|"  Strong AIC (all strong links)
+OP_CRLK = 20  # "|~|"  Robust AIC  AIC with strong link ends
+OP_NR_OPS = 21
 
-OP = ["",    # OP_NONE
-      "?-",  # OP_POS   Possibility, perhaps something to try
-      "--",  # OP_PRES  Presence of candidate / value in cell
-      "!-",  # OP_ABS   Absence of candidate in cell.
-      "==",  # OP_EQ    Presence of only value in cell
-      "!=",  # OP_NEQ   Cell cannot assume that value
-      ":=",  # OP_ASNV  Assign value to cell.
-      "+=",  # OP_ASNC  Add candidate to cell.
-      "-=",  # OP_ELIM  Eliminate candidate from cell.
-      "-" ,  # OP_WLK   Chain weak link.
-      "=" ,  # OP_SLK   Chain strong link.
-      "~" ,  # OP_WSLK  Chain strong masquerading as weak link.
-      "#" ,  # OP_CNT   Count / number of occurrences
-      "(" ,  # OP_PARO  Opening parenthesis
-      ")" ,  # OP_PARC  Closing parenthesis
-      "{" ,  # OP_BRCO  Opening brace
-      "}" ]  # OP_BRCC  Closing brace
+OP = ["",     # OP_NONE
+      "?-",   # OP_POS   Possibility, perhaps something to try
+      "--",   # OP_PRES  Presence of candidate / value in cell
+      "!-",   # OP_ABS   Absence of candidate in cell.
+      "==",   # OP_EQ    Presence of only value in cell
+      "!=",   # OP_NEQ   Cell cannot assume that value
+      ":=",   # OP_ASNV  Assign value to cell.
+      "+=",   # OP_ASNC  Add candidate to cell.
+      "-=",   # OP_ELIM  Eliminate candidate from cell.
+      "-",    # OP_WLK   Chain weak link.
+      "=",    # OP_SLK   Chain strong link.
+      "~",    # OP_WSLK  Chain strong masquerading as weak link.
+      "#",    # OP_CNT   Count / number of occurrences
+      "(",    # OP_PARO  Opening parenthesis
+      ")",    # OP_PARC  Closing parenthesis
+      "{",    # OP_BRCO  Opening brace
+      "}",    # OP_BRCC  Closing brace
+      "U",    # OP_U     Union
+      "|-|",  # OP_CWLK = 18  # "|-|"  Weak AIC  AIC with
+      "|=|",  # OP_CSLK = 19  # "|=|"  Strong AIC (all
+      "|~|"]  # OP_CRLK = 20  # "|~|"  Robust AIC  AIC with st
 
 TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
@@ -467,66 +505,86 @@ class TECH_T:
         self.Expertise  = Expertise
         self.Difficulty = Difficulty
 
-Tech = {T_UNDEF:                    TECH_T(True, "Undefined",                 UNDEF                   -1),
-        T_EXPOSED_SINGLE:           TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
-        T_HIDDEN_SINGLE:            TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
-        T_CLAIMING_LOCKED_SINGLE:   TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
-        T_POINTING_LOCKED_SINGLE:   TECH_T(True, "Pointing Locked Single",    EXP_NOVICE,             15),
-        T_EXPOSED_PAIR:             TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
-        T_LOCKED_EXPOSED_PAIR:      TECH_T(True, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
-        T_HIDDEN_PAIR:              TECH_T(True, "Hidden Pair",               EXP_INTERMEDIATE,       20),
-        T_EXPOSED_TRIPLE:           TECH_T(True, "Exposed Triple",            EXP_INTERMEDIATE,       20),
-        T_LOCKED_EXPOSED_TRIPLE:    TECH_T(True, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
-        T_HIDDEN_TRIPLE:            TECH_T(True, "Hidden Triple",             EXP_INTERMEDIATE,       30),
-        T_EXPOSED_QUAD:             TECH_T(True, "Exposed Quad",              EXP_INTERMEDIATE,       35),
-        T_HIDDEN_QUAD:              TECH_T(True, "Hidden Quad",               EXP_INTERMEDIATE,       40),
-        T_X_WING:                   TECH_T(True, "X-Wing",                    EXP_PROFICIENT,         45),
-        T_SWORDFISH:                TECH_T(True, "Swordfish",                 EXP_PROFICIENT,         50),
-        T_JELLYFISH:                TECH_T(True, "Jellyfish",                 EXP_PROFICIENT,         55),
-        T_FINNED_X_WING:            TECH_T(True, "Finned X-Wing",             EXP_PROFICIENT,         60),
-        T_FINNED_SWORDFISH:         TECH_T(True, "Finned Swordfish",          EXP_PROFICIENT,         65),
-        T_FINNED_JELLYFISH:         TECH_T(True, "Finned Jellyfish",          EXP_PROFICIENT,         70),
-        T_SASHIMI_X_WING:           TECH_T(True, "Sashimi X-Wing",            EXP_PROFICIENT,         60),
-        T_SASHIMI_SWORDFISH:        TECH_T(True, "Sashimi Swordfish",         EXP_PROFICIENT,         65),
-        T_SASHIMI_JELLYFISH:        TECH_T(True, "Sashimi Jellyfish",         EXP_PROFICIENT,         70),
-        T_SKYSCRAPER:               TECH_T(True, "Skyscraper",                EXP_PROFICIENT,         45),
-        T_TWO_STRING_KITE:          TECH_T(True, "Two String Kite",           EXP_PROFICIENT,         45),
-        T_TURBOT_FISH:              TECH_T(True, "Turbot Fish",               EXP_PROFICIENT,         50),
-        T_EMPTY_RECT:               TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
-        T_Y_WING:                   TECH_T(True, "Y-Wing",                    EXP_INTERMEDIATE,       50),
-        T_XYZ_WING:                 TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
-        T_WXYZ_WING:                TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
-        T_BENT_EXPOSED_QUAD:        TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
-        T_MEDUSA:                   TECH_T(True, "Medusa",                    EXP_PROFICIENT,         60),
-        T_X_CHAIN:                  TECH_T(True, "X-Chain",                   EXP_PROFICIENT,         70),
-        T_EVEN_X_LOOP:              TECH_T(True, "Even X-Loop",               EXP_PROFICIENT,         70),
-        T_STRONG_X_LOOP:            TECH_T(True, "Strong X-Loop",             EXP_PROFICIENT,         70),
-        T_REMOTE_PAIR:              TECH_T(True, "Remote Pair",               EXP_ACCOMPLISHED,       80),
-        T_SC_XY_CHAIN:              TECH_T(True, "Same End Candidate XY-Chain", EXP_ACCOMPLISHED,     80),
-        T_DC_XY_CHAIN:              TECH_T(True, "Different End Candidate XY-Chain", EXP_ACCOMPLISHED, 80),
-        T_DC_IBVC_XY_CHAIN:         TECH_T(True, "Different End Candidate Identical BVC XY-Chain", EXP_ACCOMPLISHED, 80),
-        T_XY_LOOP:                  TECH_T(True, "XY-Loop",                   EXP_ACCOMPLISHED,       80),
-        T_W_WING:                   TECH_T(True, "W-Wing",                    EXP_PROFICIENT,         80),
-        T_SC_AI_CHAIN:              TECH_T(True, "Same End Candidate AI-Chain", EXP_PROFICIENT,       70),
-        T_DC_AI_CHAIN:              TECH_T(True, "Different End Candidate AI-Chain", EXP_ACCOMPLISHED, 80),
-        T_DC_IBVC_AI_CHAIN:         TECH_T(True, "Different End Candidate Identical BVC AI-Chain", EXP_ACCOMPLISHED, 80),
-        T_EVEN_AI_LOOP:             TECH_T(True, "Even AI-Loop",              EXP_ACCOMPLISHED,       80),
-        T_STRONG_AI_LOOP:           TECH_T(True, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
-        T_KRAKEN_FINNED_X_WING:     TECH_T(True, "Kraken Finned X-Wing",             EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Kraken Finned Swordfish",          EXP_ACCOMPLISHED,      100),
-        T_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Kraken Finned Jellyfish",          EXP_ACCOMPLISHED,      100),
+Tech = {T_UNDEF:                       TECH_T(True, "Undefined",                 UNDEF                   -1),
+        T_EXPOSED_SINGLE:              TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
+        T_HIDDEN_SINGLE:               TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
+        T_CLAIMING_LOCKED_SINGLE:      TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
+        T_POINTING_LOCKED_SINGLE:      TECH_T(True, "Pointing Locked Single",    EXP_NOVICE,             15),
+        T_EXPOSED_PAIR:                TECH_T(True, "Exposed Pair",              EXP_INTERMEDIATE,       15),
+        T_LOCKED_EXPOSED_PAIR:         TECH_T(True, "Locked Exposed Pair",       EXP_INTERMEDIATE,       20),
+        T_HIDDEN_PAIR:                 TECH_T(True, "Hidden Pair",               EXP_INTERMEDIATE,       20),
+        T_EXPOSED_TRIPLE:              TECH_T(True, "Exposed Triple",            EXP_INTERMEDIATE,       20),
+        T_LOCKED_EXPOSED_TRIPLE:       TECH_T(True, "Locked Exposed Triple",     EXP_INTERMEDIATE,       25),
+        T_HIDDEN_TRIPLE:               TECH_T(True, "Hidden Triple",             EXP_INTERMEDIATE,       30),
+        T_EXPOSED_QUAD:                TECH_T(True, "Exposed Quad",              EXP_INTERMEDIATE,       35),
+        T_HIDDEN_QUAD:                 TECH_T(True, "Hidden Quad",               EXP_INTERMEDIATE,       40),
+        T_X_WING:                      TECH_T(True, "X-Wing",                    EXP_PROFICIENT,         45),
+        T_SWORDFISH:                   TECH_T(True, "Swordfish",                 EXP_PROFICIENT,         50),
+        T_JELLYFISH:                   TECH_T(True, "Jellyfish",                 EXP_PROFICIENT,         55),
+        T_FINNED_X_WING:               TECH_T(True, "Finned X-Wing",             EXP_PROFICIENT,         60),
+        T_FINNED_SWORDFISH:            TECH_T(True, "Finned Swordfish",          EXP_PROFICIENT,         65),
+        T_FINNED_JELLYFISH:            TECH_T(True, "Finned Jellyfish",          EXP_PROFICIENT,         70),
+        T_SASHIMI_X_WING:              TECH_T(True, "Sashimi X-Wing",            EXP_PROFICIENT,         60),
+        T_SASHIMI_SWORDFISH:           TECH_T(True, "Sashimi Swordfish",         EXP_PROFICIENT,         65),
+        T_SASHIMI_JELLYFISH:           TECH_T(True, "Sashimi Jellyfish",         EXP_PROFICIENT,         70),
+        T_SKYSCRAPER:                  TECH_T(True, "Skyscraper",                EXP_PROFICIENT,         45),
+        T_TWO_STRING_KITE:             TECH_T(True, "Two String Kite",           EXP_PROFICIENT,         45),
+        T_TURBOT_FISH:                 TECH_T(True, "Turbot Fish",               EXP_PROFICIENT,         50),
+        T_REMOTE_PAIR_T3:              TECH_T(True, "Remote Pair T3",            EXP_ACCOMPLISHED,       80),
+        T_Y_WING:                      TECH_T(True, "Y-Wing",                    EXP_INTERMEDIATE,       50),
+        T_W_WING:                      TECH_T(True, "W-Wing",                    EXP_PROFICIENT,         80),
+        T_XYZ_WING:                    TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
+        T_WXYZ_WING:                   TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
+        T_BENT_EXPOSED_QUAD:           TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
+        T_STRONG_LINKED_NET_T1:        TECH_T(True, "Strong Linked Net T1",      EXP_PROFICIENT,         60),
+        T_STRONG_LINKED_NET_T2:        TECH_T(True, "Strong Linked Net T2",      EXP_PROFICIENT,         60),
+        T_STRONG_LINKED_NET_T3:        TECH_T(True, "Strong Linked Net T3",      EXP_PROFICIENT,         60),
+        T_EMPTY_RECT:                  TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
+        T_GROUPED_BENT_PAIR_ER:        TECH_T(True, "Grouped Bent Pair, Exposed Row",   EXP_PROFICIENT,  70),
+        T_GROUPED_BENT_PAIR_EC:        TECH_T(True, "Grouped Bent Pair, Exposed Col",   EXP_PROFICIENT,  70),
+        T_GROUPED_BENT_PAIR_HR:        TECH_T(True, "Grouped Bent Pair, Hidden Row",    EXP_PROFICIENT,  70),
+        T_GROUPED_BENT_PAIR_HC:        TECH_T(True, "Grouped Bent Pair, Hidden Col",    EXP_PROFICIENT,  70),
+        T_GROUPED_BENT_TRIPLE_ER:      TECH_T(True, "Grouped Bent Triple, Exposed Row", EXP_PROFICIENT,  85),
+        T_GROUPED_BENT_TRIPLE_EC:      TECH_T(True, "Grouped Bent Triple, Exposed Col", EXP_PROFICIENT,  85),
+        T_GROUPED_BENT_TRIPLE_HR:      TECH_T(True, "Grouped Bent Triple, Hidden Row",  EXP_PROFICIENT,  85),
+        T_GROUPED_BENT_TRIPLE_HC:      TECH_T(True, "Grouped Bent Triple, Hidden Col",  EXP_PROFICIENT,  85),
+        T_GROUPED_BENT_QUAD_ER:        TECH_T(True, "Grouped Bent Quad, Exposed Row",   EXP_PROFICIENT, 100),
+        T_GROUPED_BENT_QUAD_EC:        TECH_T(True, "Grouped Bent Quad, Exposed Col",   EXP_PROFICIENT, 100),
+        T_GROUPED_BENT_QUAD_HR:        TECH_T(True, "Grouped Bent Quad, Hidden Row",    EXP_PROFICIENT, 100),
+        T_GROUPED_BENT_QUAD_HC:        TECH_T(True, "Grouped Bent Quad, Hidden Col",    EXP_PROFICIENT, 100),
+        T_BENT_HIDDEN_TRIPLE:          TECH_T(True, "Bent Hidden Triple",        EXP_PROFICIENT,         90),
+        T_X_CHAIN_T1:                  TECH_T(True, "X-Chain T1",                EXP_PROFICIENT,         70),
+        T_EVEN_X_LOOP_T3:              TECH_T(True, "Even X-Loop T3",            EXP_PROFICIENT,         70),
+        T_STRONG_X_LOOP:               TECH_T(True, "Strong X-Loop",             EXP_PROFICIENT,         70),
+        T_XY_CHAIN_T1:                 TECH_T(True, "XY-Chain T1",               EXP_ACCOMPLISHED,       80),
+        T_XY_CHAIN_T2:                 TECH_T(True, "XY-Chain T2",               EXP_ACCOMPLISHED,       80),
+        T_XY_CHAIN_T3:                 TECH_T(True, "XY-Chain T3",               EXP_ACCOMPLISHED,       80),
+        T_EVEN_XY_LOOP_T2:             TECH_T(True, "Even XY-Loop T2",           EXP_ACCOMPLISHED,       80),
+        T_EVEN_XY_LOOP_T3:             TECH_T(True, "Even XY-Loop T3",           EXP_ACCOMPLISHED,       80),
+        T_AI_CHAIN_T1:                 TECH_T(True, "AI-Chain T1",               EXP_PROFICIENT,         70),
+        T_AI_CHAIN_T2:                 TECH_T(True, "AI-Chain T2",               EXP_ACCOMPLISHED,       80),
+        T_AI_CHAIN_T3:                 TECH_T(True, "AI-Chain T3",               EXP_ACCOMPLISHED,       80),
+        T_EVEN_AI_LOOP_T1:             TECH_T(True, "Even AI-Loop T1",           EXP_ACCOMPLISHED,       80),
+        T_EVEN_AI_LOOP_T2:             TECH_T(True, "Even AI-Loop T2",           EXP_ACCOMPLISHED,       80),
+        T_EVEN_AI_LOOP_T3:             TECH_T(True, "Even AI-Loop T3",           EXP_ACCOMPLISHED,       80),
+        T_STRONG_AI_LOOP:              TECH_T(True, "Strong AI-Loop",            EXP_ACCOMPLISHED,       80),
+        T_KRAKEN_FINNED_X_WING:        TECH_T(True, "Kraken Finned X-Wing",      EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_SWORDFISH:     TECH_T(True, "Kraken Finned Swordfish",   EXP_ACCOMPLISHED,      100),
+        T_KRAKEN_FINNED_JELLYFISH:     TECH_T(True, "Kraken Finned Jellyfish",   EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_X_WING:       TECH_T(True, "Kraken Sashimi X-Wing",     EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_SWORDFISH:    TECH_T(True, "Kraken Sashimi Swordfish",  EXP_ACCOMPLISHED,      100),
         T_KRAKEN_SASHIMI_JELLYFISH:    TECH_T(True, "Kraken Sashimi Jellyfish",  EXP_ACCOMPLISHED,      100),
         T_GL_TWO_STRING_KITE:          TECH_T(True, "Group Linked Two String Kite", EXP_PROFICIENT,      45),
         T_GL_TURBOT_FISH:              TECH_T(True, "Group Linked Turbot Fish",  EXP_PROFICIENT,         50),
-        T_GL_X_CHAIN:                  TECH_T(True, "Group Linked X-Chain",      EXP_PROFICIENT,         70),
-        T_GL_EVEN_X_LOOP:              TECH_T(True, "Group Linked Even X-Loop",  EXP_PROFICIENT,         70),
+        T_GL_X_CHAIN_T1:               TECH_T(True, "Group Linked X-Chain T1",   EXP_PROFICIENT,         70),
+        T_GL_EVEN_X_LOOP_T3:           TECH_T(True, "Group Linked Even X-Loop T3", EXP_PROFICIENT,       70),
         T_GL_STRONG_X_LOOP:            TECH_T(True, "Group Linked Strong X-Loop", EXP_PROFICIENT,        70),
-        T_GL_SC_AI_CHAIN:              TECH_T(True, "Group Linked Same End Candidate AI-Chain", EXP_PROFICIENT, 80),
-        T_GL_DC_AI_CHAIN:              TECH_T(True, "Group Linked Different End Candidate AI-Chain", EXP_ACCOMPLISHED, 80),
-        T_GL_DC_IBVC_AI_CHAIN:         TECH_T(True, "Group Linked Different End Candidate Identical BVC AI-Chain", EXP_ACCOMPLISHED, 80),
-        T_GL_EVEN_AI_LOOP:             TECH_T(True, "Group Linked Even AI-Loop", EXP_ACCOMPLISHED,       80),
+        T_GL_AI_CHAIN_T1:              TECH_T(True, "Group Linked AI-Chain T1",  EXP_PROFICIENT,         80),
+        T_GL_AI_CHAIN_T2:              TECH_T(True, "Group Linked AI-Chain T2",  EXP_ACCOMPLISHED,       80),
+        T_GL_AI_CHAIN_T3:              TECH_T(True, "Group Linked AI-Chain T3",  EXP_ACCOMPLISHED,       80),
+        T_GL_EVEN_AI_LOOP_T1:          TECH_T(True, "Group Linked Even AI-Loop T1", EXP_ACCOMPLISHED,    80),
+        T_GL_EVEN_AI_LOOP_T2:          TECH_T(True, "Group Linked Even AI-Loop T2", EXP_ACCOMPLISHED,    80),
+        T_GL_EVEN_AI_LOOP_T3:          TECH_T(True, "Group Linked Even AI-Loop T3", EXP_ACCOMPLISHED,    80),
         T_GL_STRONG_AI_LOOP:           TECH_T(True, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
         T_GL_KRAKEN_FINNED_X_WING:     TECH_T(True, "Group Linked Kraken Finned X-Wing", EXP_ACCOMPLISHED, 100),
         T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Group Linked Kraken Finned Swordfish", EXP_ACCOMPLISHED, 100),

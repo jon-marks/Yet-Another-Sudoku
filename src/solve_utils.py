@@ -48,10 +48,7 @@ class TREE:  # to depreciate    # used to find chains. Tree grows branches.  Cha
         self.Branch = Branch if Branch else []
 
 class TNODE:
-    # This is the tree node (branch/child) structure used in constructing chain chains.
-    # def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, UsedNodes = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
-
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
         self.Chain = Chain if Chain else []  # List of path from root to current Node. (NODE(r, c, Cand, Lk_type_to_next)
         self.Parent = Parent
@@ -64,18 +61,14 @@ class ANODE:
         self.Children = Children if Children else []
 
 class STATE:
-    def __init__(self, SLNodes = None, Tech = T_UNDEF, Pattern = None, Outcome = None):
+    def __init__(self, SLNodes = None, Tech = T_UNDEF, Pattern = None, Pattern1 = None, Elims = None, Plcmts = None):
         self.SLNodes = SLNodes if SLNodes else []
         self.Tech = Tech
         self.Pattern = Pattern if Pattern else []
-        self.Outcome = Outcome if Outcome else []
-
-class STATUS:  # to be depreciated
-    def __init__(self, Tech = T_UNDEF, Pattern = None, Outcome = None,
-                 OddNodes = None, EvenNodes = None, PrunedOddNodes = None, PrunedEvenNodes = None):
-        self.Tech = Tech
-        self.Pattern = Pattern if Pattern else []
-        self.Outcome = Outcome if Outcome else []
+        self.Pattern1 = Pattern1 if Pattern1 else []
+        # self.Outcome = Outcome if Outcome else []  # TODO - get rid of Outcome.
+        self.Elims = Elims if Elims else {}
+        self.Plcmts = Plcmts if Plcmts else []
 
 def cell_val_has_no_conflicts(v, grid, r, c):
     #  Checks that value v obeys sudoku rules in grid[r][c], the 9x9 matrix

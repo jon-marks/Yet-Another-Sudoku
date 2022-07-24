@@ -36,19 +36,32 @@ def x_chains(Grid, Step, Cands, Methods, GrpLks = False):
                         if len(r) > 1: Step.NrGrpLks += 1
                         if len(c) > 1: Step.NrGrpLks += 1
                     Step.Pattern.extend([[P_VAL, Cand], [P_ROW, r], [P_COL, c], [P_OP, token_link(Lk & 0x000f)]])
-                Step.Pattern.append([P_END])
                 if Status.Tech in {T_STRONG_X_LOOP, T_GL_STRONG_X_LOOP}:
-                    r, c, Cand = Status.Outcome[0]
+                    (r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1), (r2, c2, Cand2, Lk2) = Status.Pattern1
+                    Step.Pattern.extend([[P_CON], [P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk0 & 0x000f)],
+                                         [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_OP, token_link(Lk1 &0x000f)],
+                                         [P_VAL, Cand2], [P_ROW, r2], [P_COL, c2]])
+                    Step.Pattern.append([P_END])
+                    r, c, Cand = Status.Plcmts[0]
                     Grid[r][c] = Cand
                     Cands[r][c].clear()
                     discard_cand_from_peers(Cand, r, c, Cands)
                     Step.Outcome = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Cand], [P_END]]
                     return 1
                 else:  # Eliminations
-                    for r, c, Cand in Status.Outcome:
-                        Cands[r][c].discard(Cand)
-                        if Step.Outcome: Step.Outcome.append([P_SEP, ])
-                        Step.Outcome.extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
+                    for (r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1), (r2, c2, Cand2, Lk2) in Status.Pattern1:
+                        Step.Pattern.extend([[P_CON], [P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk0 & 0x000f)],
+                                             [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_OP, token_link(Lk1 & 0x000f)],
+                                             [P_VAL, Cand2], [P_ROW, r2], [P_COL, c2]])
+                    Step.Pattern.append([P_END])
+                    for K, Cands1 in Status.Elims.items():
+                        r = int(K[0]); c = int(K[1])
+                        if Grid[r][c]: continue
+                        Elim = Cands[r][c] & set(Cands1)
+                        if Elim:
+                            Cands[r][c] -= set(Cands1)
+                            if Step.Outcome:  Step.Outcome.append([P_SEP])
+                            Step.Outcome.extend([[P_ROW, r], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elim]])
                     Step.Outcome.append([P_END, ])
                     return 0
             if not Tree.Children: Culls.add(Hash)
@@ -97,74 +110,120 @@ def x_chain_next_level(ANode, Chain, Cands, Lvl, Methods, State, GrpLks):
             if ANode.Children[i].Hash == X.Hash: del ANode.Children[i]; break
 
 def resolve_strong_x_loops(Chain, Cands, Methods, GrpLks, Status):
-    Status.Tech = T_UNDEF
-    if {T_STRONG_X_LOOP, T_GL_STRONG_X_LOOP} & set(Methods) and len(Chain) > 4 and (Chain[0].r, Chain[0].c, Chain[0].Cand) == (Chain[-1].r, Chain[-1].c, Chain[-1].Cand):
-        Status.Outcome = []
-        if GrpLks and T_GL_STRONG_X_LOOP in Methods and len(Chain[0].r) == len(Chain[0].c) == 1:
-            Status.Outcome = [(list(Chain[0].r)[0], list(Chain[0].c)[0], Chain[0].Cand)]
-            Status.Tech = T_GL_STRONG_X_LOOP
-        elif ~GrpLks and T_STRONG_X_LOOP in Methods:
-            Status.Outcome = [(Chain[0].r, Chain[0].c, Chain[0].Cand)]
-            Status.Tech = T_STRONG_X_LOOP
-        if Status.Outcome:
-            Status.Pattern = []
-            for i in range(len(Chain)-1):
-                Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
-            return True
-    return False
+
+    if (Chain[0].r, Chain[0].c, Chain[0].Cand) != (Chain[-1].r, Chain[-1].c, Chain[-1].Cand): return False
+    if GrpLks and T_GL_STRONG_X_LOOP in Methods and len(Chain) > 4 and len(Chain[0].r) == len(Chain[0].c) == 1:
+        Status.Plcmts = [(list(Chain[0].r)[0], list(Chain[0].c)[0], Chain[0].Cand)]
+        Status.Tech = T_GL_STRONG_X_LOOP
+    elif ~GrpLks and T_STRONG_X_LOOP in Methods and len(Chain) > 4:
+        Status.Plcmts = [(Chain[0].r, Chain[0].c, Chain[0].Cand)]
+        Status.Tech = T_STRONG_X_LOOP
+    else:
+        Status.Plcmts = []
+        Status.Tech = T_UNDEF
+        return False
+    Status.Pattern = []
+    for i in range(len(Chain)-1):
+        Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
+    Status.Pattern1 = [NL(Chain[1].r, Chain[1].c, Chain[1].Cand, LK_STRG), NL(Chain[0].r, Chain[0].c, Chain[0].Cand, LK_STRG), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)]
+    return True
 
 def resolve_other_x_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
+
     Status.Tech = T_UNDEF
     Lk = how_ccells_linked(Chain[0].r, Chain[0].c, Chain[0].Cand, Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Cands, GrpLks)
-    if {T_EVEN_X_LOOP, T_GL_EVEN_X_LOOP} & set(Methods) and Lk:  # Even X-Loop
+    if {T_EVEN_X_LOOP_T3, T_GL_EVEN_X_LOOP_T3} & set(Methods) and Lk:  # Even X-Loop
+        ChNodes = []
+        for i in range(len(Chain)): ChNodes.append((Chain[i].r, Chain[i].c, Chain[i].Cand))
         if Lk & LK_STRG: Lk = (Lk & 0x01f0) | LK_WKST
-        Status.Pattern = []; Status.Outcome = []
+        Status.Pattern = []; Status.Pattern1 = []; Status.Elims = {}
         # Search for ccells that are not part of the chain and can see both an odd and even chain node.
         if GrpLks:
             for r in range(9):
                 for c in range(9):
-                    for Cand in Cands[r][c]:
-                        Odd = Even = False
-                        for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
-                            if ccells_intersect({r}, {c}, Cand, rn, cn, Candn, GrpLks): break
-                            if ccells_see_each_other({r}, {c}, Cand, rn, cn, Candn, GrpLks):
-                                if i & 0x01: Odd = True
-                                else: Even = True
-                                if Odd and Even: Status.Outcome.append((r, c, Cand)); break
+                    for Cand in sorted(Cands[r][c]):
+                        if (r, c, Cand) in ChNodes: continue
+                        Done = False
+                        for e in range(0, len(Chain)-1, 2):
+                            Lke = how_ccells_linked({r}, {c}, Cand, Chain[e].r, Chain[e].c, Chain[e].Cand, Cands, True)
+                            if Lke:
+                                if Lke & LK_STRG: Lke |= LK_WKST
+                                for o in range(1, len(Chain), 2):
+                                    Lko = how_ccells_linked({r}, {c}, Cand, Chain[o].r, Chain[o].c, Chain[o].Cand, Cands, True)
+                                    if Lko:
+                                        if Lko & LK_STRG: Lko |= LK_WKST
+                                        Status.Pattern1.append([NL(Chain[e].r, Chain[e].c, Chain[e].Cand, Lke), NL(r, c, Cand, Lko), NL(Chain[o].r, Chain[o].c, Chain[o].Cand, LK_NONE)])
+                                        K = str(r)+str(c)
+                                        if K in Status.Elims.keys(): Status.Elims[K].append(Cand)
+                                        else: Status.Elims[K] = [Cand]
+                                        Status.Tech = T_EVEN_XY_LOOP_T3
+                                        Done = True; break
+                        if Done: break
         else:
             for r in range(9):
                 for c in range(9):
-                    for Cand in Cands[r][c]:
-                        Odd = Even = False
-                        for i, (rn, cn, Candn, Lkn) in enumerate(Chain):
-                            if (r, c, Cand) == (rn, cn, Candn): break
-                            if ccells_see_each_other(r, c, Cand, rn, cn, Candn, GrpLks):
-                                if i & 0x01: Odd = True
-                                else: Even = True
-                                if Odd and Even: Status.Outcome.append((r, c, Cand)); break
-        if Status.Outcome:
+                    for Cand in sorted(Cands[r][c]):
+                        if (r, c, Cand) in ChNodes: continue
+                        Done = False
+                        for e in range(0, len(Chain)-1, 2):
+                            Lke = how_ccells_linked(r, c, Cand, Chain[e].r, Chain[e].c, Chain[e].Cand, Cands)
+                            if Lke:
+                                if Lke & LK_STRG: Lke |= LK_WKST
+                                for o in range(1, len(Chain), 2):
+                                    Lko = how_ccells_linked(r, c, Cand, Chain[o].r, Chain[o].c, Chain[o].Cand, Cands)
+                                    if Lko:
+                                        if Lko & LK_STRG: Lko |= LK_WKST
+                                        Status.Pattern1.append([NL(Chain[e].r, Chain[e].c, Chain[e].Cand, Lke), NL(r, c, Cand, Lko), NL(Chain[o].r, Chain[o].c, Chain[o].Cand, LK_NONE)])
+                                        K = str(r)+str(c)
+                                        if K in Status.Elims.keys(): Status.Elims[K].append(Cand)
+                                        else: Status.Elims[K] = [Cand]
+                                        Status.Tech = T_EVEN_XY_LOOP_T3
+                                        Done = True; break
+                        if Done: break
+        if Status.Elims:
             for i in range(len(Chain)-1):
                 Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
             Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, Lk))
-            Status.Tech = T_GL_EVEN_X_LOOP if GrpLks else T_EVEN_X_LOOP
+            Status.Tech = T_GL_EVEN_X_LOOP_T3 if GrpLks else T_EVEN_X_LOOP_T3
             return True
     else:
-        Status.Outcome = []; Status.Tech = T_UNDEF
-        if Chain[0].Cand == Chain[-1].Cand:  # chain starts and ends with same candidate values
+        Status.Elims = {}; Status.Tech = T_UNDEF
+        if GrpLks and {T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH, T_GL_X_CHAIN_T1} and Chain[0].Cand == Chain[-1].Cand:
             for r, c in cells_that_see_all_of([(Chain[0].r, Chain[0].c), (Chain[-1].r, Chain[-1].c)], GrpLks):
-                if Chain[0].Cand in Cands[r][c]: Status.Outcome.append((r, c, Chain[0].Cand))
-            if Status.Outcome:
-                if len(Chain) == 4:
-                    if Chain[1].Lk & Chain[2].Lk & Chain[3].Lk & LK_LINE: Tech = T_SKYSCRAPER
-                    elif Chain[1].Lk & Chain[3].Lk & LK_LINE and Chain[2].Lk & LK_BOX: Tech = T_TWO_STRING_KITE
-                    else: Tech = T_TURBOT_FISH
-                else: Tech = T_X_CHAIN
-                if GrpLks: Tech |= T_GRPLK
-                if Tech in Methods:
-                    Status.Tech = Tech
-                    Status.Pattern = []
-                    for i in range(len(Chain)-1):
-                        Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
-                    Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[1].Cand, LK_NONE))
-                    return True
+                if Chain[0].Cand in Cands[r][c]:
+                    Lk1 = how_ccells_linked(Chain[0].r, Chain[0].c, Chain[0].Cand, {r}, {c}, Chain[0].Cand, Cands, GrpLks)
+                    Lk2 = how_ccells_linked({r}, {c}, Chain[0].Cand, Chain[-1].r, Chain[-1].c, Chain[0].Cand, Cands, GrpLks)
+                    if Lk1 and Lk2:
+                        if Lk1 & LK_STRG: Lk1 |= LK_WKST
+                        if Lk2 & LK_STRG: Lk2 |= LK_WKST
+                        Status.Pattern1.append([NL(Chain[0].r, Chain[0].c, Chain[0].Cand, Lk1), NL(r, c, Chain[0].Cand, Lk2), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)])
+                        K = str(r)+str(c)
+                        if K in Status.Elims.keys(): Status.Elims[K].append(Chain[0].Cand)
+                        else: Status.Elims[K] = [Chain[0].Cand]
+        elif not GrpLks and {T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH, T_X_CHAIN_T1} & set(Methods) and Chain[0].Cand == Chain[-1].Cand:  # chain starts and ends with same candidate values
+            for r, c in cells_that_see_all_of([(Chain[0].r, Chain[0].c), (Chain[-1].r, Chain[-1].c)], GrpLks):
+                if Chain[0].Cand in Cands[r][c]:
+                    Lk1 = how_ccells_linked(Chain[0].r, Chain[0].c, Chain[0].Cand, r, c, Chain[0].Cand, Cands, GrpLks)
+                    Lk2 = how_ccells_linked(r, c, Chain[0].Cand, Chain[-1].r, Chain[-1].c, Chain[0].Cand, Cands, GrpLks)
+                    if Lk1 and Lk2:
+                        if Lk1 & LK_STRG: Lk1 |= LK_WKST
+                        if Lk2 & LK_STRG: Lk2 |= LK_WKST
+                        Status.Pattern1.append([NL(Chain[0].r, Chain[0].c, Chain[0].Cand, Lk1), NL(r, c, Chain[0].Cand, Lk2), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)])
+                        K = str(r)+str(c)
+                        if K in Status.Elims.keys(): Status.Elims[K].append(Chain[0].Cand)
+                        else: Status.Elims[K] = [Chain[0].Cand]
+        if Status.Elims:
+            if len(Chain) == 4:
+                if Chain[1].Lk & Chain[2].Lk & Chain[3].Lk & LK_LINE: Tech = T_SKYSCRAPER
+                elif Chain[1].Lk & Chain[3].Lk & LK_LINE and Chain[2].Lk & LK_BOX: Tech = T_TWO_STRING_KITE
+                else: Tech = T_TURBOT_FISH
+            else: Tech = T_X_CHAIN_T1
+            if GrpLks: Tech |= T_GRPLK
+            if Tech in Methods:
+                Status.Tech = Tech
+                Status.Pattern = []
+                for i in range(len(Chain)-1):
+                    Status.Pattern.append(NL(Chain[i].r, Chain[i].c, Chain[i].Cand, Chain[i+1].Lk))
+                Status.Pattern.append(NL(Chain[-1].r, Chain[-1].c, Chain[1].Cand, LK_NONE))
+                return True
     return False

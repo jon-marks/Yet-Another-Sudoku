@@ -1,3 +1,5 @@
+from copy import copy
+
 from globals import *
 from solve_utils import *
 
@@ -238,125 +240,142 @@ def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
         return True
     return False
 
-def tech_grouped_bent_pairs(Grid, Step, Cands, Methods):
+def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
 
+    F1 = []; T1 = []
     # Exposed row, hidden box.
-    for r in RowList:
-        for c in range(8):
+    for r in range(9):
+        for c in range(9):
             if len(Cands[r][c]) != 2: continue
-            # found a pair in a cell in a row.
-            t0 = (c//3)*3; f0 = (r//3)*3
-            for t1 in range(0, 9, 3):
-                if t1 == t0: continue
-                GrpCands = Cands[r][t1] | Cands[r][t1+1] | Cands[r][t1+2]
-                if Cands[r][c] <= GrpCands:  # Almost pair found in row:
-                    rb1 = f0+(r-f0+1)%3; rb2 = f0+(r+f0+2)%3
-                    n = 0
-                    for rb, cb in range[(rb1, t0), (rb1, t0+1), (rb1, t0+2), (rb2, t0), (rb2, t0+1), (rb2, t0+2)]:
-                        if Cands[r][c] <= Cands[rb][cb]:
-                            if n: break;
-                            n += 1; rb0 = rb; cb0 = cb
-                    else:  # Grouped bent pair found, how productive is it?
-                        for r1 in range(9):
-                            if r1 in [r, t1, t1+1, t1+2]: continue
-
-
-
-
-
-
-
-
-                    rb1 = ((r+1)%3)*3; rb2 = ((r+2)%3)*3
-
-            for c1 in range(c+1, 9):
-                if Cands[r][c] != Cands[r][c1]: continue
-                # Found an exposed pair in the row. Could it perhaps
-                # be a locked pair too?
-                if (c//3) == (c1//3):  # both cells in same blk
-                    # Yes, it is a locked pair too.
-                    br = (r//3)*3; bc = (c//3)*3
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0: continue
-                            if (r2 == r and c2 == c) or (r2 == r and c2 == c1): continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
+            Pair = Cands[r][c]  # Pair found
+            t0 = (c//3)*3; T = [0, 3, 6]; T.remove(t0)  # ; ta, tb = T
+            f0 = (r//3)*3; F = [0, 3, 6]; F.remove(f0)  # ; fa, fb = F
+            rb1 = f0+(r-f0+1)%3; rb2 = f0+(r-f0+2)%3
+            cb1 = t0+(c-t0+1)%3; cb2 = t0+(c-t0+2)%3
+            rb0 = cb0 = 0
+            if T_GROUPED_BENT_PAIR_ER in Methods:  # Check out exposed in row, hidden in box.
+                for t1 in T:
+                    if Pair <= Cands[r][t1] | Cands[r][t1+1] | Cands[r][t1+2]:  # Almost pair found in rowbox:
+                        n = 0
+                        for rb, cb in [(rb1, t1), (rb1, t1+1), (rb1, t1+2), (rb2, t1), (rb2, t1+1), (rb2, t1+2)]:
+                            if Cands[rb][cb] and Pair & Cands[rb][cb]:
+                                if n: break
+                                n += 1; rb0 = rb; cb0 = cb; T1 = [0, 3, 6]; T1.remove(t1)
+                        else:
+                            if n and Pair <= Cands[rb0][cb0]:  # == 1:  # Grouped bent pair found, how productive is it?
+                                for c1 in [T1[0], T1[0]+1, T1[0]+2, T1[1], T1[1]+1, T1[1]+2]:
+                                    if c1 == c: continue
+                                    Elims = Cands[r][c1] & Pair
+                                    if Elims:
+                                        Cands[r][c1] -= Pair
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                                        Step.Outcome.extend([[P_ROW, r], [P_COL, c1], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Elims = Cands[rb0][cb0] - Pair
+                                if Elims:
+                                    Cands[rb0][cb0] = copy(Pair)
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                # else: Step.Method = T_EXPOSED_PAIR
-                for c2 in set(range(9)) - {c, c1}:
-                    if len(Cands[r][c2]) == 0: continue
-                    for Cand in Cands[r][c]:
-                        if Cand in Cands[r][c2]:
-                            Cands[r][c2].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append([P_SEP])
-                            Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome:  # Candidates were eliminated
-                    if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
-                    Step.Outcome.append([P_END])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c, c1], [P_END]]
-                    return 0
-    # then scan the cols.
-    for c in ColList:
-        for r in range(8):
-            if len(Cands[r][c]) != 2: continue
-            for r1 in range(r+1, 9):
-                if Cands[r][c] != Cands[r1][c]: continue
-                # Found an exposed pair in the col. Could it perhaps
-                # be a locked pair too?
-                if (r//3) == (r1//3):  # both cells in same blk
-                    # Yes, it is a locked pair too.
-                    br = (r//3)*3; bc = (c//3)*3
-                    for r2 in [br, br+1, br+2]:
-                        for c2 in [bc, bc+1, bc+2]:
-                            if len(Cands[r2][c2]) == 0: continue
-                            if (r2 == r and c2 == c) or (r2 == r1 and c2 == c): continue
-                            for Cand in Cands[r][c]:
-                                if Cand in Cands[r2][c2]:
-                                    Cands[r2][c2].discard(Cand)
-                                    if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome: Step.Method = T_LOCKED_EXPOSED_PAIR
-                # else: Step.Method = T_EXPOSED_PAIR
-                for r2 in set(range(9)) - {r, r1}:
-                    if len(Cands[r2][c]) == 0: continue
-                    if (r2 != r1) and (r2 != r):
-                        for Cand in Cands[r][c]:
-                            if Cand in Cands[r2][c]:
-                                Cands[r2][c].discard(Cand)
-                                if Step.Outcome: Step.Outcome.append((P_SEP,))
-                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome:  # Candidates were eliminated
-                    if Step.Method == T_UNDEF: Step.Method = T_EXPOSED_PAIR
-                    Step.Outcome.append([P_END])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r, r1], [P_COL, c], [P_END]]
-                    return 0
-    # and finally scan the blocks.
-    for h in BoxList:  # range BoxList:
-        br = (h//3)*3; bc = (h%3)*3
-        for rc in range(8):
-            r = br+(rc//3); c = bc+(rc%3)
-            if len(Cands[r][c]) != 2: continue
-            for rc1 in range(rc+1, 9):
-                r1 = br+(rc1//3); c1 = bc+(rc1%3)
-                if Cands[r][c] != Cands[r1][c1]: continue
-                # Found an exposed pair in a box, discard matching
-                # candidates from remaining cells in the box.
-                for rc2 in set(range(9)) - {rc, rc1}:
-                    r2 = br+(rc2//3); c2 = bc+(rc2%3)
-                    if len(Cands[r2][c2]) == 0: continue
-                    for Cand in Cands[r][c]:
-                        if Cand in Cands[r2][c2]:
-                            Cands[r2][c2].discard(Cand)
-                            if Step.Outcome: Step.Outcome.append((P_SEP,))
-                            Step.Outcome.extend([[P_ROW, r2], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Cand]])
-                if Step.Outcome:
-                    Step.Method = T_EXPOSED_PAIR
-                    Step.Outcome.append([P_END])
-                    Step.Pattern = [[P_VAL, sorted(Cands[r][c])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON], [P_ROW, r1], [P_COL, c1], [P_END]]
-                    return 0
+                                    Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                if Step.Outcome:
+                                    Step.Method = T_GROUPED_BENT_PAIR_ER
+                                    Step.Outcome.append([P_END])
+                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, r], [P_COL, t1, t1+1, t1+2], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
+                                    return 0
+            if T_GROUPED_BENT_PAIR_EC in Methods:  # Check out pair exposed in col, hidden in box.
+                for f1 in F:
+                    if Pair <= Cands[f1][c] | Cands[f1+1][c] | Cands[f1+2][c]:  # Almost pair found in colbox
+                        n = 0
+                        for rb, cb in [(f1, cb1), (f1+1, cb1), (f1+2, cb1), (f1, cb2), (f1+1, cb2), (f1+2, cb2)]:
+                            if Cands[rb][cb] and Pair & Cands[rb][cb]:
+                                if n: break
+                                n += 1; rb0 = rb; cb0 = cb; F1 = [0, 3, 6]; F1.remove(f1)
+                        else:  # Grouped bent pair found, how productive is it?
+                            if n and Pair <= Cands[rb0][cb0]:
+                                for r1 in [F1[0], F1[0]+1, F1[0]+2, F1[1], F1[1]+1, F1[1]+2]:
+                                    if r1 == r: continue
+                                    Elims = Cands[r1][c] & Pair
+                                    if Elims:
+                                        Cands[r1][c] -= Pair
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                                        Step.Outcome.extend([[P_ROW, r1], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Elims = Cands[rb0][cb0] - Pair
+                                if Elims:
+                                    Cands[rb0][cb0] = copy(Pair)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                if Step.Outcome:
+                                    Step.Method = T_GROUPED_BENT_PAIR_EC
+                                    Step.Outcome.append([P_END])
+                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, f1, f1+1, f1+2], [P_COL, c], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
+                                    return 0
+            if T_GROUPED_BENT_PAIR_HR in Methods:  # Check out pair exposed in box, hidden in row.
+                for rb in [rb1, rb2]:
+                    if Pair <= Cands[rb][t0] | Cands[rb][t0+1] | Cands[rb][t0+2]:  # Almost pair found in rowbox.
+                        n = 0
+                        for c1 in [T[0], T[0]+1, T[0]+2, T[1], T[1]+1, T[1]+2]:
+                            if Cands[rb][c1] and Pair & Cands[rb][c1]:
+                                if n: break
+                                n += 1; rb0 = rb; cb0 = c1; F1 = [f0, f0+1, f0+2]; F1.remove(rb)
+                        else:
+                            if n and Pair <= Cands[rb0][cb0]:  # == 1:  # Grouped bent pair found, how productive is it?
+                                for rbx, cbx in [(F1[0], t0), (F1[0], t0+1), (F1[0], t0+2), (F1[1], t0), (F1[1], t0+1), (F1[1], t0+2)]:
+                                    if rbx == r and cbx == c: continue
+                                    Elims = Cands[rbx][cbx] & Pair
+                                    if Elims:
+                                        Cands[rbx][cbx] -= Pair
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                                        Step.Outcome.extend([[P_ROW, rbx], [P_COL, cbx], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Elims = Cands[rb0][cb0]  - Pair
+                                if Elims:
+                                    Cands[rb0][cb0] = copy(Pair)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                if Step.Outcome:
+                                    Step.Method = T_GROUPED_BENT_PAIR_HR
+                                    Step.Outcome.append([P_END])
+                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, rb0], [P_COL, t0, t0+1, t0+2], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
+                                    return 0
+            if T_GROUPED_BENT_PAIR_HC in Methods:  # Check out pair in exposed box, hidden in col
+                for cb in [cb1, cb2]:
+                    if Pair <= Cands[f0][cb] | Cands[f0+1][cb] | Cands[f0+2][cb]:  # almost pair found in colbox
+                        n = 0
+                        for r1 in [F[0], F[0]+1, F[0]+2, F[1], F[1]+1, F[1]+2]:
+                            if Cands[r1][cb] and Pair & Cands[r1][cb]:
+                                if n: break
+                                n += 1; rb0 = r1; cb0 = cb; T1 = [t0, t0+1, t0+2]; T1.remove(cb)
+                        else:
+                            if n and Pair <= Cands[rb0][cb0]:
+                                for rbx, cbx in [(f0, T1[0]), (f0+1, T1[0]), (f0+2, T1[0]), (f0, T1[1]), (f0+1, T1[1]), (f0+2, T1[1])]:
+                                    if rbx == r and cbx == c: continue
+                                    Elims = Cands[rbx][cbx] & Pair
+                                    if Elims:
+                                        Cands[rbx][cbx] -= Pair
+                                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                                        Step.Outcome.extend([[P_ROW, rbx], [P_COL, cbx], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                Elims = Cands[rb0][cb0] - Pair
+                                if Elims:
+                                    Cands[rb0][cb0] = copy(Pair)
+                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                    Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                if Step.Outcome:
+                                    Step.Method = T_GROUPED_BENT_PAIR_HC
+                                    Step.Outcome.append([P_END])
+                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, f0, f0+1, f0+2], [P_COL, cb0], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
+                                                    [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
+                                    return 0
     return -1
 
+def tech_grouped_bent_triple(Grid, Step, Cands, Methods):
+    return -1
+
+def tech_grouped_bent_quad(Grid, Step, Cands, Methods):
+    return -1
+
+def tech_bent_hidden_triple(Grid, Step, Cands, Methods):
+    return -1
