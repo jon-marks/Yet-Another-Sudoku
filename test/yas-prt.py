@@ -49,8 +49,10 @@ def yas_prt():
                   f"             default: {Dst}\n"
                   f"  b=<n>:     (optional) begin testing from file line number, default: {Begin}\n"
                   f"  e=<m>:     (optional) stop testing after line number, default: {End}\n"
-                  f"  m=<Mthds>: (optional) A list of comma separated methods to filter puzzle specs by\n"
-                  f"  f=<Mthds>: (optional) A list of comma separated methods to try first for each puzzle spec"
+                  f"  m=<Mthds>: (optional) A list of comma separated methods to filter in puzzle specs.\n"
+                  f"             Only evaluate puzzles with these methods, ignore all other puzzles\n"
+                  f"  f=<Mthds>: (optional) A list of comma separated methods to try first for each puzzle spec\n"
+                  f"             Try these methods first before attempting method in puzzle spec\n"
                   f"  g:         (optional) iGgnore Method and overrides in puzzle specs.\n")
             exit()
 
@@ -101,13 +103,20 @@ def yas_prt():
                         continue
                 else: sSoln = TD[6]  # if lenTD >= 6 else ""
 
-                for Meth in [*lMeths, oPzl.Method]:
+                sExpOutc = TD[5] if lenTD >= 6 else ""
+                sExpCond = TD[4] if lenTD >= 5 else ""
+                sOverrides = TD[3] if lenTD >= 4 else ""
+                sExpMeth = TD[2] if lenTD >= 3 else ""
+                sElims   = TD[1] if lenTD >= 2 else ""
+                if not sExpMeth: sExpMeth = "Undefined"
+
+                for Meth in lMeths:
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, Meth, oPzl.Soln, True, oPzl.Overrides, JustThisMeth = True)
                     if Err or Step.Method == Meth: break
                 else:
-                    Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, T_UNDEF, oPzl.Soln, True, oPzl.Overrides)
+                    Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True, oPzl.Overrides)
                 if Err:
-                    f1.write(f"# Warning: Error encountered: {Err}, Solving:  {Line}")
+                    f1.write(f"# Warning: Error encountered: {Err}, Actual: {Tech[Step.Method].Text}, Solving:  {Line}")
                     print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Expected: {sExpMeth}| Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
                     Errs += 1
                     continue
@@ -115,12 +124,7 @@ def yas_prt():
                 sActMeth = Tech[Step.Method].Text
                 sCond = tkns_to_str(Step.Pattern).replace(" ", "").replace(".", "")
                 sOutc = tkns_to_str(Step.Outcome).replace(" ", "").replace(".", "")
-                sExpOutc = TD[5] if lenTD >= 6 else ""
-                sExpCond = TD[4] if lenTD >= 5 else ""
-                sOverrides = TD[3] if lenTD >= 4 else ""
-                sExpMeth = TD[2] if lenTD >= 3 else ""
-                sElims   = TD[1] if lenTD >= 2 else ""
-                if not sExpMeth: sExpMeth = "Undefined"
+
                 sGr = TD[0].replace("0", ".")
                 Match = True
                 if oPzl.Method != Step.Method: Match = False

@@ -437,15 +437,12 @@ class Sudoku:
                     self.Puzzle = None
                     self.gen_event(EV_SC_FIN)
                 return
-            # else: NrFound == 1:
         # else: We now have a solution and a validated or generated puzzle.
         #   Pzl structure contains a minimimum of Givens, Grid, Soln, with optional Elims, Method, Pattern and Outcome.
 
         self.StatusBar.update_0("Grading Puzzle, may take some time. . .")
         self.update_board(ST_SLV, oPzl)  # Change board colouring from Enter mode to Solve mode
-        # TRCX("Begin Solve")
         oPzl.Lvl, oPzl.Steps, Err = logic_solve_puzzle(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, oPzl.Overrides)
-        # TRCX("End Solve")
         if oPzl.Lvl < 0:
             wx.MessageBox(f"Cannot solve puzzle: {Err}\n"
                           "Please save puzzle and send to developers",
@@ -539,7 +536,8 @@ class Sudoku:
         Fp = None
         G = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
         E = [[copy(self.Puzzle.Elims[r][c]) for c in range(9)] for r in range(9)]
-        Step, Err = solve_next_step(G, E)
+        S = [[self.Puzzle.Soln[r][c] for c in range(9)] for r in range(9)]
+        Step, Err = solve_next_step(G, E, Soln = S)
         if Err:
             wx.MessageBox(f"Bug in program!  {Err}\n"
                           "Please send saved puzzle to developers",
@@ -727,7 +725,7 @@ class Sudoku:
 
         # G = [[self.Puzzle.Grid[r][c] for c in range(9)] for r in range(9)]
         # E = [[copy(self.Puzzle.Elims[r][c]) for c in range(9)] for r in range(9)]
-        Step, Err = solve_next_step(self.Puzzle.Grid, self.Puzzle.Elims)
+        Step, Err = solve_next_step(self.Puzzle.Grid, self.Puzzle.Elims, Soln = self.Puzzle.Soln)
         if Err:
             wx.MessageBox(f"Bug in program!  {Err}\n"
                           "Please send saved puzzle to developers",
@@ -892,9 +890,12 @@ class Sudoku:
                     self.update_status_histo(self.Puzzle.Grid)
                 elif op == OP_ELIM:
                     self.History.append((self.Puzzle.get_state()))
-                    self.Puzzle.Elims[r][c].add(v)
-                    r1 = (v-1)//3; c1 = (v-1)%3
-                    self.Board.set_cand_value(r, c, r1, c1, False)
+                    if isinstance(v, int):
+                        self.Puzzle.Elims[r][c].add(v)
+                        self.Board.set_cand_value(r, c, (v-1)//3, (v-1)%3, False)
+                    else:
+                        self.Puzzle.Elims[r][c] |= set(v)
+                        for v1 in v: self.Board.set_cand_value(r, c, (v1-1)//3, (v1-1)%3, False)
                 # else: #  silently ignore other operations
 
     def reset(self):

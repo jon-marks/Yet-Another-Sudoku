@@ -54,22 +54,22 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_hidden_pairs,        [T_HIDDEN_PAIR]),
            SLVR(tech_exposed_triples,     [T_EXPOSED_TRIPLE, T_LOCKED_EXPOSED_TRIPLE]),
            SLVR(tech_hidden_triples,      [T_HIDDEN_TRIPLE]),
+           SLVR(tech_grouped_bent_pair,   [T_GROUPED_BENT_PAIR_ER_HB, T_GROUPED_BENT_PAIR_EC_HB, T_GROUPED_BENT_PAIR_HR_EB, T_GROUPED_BENT_PAIR_HC_EB]),
+           SLVR(tech_bent_exposed_triples, [T_Y_WING, T_XYZ_WING]),
+           SLVR(tech_x_wings,             [T_X_WING]),
+           SLVR(tech_bent_hidden_triple,  [T_BENT_HIDDEN_TRIPLE]),
+           SLVR(tech_x_chains,            [T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH]),
            SLVR(tech_exposed_quads,       [T_EXPOSED_QUAD]),
            SLVR(tech_hidden_quads,        [T_HIDDEN_QUAD]),
-           SLVR(tech_x_wings,             [T_X_WING]),
            SLVR(tech_swordfish,           [T_SWORDFISH]),
            SLVR(tech_jellyfish,           [T_JELLYFISH]),
            SLVR(tech_empty_rects,         [T_EMPTY_RECT]),
-           SLVR(tech_bent_exposed_triples, [T_Y_WING, T_XYZ_WING]),
-           SLVR(tech_x_chains,            [T_SKYSCRAPER, T_TWO_STRING_KITE, T_TURBOT_FISH]),
            SLVR(tech_bent_exposed_quads,  [T_WXYZ_WING, T_BENT_EXPOSED_QUAD]),
            SLVR(tech_finned_x_wings,      [T_FINNED_X_WING, T_SASHIMI_X_WING]),  # finned fish never before ordinary fish
            SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH, T_SASHIMI_SWORDFISH]),
            SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
-           SLVR(tech_grouped_bent_pair,   [T_GROUPED_BENT_PAIR_ER, T_GROUPED_BENT_PAIR_EC, T_GROUPED_BENT_PAIR_HR, T_GROUPED_BENT_PAIR_HC]),
-           SLVR(tech_grouped_bent_triple, [T_GROUPED_BENT_TRIPLE_ER, T_GROUPED_BENT_TRIPLE_EC, T_GROUPED_BENT_TRIPLE_HR, T_GROUPED_BENT_TRIPLE_HC]),
-           SLVR(tech_grouped_bent_quad,   [T_GROUPED_BENT_QUAD_ER, T_GROUPED_BENT_QUAD_EC, T_GROUPED_BENT_QUAD_HR, T_GROUPED_BENT_QUAD_HC]),
-           SLVR(tech_bent_hidden_triple,  [T_BENT_HIDDEN_TRIPLE]),
+           SLVR(tech_grouped_bent_triple, [T_GROUPED_BENT_TRIPLE_ER_HB, T_GROUPED_BENT_TRIPLE_EC_HB, T_GROUPED_BENT_TRIPLE_HR_EB, T_GROUPED_BENT_TRIPLE_HC_EB]),
+           SLVR(tech_grouped_bent_quad,   [T_GROUPED_BENT_QUAD_ER_HB, T_GROUPED_BENT_QUAD_EC_HB, T_GROUPED_BENT_QUAD_HR_EB, T_GROUPED_BENT_QUAD_HC_EB]),
            SLVR(tech_remote_pairs,        [T_REMOTE_PAIR_T3]),
            SLVR(tech_strong_linked_nets,  [T_STRONG_LINKED_NET_T1, T_STRONG_LINKED_NET_T2, T_STRONG_LINKED_NET_T3]),
            SLVR(tech_x_chains,            [T_X_CHAIN_T1, T_EVEN_X_LOOP_T3, T_STRONG_X_LOOP]),  # and loops, never before three link X-Chains
@@ -129,34 +129,36 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None, StepOver
     if Meth != T_UNDEF and NrEmpties > 0:
         Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
                     Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)],
+                    Soln = Soln,
                     Overrides = StepOverrides)
         NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
         if NrSlvd >= 0:
             Steps.append(Step)
             if Tech[Meth].Expertise > MaxExpertise: MaxExpertise = Tech[Meth].Expertise
             NrEmpties -= NrSlvd
-            if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
-                if Err: return UNDEF, Steps, Err
+            # if Soln:
+            Err = check_puzzle_step(Grid1, Cands, Soln)
+            if Err: return UNDEF, Steps, Err
     while NrEmpties > 0:
         Step = STEP(Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)],
-                    Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)])
+                    Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)],
+                    Soln = Soln)
         for pFn, Meths in EnSlvrs:
             NrSlvd = pFn(Grid1, Step, Cands, Meths)
             if NrSlvd >= 0:
                 Steps.append(Step)
                 if Tech[Step.Method].Expertise > MaxExpertise: MaxExpertise = Tech[Step.Method].Expertise
                 NrEmpties -= NrSlvd
-                if Soln:
-                    Err = check_puzzle_step(Grid1, Cands, Soln)
-                    if Err:
-                        return UNDEF, Steps, Err
+                # if Soln:
+                Err = check_puzzle_step(Grid1, Cands, Soln)
+                if Err: return UNDEF, Steps, Err
                 break
         else:
             return UNDEF, Steps, "Can't solve step"
     return MaxExpertise, Steps, ""
 
 def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, MethodEnableOverride = False, StepOverrides = None, JustThisMeth = False):
+
     # Find the solution for the next step, used in providing hints to users.
     # Hints cannot be taken from the solution list as the user more than likely
     # solved the puzzle to this point taking a different path to that of the
@@ -167,24 +169,24 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, MethodEnabl
 
     NrEmpties, Cands = determine_cands(Grid, Elims)
     Grid1 = [[Grid[r][c] for c in range(9)] for r in range(9)]
-    Step = STEP()
+    Step = STEP(Soln = Soln)
     if not NrEmpties: return Step, "Puzzle already solved!"
     if Meth != T_UNDEF:
         Step.Overrides = StepOverrides
         NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
         if NrSlvd >= 0:
-            if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
-                if Err: return Step, Err,
+            # if Soln:
+            Err = check_puzzle_step(Grid1, Cands, Soln)
+            if Err: return Step, Err,
             return Step, ""
         if JustThisMeth: return Step, ""  # f"Can't solve step with {Tech[Meth].Text}."
     Step.Overrides = {}
     for pFn, Meths in Solvers if MethodEnableOverride else EnSlvrs:
         NrSlvd = pFn(Grid1, Step, Cands, Meths)
         if NrSlvd >= 0:
-            if Soln:
-                Err = check_puzzle_step(Grid1, Cands, Soln)
-                if Err: return Step, Err
+            # if Soln:
+            Err = check_puzzle_step(Grid1, Cands, Soln)
+            if Err: return Step, Err
             return Step, ""
     else: return Step, "Can't solve step"
 
@@ -193,7 +195,7 @@ def pattern_search(oPzl, Meths, Meth, Overrides):
     NrEmpties = oPzl.NrEmpties
     Cands = [[copy(oPzl.Cands[r][c]) for c in range(9)] for r in range(9)]
     Grid1 = [[oPzl.Grid[r][c] for c in range(9)] for r in range(9)]
-    Steps = []; Step = STEP()
+    Steps = []; Step = STEP(Soln = oPzl.Soln)
     while NrEmpties > 0:
         for m in Meths:  # pFn, Meths in EnSlvrs:
             Step.Pattern = []; Step.Outcome = []
@@ -212,7 +214,7 @@ def pattern_search(oPzl, Meths, Meth, Overrides):
                 NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
                 if NrSlvd >= 0:
                     Steps.append(Step)
-                    Step = STEP()
+                    Step = STEP(Soln = oPzl.Soln)
                     NrEmpties -= NrSlvd
                     Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
                     if Err: return UNDEF, Steps, Err

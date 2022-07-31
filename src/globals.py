@@ -257,10 +257,10 @@ T_GRPLK                     = 0x00000200
 T_SASHIMI                   = 0x00000400
 
 # Technique Extensions for Grouped Bent Subsets
-T_EXPOSED_ROW       = 0x00000000  # Exposed subset in row, hidden subset in box
-T_EXPOSED_COL       = 0x00001000  # Exposed subset in col, hidden subset in box
-T_HIDDEN_ROW        = 0x00002000  # Exposed subset in box, hidden subset in row
-T_HIDDEN_COL        = 0x00003000  # Exposed subset in box, hidden subset in col
+T_ER_HB             = 0x0000000  # exposed in row, hidden in box
+T_EC_HB             = 0x0001000  # exposed in column, hidden in box
+T_HR_EB             = 0x0002000  # hidden in row, exposed in box
+T_HC_EB             = 0x0003000  # hidden in column, exposed in box
 
 # Technique Extensions for Strong Link pattern resolutions
 T_SAME_PARITY_NODES         = 0x00000000  # Type 1: Two same parity nodes see each other - same house or cell
@@ -307,18 +307,18 @@ T_STRONG_LINKED_NET_T1      = 27 + T_SAME_PARITY_NODES
 T_STRONG_LINKED_NET_T2      = 27 + T_ALL_SEE_SAME_PARITY_NODES
 T_STRONG_LINKED_NET_T3      = 27 + T_SEE_OPPOSING_PARITY_NODES
 T_EMPTY_RECT                = 28
-T_GROUPED_BENT_PAIR_ER      = 29 + T_EXPOSED_ROW
-T_GROUPED_BENT_PAIR_EC      = 29 + T_EXPOSED_COL
-T_GROUPED_BENT_PAIR_HR      = 29 + T_HIDDEN_ROW
-T_GROUPED_BENT_PAIR_HC      = 29 + T_HIDDEN_COL
-T_GROUPED_BENT_TRIPLE_ER    = 30 + T_EXPOSED_ROW
-T_GROUPED_BENT_TRIPLE_EC    = 30 + T_EXPOSED_COL
-T_GROUPED_BENT_TRIPLE_HR    = 30 + T_HIDDEN_ROW
-T_GROUPED_BENT_TRIPLE_HC    = 30 + T_HIDDEN_COL
-T_GROUPED_BENT_QUAD_ER      = 31 + T_EXPOSED_ROW
-T_GROUPED_BENT_QUAD_EC      = 31 + T_EXPOSED_COL
-T_GROUPED_BENT_QUAD_HR      = 31 + T_HIDDEN_ROW
-T_GROUPED_BENT_QUAD_HC      = 31 + T_HIDDEN_COL
+T_GROUPED_BENT_PAIR_ER_HB   = 29 + T_ER_HB
+T_GROUPED_BENT_PAIR_EC_HB   = 29 + T_EC_HB
+T_GROUPED_BENT_PAIR_HR_EB   = 29 + T_HR_EB
+T_GROUPED_BENT_PAIR_HC_EB   = 29 + T_HC_EB
+T_GROUPED_BENT_TRIPLE_ER_HB = 30 + T_ER_HB
+T_GROUPED_BENT_TRIPLE_EC_HB = 30 + T_EC_HB
+T_GROUPED_BENT_TRIPLE_HR_EB = 30 + T_HR_EB
+T_GROUPED_BENT_TRIPLE_HC_EB = 30 + T_HC_EB
+T_GROUPED_BENT_QUAD_ER_HB   = 31 + T_ER_HB
+T_GROUPED_BENT_QUAD_EC_HB   = 31 + T_EC_HB
+T_GROUPED_BENT_QUAD_HR_EB   = 31 + T_HR_EB
+T_GROUPED_BENT_QUAD_HC_EB   = 31 + T_HC_EB
 T_BENT_HIDDEN_TRIPLE        = 32
 T_X_CHAIN_T1                = 33
 T_EVEN_X_LOOP_T3            = 34 + T_SEE_OPPOSING_PARITY_NODES
@@ -470,7 +470,8 @@ class STEP:
                  NrLks      = 0,
                  NrGrpLks   = 0,
                  Difficulty = 0,
-                 Overrides  = None
+                 Overrides  = None,
+                 Soln       = None,
                  ):
         self.Method     = Method
         self.Pattern    = Pattern if Pattern else []
@@ -480,7 +481,8 @@ class STEP:
         self.NrLks      = NrLks
         self.NrGrpLks   = NrGrpLks
         self.Difficulty = Difficulty
-        self.Overrides = Overrides if Overrides else {}
+        self.Overrides  = Overrides if Overrides else {}
+        self.Soln       = Soln
 
 class PZL_PROPS:
     def __init__(self,
@@ -540,18 +542,18 @@ Tech = {T_UNDEF:                       TECH_T(True, "Undefined",                
         T_STRONG_LINKED_NET_T2:        TECH_T(True, "Strong Linked Net T2",      EXP_PROFICIENT,         60),
         T_STRONG_LINKED_NET_T3:        TECH_T(True, "Strong Linked Net T3",      EXP_PROFICIENT,         60),
         T_EMPTY_RECT:                  TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
-        T_GROUPED_BENT_PAIR_ER:        TECH_T(True, "Grouped Bent Pair, Exposed Row",   EXP_PROFICIENT,  70),
-        T_GROUPED_BENT_PAIR_EC:        TECH_T(True, "Grouped Bent Pair, Exposed Col",   EXP_PROFICIENT,  70),
-        T_GROUPED_BENT_PAIR_HR:        TECH_T(True, "Grouped Bent Pair, Hidden Row",    EXP_PROFICIENT,  70),
-        T_GROUPED_BENT_PAIR_HC:        TECH_T(True, "Grouped Bent Pair, Hidden Col",    EXP_PROFICIENT,  70),
-        T_GROUPED_BENT_TRIPLE_ER:      TECH_T(True, "Grouped Bent Triple, Exposed Row", EXP_PROFICIENT,  85),
-        T_GROUPED_BENT_TRIPLE_EC:      TECH_T(True, "Grouped Bent Triple, Exposed Col", EXP_PROFICIENT,  85),
-        T_GROUPED_BENT_TRIPLE_HR:      TECH_T(True, "Grouped Bent Triple, Hidden Row",  EXP_PROFICIENT,  85),
-        T_GROUPED_BENT_TRIPLE_HC:      TECH_T(True, "Grouped Bent Triple, Hidden Col",  EXP_PROFICIENT,  85),
-        T_GROUPED_BENT_QUAD_ER:        TECH_T(True, "Grouped Bent Quad, Exposed Row",   EXP_PROFICIENT, 100),
-        T_GROUPED_BENT_QUAD_EC:        TECH_T(True, "Grouped Bent Quad, Exposed Col",   EXP_PROFICIENT, 100),
-        T_GROUPED_BENT_QUAD_HR:        TECH_T(True, "Grouped Bent Quad, Hidden Row",    EXP_PROFICIENT, 100),
-        T_GROUPED_BENT_QUAD_HC:        TECH_T(True, "Grouped Bent Quad, Hidden Col",    EXP_PROFICIENT, 100),
+        T_GROUPED_BENT_PAIR_ER_HB:     TECH_T(True, "Grouped Bent Pair ER HB",   EXP_PROFICIENT,         70),
+        T_GROUPED_BENT_PAIR_EC_HB:     TECH_T(True, "Grouped Bent Pair EC HB",   EXP_PROFICIENT,         70),
+        T_GROUPED_BENT_PAIR_HR_EB:     TECH_T(True, "Grouped Bent Pair HR EB",   EXP_PROFICIENT,         70),
+        T_GROUPED_BENT_PAIR_HC_EB:     TECH_T(True, "Grouped Bent Pair HC EB",   EXP_PROFICIENT,         70),
+        T_GROUPED_BENT_TRIPLE_ER_HB:   TECH_T(True, "Grouped Bent Triple ER HB", EXP_PROFICIENT,         85),
+        T_GROUPED_BENT_TRIPLE_EC_HB:   TECH_T(True, "Grouped Bent Triple EC HB", EXP_PROFICIENT,         85),
+        T_GROUPED_BENT_TRIPLE_HR_EB:   TECH_T(True, "Grouped Bent Triple HR EB", EXP_PROFICIENT,         85),
+        T_GROUPED_BENT_TRIPLE_HC_EB:   TECH_T(True, "Grouped Bent Triple HC EB", EXP_PROFICIENT,         85),
+        T_GROUPED_BENT_QUAD_ER_HB:     TECH_T(True, "Grouped Bent Quad ER HB",   EXP_PROFICIENT,        100),
+        T_GROUPED_BENT_QUAD_EC_HB:     TECH_T(True, "Grouped Bent Quad EC HB",   EXP_PROFICIENT,        100),
+        T_GROUPED_BENT_QUAD_HR_EB:     TECH_T(True, "Grouped Bent Quad HR EB",   EXP_PROFICIENT,        100),
+        T_GROUPED_BENT_QUAD_HC_EB:     TECH_T(True, "Grouped Bent Quad HC EB",   EXP_PROFICIENT,        100),
         T_BENT_HIDDEN_TRIPLE:          TECH_T(True, "Bent Hidden Triple",        EXP_PROFICIENT,         90),
         T_X_CHAIN_T1:                  TECH_T(True, "X-Chain T1",                EXP_PROFICIENT,         70),
         T_EVEN_X_LOOP_T3:              TECH_T(True, "Even X-Loop T3",            EXP_PROFICIENT,         70),
@@ -586,11 +588,11 @@ Tech = {T_UNDEF:                       TECH_T(True, "Undefined",                
         T_GL_EVEN_AI_LOOP_T2:          TECH_T(True, "Group Linked Even AI-Loop T2", EXP_ACCOMPLISHED,    80),
         T_GL_EVEN_AI_LOOP_T3:          TECH_T(True, "Group Linked Even AI-Loop T3", EXP_ACCOMPLISHED,    80),
         T_GL_STRONG_AI_LOOP:           TECH_T(True, "Group Linked Strong AI-Loop", EXP_ACCOMPLISHED,     80),
-        T_GL_KRAKEN_FINNED_X_WING:     TECH_T(True, "Group Linked Kraken Finned X-Wing", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(True, "Group Linked Kraken Finned Swordfish", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_FINNED_JELLYFISH:  TECH_T(True, "Group Linked Kraken Finned Jellyfish", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(True, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(True, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
-        T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(True, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_X_WING:     TECH_T(False, "Group Linked Kraken Finned X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_SWORDFISH:  TECH_T(False, "Group Linked Kraken Finned Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_FINNED_JELLYFISH:  TECH_T(False, "Group Linked Kraken Finned Jellyfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_X_WING:    TECH_T(False, "Group Linked Kraken Sashimi X-Wing", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_SWORDFISH: TECH_T(False, "Group Linked Kraken Sashimi Swordfish", EXP_ACCOMPLISHED, 100),
+        T_GL_KRAKEN_SASHIMI_JELLYFISH: TECH_T(False, "Group Linked Kraken Sashimi Jellyfish", EXP_ACCOMPLISHED, 100),
         T_BRUTE_FORCE:                 TECH_T(True, "Brute Force",               EXP_EXPERT,           1000),
         }

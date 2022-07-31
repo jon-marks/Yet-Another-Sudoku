@@ -289,56 +289,18 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
 
 def tech_brute_force(Grid, Step, Cands, Methods):
 
+    # Note Grid must have at least one hole in it, else code will hang here.
     # Randomly find an empty cell
     while 1:
         rr = randint(0, 80)
         r = rr//9; c = rr%9
         if not Grid[r][c]: break
 
-    G = [[Grid[r1][c1] for c1 in range(9)] for r1 in range(9)]
-    if _solve_puzzle_backtrack(G):
-        Step.Method     = T_BRUTE_FORCE
-        Grid[r][c]      = G[r][c]
-        Step.Pattern    = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END]]
-        Step.Outcome    = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END]]
-        Cands[r][c].clear()
-        discard_cand_from_peers(Grid[r][c], r, c, Cands)
-        return 1
-    else:
-        return 0
+    Grid[r][c] = Step.Soln[r][c]
+    Step.Method = T_BRUTE_FORCE
+    Step.Pattern = [[P_ROW, r], [P_COL, c], [P_OP, OP_EQ], [P_VAL, Grid[r][c]], [P_END]]
+    Step.Outcome = [[P_ROW, r], [P_COL, c], [P_OP, OP_ASNV], [P_VAL, Grid[r][c]], [P_END]]
+    Cands[r][c].clear()
+    discard_cand_from_peers(Grid[r][c], r, c, Cands)
+    return 1
 
-def _solve_puzzle_backtrack(Grid, Cell = 0):
-    #  Recursive backtracking function to find a Sudoku puzzle. If the
-    #  puzzle is not a valid sudoku either the first solution found will be
-    #  in grid, or returns False if no solution found.
-    #  Grid: In:  A Sudoku puzzle (can process invalid puzzles too)
-    #        Recursive call:  Partially solved puzzle
-    #        Out:  The solved puzzle.
-    #  cell: In: Optional: - must be 0 if not called recursively
-    #        Recursive call: The current cell position
-    #  Returns:  True: a solution found - does not imply a valid puzzle
-    #            False: no solution found - implies invalid puzzle
-
-    #  Find the next hole in the puzzle.
-    while Cell < 81:
-        r = Cell//9
-        c = Cell%9
-        if Grid[r][c] != 0:
-            Cell += 1
-        else:
-            break
-    else:
-        #        Soln[0] = [[Grid[r1][c1] for c1 in range(9)] for r1 in range(9)]
-        return True  # All cells successfully filled
-
-    for v in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-        if cell_val_has_no_conflicts(v, Grid, r, c):
-            Grid[r][c] = v
-            if _solve_puzzle_backtrack(Grid, Cell+1):
-                return True
-    Grid[r][c] = 0
-    return False
-
-
-# TODO Add Almost Locked Candidates.  Perhaps not, have not seen any examples in my searches
-# to validate.

@@ -400,7 +400,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             Step.Pattern = []
                             for c0, X in C:
                                 if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                             Step.Pattern.append([P_END])
                             return 0
                 # scan cols
@@ -428,7 +428,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             Step.Pattern = []
                             for r0, X in R:
                                 if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                             Step.Pattern.append([P_END])
                             return 0
                 # scan boxes
@@ -458,7 +458,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                             Step.Pattern = []
                             for r0, c0, X in B:
                                 if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
+                                Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                             Step.Pattern.append([P_END])
                             return 0
     return -1
@@ -597,7 +597,7 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 Step.Pattern = []
                                 for c0, X in C:
                                     if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
+                                    Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                                 Step.Pattern.append([P_END])
                                 return 0
                     # Scan cols
@@ -625,7 +625,7 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 Step.Pattern = []
                                 for r0, X in R:
                                     if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
+                                    Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                                 Step.Pattern.append([P_END])
                                 return 0
                     # scan boxes
@@ -655,7 +655,7 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                                 Step.Pattern = []
                                 for r0, c0, X in B:
                                     if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, X], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
+                                    Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
                                 Step.Pattern.append([P_END])
                                 return 0
     return -1

@@ -242,27 +242,26 @@ def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
 
 def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
 
-    F1 = []; T1 = []
-    # Exposed row, hidden box.
     for r in range(9):
+        f0 = (r//3)*3; F = sorted({0, 3, 6} - {f0})
+        rb1, rb2 = sorted({f0, f0+1, f0+2} - {r})
         for c in range(9):
             if len(Cands[r][c]) != 2: continue
             Pair = Cands[r][c]  # Pair found
-            t0 = (c//3)*3; T = [0, 3, 6]; T.remove(t0)  # ; ta, tb = T
-            f0 = (r//3)*3; F = [0, 3, 6]; F.remove(f0)  # ; fa, fb = F
-            rb1 = f0+(r-f0+1)%3; rb2 = f0+(r-f0+2)%3
-            cb1 = t0+(c-t0+1)%3; cb2 = t0+(c-t0+2)%3
+            t0 = (c//3)*3; T = sorted({0, 3, 6} - {t0})
+            cb1, cb2 = sorted({t0, t0+1, t0+2} - {c})
             rb0 = cb0 = 0
-            if T_GROUPED_BENT_PAIR_ER in Methods:  # Check out exposed in row, hidden in box.
-                for t1 in T:
-                    if Pair <= Cands[r][t1] | Cands[r][t1+1] | Cands[r][t1+2]:  # Almost pair found in rowbox:
+            if T_GROUPED_BENT_PAIR_ER_HB in Methods:  # Exposed in row,
+                for t in T:
+                    if Pair <= Cands[r][t] | Cands[r][t+1] | Cands[r][t+2]:  # Almost pair found in rowbox:
                         n = 0
-                        for rb, cb in [(rb1, t1), (rb1, t1+1), (rb1, t1+2), (rb2, t1), (rb2, t1+1), (rb2, t1+2)]:
-                            if Cands[rb][cb] and Pair & Cands[rb][cb]:
+                        for rb, cb in [(rb1, t), (rb1, t+1), (rb1, t+2), (rb2, t), (rb2, t+1), (rb2, t+2)]:
+                            if Pair & Cands[rb][cb]:
                                 if n: break
-                                n += 1; rb0 = rb; cb0 = cb; T1 = [0, 3, 6]; T1.remove(t1)
+                                n += 1; rb0 = rb; cb0 = cb
                         else:
                             if n and Pair <= Cands[rb0][cb0]:  # == 1:  # Grouped bent pair found, how productive is it?
+                                T1 = sorted({0, 3, 6}-{t})
                                 for c1 in [T1[0], T1[0]+1, T1[0]+2, T1[1], T1[1]+1, T1[1]+2]:
                                     if c1 == c: continue
                                     Elims = Cands[r][c1] & Pair
@@ -270,28 +269,29 @@ def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
                                         Cands[r][c1] -= Pair
                                         if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, r], [P_COL, c1], [P_OP, OP_ELIM], [P_VAL, Elims]])
-                                Elims = Cands[rb0][cb0] - Pair
+                                Elims = Cands[rb0][cb0]-Pair
                                 if Elims:
                                     Cands[rb0][cb0] = copy(Pair)
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
                                     Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                 if Step.Outcome:
-                                    Step.Method = T_GROUPED_BENT_PAIR_ER
+                                    Step.Method = T_GROUPED_BENT_PAIR_ER_HB
                                     Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, r], [P_COL, t1, t1+1, t1+2], [P_CON],
+                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
                                     return 0
-            if T_GROUPED_BENT_PAIR_EC in Methods:  # Check out pair exposed in col, hidden in box.
-                for f1 in F:
-                    if Pair <= Cands[f1][c] | Cands[f1+1][c] | Cands[f1+2][c]:  # Almost pair found in colbox
+            if T_GROUPED_BENT_PAIR_EC_HB in Methods:  # Exposed in col
+                for f in F:
+                    if Pair <= Cands[f][c] | Cands[f+1][c] | Cands[f+2][c]:  # Almost pair found in colbox
                         n = 0
-                        for rb, cb in [(f1, cb1), (f1+1, cb1), (f1+2, cb1), (f1, cb2), (f1+1, cb2), (f1+2, cb2)]:
-                            if Cands[rb][cb] and Pair & Cands[rb][cb]:
+                        for rb, cb in [(f, cb1), (f+1, cb1), (f+2, cb1), (f, cb2), (f+1, cb2), (f+2, cb2)]:
+                            if Pair & Cands[rb][cb]:
                                 if n: break
-                                n += 1; rb0 = rb; cb0 = cb; F1 = [0, 3, 6]; F1.remove(f1)
-                        else:  # Grouped bent pair found, how productive is it?
+                                n += 1; rb0 = rb; cb0 = cb
+                        else:
                             if n and Pair <= Cands[rb0][cb0]:
+                                F1 = sorted({0, 3, 6} - {f})
                                 for r1 in [F1[0], F1[0]+1, F1[0]+2, F1[1], F1[1]+1, F1[1]+2]:
                                     if r1 == r: continue
                                     Elims = Cands[r1][c] & Pair
@@ -305,22 +305,23 @@ def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
                                     Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                 if Step.Outcome:
-                                    Step.Method = T_GROUPED_BENT_PAIR_EC
+                                    Step.Method = T_GROUPED_BENT_PAIR_EC_HB
                                     Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, f1, f1+1, f1+2], [P_COL, c], [P_CON],
+                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, f, f+1, f+2], [P_COL, c], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
                                     return 0
-            if T_GROUPED_BENT_PAIR_HR in Methods:  # Check out pair exposed in box, hidden in row.
+            if T_GROUPED_BENT_PAIR_HR_EB in Methods:  # Hidden Row, Exposed Box
                 for rb in [rb1, rb2]:
                     if Pair <= Cands[rb][t0] | Cands[rb][t0+1] | Cands[rb][t0+2]:  # Almost pair found in rowbox.
                         n = 0
                         for c1 in [T[0], T[0]+1, T[0]+2, T[1], T[1]+1, T[1]+2]:
-                            if Cands[rb][c1] and Pair & Cands[rb][c1]:
+                            if Pair & Cands[rb][c1]:
                                 if n: break
-                                n += 1; rb0 = rb; cb0 = c1; F1 = [f0, f0+1, f0+2]; F1.remove(rb)
+                                n += 1; rb0 = rb; cb0 = c1
                         else:
                             if n and Pair <= Cands[rb0][cb0]:  # == 1:  # Grouped bent pair found, how productive is it?
+                                F1 = sorted({f0, f0+1, f0+2} - {rb})
                                 for rbx, cbx in [(F1[0], t0), (F1[0], t0+1), (F1[0], t0+2), (F1[1], t0), (F1[1], t0+1), (F1[1], t0+2)]:
                                     if rbx == r and cbx == c: continue
                                     Elims = Cands[rbx][cbx] & Pair
@@ -328,28 +329,29 @@ def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
                                         Cands[rbx][cbx] -= Pair
                                         if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, rbx], [P_COL, cbx], [P_OP, OP_ELIM], [P_VAL, Elims]])
-                                Elims = Cands[rb0][cb0]  - Pair
+                                Elims = Cands[rb0][cb0] - Pair
                                 if Elims:
                                     Cands[rb0][cb0] = copy(Pair)
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
                                     Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                 if Step.Outcome:
-                                    Step.Method = T_GROUPED_BENT_PAIR_HR
+                                    Step.Method = T_GROUPED_BENT_PAIR_HR_EB
                                     Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, rb0], [P_COL, t0, t0+1, t0+2], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_PRES], [P_ROW, rb0], [P_COL, cb0], [P_END]]
                                     return 0
-            if T_GROUPED_BENT_PAIR_HC in Methods:  # Check out pair in exposed box, hidden in col
+            if T_GROUPED_BENT_PAIR_HC_EB in Methods:  # Hidden Column, Exposed Box
                 for cb in [cb1, cb2]:
                     if Pair <= Cands[f0][cb] | Cands[f0+1][cb] | Cands[f0+2][cb]:  # almost pair found in colbox
                         n = 0
                         for r1 in [F[0], F[0]+1, F[0]+2, F[1], F[1]+1, F[1]+2]:
-                            if Cands[r1][cb] and Pair & Cands[r1][cb]:
+                            if Pair & Cands[r1][cb]:
                                 if n: break
-                                n += 1; rb0 = r1; cb0 = cb; T1 = [t0, t0+1, t0+2]; T1.remove(cb)
+                                n += 1; rb0 = r1; cb0 = cb
                         else:
                             if n and Pair <= Cands[rb0][cb0]:
+                                T1 = sorted({t0, t0+1, t0+2} - {cb})
                                 for rbx, cbx in [(f0, T1[0]), (f0+1, T1[0]), (f0+2, T1[0]), (f0, T1[1]), (f0+1, T1[1]), (f0+2, T1[1])]:
                                     if rbx == r and cbx == c: continue
                                     Elims = Cands[rbx][cbx] & Pair
@@ -363,7 +365,7 @@ def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
                                     if Step.Outcome: Step.Outcome.append([P_SEP])
                                     Step.Outcome.extend([[P_ROW, rb0], [P_COL, cb0], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                 if Step.Outcome:
-                                    Step.Method = T_GROUPED_BENT_PAIR_HC
+                                    Step.Method = T_GROUPED_BENT_PAIR_HC_EB
                                     Step.Outcome.append([P_END])
                                     Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Pair)], [P_ROW, f0, f0+1, f0+2], [P_COL, cb0], [P_CON],
                                                     [P_VAL, sorted(Pair)], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c], [P_CON],
@@ -372,10 +374,470 @@ def tech_grouped_bent_pair(Grid, Step, Cands, Methods):
     return -1
 
 def tech_grouped_bent_triple(Grid, Step, Cands, Methods):
+
+    if T_GROUPED_BENT_TRIPLE_ER_HB in Methods:  # Exposed in row
+        for r in range(9):
+            f0 = (r//3)*3; rb1, rb2 = sorted({f0, f0+1, f0+2} - {r})
+            for c0 in range(8):
+                if not 2 <= len(Cands[r][c0]) <= 3: continue
+                for c1 in range(c0+1, 9):
+                    if not 2 <= len(Cands[r][c1]) <= 3: continue
+                    Trip = Cands[r][c0] | Cands[r][c1]
+                    if len(Trip) != 3: continue
+                    for t in sorted({0, 3, 6} - {(c0//3)*3, (c1//3)*3}):
+                        if Trip <= Cands[r][t] | Cands[r][t+1] | Cands[r][t+2]:  # row conditions satisfied, look in box
+                            n = 0; HT = []
+                            for rb, cb in [(rb1, t), (rb1, t+1), (rb1, t+2), (rb2, t), (rb2, t+1), (rb2, t+2)]:
+                                if Trip & Cands[rb][cb]:
+                                    if n > 1: break
+                                    n += 1; HT.append((rb, cb))
+                            else:
+                                if n == 2:
+                                    rb3, cb3 = HT[0]; rb4, cb4 = HT[1]
+                                    if len(Trip & Cands[rb3][cb3]) and len(Trip & Cands[rb4][cb4]) and Trip <= (Cands[rb3][cb3] | Cands[rb4][cb4]):
+                                        # ER pattern found, what can be eliminated.
+                                        T1 = sorted({0, 3, 6} - {t})  # look in the row.
+                                        for c2 in [T1[0], T1[0]+1, T1[0]+2, T1[1], T1[1]+1, T1[1]+2]:
+                                            if c2 == c0 or c2 == c1: continue
+                                            Elims = Cands[r][c2] & Trip
+                                            if Elims:
+                                                Cands[r][c2] -= Trip
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, r], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        #  look in the box
+                                        Elims = Cands[rb3][cb3] - Trip
+                                        if Elims:
+                                            Cands[rb3][cb3] -= Elims
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                                            Step.Outcome.extend([[P_ROW, rb3], [P_COL, cb3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        Elims = Cands[rb4][cb4] - Trip
+                                        if Elims:
+                                            Cands[rb4][cb4] -= Elims
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                                            Step.Outcome.extend([[P_ROW, rb4], [P_COL, cb4], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        if Step.Outcome:
+                                            Step.Method = T_GROUPED_BENT_TRIPLE_ER_HB
+                                            Step.Outcome.append([P_END])
+                                            Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Trip)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
+                                                            [P_VAL, sorted(Cands[r][c0])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c0], [P_CON],
+                                                            [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c1], [P_CON],
+                                                            [P_VAL, sorted(Trip & Cands[rb3][cb3])], [P_OP, OP_PRES], [P_ROW, rb3], [P_COL, cb3], [P_CON],
+                                                            [P_VAL, sorted(Trip & Cands[rb4][cb4])], [P_OP, OP_PRES], [P_ROW, rb4], [P_COL, cb4], [P_END]]
+                                            return 0
+    if T_GROUPED_BENT_TRIPLE_EC_HB in Methods:  # Exposed in col, hidden in box
+        for c in range(9):
+            t0 = (c//3)*3; cb1, cb2 = sorted({t0, t0+1, t0+2} - {c})
+            for r0 in range(8):
+                if not 2 <= len(Cands[r0][c]) <= 3: continue
+                for r1 in range(r0+1, 9):
+                    if not 2 <= len(Cands[r1][c]) <= 3: continue
+                    Trip = Cands[r0][c] | Cands[r1][c]
+                    if len(Trip) != 3: continue
+                    for f in sorted({0, 3, 6} - {(r0//3)*3, (r1//3)*3}):
+                        if Trip <= Cands[f][c] | Cands[f+1][c] | Cands[f+2][c]:  # col conditions satisfied, look in box
+                            n = 0; HF = []
+                            for rb, cb in [(f, cb1), (f+1, cb1), (f+2, cb1), (f, cb2), (f+1, cb2), (f+2, cb2)]:
+                                if Trip & Cands[rb][cb]:
+                                    if n > 1: break
+                                    n += 1; HF.append((rb, cb))
+                            else:
+                                if n == 2:
+                                    rb3, cb3 = HF[0]; rb4, cb4 = HF[1]
+                                    if len(Trip & Cands[rb3][cb3]) and len(Trip & Cands[rb4][cb4]) and Trip <= (Cands[rb3][cb3] | Cands[rb4][cb4]):
+                                        # ER pattern found, what can be eliminated.
+                                        F1 = sorted({0, 3, 6} - {f})  # look in the row.
+                                        for r2 in [F1[0], F1[0]+1, F1[0]+2, F1[1], F1[1]+1, F1[1]+2]:
+                                            if r2 == r0 or r2 == r1: continue
+                                            Elims = Cands[r2][c] & Trip
+                                            if Elims:
+                                                Cands[r2][c] -= Trip
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, r2], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        #  look in the box
+                                        Elims = Cands[rb3][cb3] - Trip
+                                        if Elims:
+                                            Cands[rb3][cb3] -= Elims
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                                            Step.Outcome.extend([[P_ROW, rb3], [P_COL, cb3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        Elims = Cands[rb4][cb4] - Trip
+                                        if Elims:
+                                            Cands[rb4][cb4] -= Elims
+                                            if Step.Outcome: Step.Outcome.append([P_SEP])
+                                            Step.Outcome.extend([[P_ROW, rb4], [P_COL, cb4], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                        if Step.Outcome:
+                                            Step.Method = T_GROUPED_BENT_TRIPLE_EC_HB
+                                            Step.Outcome.append([P_END])
+                                            Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Trip)], [P_ROW, f,  f+1, f+2], [P_COL, c], [P_CON],
+                                                            [P_VAL, sorted(Cands[r0][c])], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c], [P_CON],
+                                                            [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ], [P_ROW, r1], [P_COL, c], [P_CON],
+                                                            [P_VAL, sorted(Trip & Cands[rb3][cb3])], [P_OP, OP_PRES], [P_ROW, rb3], [P_COL, cb3], [P_CON],
+                                                            [P_VAL, sorted(Trip & Cands[rb4][cb4])], [P_OP, OP_PRES], [P_ROW, rb4], [P_COL, cb4], [P_END]]
+                                            return 0
+    if {T_GROUPED_BENT_TRIPLE_HR_EB, T_GROUPED_BENT_TRIPLE_HC_EB} & set(Methods):  # exposed in box
+        for f, t in [(0, 0), (0, 3), (0, 6), (3, 0), (3, 3), (3, 6), (6, 0), (6, 3), (6, 6)]:
+            for h0 in range(8):
+                rb0 = f + h0//3; cb0 = t + h0%3
+                if not 2 <= len(Cands[rb0][cb0]) <= 3: continue
+                for h1 in range(h0+1, 9):
+                    rb1 = f + h1//3; cb1 = t + h1%3
+                    if not 2 <= len(Cands[rb1][cb1]) <= 3: continue
+                    Trip = Cands[rb0][cb0] | Cands[rb1][cb1]
+                    if len(Trip) != 3: continue
+                    if T_GROUPED_BENT_TRIPLE_HR_EB in Methods:
+                        T = sorted({0, 3, 6}-{t})
+                        for r in sorted({f, f+1, f+2} - {rb0, rb1}):
+                            if Trip <= (Cands[r][t] | Cands[r][t+1] | Cands[r][t+2]):  # Box condition satisfied for row
+                                n = 0; HR = []
+                                for c in [T[0], T[0]+1, T[0]+2, T[1], T[1]+1, T[1]+2]:
+                                    if Trip & Cands[r][c]:
+                                        if n > 1: break
+                                        n += 1; HR.append(c)
+                                else:
+                                    if n == 2:
+                                        if len(Cands[r][HR[0]] & Trip) and len(Cands[r][HR[1]] & Trip) and Trip <= (Cands[r][HR[0]] | Cands[r][HR[1]]):
+                                            # Hidden condition satisfied in row, what can be eliminated.
+                                            R1 = sorted({f, f+1, f+2} - {r})  # look in the box
+                                            for rb, cb in [(R1[0], t), (R1[0], t+1), (R1[0], t+2), (R1[1], t), (R1[1], t+1), (R1[1], t+2)]:
+                                                if (rb, cb) == (rb0, cb0) or (rb, cb) == (rb1, cb1): continue
+                                                Elims = Cands[rb][cb] & Trip
+                                                if Elims:
+                                                    Cands[rb][cb] -= Trip
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, rb], [P_COL, cb], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[r][HR[0]] - Trip
+                                            if Elims:
+                                                Cands[r][HR[0]] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, r], [P_COL, HR[0]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[r][HR[1]] - Trip
+                                            if Elims:
+                                                Cands[r][HR[1]] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, r], [P_COL, HR[1]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            if Step.Outcome:
+                                                Step.Method = T_GROUPED_BENT_TRIPLE_HR_EB
+                                                Step.Outcome.append([P_END])
+                                                Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Trip)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
+                                                                [P_VAL, sorted(Cands[rb0][cb0])], [P_OP, OP_EQ], [P_ROW, rb0], [P_COL, cb0], [P_CON],
+                                                                [P_VAL, sorted(Cands[rb1][cb1])], [P_OP, OP_EQ], [P_ROW, rb1], [P_COL, cb1], [P_CON],
+                                                                [P_VAL, sorted(Trip & Cands[r][HR[0]])], [P_OP, OP_PRES], [P_ROW, r], [P_COL, HR[0]], [P_CON],
+                                                                [P_VAL, sorted(Trip & Cands[r][HR[1]])], [P_OP, OP_PRES], [P_ROW, r], [P_COL, HR[1]], [P_END]]
+                                                return 0
+                    if T_GROUPED_BENT_TRIPLE_HC_EB in Methods:
+                        F = sorted({0, 3, 6} - {f})
+                        for c in sorted({t, t+1, t+2} - {cb0, cb1}):
+                            if Trip <= (Cands[f][c] | Cands[f+1][c] | Cands[f+2][c]):  # box condition satisfied for col
+                                n = 0; HC = []
+                                for r in [F[0], F[0]+1, F[0]+2, F[1], F[1]+1, F[1]+2]:
+                                    if Trip & Cands[r][c]:
+                                        if n > 1: break
+                                        n += 1; HC.append(r)
+                                else:
+                                    if n == 2:
+                                        if len(Cands[HC[0]][c] & Trip) and len(Cands[HC[1]][c] & Trip) and Trip <= (Cands[HC[0]][c] | Cands[HC[1]][c]):
+                                            # Hidden condition also satisfied in col, what can be eliminated
+                                            C1 = sorted({t, t+1, t+2} - {c})
+                                            for (rb, cb) in [(f, C1[0]), (f+1, C1[0]), (f+2, C1[0]), (f, C1[0]), (f+1, C1[0]), (f+2, C1[0])]:
+                                                if (rb, cb) == (rb0, cb0) or (rb, cb) == (rb1, cb1): continue
+                                                Elims = Cands[rb][cb] & Trip
+                                                if Elims:
+                                                    Cands[rb][cb] -= Trip
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, rb], [P_COL, cb], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[HC[0]][c] - Trip
+                                            if Elims:
+                                                Cands[HC[0]][c] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, HC[0], [P_COL, c]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[HC[1]][c] - Trip
+                                            if Elims:
+                                                Cands[HC[1]][c] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, HC[1]], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            if Step.Outcome:
+                                                Step.Method = T_GROUPED_BENT_TRIPLE_HC_EB
+                                                Step.Outcome.append([P_END])
+                                                Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Trip)], [P_ROW, f, f+1, f+2], [P_COL, c], [P_CON],
+                                                                [P_VAL, sorted(Cands[rb0][cb0])], [P_OP, OP_EQ], [P_ROW, rb0], [P_COL, cb0], [P_CON],
+                                                                [P_VAL, sorted(Cands[rb1][cb1])], [P_OP, OP_EQ], [P_ROW, rb1], [P_COL, cb1], [P_CON],
+                                                                [P_VAL, sorted(Trip & Cands[HC[0]][c])], [P_OP, OP_PRES], [P_ROW, HC[0]], [P_COL, c], [P_CON],
+                                                                [P_VAL, sorted(Trip & Cands[HC[1]][c])], [P_OP, OP_PRES], [P_ROW, HC[1]], [P_COL, c], [P_END]]
+                                                return 0
     return -1
 
 def tech_grouped_bent_quad(Grid, Step, Cands, Methods):
+
+    if T_GROUPED_BENT_QUAD_ER_HB in Methods:  # Exposed in row, hidden in box
+        for r in range(9):
+            f0 = (r//3)*3; rb1, rb2 = sorted({f0, f0+1, f0+2} - {r})
+            for c0 in range(7):
+                if not 2 <= len(Cands[r][c0]) <= 4: continue
+                for c1 in range(c0+1, 8):
+                    if not 2 <= len(Cands[r][c1]) <= 4: continue
+                    for c2 in range(c1+1, 9):
+                        if not 2 <= len(Cands[r][c2]) <= 4: continue
+                        Quad = Cands[r][c0] | Cands[r][c1] | Cands[r][c2]
+                        if len(Quad) != 4: continue
+                        for t in sorted({0, 3, 6} - {(c0//3)*3, (c1//3)*3, (c2//3)*3}):
+                            if Quad <= Cands[r][t] | Cands[r][t+1] | Cands[r][t+2]:  # Exposed Quad condition satisfied in row
+                                n = 0; HQ = []
+                                for rb, cb in [(rb1, t), (rb1, t+1), (rb1, t+2), (rb2, t), (rb2, t+1), (rb2, t+2)]:
+                                    if Quad & Cands[rb][cb]:
+                                        if n > 2: break
+                                        n += 1; HQ.append((rb, cb))
+                                else:
+                                    if n == 3:
+                                        rb3, cb3 = HQ[0]; rb4, cb4 = HQ[1]; rb5, cb5 = HQ[2]
+                                        if len(Quad & Cands[rb3][cb3]) and len(Quad & Cands[rb4][cb4]) and len(Quad & Cands[rb5][cb5]) and Quad <= (Cands[rb3][cb3] | Cands[rb4][cb4] | Cands[rb5][cb5]):
+                                            # ER pattern found, what can be eliminated.
+                                            T1 = sorted({0, 3, 6} - {t})  # look in the row.
+                                            for c3 in [T1[0], T1[0]+1, T1[0]+2, T1[1], T1[1]+1, T1[1]+2]:
+                                                if c3 == c0 or c3 == c1 or c3 == c2: continue
+                                                Elims = Cands[r][c3] & Quad
+                                                if Elims:
+                                                    Cands[r][c3] -= Quad
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r], [P_COL, c3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            #  look in the box
+                                            Elims = Cands[rb3][cb3] - Quad
+                                            if Elims:
+                                                Cands[rb3][cb3] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, rb3], [P_COL, cb3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[rb4][cb4] - Quad
+                                            if Elims:
+                                                Cands[rb4][cb4] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, rb4], [P_COL, cb4], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[rb5][cb5] - Quad
+                                            if Elims:
+                                                Cands[rb5][cb5] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, rb5], [P_COL, cb5], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            if Step.Outcome:
+                                                Step.Method = T_GROUPED_BENT_QUAD_ER_EB
+                                                Step.Outcome.append([P_END])
+                                                Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Quad)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
+                                                                [P_VAL, sorted(Cands[r][c0])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c0], [P_CON],
+                                                                [P_VAL, sorted(Cands[r][c1])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c1], [P_CON],
+                                                                [P_VAL, sorted(Cands[r][c2])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c2], [P_CON],
+                                                                [P_VAL, sorted(Quad & Cands[rb3][cb3])], [P_OP, OP_PRES], [P_ROW, rb3], [P_COL, cb3], [P_CON],
+                                                                [P_VAL, sorted(Quad & Cands[rb4][cb4])], [P_OP, OP_PRES], [P_ROW, rb4], [P_COL, cb4], [P_CON],
+                                                                [P_VAL, sorted(Quad & Cands[rb5][cb5])], [P_OP, OP_PRES], [P_ROW, rb5], [P_COL, cb5], [P_END]]
+                                                return 0
+    if T_GROUPED_BENT_QUAD_EC_HB in Methods:  # Exposed in col, hidden in box
+        for c in range(9):
+            t0 = (c//3)*3; cb1 = t0+(c-t0+1)%3; cb2 = t0+(c-t0+2)%3
+            for r0 in range(7):
+                if not 2 <= len(Cands[r0][c]) <= 4: continue
+                for r1 in range(r0+1, 8):
+                    if not 2 <= len(Cands[r1][c]) <= 4: continue
+                    for r2 in range(r1+1, 9):
+                        if not 2 <= len(Cands[r2][c]) <= 4: continue
+                        Quad = Cands[r0][c] | Cands[r1][c] | Cands[r2][c]
+                        if len(Quad) != 4: continue
+                        for f in sorted({0, 3, 6} - {(r0//3)*3, (r1//3)*3, (r2//3)*3}):
+                            if Quad <= Cands[f][c] | Cands[f+1][c] | Cands[f+2][c]:  # Exposed Quad condition satisfied in col
+                                n = 0; HQ = []
+                                for rb, cb in [(f, cb1), (f+1, cb1), (f+2, cb1), (f, cb2), (f+1, cb2), (f+2, cb2)]:
+                                    if Quad & Cands[rb][cb]:
+                                        if n > 2: break
+                                        n += 1; HQ.append((rb, cb))
+                                else:
+                                    if n == 3:
+                                        rb3, cb3 = HQ[0]; rb4, cb4 = HQ[1]; rb5, cb5 = HQ[2]
+                                        if len(Quad & Cands[rb3][cb3]) and len(Quad & Cands[rb4][cb4]) and len(Quad & Cands[rb5][cb5]) and Quad <= (Cands[rb3][cb3] | Cands[rb4][cb4] | Cands[rb5][cb5]):
+                                            # ER pattern found, what can be eliminated.
+                                            F1 = sorted({0, 3, 6} - {f})  # look in the row.
+                                            for r3 in [F1[0], F1[0]+1, F1[0]+2, F1[1], F1[1]+1, F1[1]+2]:
+                                                if r3 == r0 or r3 == r1 or r3 == r2: continue
+                                                Elims = Cands[r3][c] & Quad
+                                                if Elims:
+                                                    Cands[r3][c] -= Quad
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r3], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            #  look in the box
+                                            Elims = Cands[rb3][cb3] - Quad
+                                            if Elims:
+                                                Cands[rb3][cb3] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, rb3], [P_COL, cb3], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[rb4][cb4] - Quad
+                                            if Elims:
+                                                Cands[rb4][cb4] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, rb4], [P_COL, cb4], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            Elims = Cands[rb5][cb5] - Quad
+                                            if Elims:
+                                                Cands[rb5][cb5] -= Elims
+                                                if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                Step.Outcome.extend([[P_ROW, rb5], [P_COL, cb5], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                            if Step.Outcome:
+                                                Step.Method = T_GROUPED_BENT_QUAD_EC_HB
+                                                Step.Outcome.append([P_END])
+                                                Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Quad)], [P_ROW, f, f+1, f+2], [P_COL, c], [P_CON],
+                                                                [P_VAL, sorted(Cands[r0][c])], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c], [P_CON],
+                                                                [P_VAL, sorted(Cands[r1][c])], [P_OP, OP_EQ], [P_ROW, r1], [P_COL, c], [P_CON],
+                                                                [P_VAL, sorted(Cands[r2][c])], [P_OP, OP_EQ], [P_ROW, r2], [P_COL, c], [P_CON],
+                                                                [P_VAL, sorted(Quad & Cands[rb3][cb3])], [P_OP, OP_PRES], [P_ROW, rb3], [P_COL, cb3], [P_CON],
+                                                                [P_VAL, sorted(Quad & Cands[rb4][cb4])], [P_OP, OP_PRES], [P_ROW, rb4], [P_COL, cb4], [P_CON],
+                                                                [P_VAL, sorted(Quad & Cands[rb5][cb5])], [P_OP, OP_PRES], [P_ROW, rb5], [P_COL, cb5], [P_END]]
+                                                return 0
+    if {T_GROUPED_BENT_QUAD_HR_EB, T_GROUPED_BENT_QUAD_HC_EB} & set(Methods):  # exposed in box
+        for f, t in [(0, 0), (0, 3), (0, 6), (3, 0), (3, 3), (3, 6), (6, 0), (6, 3), (6, 6)]:
+            for h0 in range(7):
+                rb0 = f + h0//3; cb0 = t + h0%3
+                if not 2 <= len(Cands[rb0][cb0]) <= 4: continue
+                for h1 in range(h0+1, 8):
+                    rb1 = f + h1//3; cb1 = t + h1%3
+                    if not 2 <= len(Cands[rb1][cb1]) <= 4: continue
+                    for h2 in range(h1+1, 9):
+                        rb2 = f + h2//3; cb2 = t + h2%3
+                        if not 2 <= len(Cands[rb2][cb2]) <= 4: continue
+                        Quad = Cands[rb0][cb0] | Cands[rb1][cb1] | Cands[rb2][cb2]
+                        if len(Quad) != 4: continue
+                        if T_GROUPED_BENT_QUAD_HR_EB in Methods:
+                            T = sorted({0, 3, 6}-{t})
+                            for r in sorted({f, f+1, f+2} - {rb0, rb1, rb2}):
+                                if Quad <= (Cands[r][t] | Cands[r][t+1] | Cands[r][t+2]):  # Box condition satisfied for row
+                                    n = 0; HR = []
+                                    for c in [T[0], T[0]+1, T[0]+2, T[1], T[1]+1, T[1]+2]:
+                                        if Quad & Cands[r][c]:
+                                            if n > 2: break
+                                            n += 1; HR.append(c)
+                                    else:
+                                        if n == 3:
+                                            if len(Cands[r][HR[0]] & Quad) and len(Cands[r][HR[1]] & Quad) and len(Cands[r][HR[2]] & Quad) and Quad <= (Cands[r][HR[0]] | Cands[r][HR[1]] | Cands[r][HR[2]]):
+                                                # Hidden condition satisfied in row, what can be eliminated.
+                                                R1 = sorted({f, f+1, f+2}-{r})  # look in the box
+                                                for rb, cb in [(R1[0], t), (R1[0], t+1), (R1[0], t+2), (R1[1], t), (R1[1], t+1), (R1[1], t+2)]:
+                                                    if (rb, cb) == (rb0, cb0) or (rb, cb) == (rb1, cb1) or (rb, cb) == (rb2, cb2): continue
+                                                    Elims = Cands[rb][cb] & Quad
+                                                    if Elims:
+                                                        Cands[rb][cb] -= Quad
+                                                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                        Step.Outcome.extend([[P_ROW, rb], [P_COL, cb], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[r][HR[0]] - Quad
+                                                if Elims:
+                                                    Cands[r][HR[0]] -= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r], [P_COL, HR[0]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[r][HR[1]] - Quad
+                                                if Elims:
+                                                    Cands[r][HR[1]] -= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r], [P_COL, HR[1]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[r][HR[2]] - Quad
+                                                if Elims:
+                                                    Cands[r][HR[2]] -= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r], [P_COL, HR[2]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                if Step.Outcome:
+                                                    Step.Method = T_GROUPED_BENT_QUAD_HR_EC
+                                                    Step.Outcome.append([P_END])
+                                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Quad)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
+                                                                    [P_VAL, sorted(Cands[rb0][cb0])], [P_OP, OP_EQ], [P_ROW, rb0], [P_COL, cb0], [P_CON],
+                                                                    [P_VAL, sorted(Cands[rb1][cb1])], [P_OP, OP_EQ], [P_ROW, rb1], [P_COL, cb1], [P_CON],
+                                                                    [P_VAL, sorted(Cands[rb2][cb2])], [P_OP, OP_EQ], [P_ROW, rb2], [P_COL, cb2], [P_CON],
+                                                                    [P_VAL, sorted(Quad & Cands[r][HR[0]])], [P_OP, OP_PRES], [P_ROW, r], [P_COL, HR[0]], [P_CON],
+                                                                    [P_VAL, sorted(Quad & Cands[r][HR[1]])], [P_OP, OP_PRES], [P_ROW, r], [P_COL, HR[1]], [P_CON],
+                                                                    [P_VAL, sorted(Quad & Cands[r][HR[2]])], [P_OP, OP_PRES], [P_ROW, r], [P_COL, HR[2]], [P_END]]
+                                                    return 0
+                        if T_GROUPED_BENT_QUAD_HC_EB in Methods:
+                            F = sorted({0, 3, 6}-{f})
+                            for c in sorted({t, t+1, t+2}-{cb0, cb1, cb2}):
+                                if Quad <= (Cands[f][c] | Cands[f+1][c] | Cands[f+2][c]):  # box condition satisfied for col
+                                    n = 0; HC = []
+                                    for r in [F[0], F[0]+1, F[0]+2, F[1], F[1]+1, F[1]+2]:
+                                        if Quad & Cands[r][c]:
+                                            if n > 2: break
+                                            n += 1; HC.append(r)
+                                    else:
+                                        if n == 3:
+                                            if len(Cands[HC[0]][c] & Quad) and len(Cands[HC[1]][c] & Quad) and len(Cands[HC[2]][c] & Quad) and Quad <= (Cands[HC[0]][c] | Cands[HC[1]][c] | Cands[HC[2]][c]):
+                                                # Hidden condition also satisfied in col, what can be eliminated
+                                                C1 = sorted({t, t+1, t+2}-{c})
+                                                for (rb, cb) in [(f, C1[0]), (f+1, C1[0]), (f+2, C1[0]), (f, C1[0]), (f+1, C1[0]), (f+2, C1[0])]:
+                                                    if (rb, cb) == (rb0, cb0) or (rb, cb) == (rb1, cb1) or (rb, cb) == (rb2, cb2): continue
+                                                    Elims = Cands[rb][cb] & Quad
+                                                    if Elims:
+                                                        Cands[rb][cb] -= Quad
+                                                        if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                        Step.Outcome.extend([[P_ROW, rb], [P_COL, cb], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[HC[0]][c] - Quad
+                                                if Elims:
+                                                    Cands[HC[0]][c] -= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, HC[0], [P_COL, c]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[HC[1]][c] - Quad
+                                                if Elims:
+                                                    Cands[HC[1]][c]-= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, HC[1]], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[HC[2]][c] - Quad
+                                                if Elims:
+                                                    Cands[HC[2]][c] -= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, HC[2]], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                if Step.Outcome:
+                                                    Step.Method = T_GROUPED_BENT_QUAD_HC_EB
+                                                    Step.Outcome.append([P_END])
+                                                    Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Quad)], [P_ROW, f, f+1, f+2], [P_COL, c], [P_CON],
+                                                                    [P_VAL, sorted(Cands[rb0][cb0])], [P_OP, OP_EQ], [P_ROW, rb0], [P_COL, cb0], [P_CON],
+                                                                    [P_VAL, sorted(Cands[rb1][cb1])], [P_OP, OP_EQ], [P_ROW, rb1], [P_COL, cb1], [P_CON],
+                                                                    [P_VAL, sorted(Cands[rb2][cb2])], [P_OP, OP_EQ], [P_ROW, rb2], [P_COL, cb2], [P_CON],
+                                                                    [P_VAL, sorted(Quad & Cands[HC[0]][c])], [P_OP, OP_PRES], [P_ROW, HC[0]], [P_COL, c], [P_CON],
+                                                                    [P_VAL, sorted(Quad & Cands[HC[1]][c])], [P_OP, OP_PRES], [P_ROW, HC[1]], [P_COL, c], [P_CON],
+                                                                    [P_VAL, sorted(Quad & Cands[HC[2]][c])], [P_OP, OP_PRES], [P_ROW, HC[2]], [P_COL, c], [P_END]]
+                                                    return 0
     return -1
 
 def tech_bent_hidden_triple(Grid, Step, Cands, Methods):
+
+    if T_BENT_HIDDEN_TRIPLE in Methods:
+        for r0 in range(9):
+            for Cand0 in range(1, 8):
+                for Cand1 in range(Cand0+1, 9):
+                    for Cand2 in range(Cand1+1, 10):
+                        Trip = {Cand0, Cand1, Cand2}
+                        for c0 in range(9):
+                            if Trip <= Cands[r0][c0]:
+                                t = (c0//3)*3; T = sorted({0, 3, 6} - {t})
+                                n = 0; r2 = c2 = -1
+                                for c1 in [T[0], T[0]+1, T[0]+2, T[1], T[1]+1, T[1]+2]:
+                                    if len(Cands[r0][c1] & Trip):
+                                        if n: break
+                                        n += 1; c2 = c1
+                                else:
+                                    if n and len(Cands[r0][c2] & Trip) >= 2:  # row pattern found, find col.
+                                        f = (r0//3)*3; F = sorted({0, 3, 6} - {f})
+                                        n = 0
+                                        for r1 in [F[0], F[0]+1, F[0]+2, F[1], F[1]+1, F[1]+2]:
+                                            if len(Cands[r1][c0] & Trip):
+                                                if n: break
+                                                n += 1; r2 = r1
+                                        else:
+                                            if n and len((Cands[r0][c2] | Cands[r2][c0]) & Trip) == 3:  # Triple Fireworks pattern found, what can be eliminated
+                                                Elims = Cands[r0][c0] - Trip
+                                                if Elims:
+                                                    Cands[r0][c0]-= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[r0][c2] - Trip
+                                                if Elims:
+                                                    Cands[r0][c2]-= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r0], [P_COL, c2], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Elims = Cands[r2][c0] - Trip
+                                                if Elims:
+                                                    Cands[r2][c0]-= Elims
+                                                    if Step.Outcome: Step.Outcome.append([P_SEP])
+                                                    Step.Outcome.extend([[P_ROW, r2], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                if Step.Outcome:
+                                                    Step.Method = T_BENT_HIDDEN_TRIPLE
+                                                    Step.Outcome.append([P_END])
+                                                    Step.Pattern = [[P_VAL, sorted(Cands[r0][c2])], [P_ROW, r0], [P_COL, c2], [P_OP, OP_WLK],
+                                                                    [P_VAL, sorted(Cands[r0][c0])], [P_ROW, r0], [P_COL, c0], [P_OP, OP_WLK],
+                                                                    [P_VAL, sorted(Cands[r2][c0])], [P_ROW, r2], [P_COL, c0], [P_END]]
+                                                    return 0
     return -1

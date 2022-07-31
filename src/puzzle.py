@@ -65,7 +65,7 @@ class Puzzle:
                              HT_ADIFF: 0} for Mthd in Tech}
         Difficulty = 0
         for Step in self.Steps:
-            Step.Difficulty                     = Tech[Step.Method].Difficulty + (Step.NrLks - Step.NrGrpLks) * LK_DIFF + Step.NrGrpLks * GRP_LK_DIFF
+            Step.Difficulty                    = Tech[Step.Method].Difficulty + (Step.NrLks - Step.NrGrpLks) * LK_DIFF + Step.NrGrpLks * GRP_LK_DIFF
             Difficulty                        += Step.Difficulty
             StepsHisto[Step.Method][HT_NR]    += 1
             StepsHisto[Step.Method][HT_ADIFF] += Step.Difficulty
