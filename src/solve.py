@@ -75,6 +75,7 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_x_chains,            [T_X_CHAIN_T1, T_EVEN_X_LOOP_T3, T_STRONG_X_LOOP]),  # and loops, never before three link X-Chains
            SLVR(tech_xy_chains,           [T_XY_CHAIN_T1, T_XY_CHAIN_T2, T_XY_CHAIN_T3, T_EVEN_XY_LOOP_T2, T_EVEN_XY_LOOP_T3]),
            SLVR(tech_ai_chains,           [T_W_WING, T_AI_CHAIN_T1, T_AI_CHAIN_T2, T_AI_CHAIN_T3, T_EVEN_AI_LOOP_T1, T_EVEN_AI_LOOP_T2, T_EVEN_AI_LOOP_T3, T_STRONG_AI_LOOP]),
+           SLVR(tech_chained_strong_linked_nets, [T_CHAINED_STRONG_LINKED_NET_T1, T_CHAINED_STRONG_LINKED_NET_T2, T_CHAINED_STRONG_LINKED_NET_T3]),
            SLVR(tech_gl_x_chains,         [T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH, T_GL_X_CHAIN_T1, T_GL_EVEN_X_LOOP_T3, T_GL_STRONG_X_LOOP]),
            SLVR(tech_gl_ai_chains,        [T_GL_AI_CHAIN_T1, T_GL_AI_CHAIN_T2, T_GL_AI_CHAIN_T3, T_GL_EVEN_AI_LOOP_T1, T_GL_EVEN_AI_LOOP_T2, T_GL_EVEN_AI_LOOP_T3 , T_GL_STRONG_AI_LOOP]),
            SLVR(tech_finned_x_wings,      [T_KRAKEN_FINNED_X_WING, T_KRAKEN_SASHIMI_X_WING]),  # kraken fish never before finned fish

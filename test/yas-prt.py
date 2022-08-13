@@ -2,8 +2,7 @@
 from os.path import dirname, join
 from os import chdir
 from sys import argv, exit, path
-from datetime import datetime
-from time import perf_counter
+from time import perf_counter, localtime, strftime, time
 
 SrcDir   = "src"
 TestDir  = "test"
@@ -22,10 +21,9 @@ from solve import *
 from solve_utils import *
 
 def yas_prt():
-
     print(f"YAS Pattern Regression Tester.")
     print(VERSION)
-    print(f"Run start: {datetime.now()}.", flush = True)  # , using {Code} code.", flush = True)
+    print(f"Run start: {strftime('%a, %d %b %Y, %H:%M:%S', localtime(time()))}")
     TestDataDir = join(join(Root, TestDir), TestDDir)
     Src = join(TestDataDir, SrcFile+FileExt)
     Dst = join(TestDataDir, SrcFile+DstSuff+FileExt)
@@ -151,7 +149,7 @@ def time_str(STime = 0):
     DTime = ETime - STime
     ESecs = ETime % 60; EMins = int((ETime//60)%60); EHrs = int(ETime//3600)
     DSecs = DTime % 60; DMins = int((DTime//60)%60); DHrs = int(DTime//3600)
-    return f"{EHrs:02d}:{EMins:02d}:{ESecs:07.4f}|{DHrs:02d}:{DMins:02d}:{DSecs:07.4f}"
+    return f"{EHrs:02d}:{EMins:02d}:{ESecs:010.7f}|{DHrs:02d}:{DMins:02d}:{DSecs:010.7f}"
 
 if __name__ == "__main__":
     yas_prt()

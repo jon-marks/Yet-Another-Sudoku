@@ -1,5 +1,3 @@
-from copy import copy
-
 from globals import *
 from solve_utils import *
 
@@ -356,8 +354,8 @@ def resolve_other_ai_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
                         Lk0 = how_ccells_linked(Chain[0].r, Chain[0].c, Chain[0].Cand, {r}, {c}, Chain[0].Cand, Cands, GrpLks)
                         Lk1 = how_ccells_linked(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, {r}, {c}, Chain[-1].Cand, Cands, GrpLks)
                         if Lk0 & LK_STRG: Lk0 |= LK_WKST
-                        if Lk1 & LK_STRG: Lk0 |= LK_WKST
-                        Status.Pattern1.append([NL(Chain[0].r, Chain[0].c, Chain[0].Cand, Lk0), NL(r, c, Chain[0].Cand, Lk0), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)])
+                        if Lk1 & LK_STRG: Lk1 |= LK_WKST
+                        Status.Pattern1.append([NL(Chain[0].r, Chain[0].c, Chain[0].Cand, Lk0), NL(r, c, Chain[0].Cand, Lk1), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)])
                         K = str(r) + str(c)
                         if K in Status.Elims.keys(): Status.Elims[K].append(Chain[0].Cand)
                         else: Status.Elims[K] = [Chain[0].Cand]
@@ -368,7 +366,7 @@ def resolve_other_ai_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
                         Lk1 = how_ccells_linked(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, r, c, Chain[-1].Cand, Cands, GrpLks)
                         if Lk0 & LK_STRG: Lk0 |= LK_WKST
                         if Lk1 & LK_STRG: Lk0 |= LK_WKST
-                        Status.Pattern1 = [[NL(Chain[0].r, Chain[0].c, Chain[0].Cand, Lk0), NL(r, c, Chain[0].Cand, Lk0), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)]]
+                        Status.Pattern1 = [[NL(Chain[0].r, Chain[0].c, Chain[0].Cand, Lk0), NL(r, c, Chain[0].Cand, Lk1), NL(Chain[-1].r, Chain[-1].c, Chain[-1].Cand, LK_NONE)]]
                         K = str(r) + str(c)
                         if K in Status.Elims.keys(): Status.Elims[K].append(Chain[0].Cand)
                         else: Status.Elims[K] = [Chain[0].Cand]
@@ -381,9 +379,9 @@ def resolve_other_ai_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
                     and (Chain[0].r != Chain[-1].r or Chain[0].c != Chain[-1].c) \
                     and len(Cands[Chain[0].r][Chain[0].c]) == 2 \
                     and Cands[Chain[0].r][Chain[0].c] == Cands[Chain[-1].r][Chain[-1].c]:
-                if Chain[0].r == Chain[-1].r: Status.Pattern1 = [(Chain[0].r, [Chain[0].c, Chain[-1].c], copy(Cands[Chain[0].r][Chain[0].c]))]
-                elif Chain[0].c == Chain[-1].c: Status.Pattern1 = [([Chain[0].r, Chain[-1].r], Chain[0].c, copy(Cands[Chain[0].r][Chain[0].c]))]
-                else: Status.Pattern1 = [(Chain[0].r, Chain[0].c, copy(Cands[Chain[0].r][Chain[0].c])), (Chain[-1].r, Chain[-1].c, copy(Cands[Chain[1].r][Chain[1].c]))]
+                if Chain[0].r == Chain[-1].r: Status.Pattern1 = [(Chain[0].r, [Chain[0].c, Chain[-1].c], sorted(Cands[Chain[0].r][Chain[0].c]))]
+                elif Chain[0].c == Chain[-1].c: Status.Pattern1 = [([Chain[0].r, Chain[-1].r], Chain[0].c, sorted(Cands[Chain[0].r][Chain[0].c]))]
+                else: Status.Pattern1 = [(Chain[0].r, Chain[0].c, sorted(Cands[Chain[0].r][Chain[0].c])), (Chain[-1].r, Chain[-1].c, sorted(Cands[Chain[1].r][Chain[1].c]))]
                 Status.Plcmts = [(Chain[0].r, Chain[0].c, Chain[0].Cand), (Chain[-1].r, Chain[-1].c, Chain[-1].Cand)]
                 Status.Tech = T_AI_CHAIN_T3
             elif T_GL_AI_CHAIN_T3 in Methods and GrpLks \
@@ -391,9 +389,9 @@ def resolve_other_ai_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
                     and len(Chain[0].r) == len(Chain[-1].r) == len(Chain[0].c) == len(Chain[-1].c) == 1 \
                     and len(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]]) == 2 \
                     and Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]] == Cands[list(Chain[-1].r)[0]][list(Chain[-1].c)[0]]:
-                if Chain[0].r == Chain[-1].r: Status.Pattern1 = [(Chain[0].r, [Chain[0].c, Chain[-1].c], copy(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]]))]
-                elif Chain[0].c == Chain[-1].c: Status.Pattern1 = [([Chain[0].r, Chain[-1].r], Chain[0].c, copy(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]]))]
-                else: Status.Pattern1 = [(Chain[0].r, Chain[0].c, copy(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]])), (Chain[-1].r, Chain[-1].c, copy(Cands[list(Chain[-1].r)[0]][list(Chain[-1].c)[0]]))]
+                if Chain[0].r == Chain[-1].r: Status.Pattern1 = [(Chain[0].r, [Chain[0].c, Chain[-1].c], sorted(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]]))]
+                elif Chain[0].c == Chain[-1].c: Status.Pattern1 = [([Chain[0].r, Chain[-1].r], Chain[0].c, sorted(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]]))]
+                else: Status.Pattern1 = [(Chain[0].r, Chain[0].c, sorted(Cands[list(Chain[0].r)[0]][list(Chain[0].c)[0]])), (Chain[-1].r, Chain[-1].c, sorted(Cands[list(Chain[-1].r)[0]][list(Chain[-1].c)[0]]))]
                 Status.Plcmts = [(list(Chain[0].r)[0], list(Chain[0].c)[0], Chain[0].Cand), (list(Chain[-1].r)[0], list(Chain[-1].c)[0], Chain[-1].Cand)]
                 Status.Tech = T_GL_AI_CHAIN_T3
             elif T_AI_CHAIN_T2 in Methods and ~GrpLks:

@@ -11,9 +11,9 @@ Audit:
 
 """
 
-from sys import path, version
+from sys import path, version, gettrace
 from git import Repo
-from time import strftime, gmtime
+from time import strftime, localtime
 
 
 import wx
@@ -22,15 +22,16 @@ TITLE   = 'Yet Another Sudoku'
 BLURB   = '*  Feature rich with a\n' \
           '*  Simple and minimal user interface'
 
-VERSION = 'Version 0.01 - 2021-xx-xx, (c) Jonathan Marks'
 
 # TODO: This must be moved to PyInstaller when I get that working.
 oRepo = Repo(".")
-sDirty = "-Dirty" if oRepo.is_dirty() else ""
-sTimeStamp = strftime("%d %b %Y, %H:%M:%S", gmtime(oRepo.head.commit.committed_date))
+sDirty = "*" if oRepo.is_dirty() else ""
+sTimeStamp = strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))
 sVers = f"V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}, {sTimeStamp}."
 VERSION = f"    {sVers}\n" \
           f"    Python {version}"
+DEBUG = " - DEBUG" if gettrace() else ""
+TITLE = f"Yet Another Sudoku - V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}{DEBUG}"
 
 # Generic enumerations
 UNDEF   = -1
@@ -257,15 +258,15 @@ T_GRPLK                     = 0x00000200
 T_SASHIMI                   = 0x00000400
 
 # Technique Extensions for Grouped Bent Subsets
-T_ER_HB             = 0x0000000  # exposed in row, hidden in box
-T_EC_HB             = 0x0001000  # exposed in column, hidden in box
-T_HR_EB             = 0x0002000  # hidden in row, exposed in box
-T_HC_EB             = 0x0003000  # hidden in column, exposed in box
+T_ER_HB             = 0x0001000  # exposed in row, hidden in box
+T_EC_HB             = 0x0002000  # exposed in column, hidden in box
+T_HR_EB             = 0x0004000  # hidden in row, exposed in box
+T_HC_EB             = 0x0008000  # hidden in column, exposed in box
 
 # Technique Extensions for Strong Link pattern resolutions
-T_SAME_PARITY_NODES         = 0x00000000  # Type 1: Two same parity nodes see each other - same house or cell
-T_ALL_SEE_SAME_PARITY_NODES = 0x00001000  # Type 2: All candidates in a cell see same parity nodes
-T_SEE_OPPOSING_PARITY_NODES = 0x00002000  # Type 3: Ccell sees both an odd and an even parity node
+T_SAME_POLARITY_NODES         = 0x00001000  # Type 1: Two same polarity nodes see each other - same house or cell
+T_ALL_SEE_SAME_POLARITY_NODES = 0x00002000  # Type 2: All candidates in a cell see same polarity nodes
+T_SEE_OPPOSING_POLARITY_NODES = 0x00004000  # Type 3: Ccell sees both an odd and an even polarity node
 
 # Technique Extensions for XY- and AI-Chain End pattern resolutions
 T_SAME_CANDS                = 0x00000000  # Type 1: Same Value candidates
@@ -297,44 +298,47 @@ T_SASHIMI_JELLYFISH         = T_FINNED_JELLYFISH + T_SASHIMI
 T_SKYSCRAPER                = 18
 T_TWO_STRING_KITE           = 19
 T_TURBOT_FISH               = 20
-T_REMOTE_PAIR_T3            = 21 + T_SEE_OPPOSING_PARITY_NODES
+T_REMOTE_PAIR_T3            = 21 + T_SEE_OPPOSING_POLARITY_NODES
 T_Y_WING                    = 22
 T_W_WING                    = 23
 T_XYZ_WING                  = 24
 T_WXYZ_WING                 = 25
 T_BENT_EXPOSED_QUAD         = 26
-T_STRONG_LINKED_NET_T1      = 27 + T_SAME_PARITY_NODES
-T_STRONG_LINKED_NET_T2      = 27 + T_ALL_SEE_SAME_PARITY_NODES
-T_STRONG_LINKED_NET_T3      = 27 + T_SEE_OPPOSING_PARITY_NODES
-T_EMPTY_RECT                = 28
-T_GROUPED_BENT_PAIR_ER_HB   = 29 + T_ER_HB
-T_GROUPED_BENT_PAIR_EC_HB   = 29 + T_EC_HB
-T_GROUPED_BENT_PAIR_HR_EB   = 29 + T_HR_EB
-T_GROUPED_BENT_PAIR_HC_EB   = 29 + T_HC_EB
-T_GROUPED_BENT_TRIPLE_ER_HB = 30 + T_ER_HB
-T_GROUPED_BENT_TRIPLE_EC_HB = 30 + T_EC_HB
-T_GROUPED_BENT_TRIPLE_HR_EB = 30 + T_HR_EB
-T_GROUPED_BENT_TRIPLE_HC_EB = 30 + T_HC_EB
-T_GROUPED_BENT_QUAD_ER_HB   = 31 + T_ER_HB
-T_GROUPED_BENT_QUAD_EC_HB   = 31 + T_EC_HB
-T_GROUPED_BENT_QUAD_HR_EB   = 31 + T_HR_EB
-T_GROUPED_BENT_QUAD_HC_EB   = 31 + T_HC_EB
-T_BENT_HIDDEN_TRIPLE        = 32
-T_X_CHAIN_T1                = 33
-T_EVEN_X_LOOP_T3            = 34 + T_SEE_OPPOSING_PARITY_NODES
-T_STRONG_X_LOOP             = 35
-T_XY_CHAIN_T1               = 36 + T_SAME_CANDS
-T_XY_CHAIN_T2               = 36 + T_DIFF_CANDS
-T_XY_CHAIN_T3               = 36 + T_ALT_EXPOSED_PAIR_CANDS
-T_EVEN_XY_LOOP_T2           = 37 + T_ALL_SEE_SAME_PARITY_NODES
-T_EVEN_XY_LOOP_T3           = 37 + T_SEE_OPPOSING_PARITY_NODES
-T_AI_CHAIN_T1               = 38 + T_SAME_CANDS
-T_AI_CHAIN_T2               = 38 + T_DIFF_CANDS
-T_AI_CHAIN_T3               = 38 + T_ALT_EXPOSED_PAIR_CANDS
-T_EVEN_AI_LOOP_T1           = 39 + T_SAME_PARITY_NODES
-T_EVEN_AI_LOOP_T2           = 39 + T_ALL_SEE_SAME_PARITY_NODES
-T_EVEN_AI_LOOP_T3           = 39 + T_SEE_OPPOSING_PARITY_NODES
-T_STRONG_AI_LOOP            = 40
+T_STRONG_LINKED_NET_T1      = 27 + T_SAME_POLARITY_NODES
+T_STRONG_LINKED_NET_T2      = 27 + T_ALL_SEE_SAME_POLARITY_NODES
+T_STRONG_LINKED_NET_T3      = 27 + T_SEE_OPPOSING_POLARITY_NODES
+T_CHAINED_STRONG_LINKED_NET_T1 = 28 + T_SAME_CANDS
+T_CHAINED_STRONG_LINKED_NET_T2 = 28 + T_DIFF_CANDS
+T_CHAINED_STRONG_LINKED_NET_T3 = 28 + T_ALT_EXPOSED_PAIR_CANDS
+T_EMPTY_RECT                = 29
+T_GROUPED_BENT_PAIR_ER_HB   = 30 + T_ER_HB
+T_GROUPED_BENT_PAIR_EC_HB   = 30 + T_EC_HB
+T_GROUPED_BENT_PAIR_HR_EB   = 30 + T_HR_EB
+T_GROUPED_BENT_PAIR_HC_EB   = 30 + T_HC_EB
+T_GROUPED_BENT_TRIPLE_ER_HB = 31 + T_ER_HB
+T_GROUPED_BENT_TRIPLE_EC_HB = 31 + T_EC_HB
+T_GROUPED_BENT_TRIPLE_HR_EB = 31 + T_HR_EB
+T_GROUPED_BENT_TRIPLE_HC_EB = 31 + T_HC_EB
+T_GROUPED_BENT_QUAD_ER_HB   = 32 + T_ER_HB
+T_GROUPED_BENT_QUAD_EC_HB   = 32 + T_EC_HB
+T_GROUPED_BENT_QUAD_HR_EB   = 32 + T_HR_EB
+T_GROUPED_BENT_QUAD_HC_EB   = 32 + T_HC_EB
+T_BENT_HIDDEN_TRIPLE        = 33
+T_X_CHAIN_T1                = 34
+T_EVEN_X_LOOP_T3            = 35 + T_SEE_OPPOSING_POLARITY_NODES
+T_STRONG_X_LOOP             = 36
+T_XY_CHAIN_T1               = 37 + T_SAME_CANDS
+T_XY_CHAIN_T2               = 37 + T_DIFF_CANDS
+T_XY_CHAIN_T3               = 37 + T_ALT_EXPOSED_PAIR_CANDS
+T_EVEN_XY_LOOP_T2           = 38 + T_ALL_SEE_SAME_POLARITY_NODES
+T_EVEN_XY_LOOP_T3           = 38 + T_SEE_OPPOSING_POLARITY_NODES
+T_AI_CHAIN_T1               = 39 + T_SAME_CANDS
+T_AI_CHAIN_T2               = 39 + T_DIFF_CANDS
+T_AI_CHAIN_T3               = 39 + T_ALT_EXPOSED_PAIR_CANDS
+T_EVEN_AI_LOOP_T1           = 40 + T_SAME_POLARITY_NODES
+T_EVEN_AI_LOOP_T2           = 40 + T_ALL_SEE_SAME_POLARITY_NODES
+T_EVEN_AI_LOOP_T3           = 40 + T_SEE_OPPOSING_POLARITY_NODES
+T_STRONG_AI_LOOP            = 41
 T_KRAKEN_FINNED_X_WING      = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_FINNED_SWORDFISH   = T_FINNED_SWORDFISH + T_KRAKEN
 T_KRAKEN_FINNED_JELLYFISH   = T_FINNED_JELLYFISH + T_KRAKEN
@@ -367,9 +371,11 @@ P_COL = 1   # cell column index or set of cell column indices
 P_BOX = 2   # box coords (down, across)
 P_OP  = 3   # Operator
 P_VAL = 4   # digit 0 - 9
-P_SEP = 5   # Separator between cell phrases
-P_CON = 6   # Concatenator for combining cell collections
-P_END = 7   # End of list of phrases
+P_POL = 5   # Polarity of a ccell in relation to its peers.
+P_SN  = 6   # Strong net
+P_SEP = 7   # Separator between cell phrases
+P_CON = 8   # Concatenator for combining cell collections
+P_END = 9   # End of list of phrases
 
 # Logic technique operator enumerations
 OP_NONE = 0   # ""
@@ -381,19 +387,23 @@ OP_NEQ  = 5   # "!=" Cell cannot assume that value
 OP_ASNV = 6   # ":="  Assign value to cell.
 OP_ASNC = 7   # "+=" Add candidate to cell.
 OP_ELIM = 8   # "-=" Eliminate candidate from cell.
-OP_WLK  = 9   # "-"  Weak link
-OP_SLK  = 10  # "="  Strong link
-OP_WSLK = 11  # "~"  Strong link masquerading as a weak link
-OP_CNT  = 12  # "#"  Number of occurrences or count.
-OP_PARO = 13  # "("  Opening parenthesis
-OP_PARC = 14  # ")"  Closing parenthesis
-OP_BRCO = 15  # "{"  Opening brace
-OP_BRCC = 16  # "}"  Closing brace
-OP_U    = 17  # "U"  Union
-OP_CWLK = 18  # "|-|"  Weak AIC  AIC with weak link ends
-OP_CSLK = 19  # "|=|"  Strong AIC (all strong links)
-OP_CRLK = 20  # "|~|"  Robust AIC  AIC with strong link ends
-OP_NR_OPS = 21
+OP_CNT  = 9   # "#"  Number of occurrences or count.
+OP_U    = 10  # "U"  Union
+OP_WLK  = 11   # "-"  Weak link
+OP_SLK  = 12  # "="  Strong link
+OP_WSLK = 13  # "~"  Strong link masquerading as a weak link
+OP_CWLK = 14  # "|-|"  Weak AIC  AIC with weak link ends
+OP_CSLK = 15  # "|=|"  Strong AIC (all strong links)
+OP_CRLK = 16  # "|~|"  Robust AIC  AIC with strong link ends
+OP_PARO = 17  # "("  Opening parenthesis
+OP_PARC = 18  # ")"  Closing parenthesis
+OP_BRCO = 19  # "{"  Opening brace
+OP_BRCC = 20  # "}"  Closing brace
+OP_LT   = 21  # "<"  Opening pointy bracket
+OP_GT   = 22  # ">"  Closing pointy bracket
+OP_SQBO = 23  # "["  Opening square bracket
+OP_SQBC = 24  # "]"  Closing square bracket
+OP_NR_OPS = 25
 
 OP = ["",     # OP_NONE
       "?-",   # OP_POS   Possibility, perhaps something to try
@@ -404,18 +414,26 @@ OP = ["",     # OP_NONE
       ":=",   # OP_ASNV  Assign value to cell.
       "+=",   # OP_ASNC  Add candidate to cell.
       "-=",   # OP_ELIM  Eliminate candidate from cell.
+      "#",    # OP_CNT   Count / number of occurrences
+      "U",    # OP_U     Union
       "-",    # OP_WLK   Chain weak link.
       "=",    # OP_SLK   Chain strong link.
       "~",    # OP_WSLK  Chain strong masquerading as weak link.
-      "#",    # OP_CNT   Count / number of occurrences
+      "|-|",  # OP_CWLK = 18  # "|-|"  Weak AIC  AIC with
+      "|=|",  # OP_CSLK = 19  # "|=|"  Strong AIC (all
+      "|~|",  # OP_CRLK = 20  # "|~|"  Robust AIC  AIC with st
       "(",    # OP_PARO  Opening parenthesis
       ")",    # OP_PARC  Closing parenthesis
       "{",    # OP_BRCO  Opening brace
       "}",    # OP_BRCC  Closing brace
-      "U",    # OP_U     Union
-      "|-|",  # OP_CWLK = 18  # "|-|"  Weak AIC  AIC with
-      "|=|",  # OP_CSLK = 19  # "|=|"  Strong AIC (all
-      "|~|"]  # OP_CRLK = 20  # "|~|"  Robust AIC  AIC with st
+      "<",    # OP_LT    Opening pointing bracket
+      ">",    # OP_GT    Closing pointing bracked
+      "[",    # OP_SQBO  Opening square bracket
+      "]"]    # OP_SQBC  Closing square bracket
+
+
+POL_1  = "p"  # Positive polarity
+POL_0  = "n"  # Negative polarity
 
 TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
@@ -507,7 +525,7 @@ class TECH_T:
         self.Expertise  = Expertise
         self.Difficulty = Difficulty
 
-Tech = {T_UNDEF:                       TECH_T(True, "Undefined",                 UNDEF                   -1),
+Tech = {
         T_EXPOSED_SINGLE:              TECH_T(True, "Exposed Single",            EXP_BEGINNER,            5),
         T_HIDDEN_SINGLE:               TECH_T(True, "Hidden Single",             EXP_BEGINNER,           10),
         T_CLAIMING_LOCKED_SINGLE:      TECH_T(True, "Claiming Locked Single",    EXP_NOVICE,             15),
@@ -541,6 +559,9 @@ Tech = {T_UNDEF:                       TECH_T(True, "Undefined",                
         T_STRONG_LINKED_NET_T1:        TECH_T(True, "Strong Linked Net T1",      EXP_PROFICIENT,         60),
         T_STRONG_LINKED_NET_T2:        TECH_T(True, "Strong Linked Net T2",      EXP_PROFICIENT,         60),
         T_STRONG_LINKED_NET_T3:        TECH_T(True, "Strong Linked Net T3",      EXP_PROFICIENT,         60),
+        T_CHAINED_STRONG_LINKED_NET_T1: TECH_T(True, "Chained Strong Linked Net T1", EXP_PROFICIENT,     60),
+        T_CHAINED_STRONG_LINKED_NET_T2: TECH_T(True, "Chained Strong Linked Net T2", EXP_PROFICIENT,     60),
+        T_CHAINED_STRONG_LINKED_NET_T3: TECH_T(True, "Chained Strong Linked Net T3", EXP_PROFICIENT,     60),
         T_EMPTY_RECT:                  TECH_T(True, "Empty Rectangle",           EXP_PROFICIENT,         45),
         T_GROUPED_BENT_PAIR_ER_HB:     TECH_T(True, "Grouped Bent Pair ER HB",   EXP_PROFICIENT,         70),
         T_GROUPED_BENT_PAIR_EC_HB:     TECH_T(True, "Grouped Bent Pair EC HB",   EXP_PROFICIENT,         70),

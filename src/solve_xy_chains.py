@@ -4,8 +4,8 @@ from solve_utils import *
 class NET:
     def __init__(self, Cands = None, NNode = None):
         self.Cands = Cands
-        self.Odds = []
-        self.Evens = []
+        self.Pol0 = []
+        self.Pol1 = []
         self.Tree = NNode
         self.OddEven = [[None for c in range(9)] for r in range(9)]
 
@@ -13,6 +13,11 @@ class NNODE:  # Net Node
     def __init__(self, r = -1, c = -1, Children = None):
         self.r = r; self.c = c
         self.Children = Children if Children else []
+
+class TREE:
+    def __init__(self, r = -1, c = -1, Cand = -1, Branch = None):
+        self.r = r; self.c = c; self.Cand = Cand
+        self.Branch = Branch if Branch else []
 
 def tech_remote_pairs(Grid, Step, Cands, Methods):
 
@@ -24,9 +29,9 @@ def tech_remote_pairs(Grid, Step, Cands, Methods):
                 else: CellConsidered[r][c] = True
                 Net = NET(Cands[r][c], NNODE(r, c))
                 Net.OddEven[r][c] = Lvl = 0
-                Net.Evens.append((r, c))
+                Net.Pol0.append((r, c))
                 next_net_level(Net, Net.Tree, True, True, True, CellConsidered, Cands, Lvl+1)
-                if len(Net.Odds) < 2 or len(Net.Evens) < 2: continue
+                if len(Net.Pol1) < 2 or len(Net.Pol0) < 2: continue
                 Pattern = []; Elims = {}
                 if T_REMOTE_PAIR_T3 in Methods:  # Ccell see both an odd and even node. # perhaps has a higher likelihood of occurring than Type 2.
                     for r0 in range(9):
@@ -35,11 +40,11 @@ def tech_remote_pairs(Grid, Step, Cands, Methods):
                             Cand0 = sorted(Cands[r0][c0] & Net.Cands)
                             if Cand0:
                                 Done = False
-                                for re, ce in Net.Evens:
+                                for re, ce in Net.Pol0:
                                     Lke = how_ccells_linked(r0, c0, Cand0[0], re, ce, Cand0[0], Cands)
                                     if Lke:
                                         if Lke & LK_STRG: Lke |= LK_WKST
-                                        for ro, co in Net.Odds:
+                                        for ro, co in Net.Pol1:
                                             Lko = how_ccells_linked(r0, c0, Cand0[0], ro, co, Cand0[0], Cands)
                                             if Lko:
                                                 if Lko & LK_STRG: Lko |= LK_WKST
@@ -82,8 +87,8 @@ def next_net_level(Net, NNode, Row, Col, Box, CellConsidered, Cands, Lvl):
             if Cands[NNode.r][c] == Net.Cands and Net.OddEven[NNode.r][c] is None:
                 CellConsidered[NNode.r][c] = True
                 Net.OddEven[NNode.r][c] = Lvl
-                if Lvl & 0x01: Net.Odds.append((NNode.r, c))
-                else: Net.Evens.append((NNode.r, c))
+                if Lvl & 0x01: Net.Pol1.append((NNode.r, c))
+                else: Net.Pol0.append((NNode.r, c))
                 NNode.Children.append(NNODE(NNode.r, c))
                 next_net_level(Net, NNode.Children[-1], False, True, True, CellConsidered, Cands, Lvl+1)
                 break
@@ -93,8 +98,8 @@ def next_net_level(Net, NNode, Row, Col, Box, CellConsidered, Cands, Lvl):
             if Cands[r][NNode.c] == Net.Cands and Net.OddEven[r][NNode.c] is None:
                 CellConsidered[r][NNode.c] = True
                 Net.OddEven[r][NNode.c] = Lvl
-                if Lvl & 0x01: Net.Odds.append((r, NNode.c))
-                else: Net.Evens.append((r, NNode.c))
+                if Lvl & 0x01: Net.Pol1.append((r, NNode.c))
+                else: Net.Pol0.append((r, NNode.c))
                 NNode.Children.append(NNODE(r, NNode.c))
                 next_net_level(Net, NNode.Children[-1], True, False, True, CellConsidered, Cands, Lvl+1)
                 break
@@ -105,8 +110,8 @@ def next_net_level(Net, NNode, Row, Col, Box, CellConsidered, Cands, Lvl):
             if Cands[r][c] == Net.Cands and Net.OddEven[r][c] is None:
                 CellConsidered[r][c] = True
                 Net.OddEven[r][c] = Lvl
-                if Lvl & 0x01: Net.Odds.append((r, c))
-                else: Net.Evens.append((r, c))
+                if Lvl & 0x01: Net.Pol1.append((r, c))
+                else: Net.Pol0.append((r, c))
                 NNode.Children.append(NNODE(r, c))
                 next_net_level(Net, NNode.Children[-1], True, True, False, CellConsidered, Cands, Lvl+1)
 
@@ -133,10 +138,10 @@ def tech_xy_chains(Grid, Step, Cands, Methods):
             Candsl = sorted(Cands[r][c])
             for r1, c1, Candsl1, Lk1 in list_bv_cells_linked_to(r, c, Candsl[1], Cands):
                 if Lk1 & LK_STRG: Lk1 |= LK_WKST
-                Forest.append(TREE(r, c, Candsl, None, TNODE(r1, c1, Candsl1, Lk1, [NL(r, c, Candsl, LK_NONE), NL(r1, c1, Candsl1, Lk1)])))
+                Forest.append(TREE(r, c, Candsl, TNODE(r1, c1, Candsl1, Lk1, [NL(r, c, Candsl, LK_NONE), NL(r1, c1, Candsl1, Lk1)])))
             for r1, c1, Candsl1, Lk1 in list_bv_cells_linked_to(r, c, Candsl[0], Cands):
                 if Lk1 & LK_STRG: Lk1 |= LK_WKST
-                Forest.append(TREE(r, c, [Candsl[1], Candsl[0]], None, TNODE(r1, c1, Candsl1, Lk1, [NL(r, c, [Candsl[1], Candsl[0]], LK_NONE), NL(r1, c1, Candsl1, Lk1)])))
+                Forest.append(TREE(r, c, [Candsl[1], Candsl[0]], TNODE(r1, c1, Candsl1, Lk1, [NL(r, c, [Candsl[1], Candsl[0]], LK_NONE), NL(r1, c1, Candsl1, Lk1)])))
     # all saplings planted.
     while Forest:
         Culls = set()

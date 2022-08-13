@@ -36,17 +36,6 @@ LK_CELL = 0x0080
 NL = namedtuple('NL', ['r', 'c', 'Cand', 'Lk'])  # Node in a chain with lk to partner
 CCELL = namedtuple('CCELL', ['r', 'c', 'Cand'])
 
-# class NODEP_depreciate:  # Node in a chain with link type to partner on right.
-#     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1):
-#         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
-
-class TREE:  # to depreciate    # used to find chains. Tree grows branches.  Chain is the list of nodes from
-    # root to leaf that meets the chain's criteria.
-    def __init__(self, r = -1, c = -1, Cand = -1, Chain = None, Branch = None):
-        self.r = r; self.c = c; self.Cand = Cand
-        self.Chain = Chain if Chain else []
-        self.Branch = Branch if Branch else []
-
 class TNODE:
     def __init__(self, r = -1, c = -1, Cand = -1, Lk = -1, Chain = None, Parent = None, Children = None):  # , Subnet = None):  #, SubnetBackRefs = None):  # Chain = None,
         self.r = r; self.c = c; self.Cand = Cand; self.Lk = Lk
@@ -66,7 +55,6 @@ class STATE:
         self.Tech = Tech
         self.Pattern = Pattern if Pattern else []
         self.Pattern1 = Pattern1 if Pattern1 else []
-        # self.Outcome = Outcome if Outcome else []  # TODO - get rid of Outcome.
         self.Elims = Elims if Elims else {}
         self.Plcmts = Plcmts if Plcmts else []
 

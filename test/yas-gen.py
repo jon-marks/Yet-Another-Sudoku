@@ -2,8 +2,7 @@
 from os.path import dirname, join
 from os import chdir
 from sys import argv, exit, path
-from datetime import datetime
-from time import perf_counter
+from time import perf_counter, time, strftime, localtime
 from random import shuffle, randrange, seed
 
 SrcDir   = "src"
@@ -45,10 +44,9 @@ RAND = 1
 seed()
 
 def yas_gen():
-
     print(f"YAS - Puzzle Generator / Modifier.")
     print(VERSION)
-    print(f"\nRun start: {datetime.now()}.", flush = True)  # , using {Code} code.", flush = True))
+    print(f"Run start: {strftime('%a, %d %b %Y, %H:%M:%S', localtime(time()))}")
     TestDataDir = join(join(Root, TestDir), TestDDir)
     Src  = join(TestDataDir, SrcFile+FileExt)
     Dst  = join(TestDataDir, DstFile+FileExt)
@@ -140,6 +138,17 @@ def yas_gen():
                   f"Note:  The s= switch does not produce repeatable results as there can be multiple minimal puzzles\n"
                   f"from any non minimal puzzle, and the remaining holes to dig are selected randomly.")
             exit()
+
+    if len(argv) == 1:  # No parameters given, simply output a random puzzle string.
+        StTime = perf_counter()
+        oPzl = PZL(Sym = SYM_RAND)
+        create_puzzle(oPzl)
+        oPzl.Grid = oPzl.Givens
+        sPzl = pzl_to_pzl_str(oPzl)
+
+        print(f"{time_str(StTime)}|{sPzl.replace('+','')}")
+        print(f"{time_str()}| End Run.")
+        exit()
 
     if Mode & M_FILE: # I/O to and from files.
         print("File I/O Mode")
@@ -295,7 +304,7 @@ def time_str(STime = 0):
     DTime = ETime - STime
     ESecs = ETime % 60; EMins = int((ETime//60)%60); EHrs = int(ETime//3600)
     DSecs = DTime % 60; DMins = int((DTime//60)%60); DHrs = int(DTime//3600)
-    return f"{EHrs:02d}:{EMins:02d}:{ESecs:07.4f}|{DHrs:02d}:{DMins:02d}:{DSecs:07.4f}"
+    return f"{EHrs:02d}:{EMins:02d}:{ESecs:010.7f}|{DHrs:02d}:{DMins:02d}:{DSecs:010.7f}"
 
 def parse_shuffle_spec(sShuffleSpec):
     # empty value list implies random shuffle.

@@ -204,7 +204,6 @@ def tkns_to_str(Tkns):
 
     St = ""
     for Tkn in Tkns:
-        # try:
         if Tkn[0] == P_ROW:
             St += "r"
             for i in range(1, len(Tkn)):
@@ -235,6 +234,8 @@ def tkns_to_str(Tkns):
                 else:
                     for v in sorted(Tkn[i]):
                         St += f"{v}"
+        elif Tkn[0] == P_POL:
+            St += Tkn[1]
         elif Tkn[0] == P_SEP:
             St += "; "
         elif Tkn[0] == P_CON:
