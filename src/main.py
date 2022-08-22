@@ -156,7 +156,7 @@ class MainWindow(wx.Frame):
         self.CWD = getcwd()
         self.Title = TITLE
         Icon = wx.Icon()
-        Icon.CopyFromBitmap(wx.Bitmap(join(self.CWD, IMG_DIR, "sudoku.ico"), wx.BITMAP_TYPE_ANY))
+        Icon.CopyFromBitmap(wx.Bitmap(join(self.CWD, IMG_DIR, ICON), wx.BITMAP_TYPE_ANY))
         self.SetIcon(Icon)
         self.SetMenuBar(MainMenubar(self))
         self.SetStatusBar(MainStatusBar(self))

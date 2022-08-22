@@ -21,13 +21,14 @@ import wx
 TITLE   = 'Yet Another Sudoku'
 BLURB   = '*  Feature rich with a\n' \
           '*  Simple and minimal user interface'
+ICON    = "AIM.ico"
 
 
 # TODO: This must be moved to PyInstaller when I get that working.
 oRepo = Repo(".")
 sDirty = "*" if oRepo.is_dirty() else ""
 sTimeStamp = strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))
-sVers = f"V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}, {sTimeStamp}."
+sVers = f"V{oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:8]}{sDirty}, {sTimeStamp}."
 VERSION = f"    {sVers}\n" \
           f"    Python {version}"
 DEBUG = " - DEBUG" if gettrace() else ""
@@ -304,41 +305,43 @@ T_W_WING                    = 23
 T_XYZ_WING                  = 24
 T_WXYZ_WING                 = 25
 T_BENT_EXPOSED_QUAD         = 26
-T_STRONG_LINKED_NET_T1      = 27 + T_SAME_POLARITY_NODES
-T_STRONG_LINKED_NET_T2      = 27 + T_ALL_SEE_SAME_POLARITY_NODES
-T_STRONG_LINKED_NET_T3      = 27 + T_SEE_OPPOSING_POLARITY_NODES
-T_CHAINED_STRONG_LINKED_NET_T1 = 28 + T_SAME_CANDS
-T_CHAINED_STRONG_LINKED_NET_T2 = 28 + T_DIFF_CANDS
-T_CHAINED_STRONG_LINKED_NET_T3 = 28 + T_ALT_EXPOSED_PAIR_CANDS
-T_EMPTY_RECT                = 29
-T_GROUPED_BENT_PAIR_ER_HB   = 30 + T_ER_HB
-T_GROUPED_BENT_PAIR_EC_HB   = 30 + T_EC_HB
-T_GROUPED_BENT_PAIR_HR_EB   = 30 + T_HR_EB
-T_GROUPED_BENT_PAIR_HC_EB   = 30 + T_HC_EB
-T_GROUPED_BENT_TRIPLE_ER_HB = 31 + T_ER_HB
-T_GROUPED_BENT_TRIPLE_EC_HB = 31 + T_EC_HB
-T_GROUPED_BENT_TRIPLE_HR_EB = 31 + T_HR_EB
-T_GROUPED_BENT_TRIPLE_HC_EB = 31 + T_HC_EB
-T_GROUPED_BENT_QUAD_ER_HB   = 32 + T_ER_HB
-T_GROUPED_BENT_QUAD_EC_HB   = 32 + T_EC_HB
-T_GROUPED_BENT_QUAD_HR_EB   = 32 + T_HR_EB
-T_GROUPED_BENT_QUAD_HC_EB   = 32 + T_HC_EB
-T_BENT_HIDDEN_TRIPLE        = 33
-T_X_CHAIN_T1                = 34
-T_EVEN_X_LOOP_T3            = 35 + T_SEE_OPPOSING_POLARITY_NODES
-T_STRONG_X_LOOP             = 36
-T_XY_CHAIN_T1               = 37 + T_SAME_CANDS
-T_XY_CHAIN_T2               = 37 + T_DIFF_CANDS
-T_XY_CHAIN_T3               = 37 + T_ALT_EXPOSED_PAIR_CANDS
-T_EVEN_XY_LOOP_T2           = 38 + T_ALL_SEE_SAME_POLARITY_NODES
-T_EVEN_XY_LOOP_T3           = 38 + T_SEE_OPPOSING_POLARITY_NODES
-T_AI_CHAIN_T1               = 39 + T_SAME_CANDS
-T_AI_CHAIN_T2               = 39 + T_DIFF_CANDS
-T_AI_CHAIN_T3               = 39 + T_ALT_EXPOSED_PAIR_CANDS
-T_EVEN_AI_LOOP_T1           = 40 + T_SAME_POLARITY_NODES
-T_EVEN_AI_LOOP_T2           = 40 + T_ALL_SEE_SAME_POLARITY_NODES
-T_EVEN_AI_LOOP_T3           = 40 + T_SEE_OPPOSING_POLARITY_NODES
-T_STRONG_AI_LOOP            = 41
+T_BENT_EXPOSED_QUINT        = 27
+T_BENT_EXPOSED_SEXT         = 28
+T_STRONG_LINKED_NET_T1      = 29 + T_SAME_POLARITY_NODES
+T_STRONG_LINKED_NET_T2      = 29 + T_ALL_SEE_SAME_POLARITY_NODES
+T_STRONG_LINKED_NET_T3      = 29 + T_SEE_OPPOSING_POLARITY_NODES
+T_CHAINED_STRONG_LINKED_NET_T1 = 30 + T_SAME_CANDS
+T_CHAINED_STRONG_LINKED_NET_T2 = 30 + T_DIFF_CANDS
+T_CHAINED_STRONG_LINKED_NET_T3 = 30 + T_ALT_EXPOSED_PAIR_CANDS
+T_EMPTY_RECT                = 31
+T_GROUPED_BENT_PAIR_ER_HB   = 32 + T_ER_HB
+T_GROUPED_BENT_PAIR_EC_HB   = 32 + T_EC_HB
+T_GROUPED_BENT_PAIR_HR_EB   = 32 + T_HR_EB
+T_GROUPED_BENT_PAIR_HC_EB   = 32 + T_HC_EB
+T_GROUPED_BENT_TRIPLE_ER_HB = 33 + T_ER_HB
+T_GROUPED_BENT_TRIPLE_EC_HB = 33 + T_EC_HB
+T_GROUPED_BENT_TRIPLE_HR_EB = 33 + T_HR_EB
+T_GROUPED_BENT_TRIPLE_HC_EB = 33 + T_HC_EB
+T_GROUPED_BENT_QUAD_ER_HB   = 34 + T_ER_HB
+T_GROUPED_BENT_QUAD_EC_HB   = 34 + T_EC_HB
+T_GROUPED_BENT_QUAD_HR_EB   = 34 + T_HR_EB
+T_GROUPED_BENT_QUAD_HC_EB   = 34 + T_HC_EB
+T_BENT_HIDDEN_TRIPLE        = 35
+T_X_CHAIN_T1                = 36
+T_EVEN_X_LOOP_T3            = 37 + T_SEE_OPPOSING_POLARITY_NODES
+T_STRONG_X_LOOP             = 38
+T_XY_CHAIN_T1               = 39 + T_SAME_CANDS
+T_XY_CHAIN_T2               = 39 + T_DIFF_CANDS
+T_XY_CHAIN_T3               = 39 + T_ALT_EXPOSED_PAIR_CANDS
+T_EVEN_XY_LOOP_T2           = 40 + T_ALL_SEE_SAME_POLARITY_NODES
+T_EVEN_XY_LOOP_T3           = 40 + T_SEE_OPPOSING_POLARITY_NODES
+T_AI_CHAIN_T1               = 41 + T_SAME_CANDS
+T_AI_CHAIN_T2               = 41 + T_DIFF_CANDS
+T_AI_CHAIN_T3               = 41 + T_ALT_EXPOSED_PAIR_CANDS
+T_EVEN_AI_LOOP_T1           = 42 + T_SAME_POLARITY_NODES
+T_EVEN_AI_LOOP_T2           = 42 + T_ALL_SEE_SAME_POLARITY_NODES
+T_EVEN_AI_LOOP_T3           = 42 + T_SEE_OPPOSING_POLARITY_NODES
+T_STRONG_AI_LOOP            = 43
 T_KRAKEN_FINNED_X_WING      = T_FINNED_X_WING + T_KRAKEN
 T_KRAKEN_FINNED_SWORDFISH   = T_FINNED_SWORDFISH + T_KRAKEN
 T_KRAKEN_FINNED_JELLYFISH   = T_FINNED_JELLYFISH + T_KRAKEN
@@ -556,6 +559,8 @@ Tech = {
         T_XYZ_WING:                    TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
         T_WXYZ_WING:                   TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
         T_BENT_EXPOSED_QUAD:           TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
+        T_BENT_EXPOSED_QUINT:          TECH_T(True, "Bent Exposed Quint",        EXP_ACCOMPLISHED,      110),
+        T_BENT_EXPOSED_SEXT:           TECH_T(True, "Bent Exposed Sext",         EXP_ACCOMPLISHED,      110),
         T_STRONG_LINKED_NET_T1:        TECH_T(True, "Strong Linked Net T1",      EXP_PROFICIENT,         60),
         T_STRONG_LINKED_NET_T2:        TECH_T(True, "Strong Linked Net T2",      EXP_PROFICIENT,         60),
         T_STRONG_LINKED_NET_T3:        TECH_T(True, "Strong Linked Net T3",      EXP_PROFICIENT,         60),

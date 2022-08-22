@@ -67,6 +67,8 @@ Solvers = [SLVR(tech_exposed_singles,     [T_EXPOSED_SINGLE]),
            SLVR(tech_bent_exposed_quads,  [T_WXYZ_WING, T_BENT_EXPOSED_QUAD]),
            SLVR(tech_finned_x_wings,      [T_FINNED_X_WING, T_SASHIMI_X_WING]),  # finned fish never before ordinary fish
            SLVR(tech_finned_swordfish,    [T_FINNED_SWORDFISH, T_SASHIMI_SWORDFISH]),
+           SLVR(tech_bent_exposed_quints, [T_BENT_EXPOSED_QUINT]),
+           SLVR(tech_bent_exposed_sexts,  [T_BENT_EXPOSED_SEXT]),
            SLVR(tech_finned_jellyfish,    [T_FINNED_JELLYFISH, T_SASHIMI_JELLYFISH]),
            SLVR(tech_grouped_bent_triple, [T_GROUPED_BENT_TRIPLE_ER_HB, T_GROUPED_BENT_TRIPLE_EC_HB, T_GROUPED_BENT_TRIPLE_HR_EB, T_GROUPED_BENT_TRIPLE_HC_EB]),
            SLVR(tech_grouped_bent_quad,   [T_GROUPED_BENT_QUAD_ER_HB, T_GROUPED_BENT_QUAD_EC_HB, T_GROUPED_BENT_QUAD_HR_EB, T_GROUPED_BENT_QUAD_HC_EB]),
