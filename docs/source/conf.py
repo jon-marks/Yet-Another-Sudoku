@@ -1,4 +1,4 @@
-from git import Repo
+# from git import Repo
 from time import strftime, localtime
 # Configuration file for the Sphinx documentation builder.
 #
@@ -8,12 +8,12 @@ from time import strftime, localtime
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-oRepo = Repo("..\\..")
+# oRepo = Repo("..\\..")
 project = 'Yet Another Sudoku'
 author = 'Jonathan Marks'
-version = ""  # f'V{oRepo.tags[-1].tag.tag}'
+version = "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
 release = ""  # f'{version}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
-copyright = '2022, Jonathan Marks, Build Tag: 'f'V{oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
+copyright = '2022, Jonathan Marks, Build Tag: 'f'V{version}'  # oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
 
 
 # -- General configuration ---------------------------------------------------
