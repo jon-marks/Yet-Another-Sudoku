@@ -47,6 +47,7 @@ html_logo = 'AIM.png'
 #extensions.append('sphinx_copybutton')
 html_theme = 'furo'
 
+# https://github.com/pradyunsg/furo/discussions/308, set furo==2022.4.7 in requirements.txt..
 
 # -- HTML theme options for `basicstrap` style -------
 
