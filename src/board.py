@@ -162,10 +162,10 @@ class Board:
         self.BgClrPkr = None
         self.UnselCandVisible = False
 
-        self.BrdSz = 2*(BOARD_BDR+BLOCK_BDR)+6*CELL_BDR+18*CELL_FRM_BDR+9*CellSz
-        CellFontPt = CellSz*PT2PXR*V_FT_SCL
-        CandSz = CellSz/3
-        CandFontPt = CandSz*PT2PXR*C_FT_SCL
+        self.BrdSz = int(2*(BOARD_BDR+BLOCK_BDR)+6*CELL_BDR+18*CELL_FRM_BDR+9*CellSz)
+        CellFontPt = int(CellSz*PT2PXR*V_FT_SCL)
+        CandSz = int(CellSz/3)
+        CandFontPt = int(CandSz*PT2PXR*C_FT_SCL)
 
         self.HighlightGroup = False
         self.CellFont = wx.Font(CellFontPt, FONT_FAM, CELL_FONT_ST, CELL_FONT_WT, CELL_FONT_UL, FONT)

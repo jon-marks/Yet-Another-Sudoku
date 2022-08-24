@@ -28,7 +28,7 @@ ICON    = "AIM.ico"
 oRepo = Repo(".")
 sDirty = "*" if oRepo.is_dirty() else ""
 sTimeStamp = strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))
-sVers = f"V{oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:8]}{sDirty}, {sTimeStamp}."
+sVers = f"V{oRepo.tags[-1].tag.tag}:{str(oRepo.head.commit.hexsha[:7])}{sDirty}, {sTimeStamp}."
 VERSION = f"    {sVers}\n" \
           f"    Python {version}"
 DEBUG = " - DEBUG" if gettrace() else ""
