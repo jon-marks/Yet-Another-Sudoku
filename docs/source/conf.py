@@ -52,6 +52,7 @@ html_theme = 'furo'
 
 # html_theme_options = {
 #
+
 #     # Set the lang attribute of the html tag. Defaults to 'en'
 #     'lang': 'en',
 #     # Disable showing the sidebar. Defaults to 'false'
