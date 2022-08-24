@@ -1,0 +1,11 @@
+Exposed Single
+Hidden Single
+Claiming Locked Single
+Pointing Locked Single
+Exposed Pair
+Locked Exposed Pair
+Hidden Pair
+Exposed Triple
+Locked Exposed Triple
+Hidden Triple
+Exposed Quad

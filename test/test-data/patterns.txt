@@ -1,0 +1,61 @@
+# Yet Another Sudoku - Solve Logic Step Regression Test List.
+#
+# A list of test cases that brings a sudoku puzzle to the point where a specific logic
+# method can be tested for a specific conditions and checks the result.  The specified Pattern in
+# this database forces YAS to seek out a pattern of that kind only, and compares the pattern found
+# and solution with that if specified.  In many of these exemplars there are simpler and or
+# mulitple other patterns that can be found, however the purpose of this database is to provide a
+# set of regression test data to test the solving ability of YAS for the specified pattern.
+#
+# Full credit for this goes to Hodoku, from whom I plagerized the original idea and most
+# of the examples, even though things have progressed from there.
+#
+# This database is to be extend over time.
+#
+# YAS is designed to read single line puzzle specs in files. Each puzzle spec here is compatible
+# with YAS.  Depending on YAS's context it will use the information it needs and compensate for
+# information missing in the spec.  Givens+Placed come first to maintain compatibility with other
+# programs and formats.  This file spec makes use of the human readible cell grammar that YAS
+# and writes.
+#
+# Database Fields:
+# Givens +Placed:       The puzzle givens and placed values to bring the puzzle to the point where
+#                       the logic technique can be isolated and tested. Placed values are prefixed
+#                       with a '+'.  Characters '.', '-', or '0' indicate empty cells. ' '(spaces)
+#                       are ignored
+# Removed Candidates:   Candidates to be removed to bring the puzzle to the point where the logic
+#                       technique can be isolated and tested, in cell grammar syntax.
+# Method:               The name of the logic technique to be tested.  This name must match the
+#                       text description of the techique in the T array in solve-utils.py.
+# Overrides:            (optional)Pattern/test specific override information <key>=<val>; ... .
+# Pattern:              (Optional) The pattern to be spotted by the specified method, expressed in cell
+#                       grammar syntax.  Will be compared to resulting pattern if present.
+# Outcome:              (Optional) The placements and eliminations to be identified by the specified method,
+#                       expressed in cell grammar syntax.  Will be compared to the resulting outcome
+#                       if present.
+# Solution              (Optional) The puzzle solution.  If present is used to confirm that the
+#                       resulting outcome is valid.
+#
+# Note:  Comments are lines starting with "#". Do not make inline comments or split lines.
+
+# Singles Patterns.
+## Exposed Singles
+# one for every digit
+8.9.4..2..46.1....3..9........1..9455.......6983..6........4..1....9.37..3..7.4.9|||||859647123246513798371982654627138945514729836983456217792364581465891372138275469
+8.964.12..46.1..983.198...4...138945514729836983456.1..9..64..14...9137.13..7.4.9|||||859647123246513798371982654627138945514729836983456217792364581465891372138275469
+....4...7.4.69.......2.86.1.2....36.7.......5.38....1.2.93.6.......52.8.4...7....|||||863145297142697853975238641524719368791863425638524719259386174317452986486971532
+.5.9..8.2..732...........54......915.1.6.7.83538......67...........867..8.1..9.2.|||||153964872487325169296178354762843915914657283538291647679512438325486791841739526
+8.964.123.46.1..983.198...4...138945514729836983456217.9..64..14...9137213..7.4.9|||||859647123246513798371982654627138945514729836983456217792364581465891372138275469
+.9164........9.8.4...213.6.86..712............2435..87.8.139...5.3.......1..2437.|||||791648523632795814458213769869471235375982641124356987287139456543867192916524378
+.5..46.8.3.12.8.5.7..395.16.78.......9.681.4.......19.62...7..4.....98.1.1..2..7.|||||952146783361278459784395216178954362293681547546732198625817934437569821819423675
+6...534.7....4256.254867391.4..96.1.162385749.3..14.5....42193..1.57...442.63.175|||||681953427793142568254867391547296813162385749938714652875421936316579284429638175
+..84739....7.5....1.5..6..37.2.8.....9.....5.....3.2.65.63481.9....2.8....9617...|||||628473915937851642145296783762584391391762458854139276576348129413925867289617534
+
+# one for every row
+.7435..6....9....551.2..........9.13...183...83.5..........2.762....5....5..3.48.|||||974358261328916745516274398765429813492183657831567924143892576287645139659731482
+5...7......6.2.89..198...5....2...34..3...9..64...9....3...468..61.8.4......9...5|||||528971346376425891419836257197268534853147962642359718235714689961582473784693125
+7.4..625..26........1...9.8..94.3.8..4.....9..8.5.14..9.8...1........62..531....9|||||794816253826935714531742968679423581145678392382591476968254137417389625253167849
+38461752951789236426934517815...6..2..8.5.6.16....1..59.61.48538.5.6.417..15.8296|||||384617529517892364269345178153786942748259631692431785976124853825963417431578296
+.439.........5...821....9..82.......6..742..1.......23..2....974...6.........715.|||||543981276967254318218376945824513769639742581751698423182435697475169832396827154
+139.752.6576......248691..34......6.962.5.3.1.8......78...46..........256.352...4|||||139875246576432198248691573457318962962754381381269457825146739714983625693527814
+..265...........4.497.....2.....16...73.9.15...95.....1.....237.3...........469..|||||382654791561279843497813562854731629673492158219568374146985237935127486728346915
