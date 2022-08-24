@@ -44,7 +44,7 @@ html_logo = 'AIM.png'
 
 # https://sphinxjpthemesbasicstrap.readthedocs.io/en/latest/options.html
 
-extensions.append('sphinx_copybutton')
+#extensions.append('sphinx_copybutton')
 html_theme = 'furo'
 
 
