@@ -1,0 +1,21 @@
+.. title:: Yet Another Sudoku | Foundation
+==========
+Foundation
+==========
+
+This section specifies a language (notation, grammar and terminology) to describe Sudoku Puzzles,
+patterns and outcomes, as well as develops the theory used in the solving of Sudoku puzzles
+
+.. toctree::
+   :maxdepth: 5
+
+   language
+   concepts
+   subsets
+
+..
+   base-cover-sets
+   chains-loops-nets
+   unlocked-sets
+   uniqueness
+   searching
