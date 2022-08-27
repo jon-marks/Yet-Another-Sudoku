@@ -25,7 +25,16 @@ if errorlevel 9009 (
 
 if "%1" == "" goto help
 
+if "%1" == "html" (
+for /r %SOURCEDIR% %%x in (*.txt) do copy "%%x" "%%~dpx%%~nx.rst" 2>&1 > NUL
+)
+
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+
+if "%1" == "html" (
+for /r %SOURCEDIR% %%x in (*.rst) do del "%%x"
+)
+
 goto end
 
 :help

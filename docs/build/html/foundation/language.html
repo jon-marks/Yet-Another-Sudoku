@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. Concepts" href="concepts.html" /><link rel="prev" title="2. Foundation" href="index.html" />
 
-    <link rel="shortcut icon" href="../_static/AIM.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.04.07"/>
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Yet another Sudoku | Foundation | Language</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/overrides.css" />
@@ -189,7 +189,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -242,10 +243,11 @@ links of the chain.</p></li>
 <h2><span class="section-number">2.1.2. </span>Sudoku Language Syntax<a class="headerlink" href="#sudoku-language-syntax" title="Permalink to this heading">#</a></h2>
 <section id="location-specifiers">
 <h3><span class="section-number">2.1.2.1. </span>Location Specifiers<a class="headerlink" href="#location-specifiers" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-left" style="width: 98%">
 <colgroup>
-<col style="width: 20.0%"/>
-<col style="width: 80.0%"/>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">r6c5</span></code></p></td>
@@ -280,14 +282,16 @@ top to bottom, translates to <code class="docutils literal notranslate"><span cl
 <td><p>All the cells in column 6 excluding <code class="docutils literal notranslate"><span class="pre">r35c6</span></code></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="ccell-specifiers">
 <h3><span class="section-number">2.1.2.2. </span>Ccell Specifiers<a class="headerlink" href="#ccell-specifiers" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-left" style="width: 98%">
 <colgroup>
-<col style="width: 20.0%"/>
-<col style="width: 80.0%"/>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">3r6c5</span></code></p></td>
@@ -300,14 +304,16 @@ top to bottom, translates to <code class="docutils literal notranslate"><span cl
 <td><p>Three ccells with candidate values 3, 4, 7 in block 2 position 2 (same as <code class="docutils literal notranslate"><span class="pre">r4c8</span></code>)</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="operators">
 <h3><span class="section-number">2.1.2.3. </span>Operators<a class="headerlink" href="#operators" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-left" style="width: 98%">
 <colgroup>
-<col style="width: 20.0%"/>
-<col style="width: 80.0%"/>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">:=</span></code></p></td>
@@ -317,14 +323,16 @@ top to bottom, translates to <code class="docutils literal notranslate"><span cl
 <td><p>Elimination of a ccell or ccells - candidate(s) from a cell eg. <code class="docutils literal notranslate"><span class="pre">r7c2-=24</span></code></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="conditionals">
 <h3><span class="section-number">2.1.2.4. </span>Conditionals<a class="headerlink" href="#conditionals" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-left" style="width: 98%">
 <colgroup>
-<col style="width: 20.0%"/>
-<col style="width: 80.0%"/>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">==</span></code></p></td>
@@ -347,14 +355,16 @@ grouping.  <code class="docutils literal notranslate"><span class="pre">34~-r3Ib
 <td><p>Absence of candidate(s) in cells, eg. <code class="docutils literal notranslate"><span class="pre">34!-r2c235</span></code></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="relational-specifiers">
 <h3><span class="section-number">2.1.2.5. </span>Relational Specifiers<a class="headerlink" href="#relational-specifiers" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-left" style="width: 98%">
 <colgroup>
-<col style="width: 20.0%"/>
-<col style="width: 80.0%"/>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">#</span></code></p></td>
@@ -395,14 +405,16 @@ and if X is False then Y is True</p></td>
 <td><p>Pointy Brackets – Contain relationships between grouped sub-structures</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="candidate-dressing">
 <h3><span class="section-number">2.1.2.6. </span>Candidate Dressing<a class="headerlink" href="#candidate-dressing" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-left" style="width: 98%">
 <colgroup>
-<col style="width: 20.0%"/>
-<col style="width: 80.0%"/>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/</span></code></p></td>
@@ -412,7 +424,8 @@ and if X is False then Y is True</p></td>
 <td><p>Unrestricted Candidate, eg 3456c7Ub4 - 5 is the unrestricted candidate.</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 </section>
 <section id="sudoku-language-semantics">
@@ -600,7 +613,7 @@ X is present in the intersection of r1 and b1 with other candidates, and is not 
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Build Tag: V0.0.2:b8cc5e0, Sat, 27 Aug 2022, 09:23:30
+                Copyright &#169; 2022, Jonathan Marks, Build Tag: V0.0.2:8ea7be5*, Sat, 27 Aug 2022, 09:25:06
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
