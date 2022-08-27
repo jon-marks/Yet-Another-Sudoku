@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy only Sphinx Created Static Pages.
+name: Deploy only Sphinx Created Static Pages
 
 on:
   # Runs on pushes targeting the default branch

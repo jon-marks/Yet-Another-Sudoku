@@ -15,8 +15,8 @@ Sources:
    |  https://en.wikipedia.org/wiki/Sudoku
 
 In July 1895 in France, the Newspaper La France, refined a numbers game puzzle appearing in a rival
-newspaper Le Siècle.  La France called these puzzles *Carré Magique Diabolique*.  These puzzles were
-the precursor to modern Sudoku.  La France published its puzzles until about the time of the First World War.
+newspaper Le Siècle.  La France called the puzzles *Carré Magique Diabolique*.  They were a precursor
+to modern Sudoku.  La France published these puzzles until about the time of the First World War.
 
 Modern Sudoku started out published in Dell Magazines from about 1979 called *Number Place*.  It is thought
 that they were designed by Howard Garns, a retired 74-year old Architect.  In 1984 the Nikoli Puzzle Company
@@ -90,7 +90,7 @@ basics <https://www.google.com/search?client=firefox-b-d&q=Sudoku+basics>`_.  I 
 Acknowledgements
 =================
 
-I owe credit to the whole sudoku community, the many reports, web-pages, and videos found on the Internet.
+I owe credit to the whole Sudoku Community, the many reports, web-pages, and videos found on the Internet.
 This tomb brings together many, many related bits information.  If anything is original here, it is
 the insights and conclusions gained from the collective works before me.
 

@@ -220,6 +220,8 @@ is also a renaming of some existing terms, such that they are:</p>
 <li><p>more self descriptive, and</p></li>
 <li><p>relate better within the context that they are described.</p></li>
 </ul>
+<p>As my intended audience is wider than mathematicians, I have avoided using many symbols from the
+mathematics stratasphere, in favour of a bit more verbose textual equavlents.</p>
 <section id="ccells">
 <h2><span class="section-number">2.1.1. </span>Ccells<a class="headerlink" href="#ccells" title="Permalink to this heading">#</a></h2>
 <p>A Ccell refers to any candidate in any cell as specified by its candidate value, row and column.  That is,
@@ -236,8 +238,8 @@ links of the chain.</p></li>
 <li><p><strong>Candidate</strong>:  which is a a lesser reference to only the possible values in cells that obey Sudoku Rules.</p></li>
 </ul>
 </section>
-<section id="sudoku-syntax">
-<h2><span class="section-number">2.1.2. </span>Sudoku Syntax<a class="headerlink" href="#sudoku-syntax" title="Permalink to this heading">#</a></h2>
+<section id="sudoku-language-syntax">
+<h2><span class="section-number">2.1.2. </span>Sudoku Language Syntax<a class="headerlink" href="#sudoku-language-syntax" title="Permalink to this heading">#</a></h2>
 <section id="location-specifiers">
 <h3><span class="section-number">2.1.2.1. </span>Location Specifiers<a class="headerlink" href="#location-specifiers" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
@@ -381,33 +383,60 @@ grouping.  <code class="docutils literal notranslate"><span class="pre">34~-r3Ib
 and if X is False then Y is True</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">(</span> <span class="pre">...</span> <span class="pre">)</span></code></p></td>
-<td><p>Parenthesis – Associative contraction: <code class="docutils literal notranslate"><span class="pre">5r3c2=3r3c2</span> <span class="pre">&lt;=&gt;</span> <span class="pre">(5=3)r3c2</span></code>.</p></td>
+<td><p>Parenthesis – Associative contraction: <code class="docutils literal notranslate"><span class="pre">5r3c2=3r3c2</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">as</span> <span class="pre">(5=3)r3c2</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">...</span> <span class="pre">,</span> <span class="pre">...}</span></code></p></td>
+<td><p>Braces – Groupings of sub-patterns in Nets, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">...</span> <span class="pre">]</span></code></p></td>
+<td><p>Square Brackets – To group sub-structures of larger structures</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">...</span> <span class="pre">&gt;</span></code></p></td>
+<td><p>Pointy Brackets – Contain relationships between grouped sub-structures</p></td>
 </tr>
 </tbody>
 </table></div>
-<p>This is an arrow <span class="raw-html">→</span> just for luck.
-{ … , … , …}      Braces – Groupings of sub-patterns in Nets, etc.
-[ … ] Square Brackets – To group sub-structures in larger structures
-&lt; … &gt; Pointy Brackets – Contain relationships between grouped sub-structures
-2.1.2.6.   Candidate Dressing
-+       Candidate is placed (as opposed to being a given) in a puzzle.
-/       Restricted Candidate, eg. 3/456r3Ub2
-      Unrestricted Candidate, eg 3456c7Ub4</p>
-<p>2.1.3.   Sudoku Language Semantics
-This section only describes how to read and interpret the Sudoku Language Syntax, not what the patterns mean and how they are resolved.  That is left to the balance of this chapter and the Chapter on Human Solvable Sudoku Patterns.</p>
+</section>
+<section id="candidate-dressing">
+<h3><span class="section-number">2.1.2.6. </span>Candidate Dressing<a class="headerlink" href="#candidate-dressing" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper"><table class="docutils align-left" style="width: 98%">
+<colgroup>
+<col style="width: 20.0%"/>
+<col style="width: 80.0%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/</span></code></p></td>
+<td><p>Restricted Candidate, eg. 3/456r3Ub2 - 4 is the restricted candidate.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\</span></code></p></td>
+<td><p>Unrestricted Candidate, eg 3456c7Ub4 - 5 is the unrestricted candidate.</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+</section>
+<section id="sudoku-language-semantics">
+<h2><span class="section-number">2.1.3. </span>Sudoku Language Semantics<a class="headerlink" href="#sudoku-language-semantics" title="Permalink to this heading">#</a></h2>
+<p>This section only describes how to read and interpret the Sudoku Language Syntax, not what the patterns
+mean and how they are resolved.  That is left to the balance of this chapter and the Chapter on
+Human Solvable Sudoku Patterns.</p>
 <dl class="simple">
 <dt>Note:</dt><dd><ol class="arabic simple">
-<li><p>Candidate values always precede operators and / or cell specifiers when describing or specifying a pattern.</p></li>
-<li><p>Candidate values always follow an operator in when cell(s) are being modified (either adding or eliminating a candidate or assigning a value.</p></li>
+<li><p>Values always precede operators and/or cell specifiers when describing or specifying a pattern.</p></li>
+<li><p>Values always follow an operator when cell(s) are being modified (either assigning a value or eliminating a Ccell).</p></li>
 <li><p>A Ccell that is part of a structure such as a Chain or Net is always referred to as a Node to distinguish it from other Ccells that are not part of the structure.</p></li>
 </ol>
 </dd>
 </dl>
-<p>2.1.3.1.   Singles
-Exposed Singles
-3==r7c1 3 is the only candidate in r7c1 and can be placed.</p>
-<p>Hidden Singles
-3#1b7,b7p3      3 occurs once in box 7, position 3,.</p>
+<section id="singles">
+<h3><span class="section-number">2.1.3.1. </span>Singles<a class="headerlink" href="#singles" title="Permalink to this heading">#</a></h3>
+<section id="exposed-singles">
+<h4><span class="section-number">2.1.3.1.1. </span>Exposed Singles<a class="headerlink" href="#exposed-singles" title="Permalink to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">3==r7c1</span></code> 3 is the only candidate in r7c1 and can be placed.</p>
+</section>
+<section id="hidden-singles">
+<h4><span class="section-number">2.1.3.1.2. </span>Hidden Singles<a class="headerlink" href="#hidden-singles" title="Permalink to this heading">#</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">3#1b7,b7p3</span></code> 3 occurs only once in box 7, and that is in position 3,.</p>
 <p>Locked Singles
 7r9c12,!-r9             Pointing locked single, 7 occurs in r9, cells r9c1, and r9c2, and nowhere else in row 9 (!-r9), that is outside of tower 1.
 4r45c2,!-b4     Claiming locked single, 4 occurs column 2 cells  r4c2 and r5c2, and no where else in box 4,</p>
@@ -540,6 +569,7 @@ X is present in the intersection of r1 and b1 with other candidates, and is not 
 </section>
 </section>
 </section>
+</section>
 
         </article>
       </div>
@@ -570,7 +600,7 @@ X is present in the intersection of r1 and b1 with other candidates, and is not 
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Build Tag: V0.0.2:faa7048*, Thu, 25 Aug 2022, 00:01:20
+                Copyright &#169; 2022, Jonathan Marks, Build Tag: V0.0.2:7551533*, Fri, 26 Aug 2022, 12:15:27
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -600,12 +630,21 @@ X is present in the intersection of r1 and b1 with other candidates, and is not 
             <ul>
 <li><a class="reference internal" href="#">2.1. Language</a><ul>
 <li><a class="reference internal" href="#ccells">2.1.1. Ccells</a></li>
-<li><a class="reference internal" href="#sudoku-syntax">2.1.2. Sudoku Syntax</a><ul>
+<li><a class="reference internal" href="#sudoku-language-syntax">2.1.2. Sudoku Language Syntax</a><ul>
 <li><a class="reference internal" href="#location-specifiers">2.1.2.1. Location Specifiers</a></li>
 <li><a class="reference internal" href="#ccell-specifiers">2.1.2.2. Ccell Specifiers</a></li>
 <li><a class="reference internal" href="#operators">2.1.2.3. Operators</a></li>
 <li><a class="reference internal" href="#conditionals">2.1.2.4. Conditionals</a></li>
 <li><a class="reference internal" href="#relational-specifiers">2.1.2.5. Relational Specifiers</a></li>
+<li><a class="reference internal" href="#candidate-dressing">2.1.2.6. Candidate Dressing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sudoku-language-semantics">2.1.3. Sudoku Language Semantics</a><ul>
+<li><a class="reference internal" href="#singles">2.1.3.1. Singles</a><ul>
+<li><a class="reference internal" href="#exposed-singles">2.1.3.1.1. Exposed Singles</a></li>
+<li><a class="reference internal" href="#hidden-singles">2.1.3.1.2. Hidden Singles</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

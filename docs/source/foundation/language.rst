@@ -44,8 +44,8 @@ The term Ccell is not to be confused with:
    links of the chain.
 *  **Candidate**:  which is a a lesser reference to only the possible values in cells that obey Sudoku Rules.
 
-Sudoku Syntax
-=============
+Sudoku Language Syntax
+======================
 
 Location Specifiers
 -------------------
@@ -155,30 +155,50 @@ Relational Specifiers
          and if X is False then Y is True
    *  -  ``( ... )``
       -  Parenthesis – Associative contraction: ``5r3c2=3r3c2 is the same as (5=3)r3c2``
+   *  -  ``{ ... , ...}``
+      -  Braces – Groupings of sub-patterns in Nets, etc.
+   *  -  ``[ ... ]``
+      -  Square Brackets – To group sub-structures of larger structures
+   *  -  ``< ... >``
+      -  Pointy Brackets – Contain relationships between grouped sub-structures
 
+Candidate Dressing
+------------------
 
-{ ... , ... , ...}	Braces – Groupings of sub-patterns in Nets, etc.
-[ ... ]	Square Brackets – To group sub-structures in larger structures
-< ... >	Pointy Brackets – Contain relationships between grouped sub-structures
-2.1.2.6.   Candidate Dressing
-+	Candidate is placed (as opposed to being a given) in a puzzle.
-/	Restricted Candidate, eg. 3/456r3Ub2
-\	Unrestricted Candidate, eg 34\56c7Ub4
+.. list-table::
+   :widths: 20 80
+   :align: left
+   :width: 98%
 
-2.1.3.   Sudoku Language Semantics
-This section only describes how to read and interpret the Sudoku Language Syntax, not what the patterns mean and how they are resolved.  That is left to the balance of this chapter and the Chapter on Human Solvable Sudoku Patterns.
+   *  -  ``/``
+      -  Restricted Candidate, eg. 3/456r3Ub2 - 4 is the restricted candidate.
+   *  -  ``\``
+      -  Unrestricted Candidate, eg 34\56c7Ub4 - 5 is the unrestricted candidate.
+
+Sudoku Language Semantics
+=========================
+
+This section only describes how to read and interpret the Sudoku Language Syntax, not what the patterns
+mean and how they are resolved.  That is left to the balance of this chapter and the Chapter on
+Human Solvable Sudoku Patterns.
 
 Note:
-    1. Candidate values always precede operators and / or cell specifiers when describing or specifying a pattern.
-    2. Candidate values always follow an operator in when cell(s) are being modified (either adding or eliminating a candidate or assigning a value.
+    1. Values always precede operators and/or cell specifiers when describing or specifying a pattern.
+    2. Values always follow an operator when cell(s) are being modified (either assigning a value or eliminating a Ccell).
     3. A Ccell that is part of a structure such as a Chain or Net is always referred to as a Node to distinguish it from other Ccells that are not part of the structure.
 
-2.1.3.1.   Singles
+Singles
+-------
+
 Exposed Singles
-3==r7c1	3 is the only candidate in r7c1 and can be placed.
++++++++++++++++
+
+``3==r7c1`` 3 is the only candidate in r7c1 and can be placed.
 
 Hidden Singles
-3#1b7,b7p3	3 occurs once in box 7, position 3,.
+++++++++++++++
+
+``3#1b7,b7p3`` 3 occurs only once in box 7, and that is in position 3,.
 
 Locked Singles
 7r9c12,!-r9		Pointing locked single, 7 occurs in r9, cells r9c1, and r9c2, and nowhere else in row 9 (!-r9), that is outside of tower 1.
