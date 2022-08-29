@@ -95,12 +95,6 @@ X can only be True once in Box 1, **therefore**:
 A box with two same value candidates can be resolved as an Empty Rectangle, however these patterns overlap
 with Turbot Fish and Grouped X Chains.  Of these three patterns, a Turbot Fish is the easiest to resolve.
 
-.. _fig-aim:
-
-.. figure:: images/AIM.png
-   :scale: 100%
-
-   Aim Png
 
 
 Let's go for a sample table too.  This is dummy text.

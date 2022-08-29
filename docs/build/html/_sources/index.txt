@@ -38,9 +38,6 @@ List of Figures
 |  :numref:`fig-locked-exposed-triple-cd1` :ref:`fig-locked-exposed-triple-cd1`
 |  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
 
-..
-   :numref:`fig-aim` :ref:`fig-aim`
-
 ==============
 List of Tables
 ==============
@@ -48,13 +45,13 @@ List of Tables
 |  :numref:`tbl-cand-diag-comps` :ref:`tbl-cand-diag-comps`
 |  :numref:`tbl-cand-diag-symbs` :ref:`tbl-cand-diag-symbs`
 
+..
+   ==================
+   Indices and tables
+   ==================
 
-==================
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`
 
 

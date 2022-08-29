@@ -216,14 +216,26 @@ linked to 7r7c4.
 (Straight) Subsets
 ------------------
 
-Exposed Pair, Triple and Quad
-+++++++++++++++++++++++++++++
+Exposed Pairs, Triples and Quads
+++++++++++++++++++++++++++++++++
 
-Exposed Locked Pair and Triple
-++++++++++++++++++++++++++++++
+56==r4c59
+14==r3c1,15==r3c5,145==r3c6
+5789==r4c4,579==r4c5,78==r4c6,5789==r4c8
 
-Hidden Pair, Triple and Quad
-++++++++++++++++++++++++++++
+Exposed Locked Pairs and Triples
+++++++++++++++++++++++++++++++++
+
+68==r89c1
+345==r2c4,45==r2c5,35==r2c6
+
+
+Hidden Pairs, Triples and Quads
++++++++++++++++++++++++++++++++
+
+45#2r3c38 pair,
+59--r1c1,25--r1c3,29--r1c5  259!-r1c!135 trip
+289--r1c1,289--r1c3,268--r1c7,2689--r1c8  2689!-r1c!1378
 
 Fish
 ----
@@ -359,7 +371,7 @@ Y-Wing
 
    Y-Wing Pattern
 
-The Diagram shows that Z is true at either or both pincers (Zr3r6 and Xr8c2).  Therefore, any same value
+Z is true at either or both pincers (Zr3r6 and Xr8c2).  Therefore, any same value
 candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated.
 
 |
@@ -388,7 +400,7 @@ along row 3 outside the intersection cannot be True and can be eliminated.
 
 |
 |
-|
+
 
 XYZ-Wing
 ++++++++
