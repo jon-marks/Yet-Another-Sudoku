@@ -369,20 +369,24 @@ T_GL_KRAKEN_SASHIMI_JELLYFISH = T_KRAKEN_SASHIMI_JELLYFISH + T_GRPLK
 T_BRUTE_FORCE               = 0x000000FF  # 255
 
 # The lexical token identifiers for cell grammar elements
-P_ROW = 0   # cell row index
-P_COL = 1   # cell column index or set of cell column indices
-P_BOX = 2   # box coords (down, across)
-P_OP  = 3   # Operator
-P_VAL = 4   # digit 0 - 9
-P_POL = 5   # Polarity of a ccell in relation to its peers.
-P_SN  = 6   # Strong net
-P_SEP = 7   # Separator between cell phrases
-P_CON = 8   # Concatenator for combining cell collections
-P_END = 9   # End of list of phrases
+P_ROW   = 0   # cell row index
+P_ROWX  = 1   # cell row index exclusion
+P_COL   = 2   # cell column index or set of cell column indices
+P_COLX  = 3   # cell column index exclusion
+P_BOX   = 4   # box index (left to right, then top to bottom)
+P_POS   = 5   # cell position index in box (L to R, T to B)
+P_POSX  = 6   # cell position index exclusion
+P_OP    = 7   # Operator
+P_VAL   = 8   # digit 0 - 9
+P_POL   = 9   # Polarity of a ccell relative its peers.
+P_SN    = 10  # Strong net
+P_SEP   = 11  # Separator between cell phrases
+P_CON   = 12  # Concatenator for combining cell collections
+P_END   = 13  # End of list of phrases
 
 # Logic technique operator enumerations
 OP_NONE = 0   # ""
-OP_POS  = 1   # "?-" Possibility, perhaps something to try
+OP_NEG  = 1   # "!"  Negation or exclusion
 OP_PRES = 2   # "--" Presence of candidate / value in cell
 OP_ABS  = 3   # "!-" Absence of candidate in cell.
 OP_EQ   = 4   # "==" Presence of only candidates or value in cell
@@ -392,7 +396,7 @@ OP_ASNC = 7   # "+=" Add candidate to cell.
 OP_ELIM = 8   # "-=" Eliminate candidate from cell.
 OP_CNT  = 9   # "#"  Number of occurrences or count.
 OP_U    = 10  # "U"  Union
-OP_WLK  = 11   # "-"  Weak link
+OP_WLK  = 11  # "-"  Weak link
 OP_SLK  = 12  # "="  Strong link
 OP_WSLK = 13  # "~"  Strong link masquerading as a weak link
 OP_CWLK = 14  # "|-|"  Weak AIC  AIC with weak link ends
@@ -409,7 +413,7 @@ OP_SQBC = 24  # "]"  Closing square bracket
 OP_NR_OPS = 25
 
 OP = ["",     # OP_NONE
-      "?-",   # OP_POS   Possibility, perhaps something to try
+      "!",    # OP_NEG   Negation or exclusion
       "--",   # OP_PRES  Presence of candidate / value in cell
       "!-",   # OP_ABS   Absence of candidate in cell.
       "==",   # OP_EQ    Presence of only value in cell
@@ -437,8 +441,6 @@ OP = ["",     # OP_NONE
 
 POL_1  = "p"  # Positive polarity
 POL_0  = "n"  # Negative polarity
-
-TKN_LK = [OP_NONE, OP_WLK, OP_SLK, OP_SLK, OP_WSLK, OP_WSLK, OP_WSLK, OP_WSLK]
 
 # Puzzle properties histogram attribute enums
 HT_NR    = 0  # Count of logic technique used

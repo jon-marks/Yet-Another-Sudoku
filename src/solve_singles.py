@@ -97,7 +97,7 @@ def tech_hidden_singles(Grid, Step, Cands, Methods):
 
 def tech_locked_singles(Grid, Step, Cands, Methods):
     # For pointing in a block if a candidate value is confined to a row or col
-    # then none of of the cells in that row or col outside the block can have
+    # then none of the cells in that row or col outside the block can have
     # the candidate value.
     #
     # For claiming in a row or column if a candidate value is confined to a block
@@ -139,10 +139,7 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                 if Step.Outcome:
                                     Step.Method  = T_POINTING_LOCKED_SINGLE
                                     Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
-                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                    [P_ROW, Rx], [P_COL, bc, bc1, bc2],
-                                                    [P_END]]
+                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1], [P_CON], [P_OP, OP_ABS], [P_BOX, (r0//3)*3 + C1[0]%3 + 1], [P_END]]
                                     return 0
                         # else check claiming
                         if (T_CLAIMING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
@@ -150,21 +147,18 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                             for c in C2:  # set(range(9))-{bc, bc1, bc2}:
                                 U |= Cands[r0][c]
                             if Cand not in U:
-                                # Candidate is locked to the row, Candidate vals in the rest
+                                # Candidate is locked to the block, Candidate vals in the rest
                                 # of the block can be discarded
                                 for c in [bc, bc1, bc2]:
                                     for x in Rx:  # or1, or2]:
                                         if Cand in Cands[x][c]:
                                             Cands[x][c].discard(Cand)
                                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                                            Step.Outcome.extend([[P_ROW, x], [P_COL, c],
-                                                                 [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                            Step.Outcome.extend([[P_ROW, x], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method = T_CLAIMING_LOCKED_SINGLE
                                     Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1],
-                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                    [P_ROW, r0], [P_COL, C2], [P_END]]
+                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, r0], [P_COL, C1], [P_CON], [P_OP, OP_ABS], [P_ROW, r0], [P_END]]
                                     return 0
             # then scan the columns
             for c0, oc1, oc2 in zip([bc, bc1, bc2], [bc1, bc2, bc], [bc2, bc, bc1]):
@@ -189,15 +183,11 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                     if Cand in Cands[r][c0]:
                                         Cands[r][c0].discard(Cand)
                                         if Step.Outcome: Step.Outcome.append([P_SEP])
-                                        Step.Outcome.extend([[P_ROW, r], [P_COL, c0],
-                                                             [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                        Step.Outcome.extend([[P_ROW, r], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method = T_POINTING_LOCKED_SINGLE
                                     Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
-                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                    [P_ROW, br, br1, br2], [P_COL, Cx],
-                                                    [P_END]]
+                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0], [P_CON], [P_OP, OP_ABS], [P_BOX, (R1[0]//3)*3 + c0%3 + 1], [P_END]]
                                     return 0
                         # else check claiming
                         if (T_CLAIMING_LOCKED_SINGLE in Methods) or (T_UNDEF in Methods):
@@ -212,14 +202,11 @@ def tech_locked_singles(Grid, Step, Cands, Methods):
                                         if Cand in Cands[r][x]:
                                             Cands[r][x].discard(Cand)
                                             if Step.Outcome: Step.Outcome.append([P_SEP])
-                                            Step.Outcome.extend([[P_ROW, r], [P_COL, x],
-                                                                 [P_OP, OP_ELIM], [P_VAL, Cand]])
+                                            Step.Outcome.extend([[P_ROW, r], [P_COL, x], [P_OP, OP_ELIM], [P_VAL, Cand]])
                                 if Step.Outcome:
                                     Step.Method = T_CLAIMING_LOCKED_SINGLE
                                     Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0],
-                                                    [P_SEP], [P_VAL, Cand], [P_OP, OP_ABS],
-                                                    [P_ROW, R2], [P_COL, c0], [P_END]]
+                                    Step.Pattern = [[P_VAL, Cand], [P_ROW, R1], [P_COL, c0], [P_CON], [P_OP, OP_ABS], [P_COL, c0], [P_END]]
                                     return 0
     return -1
 
@@ -229,13 +216,13 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
     # less than three same candidate values are simply potential X-Chains and
     # are handled by the x chain algorithms.
 
-    # look for boxes that contain 3 to 5 same candidate value that describe only
+    # Look for boxes that contain 3 to 5 same candidate value that describe only
     # a single row (r) and column (c).  Then scan the column and the row outside
     # the box to find other cells with same value candidates (Cr and Cc).  If
     # any cell (Cb) that both Cr and Cc see also has a same value candidate then
-    # we have found an Empty Rectangle.  If there is a strong link between Cb
-    # and Cc, then the candidate can be eliminated from Cr.  Similarly if there
-    # is/was a strong link between Cb and Cr, then Cc too can be eliminated.
+    # we have found an Empty Rectangle.  If a strong link between Cb
+    # and Cc exists, then the candidate can be eliminated from Cr.  Similarly, if
+    # a strong link between Cb and Cr exists, then Cc too can be eliminated.
     #
 
     # Look for a box that only has cands that describe a single row and col in
@@ -255,35 +242,32 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
                         else: break
                 else:
                     if len(BC) < 3: continue
-                    # An empty rectangle pattern found, scan row and col for other condidates
-                    # scan the row and col outside the box for additional candiates
+                    # An empty rectangle pattern found, scan row and col for other candidates
+                    # scan the row and col outside the box for additional candidates
                     or1 = (rb+3)%9; or2 = (rb+6)%9
                     oc1 = (cb+3)%9; oc2 = (cb+6)%9
-                    Rx = [or1, or1+1, or1+2, or2, or2+1, or2+2]
-                    Cx = [oc1, oc1+1, oc1+2, oc2, oc2+1, oc2+2]
-                    for c in Cx:
+                    for c in [oc1, oc1+1, oc1+2, oc2, oc2+1, oc2+2]:
                         if Cand not in Cands[row][c]: continue
-                        for r in Rx:
+                        for r in [or1, or1+1, or1+2, or2, or2+1, or2+2]:
                             if Cand not in Cands[r][col]: continue
                             # found a cand along the row and col, does the opposing cell have a Cand
                             if Cand in Cands[r][c]:
                                 Elim = []
                                 Lk = how_ccells_linked(r, c, Cand, row, c, Cand, Cands)
-                                if Lk & LK_STRG: Elim.append((r, col))
+                                if Lk & LK_STRG: Elim.append((r, c, row, c, r, col))
                                 Lk = how_ccells_linked(r, c, Cand, r, col, Cand, Cands)
-                                if Lk & LK_STRG: Elim.append((row, c))
+                                if Lk & LK_STRG: Elim.append((r, c, r, col, row, c))
                                 if len(Elim):
                                     Step.Method = T_EMPTY_RECT
-                                    for r3, c3 in Elim:
+                                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, len(BC)], [P_BOX, (rb//3)*3+cb//3], [P_CON], [P_ROW, row], [P_CON], [P_COL, col]]
+                                    for r1, c1, r2, c2, r3, c3 in Elim:
                                         Cands[r3][c3].discard(Cand)
+                                        Step.Pattern.extend([[P_CON], [P_VAL, Cand], [P_ROW, r1], [P_COL, c1], [P_OP, OP_EQ], [P_VAL, Cand], [P_ROW, r1], [P_COL, c1]])
                                         if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, r3], [P_COL, c3],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])
-                                    Step.Outcome.append([P_END])
-                                    Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, len(BC)], [P_BOX, (rb//3)*3+cb//3]]
-                                    for r3, c3 in BC:
-                                        Step.Pattern.extend([[P_CON], [P_ROW, r3], [P_COL, c3]])
                                     Step.Pattern.append([P_END])
+                                    Step.Outcome.append([P_END])
                                     return 0
     return -1
 

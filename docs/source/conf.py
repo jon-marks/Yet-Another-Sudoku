@@ -32,6 +32,27 @@ numfig_format = {
                  'section':    "Section %s: ",
                 }
 
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'restructuredtext',
+    '.md': 'markdown',
+}
+
+rst_epilog = """
+.. role:: raw-html(raw)
+   :format: html
+
+.. role:: underline
+   :class: underline
+
+.. role:: overline
+   :class: overline
+
+.. role:: strikethrough
+   :class: strikethrough
+"""
+
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -40,12 +61,12 @@ numfig_format = {
 html_static_path = ['_static']
 html_title = ''
 html_css_files = ['overrides.css']
-html_logo = 'AIM.png'
-html_favicon = 'AIM.ico'
+html_logo = 'images/AIM.png'
+html_favicon = 'images/AIM.ico'
 html_use_index = True
 
 # https://sphinxjpthemesbasicstrap.readthedocs.io/en/latest/options.html
 
-extensions.append('sphinx_copybutton')
+# extensions.append('sphinx_copybutton')
 html_theme = 'furo'
 

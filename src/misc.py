@@ -212,6 +212,14 @@ def tkns_to_str(Tkns):
                 else:
                     for r in sorted(Tkn[i]):
                         St += f"{r+1}"
+        if Tkn[0] == P_ROWX:
+            St += "r!"
+            for i in range(1, len(Tkn)):
+                if isinstance(Tkn[i], int):
+                    St += f"{Tkn[i]+1}"
+                else:
+                    for r in sorted(Tkn[i]):
+                        St += f"{r+1}"
         elif Tkn[0] == P_COL:
             St += "c"
             for i in range(1, len(Tkn)):
@@ -220,8 +228,32 @@ def tkns_to_str(Tkns):
                 else:
                     for c in sorted(Tkn[i]):
                         St += f"{c+1}"
+        elif Tkn[0] == P_COLX:
+            St += "c!"
+            for i in range(1, len(Tkn)):
+                if isinstance(Tkn[i], int):
+                    St += f"{Tkn[i]+1}"
+                else:
+                    for c in sorted(Tkn[i]):
+                        St += f"{c+1}"
         elif Tkn[0] == P_BOX:
             St += f"b{Tkn[1]+1}"
+        elif Tkn[0] == P_POS:
+            St += "p"
+            for i in range(1, len(Tkn)):
+                if isinstance(Tkn[i], int):
+                    St += f"{Tkn[i]+1}"
+                else:
+                    for p in sorted(Tkn[i]):
+                        St += f"{p+1}"
+        elif Tkn[0] == P_POSX:
+            St += "p!"
+            for i in range(1, len(Tkn)):
+                if isinstance(Tkn[i], int):
+                    St += f"{Tkn[i]+1}"
+                else:
+                    for p in sorted(Tkn[i]):
+                        St += f"{p+1}"
         elif Tkn[0] == P_OP:
             if Tkn[1] == OP_CNT:
                 St += f"{OP[OP_CNT]}{Tkn[2]}"

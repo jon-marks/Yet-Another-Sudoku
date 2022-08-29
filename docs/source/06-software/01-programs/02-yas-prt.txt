@@ -1,0 +1,7 @@
+.. title:: Yet another Sudoku | Software | Programs | yas-prt
+
+=========================
+Pattern Regression Tester
+=========================
+
+YAS Pattern Regression Tester stub.

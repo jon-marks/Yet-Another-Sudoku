@@ -1,0 +1,7 @@
+.. title:: Yet Another Sudoku | Foundation | Subsets
+
+=======
+Subsets
+=======
+
+Subsets stub

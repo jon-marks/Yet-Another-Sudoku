@@ -1,0 +1,15 @@
+.. title:: Yet Another Sudoku | Foundation | Concepts
+
+=============
+Some Concepts
+=============
+
+'A Truth' and 'The Truth'
+-------------------------
+
+Premises, Inferences and Conclusions
+------------------------------------
+
+Spatial Representation
+----------------------
+

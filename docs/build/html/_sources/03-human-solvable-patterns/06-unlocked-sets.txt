@@ -1,0 +1,7 @@
+.. title:: Yet another Sudoku | Human Solvable Patterns | Unlocked Sets
+
+=============
+Unlocked Sets
+=============
+
+Unlocked Sets stub.

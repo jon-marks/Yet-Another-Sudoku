@@ -123,8 +123,8 @@ def tech_hidden_pairs(Grid, Step, Cands, Methods):
     # candidates they share.  All other candidates in those two cells can be
     # eliminated, thereby exposing the pair.  Algorithmically, select two cells
     # in a group and subtract the union of the candidates from the remaining
-    # cells from the two selected cells.  If there are the same two remaining
-    # candidates in the selected cells, then a hidden pair has been found.
+    # cells from the two selected cells.  If the same two remaining
+    # candidates are in the selected cells, then a hidden pair has been found.
 
     for Cand0 in range(1, 9):
         for Cand1 in range(Cand0+1, 10):
@@ -397,11 +397,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if Step.Outcome:
                             Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
-                            Step.Pattern = []
-                            for c0, X in C:
-                                if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
-                            Step.Pattern.append([P_END])
+                            Step.Pattern = [[P_VAL, sorted(U)], [P_OP, OP_ABS], [P_ROW, r0], [P_COLX, C[0][0], C[1][0], C[2][0]], [P_END]]
                             return 0
                 # scan cols
                 for c0 in ColList:  # range(9):
@@ -425,11 +421,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if Step.Outcome:
                             Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
-                            Step.Pattern = []
-                            for r0, X in R:
-                                if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
-                            Step.Pattern.append([P_END])
+                            Step.Pattern = [[P_VAL, sorted(U)], [P_OP, OP_ABS], [P_ROWX, R[0][0], R[1][0], R[2][0]], [P_COL, c0], [P_END]]
                             return 0
                 # scan boxes
                 for h0 in BoxList:  # range(9):
@@ -455,11 +447,7 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if Step.Outcome:
                             Step.Outcome.append([P_END])
                             Step.Method = T_HIDDEN_TRIPLE
-                            Step.Pattern = []
-                            for r0, c0, X in B:
-                                if Step.Pattern: Step.Pattern.append([P_CON])
-                                Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
-                            Step.Pattern.append([P_END])
+                            Step.Pattern = [[P_VAL, sorted(U)], [P_OP, OP_ABS], [P_BOX, h0], [P_POSX, B[0][0], B[1][0], B[2][0]], [P_END]]
                             return 0
     return -1
 
@@ -467,7 +455,7 @@ def tech_exposed_quads(Grid, Step, Cands, Methods):
     # In any group (row, col or box) if any four empty cells have any
     # combination of only the same 4 candidates, then we have found an exposed
     # quad, and these four candidates can be eliminated from other cells in that
-    # group.  It is not possible to have a locked exposed quad as four cells
+    # group.  It is impossible to have a locked exposed quad as four cells
     # is too large to fit in a col or row span.
 
     # Scan rows
@@ -566,7 +554,7 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
     # A hidden quad is where the union of four cells in a group contains the
     # same four candidates that are not found in any other cell in that group.
     # Here we can eliminate candidates from those four cells that are not the
-    # same four candidates, thereby exposing the hidden quad.
+    #  four candidates, thereby exposing the hidden quad.
 
     for Cand0 in range(1, 7):
         for Cand1 in range(Cand0+1, 8):
@@ -594,11 +582,7 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                             if Step.Outcome:
                                 Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
-                                Step.Pattern = []
-                                for c0, X in C:
-                                    if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
-                                Step.Pattern.append([P_END])
+                                Step.Pattern = [[P_VAL, sorted(U)], [P_OP, OP_ABS], [P_ROW, r0], [P_COLX, C[0][0], C[1][0], C[2][0], C[3][0]], [P_END]]
                                 return 0
                     # Scan cols
                     for c0 in range(9):
@@ -622,11 +606,7 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                             if Step.Outcome:
                                 Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
-                                Step.Pattern = []
-                                for r0, X in R:
-                                    if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
-                                Step.Pattern.append([P_END])
+                                Step.Pattern = [[P_VAL, sorted(U)], [P_OP, OP_ABS], [P_ROWX, R[0][0], R[1][0], R[2][0], R[3][0]], [P_COL, c0], [P_END]]
                                 return 0
                     # scan boxes
                     for h0 in range(9):
@@ -639,11 +619,11 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                             if not X: continue
                             if len(X) == 1: break
                             if n0 > 3: break
-                            B.append((r0, c0, X)); U |= X; n0 += 1
+                            B.append((b0, r0, c0, X)); U |= X; n0 += 1
                         else:
                             if n0 != 4 or len(U) != 4: continue
                             # found a hidden quad in block
-                            for r0, c0, X in B:
+                            for b0, r0, c0, X in B:
                                 Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2, Cand3}
                                 if Elims:
                                     Cands[r0][c0] = X
@@ -652,10 +632,6 @@ def tech_hidden_quads(Grid, Step, Cands, Method = T_UNDEF):
                             if Step.Outcome:
                                 Step.Outcome.append([P_END])
                                 Step.Method = T_HIDDEN_QUAD
-                                Step.Pattern = []
-                                for r0, c0, X in B:
-                                    if Step.Pattern: Step.Pattern.append([P_CON])
-                                    Step.Pattern.extend([[P_VAL, sorted(X)], [P_OP, OP_PRES], [P_ROW, r0], [P_COL, c0]])
-                                Step.Pattern.append([P_END])
+                                Step.Pattern = [[P_VAL, sorted(U)], [P_OP, OP_ABS], [P_BOX, h0], [P_POSX, B[0][0], B[1][0], B[2][0], B[3][0]], [P_END]]
                                 return 0
     return -1

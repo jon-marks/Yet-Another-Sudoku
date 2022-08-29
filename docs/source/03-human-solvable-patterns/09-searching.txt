@@ -1,0 +1,7 @@
+.. title:: Yet another Sudoku | Human Solvable Patterns | Searching
+
+=========
+Searching
+=========
+
+Searching stub.

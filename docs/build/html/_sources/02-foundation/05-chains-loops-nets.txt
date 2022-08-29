@@ -1,0 +1,7 @@
+.. title:: Yet Another Sudoku | Foundation | Chains, Loops and Nets
+
+======================
+Chains, Loops and Nets
+======================
+
+Chains, Loops and Nets stub.

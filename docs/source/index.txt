@@ -1,26 +1,57 @@
 .. title:: Yet Another Sudoku
 
+
+
 ##################
 Yet Another Sudoku
 ##################
 
+=================
+Table of Contents
+=================
+
 .. toctree::
    :maxdepth: 6
    :numbered:
+
+   01-introduction
+   02-foundation/index
+   03-human-solvable-patterns/index
+   04-generating
+   05-grading
+   06-software/index
+   07-glossary
+   08-references
+
+..
    :caption: Table of Contents
-   :name: table_of_contents
+   :name: table-of-contents
 
-   introduction
-   foundation/index
-   human-solvable-patterns/index
-   glossary
-   references
+===============
+List of Figures
+===============
 
-Indices and tables
-==================
+|  :numref:`fig-locked-exposed-pair-cd1` :ref:`fig-locked-exposed-pair-cd1`
+|  :numref:`fig-y-wing-cd1` :ref:`fig-y-wing-cd1`
+|  :numref:`fig-locked-pointing-single-cd1` :ref:`fig-locked-pointing-single-cd1`
+|  :numref:`fig-xyz-wing-cd1` :ref:`fig-xyz-wing-cd1`
+|  :numref:`fig-locked-exposed-triple-cd1` :ref:`fig-locked-exposed-triple-cd1`
+|  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+==============
+List of Tables
+==============
+
+|  :numref:`tbl-cand-diag-comps` :ref:`tbl-cand-diag-comps`
+|  :numref:`tbl-cand-diag-symbs` :ref:`tbl-cand-diag-symbs`
+
+..
+   ==================
+   Indices and tables
+   ==================
+
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`
 
 
