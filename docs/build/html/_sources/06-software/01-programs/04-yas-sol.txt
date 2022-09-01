@@ -1,7 +1,0 @@
-.. title:: Yet another Sudoku | Software | Programs | yas-sol
-
-===================
-Batch Puzzle Solver
-===================
-
-YAS Puzzle Solver stub.

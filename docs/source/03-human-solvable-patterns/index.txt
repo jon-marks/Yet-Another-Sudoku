@@ -29,11 +29,10 @@ broadest reach is favoured, unless it is rather more complex than another techni
    04-fish
    05-chains
    06-unlocked-sets
-   07-hybrids
-   08-uniqueness
-   09-searching
-   10-barely-human
-   11-last-resort
+   07-uniqueness
+   08-searching
+   09-barely-human
+   10-last-resort
 
 
 

@@ -1,14 +1,53 @@
 ﻿.. title:: Yet Another Sudoku | Glossary
 
+========
 Glossary 
 ======== 
 
-1.4.   Glossary 
+
 https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Terminology.html 
 
+.. glossary::
 
-Grid:	9x9 grid, subdivided into 9  Given:  Populated with a fixed value that defines the puzzle. 
-    Empty: No values.  Often empty cells are annotated with candidate pencil marks. 
+   **Board**
+      A solved, filled or completed puzzle.
+
+   **Box**
+      A 3x3 Grid of which 9, also arranged as 3x3 to create a Sudoku grid.
+
+   Grid
+      9x9 grid, subdivided into 9  – 3x3 :Term:`Box`\es  (Blocks) on to which Sudoku puzzles are spatially
+      represented. I generally call an empty grid a grid, a partially filled grid a puzzle and
+      a filled grid, a board.
+
+
+   Puzzle
+      A partially completed Sudoku in a puzzle, it may only be populated with the givens or with givens and some solved values.
+
+   Ccell
+      Blah, blah, blah
+
+
+Box / Block:	One of the 9 3x3 sub grids making up the 9 x 9 Sudoku grid.
+Chute/Band:	3 Boxes in a row or column.  A horizontal chute is known as a Floor, a vertical chute is known as a Tower.
+Location or Cell:	A position in the 9x9 Grid.  Located as a 2 dimensional array. For example Grid[7,2] is the cell in the 7th row, and 2nd column.  A cell can also be referenced by r7c2.  A cell state can be:
+
+    • Given:  Populated with a fixed value that defines the puzzle.
+    • Solved:  Entered, possibly correct value
+    • Empty: No values.  Often empty cells are annotated with candidate pencil marks.
+
+Group/House/Sector/Unit:	A collection of 9 locations that can hold the 1 to 9 unique solved values
+in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique
+value between 1 and 9 that obeys Sudoku rules.  A group can be referenced by r7 for the 7th row, c2
+for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.
+Blocks/Boxes, Rows and Columns are Groups/Houses.
+Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block
+groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values.
+Peers/Buddies are said to “see” each other.
+
+
+
+
 
 Group/House/Sector/Unit:	A collection of 9 locations that can hold the 1 to 9 unique solved values in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique value between 1 and 9 that obeys Sudoku rules.  .  A group can be referenced by r7 for the 7th row, c2 for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.  Blocks/Boxes, Rows and Columns are Groups/Houses. 
 Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other. 

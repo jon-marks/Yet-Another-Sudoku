@@ -1,8 +1,0 @@
-... title:: Yet another Sudoku | Software | File Formats
-
-============
-File Formats
-============
-
-YAS File Formats stub.
-

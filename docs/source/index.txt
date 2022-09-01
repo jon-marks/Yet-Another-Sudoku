@@ -31,6 +31,8 @@ Table of Contents
 List of Figures
 ===============
 
+|  :numref:`fig-links-eg1` :ref:`fig-links-eg1`
+|  :numref:`fig-grouped-ccell-link-cd1` :ref:`fig-grouped-ccell-link-cd1`
 |  :numref:`fig-locked-exposed-pair-cd1` :ref:`fig-locked-exposed-pair-cd1`
 |  :numref:`fig-y-wing-cd1` :ref:`fig-y-wing-cd1`
 |  :numref:`fig-locked-pointing-single-cd1` :ref:`fig-locked-pointing-single-cd1`
@@ -53,5 +55,3 @@ List of Tables
    * :ref:`genindex`
    * :ref:`modindex`
    * :ref:`search`
-
-

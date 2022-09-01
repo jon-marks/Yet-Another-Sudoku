@@ -1,7 +1,0 @@
-.. title:: Yet Another Sudoku | Foundation | Unlocked Sets
-
-=============
-Unlocked Sets
-=============
-
-Unlocked Sets stub.

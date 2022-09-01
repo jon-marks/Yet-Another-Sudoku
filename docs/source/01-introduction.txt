@@ -97,8 +97,8 @@ I acknowledge the Sudoku Community, the many reports, web-pages, and videos foun
 This tomb brings together many, many related bits of information.  If anything is original here, it is
 the insights and conclusions gained from the collective works before me.
 
-A complete list acknowledging all the media that has contributed to my understanding would be so vast and so
-incomplete diluting its intent.
+A complete list acknowledging all the media contributing to my understanding would be so vast incomplete
+and constantly changing thereby diluting its intent.
 
 Sources of information and puzzles are acknowledged throughout the text.  A :ref:`list of references <references>`
 is included too.  Some sources have been lost.  I apologise in advance.  Please contact me if you notice information

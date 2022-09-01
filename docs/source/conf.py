@@ -13,13 +13,13 @@ project = 'Yet Another Sudoku'
 author = 'Jonathan Marks'
 version = "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
 release = ""  # f'{version}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
-copyright = '2022, Jonathan Marks, Build Tag: 'f'V{oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
+copyright = '2022, Jonathan Marks, Commit Tag: 'f'V{oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
 
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = ['sphinx.ext.githubpages'] # creates .nojekyll empty file in html directory.
 templates_path = ['_templates']
 exclude_patterns = []
 
@@ -38,21 +38,12 @@ source_suffix = {
     '.md': 'markdown',
 }
 
+
+
 rst_epilog = """
 .. role:: raw-html(raw)
    :format: html
-
-.. role:: underline
-   :class: underline
-
-.. role:: overline
-   :class: overline
-
-.. role:: strikethrough
-   :class: strikethrough
 """
-
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -65,8 +56,12 @@ html_logo = 'images/AIM.png'
 html_favicon = 'images/AIM.ico'
 html_use_index = True
 
-# https://sphinxjpthemesbasicstrap.readthedocs.io/en/latest/options.html
+# Furo is not supporting sourcelinks https://github.com/pradyunsg/furo/issues/478
+html_copy_source = False
+html_show_sourcelink = False
 
-# extensions.append('sphinx_copybutton')
+extensions.append('cloud_sptheme.ext.table_styling')
+
+
 html_theme = 'furo'
 

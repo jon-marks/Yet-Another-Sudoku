@@ -1,7 +1,0 @@
-.. title:: Yet Another Sudoku | Foundation | Base Sets (Truths) and Cover Sets (Links)
-
-=========================================
-Base Sets (Truths) and Cover Sets (Links)
-=========================================
-
-Base sets and cover sets stub.

@@ -4,14 +4,24 @@
 Foundation
 ==========
 
-A language (notation, grammar and terminology) to describe Sudoku Puzzles, patterns and their resolutions,
-is explained, together with the underlying logic applied in the resolution of Sudoku patterns.
+This foundation is organised into a logical consistent flow explaining concepts
+and how the concepts are related.
+
+In the effort to be consistent and unambiguous, some terms have been refined or
+renamed such that they are:
+*  less overloaded,
+*  more consistent,
+*  more self descriptive, and
+*  relate better within the context that they are described.
+
+To keep the reach of this text as wide as possible, verbal or algorithmic descriptions replace less
+common symbols used for mathematical operations.
 
 .. toctree::
    :maxdepth: 5
 
-   01-language
-   02-concepts
+   01-core-concepts
+   02-language
    03-subsets
    04-base-cover-sets
    05-chains-loops-nets

@@ -9,6 +9,7 @@
         <title>Yet Another Sudoku | Glossary</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/table_styling.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="_static/overrides.css" />
     
@@ -161,8 +162,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="02-foundation/index.html">2. Foundation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/01-language.html">2.1. Language</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/02-concepts.html">2.2. Some Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/01-core-concepts.html">2.1. Core Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/02-language.html">2.2. Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/03-subsets.html">2.3. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/04-base-cover-sets.html">2.4. Base Sets (Truths) and Cover Sets (Links)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
@@ -178,11 +179,10 @@
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/07-hybrids.html">3.7. Hybrids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/08-uniqueness.html">3.8. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/09-searching.html">3.9. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/10-barely-human.html">3.10. Barely Human</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/11-last-resort.html">3.11. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/09-barely-human.html">3.9. Barely Human Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="04-generating.html">4. Generating Puzzles</a></li>
@@ -235,12 +235,39 @@
         <article role="main">
           <section id="glossary">
 <h1><span class="section-number">7. </span>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">#</a></h1>
-<p>1.4.   Glossary
-<a class="reference external" href="https://www.sudocue.net/glossary.php">https://www.sudocue.net/glossary.php</a> and <a class="reference external" href="http://sudopedia.enjoysudoku.com/Terminology.html">http://sudopedia.enjoysudoku.com/Terminology.html</a></p>
-<dl class="simple">
-<dt>Grid:   9x9 grid, subdivided into 9  Given:  Populated with a fixed value that defines the puzzle.</dt><dd><p>Empty: No values.  Often empty cells are annotated with candidate pencil marks.</p>
+<p><a class="reference external" href="https://www.sudocue.net/glossary.php">https://www.sudocue.net/glossary.php</a> and <a class="reference external" href="http://sudopedia.enjoysudoku.com/Terminology.html">http://sudopedia.enjoysudoku.com/Terminology.html</a></p>
+<dl class="simple glossary">
+<dt id="term-Board"><strong>Board</strong><a class="headerlink" href="#term-Board" title="Permalink to this term">#</a></dt><dd><p>A solved, filled or completed puzzle.</p>
+</dd>
+<dt id="term-Box"><strong>Box</strong><a class="headerlink" href="#term-Box" title="Permalink to this term">#</a></dt><dd><p>A 3x3 Grid of which 9, also arranged as 3x3 to create a Sudoku grid.</p>
+</dd>
+<dt id="term-Grid">Grid<a class="headerlink" href="#term-Grid" title="Permalink to this term">#</a></dt><dd><p>9x9 grid, subdivided into 9  – 3x3 <a class="reference internal" href="#term-Box"><span class="xref std std-term">Box</span></a>es  (Blocks) on to which Sudoku puzzles are spatially
+represented. I generally call an empty grid a grid, a partially filled grid a puzzle and
+a filled grid, a board.</p>
+</dd>
+<dt id="term-Puzzle">Puzzle<a class="headerlink" href="#term-Puzzle" title="Permalink to this term">#</a></dt><dd><p>A partially completed Sudoku in a puzzle, it may only be populated with the givens or with givens and some solved values.</p>
+</dd>
+<dt id="term-Ccell">Ccell<a class="headerlink" href="#term-Ccell" title="Permalink to this term">#</a></dt><dd><p>Blah, blah, blah</p>
 </dd>
 </dl>
+<p>Box / Block:    One of the 9 3x3 sub grids making up the 9 x 9 Sudoku grid.
+Chute/Band:     3 Boxes in a row or column.  A horizontal chute is known as a Floor, a vertical chute is known as a Tower.
+Location or Cell:       A position in the 9x9 Grid.  Located as a 2 dimensional array. For example Grid[7,2] is the cell in the 7th row, and 2nd column.  A cell can also be referenced by r7c2.  A cell state can be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Given:  Populated with a fixed value that defines the puzzle.</p></li>
+<li><p>Solved:  Entered, possibly correct value</p></li>
+<li><p>Empty: No values.  Often empty cells are annotated with candidate pencil marks.</p></li>
+</ul>
+</div></blockquote>
+<p>Group/House/Sector/Unit:        A collection of 9 locations that can hold the 1 to 9 unique solved values
+in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique
+value between 1 and 9 that obeys Sudoku rules.  A group can be referenced by r7 for the 7th row, c2
+for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.
+Blocks/Boxes, Rows and Columns are Groups/Houses.
+Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block
+groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values.
+Peers/Buddies are said to “see” each other.</p>
 <p>Group/House/Sector/Unit:        A collection of 9 locations that can hold the 1 to 9 unique solved values in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique value between 1 and 9 that obeys Sudoku rules.  .  A group can be referenced by r7 for the 7th row, c2 for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.  Blocks/Boxes, Rows and Columns are Groups/Houses.
 Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other.</p>
 <p>And and and we are going to to t
@@ -295,7 +322,7 @@ Colbox  The intersection of a column and box comprising only three cells.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Build Tag: V0.0.2:12ff4f3*, Mon, 29 Aug 2022, 23:02:39
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:59f3d49*, Mon, 29 Aug 2022, 23:09:41
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

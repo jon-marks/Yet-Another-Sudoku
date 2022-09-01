@@ -1,0 +1,25 @@
+.. title:: Yet another Sudoku | Human Solvable Patterns | Barely Human
+
+=====================
+Barely Human Patterns
+=====================
+
+
+
+Hybrid Chains
+-------------
+
+Fraken Fish
+-----------
+
+Mutant Fish
+-----------
+
+Multi Fish
+----------
+
+Exocets
+-------
+
+Multi-Sector Locked Sets (MSLS)
+-------------------------------

@@ -1,7 +1,0 @@
-.. title:: Yet another Sudoku | Human Solvable Patterns | Fish
-
-====
-Fish
-====
-
-Fish stub.

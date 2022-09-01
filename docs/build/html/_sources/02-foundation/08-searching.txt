@@ -1,7 +1,0 @@
-.. title:: Yet Another Sudoku | Foundation | Searching
-
-=========
-Searching
-=========
-
-Searching stub.

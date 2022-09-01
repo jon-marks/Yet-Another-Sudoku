@@ -1,0 +1,789 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. Language" href="02-language.html" /><link rel="prev" title="2. Foundation" href="index.html" />
+
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+        <title>Yet Another Sudoku | Foundation | Concepts</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/table_styling.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/overrides.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Yet Another Sudoku</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/AIM.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Yet Another Sudoku</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.1. Core Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-language.html">2.2. Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-subsets.html">2.3. Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets (Truths) and Cover Sets (Links)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">2.6. Unlocked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">2.7. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-searching.html">2.8. Searching</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-barely-human.html">3.9. Barely Human Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-grading.html">5. Grading Puzzles</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../06-software/index.html">6. Software</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../06-software/01-programs/index.html">6.1. Programs</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/01-yas.html">6.1.1. Yet Another Sudoku</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/02-yas-prt.html">6.1.2. Pattern Regression Tester</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/03-yas-gen.html">6.1.3. Batch Puzzle Generator and Grader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/04-yas-sol.html">6.1.4. Batch Puzzle Solver</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="core-concepts">
+<h1><span class="section-number">2.1. </span>Core Concepts<a class="headerlink" href="#core-concepts" title="Permalink to this heading">#</a></h1>
+<section id="ccells">
+<h2><span class="section-number">2.1.1. </span>Ccells<a class="headerlink" href="#ccells" title="Permalink to this heading">#</a></h2>
+<p>A <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> refers to any candidate in any cell as specified by its candidate value, row and column.
+That is, a Ccell is the unique reference to a specific candidate in a cell.</p>
+<p>Ccells are three-dimensional tuples of value, row and column, each dimension ranging
+between 1 and 9.  In Sudoku, 729 unique (9 value x 9 row x 9 column) possible Ccells exist.  A
+solved Sudoku puzzle comprises 81 unique Ccells of the 729 unique possibilities.  That is each cell
+in the 9 row by 9 column has only one value, all values in all cells obeying
+<a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
+<p>The term Ccell is not to be confused with a:</p>
+<ul class="simple">
+<li><p><strong>Node</strong>:  which is a further qualification of a ccell in a larger relationship such
+as a net or chain.  For example:  Ccells linked together in a chain form the Nodes between the
+links of the chain.</p></li>
+<li><p><strong>Candidate</strong>:  which is a lesser reference to only the possible values in cells that obey Sudoku
+Rules.</p></li>
+</ul>
+</section>
+<section id="premises-and-inferences-links">
+<h2><span class="section-number">2.1.2. </span>Premises and Inferences (Links)<a class="headerlink" href="#premises-and-inferences-links" title="Permalink to this heading">#</a></h2>
+<p>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Inference.html">http://sudopedia.enjoysudoku.com/Inference.html</a></p>
+<p>Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
+inferred.</p>
+<p>The most basic assertion of a premise is on the state of a Ccell. For example, asserting
+Ccell 3r7c2 True.</p>
+<p>An inference implies a relationship (link) between two Ccells, characterised by how the other Ccell
+responds when premise is asserted on the first Ccell.  For example If 3r7c2 is True, then according
+to <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>, 3r7c5 is False.</p>
+<p>The full nature of the inference (link) between two ccells is characterised by the outcome of
+asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:</p>
+<ul class="simple">
+<li><p>Weak Links</p></li>
+<li><p>Strong Links</p></li>
+<li><p>Robust Links</p></li>
+</ul>
+<section id="weak-links">
+<h3><span class="section-number">2.1.2.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Permalink to this heading">#</a></h3>
+<p>A weak link is formed by two ccells A and B, where they are either:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>In the same house with:</dt><dd><ul>
+<li><p>same candidate value, and</p></li>
+<li><p>more than two occurrences of that candidate value in that house.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>In the same cell with:</dt><dd><ul>
+<li><p>different candidate values, and</p></li>
+<li><p>more than two candidates in that cell.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<figure class="align-right" id="id1">
+<span id="fig-links-eg1"></span><a class="reference internal image-reference" href="../_images/links-eg1.png"><img alt="Links Example" src="../_images/links-eg1.png" style="width: 378.0px; height: 76.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.1:  </span><span class="caption-text">Links Example</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
+Notice that:</p>
+<ul class="simple">
+<li><p>if 7r7c2 is True, then none of the same valued Ccells in row 7 can be True.</p></li>
+<li><p>if 7r7c2 is False, it does not infer state of any other same valued Ccell in the row.</p></li>
+</ul>
+<p>This is the characteristic defining a Weak Link.</p>
+<p>Testing <span class="raw-html"><b><small><span class="mono"><span class="overline"><span class="italic">Testing</span></span></span></small></b></span> Testing.</p>
+<p>Testing <span class="raw-html"><b><span class="mono">Testing</span></b></span> Testing.</p>
+<p><span class="raw-html"><small><span class="mono">qwertyui<b>opasdfgh</b>jkl;;;;;;zxcvbnm,,,,,.</span></small><br></span>
+<span class="raw-html"><span class="mono">.,mnbvcxz';lkjhgfdsa][poiuytrewq90876654</span></span></p>
+<p>Weak links are indicated by a “-”, and conform to the following inferences:</p>
+</section>
+</section>
+<section id="table-styles">
+<h2><span class="section-number">2.1.3. </span>Table Styles<a class="headerlink" href="#table-styles" title="Permalink to this heading">#</a></h2>
+<div class="table-wrapper styled-table docutils container" id="id2">
+<table class="styled-table docutils align-default" id="id2">
+<caption><span class="caption-number">Table 2.1:  </span><span class="caption-text">Default Table</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
+<th class="head left-align"><p>Header2</p></th>
+<th class="head left-align"><p>Header3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+</tr>
+<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper styled-table plain docutils container" id="id3">
+<table class="styled-table plain docutils align-default" id="id3">
+<caption><span class="caption-number">Table 2.2:  </span><span class="caption-text">Plain Table (no row shading)</span><a class="headerlink" href="#id3" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
+<th class="head left-align"><p>Header2</p></th>
+<th class="head left-align"><p>Header3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+</tr>
+<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper styled-table docutils container" id="id4">
+<table class="styled-table docutils align-left" id="id4">
+<caption><span class="caption-number">Table 2.3:  </span><span class="caption-text">Left Table</span><a class="headerlink" href="#id4" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
+<th class="head left-align"><p>Header2</p></th>
+<th class="head left-align"><p>Header3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+</tr>
+<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper styled-table docutils container" id="id5">
+<table class="styled-table docutils align-default" id="id5">
+<caption><span class="caption-number">Table 2.4:  </span><span class="caption-text">Center Table</span><a class="headerlink" href="#id5" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
+<th class="head left-align"><p>Header2</p></th>
+<th class="head left-align"><p>Header3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+</tr>
+<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper styled-table docutils container" id="id6">
+<table class="styled-table docutils align-right" id="id6">
+<caption><span class="caption-number">Table 2.5:  </span><span class="caption-text">Right Table</span><a class="headerlink" href="#id6" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
+<th class="head left-align"><p>Header2</p></th>
+<th class="head left-align"><p>Header3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+</tr>
+<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper styled-table fullwidth docutils container" id="id7">
+<table class="styled-table fullwidth docutils align-default" id="id7">
+<caption><span class="caption-number">Table 2.6:  </span><span class="caption-text">Full Width Table</span><a class="headerlink" href="#id7" title="Permalink to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
+<th class="head left-align"><p>Header2</p></th>
+<th class="head left-align"><p>Header3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+<td class="left-align"><p>Row 1</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+<td class="left-align"><p>Row 2</p></td>
+</tr>
+<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+<td class="left-align"><p>Row 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="table-styling-extension">
+<h2><span class="section-number">2.1.4. </span><span class="xref std std-doc">Table Styling Extension</span><a class="headerlink" href="#table-styling-extension" title="Permalink to this heading">#</a></h2>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="id8">
+<table class="styled-table docutils align-default" id="id8">
+<caption><span class="caption-number">Table 2.7:  </span><span class="caption-text">Column Separators</span><a class="headerlink" href="#id8" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 33.3%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub left-align nowrap no-left-divider single-right-divider"><p>Width x1</p></th>
+<th class="head left-align nowrap single-left-divider double-right-divider"><p>Width x2</p></th>
+<th class="head left-align nowrap double-left-divider single-right-divider"><p>Width x3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub left-align nowrap no-left-divider single-right-divider"><p>Header 1</p></th>
+<td class="center-align nowrap single-left-divider double-right-divider"><p>Center 1</p></td>
+<td class="right-align nowrap double-left-divider single-right-divider"><p>Right 1</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap no-left-divider single-right-divider"><p>Header 2</p></th>
+<td class="center-align nowrap single-left-divider double-right-divider"><p>Center 2</p></td>
+<td class="right-align nowrap double-left-divider single-right-divider"><p>Right 2</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap no-left-divider single-right-divider"><p>Header 3</p></th>
+<td class="center-align nowrap single-left-divider double-right-divider"><p>Center 3</p></td>
+<td class="right-align nowrap double-left-divider single-right-divider"><p>Right 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="id9">
+<table class="styled-table docutils align-default" id="id9">
+<caption><span class="caption-number">Table 2.8:  </span><span class="caption-text">Header Alignment &amp; Body Colspans</span><a class="headerlink" href="#id9" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 6.2%" />
+<col style="width: 6.2%" />
+<col style="width: 6.2%" />
+<col style="width: 6.2%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head left-align single-left-divider double-right-divider"><p>Left x1</p></th>
+<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
+<th class="head left-align double-left-divider double-right-divider"><p>Left x1</p></th>
+<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
+<th class="head left-align double-left-divider double-right-divider"><p>Left x2</p></th>
+<th class="head right-align double-left-divider double-right-divider"><p>Right x2</p></th>
+<th class="head left-align double-left-divider double-right-divider"><p>Left x4</p></th>
+<th class="head right-align double-left-divider single-right-divider"><p>Right x4</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="left-align single-left-divider double-right-divider" colspan="2"><p>Left Span x1+1</p></td>
+<td class="center-align double-left-divider double-right-divider" colspan="4"><p>Center Span x1+1+2+2</p></td>
+<td class="center-align double-left-divider single-right-divider" colspan="2"><p>Center Span x4+4</p></td>
+</tr>
+<tr class="row-odd"><td class="left-align single-left-divider single-right-divider" colspan="8"><p>Left Span xALL</p></td>
+</tr>
+<tr class="row-even"><td class="left-align single-left-divider single-right-divider" colspan="8"><p>Left Span xALL</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="id10">
+<table class="styled-table docutils align-default" id="id10">
+<caption><span class="caption-number">Table 2.9:  </span><span class="caption-text">Multi-Row Header &amp; Header Colspans</span><a class="headerlink" href="#id10" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 6.2%" />
+<col style="width: 6.2%" />
+<col style="width: 6.2%" />
+<col style="width: 6.2%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub left-align single-left-divider double-right-divider"><p>Left x1</p></th>
+<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
+<th class="head left-align double-left-divider double-right-divider"><p>Left x1</p></th>
+<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
+<th class="head left-align double-left-divider double-right-divider"><p>Left x2</p></th>
+<th class="head right-align double-left-divider double-right-divider"><p>Right x2</p></th>
+<th class="head left-align double-left-divider double-right-divider"><p>Left x4</p></th>
+<th class="head right-align double-left-divider single-right-divider"><p>Right x4</p></th>
+</tr>
+<tr class="row-even"><th class="head stub left-align single-left-divider double-right-divider" colspan="2"><p>Left Span x1+1</p></th>
+<th class="head left-align double-left-divider double-right-divider" colspan="4"><p>Center Span x1+1+2+2</p></th>
+<th class="head left-align double-left-divider single-right-divider" colspan="2"><p>Center Span x4+4</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><th class="stub left-align single-left-divider double-right-divider"><p>H x1</p></th>
+<td class="center-align double-left-divider double-right-divider"><p>x1</p></td>
+<td class="center-align double-left-divider double-right-divider" colspan="2"><p>Center Span x1+1</p></td>
+<td class="center-align double-left-divider double-right-divider" colspan="2"><p>Center Span x2+2</p></td>
+<td class="center-align double-left-divider single-right-divider" colspan="2"><p>Center Span x4+4</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align single-left-divider double-right-divider"><p>H x1</p></th>
+<td class="center-align double-left-divider single-right-divider" colspan="7"><p>Center Span xALL</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given docutils container" id="id11">
+<span id="tbl-weak-link-it"></span><span id="tbl-weak-link-it"></span><table class="docutils align-right" id="id11" style="width: 50%">
+<caption><span class="caption-number">Table 2.10:  </span><span class="caption-text">Weak Link Inference Table</span><a class="headerlink" href="#id11" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">A</span>&#160; <span class="pre">-</span>&#160; <span class="pre">B</span></code></p></td>
+<td><p><span class="raw-html">&lArr;</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="raw-html"><pre><span class="align-center"><pre><b>A  -  B</b></span></pre></span> And some more text</p></td>
+<td><p>If A is True then B is False</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">F</span>&#160; <span class="pre">:raw-html:`&amp;larr;`</span>&#160; <span class="pre">T</span></code></p></td>
+<td><p>If B is True then A is False</p></td>
+</tr>
+<tr class="row-even"><td><p>+</p></td>
+<td><p>An appended “+” indicates presence of additional candidates</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="raw-html"><span class="overline">X</span></span></p></td>
+<td><p>(overline) Not X, X must be absent</p></td>
+</tr>
+<tr class="row-even"><td><p>*</p></td>
+<td><p>(wildcard) Any Candidate indicated in the pattern can be eliminated.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="raw-html"><span class="strikethrough">X</span></span></p></td>
+<td><p>(strikethrough) If Candidate is present, it can be eliminated.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In this Truth Table A and B are Weakly Linked Ccells as indicated by the “-“.
+The conclusion drawn from a weak link is that one if the one end is True, the other End is False, and the same in the other direction.  That is</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Both ends of a Weak Link can never be True, but both can be False.</p></li>
+<li><p>At least one of A or B is False.</p></li>
+</ul>
+</div></blockquote>
+<section id="strong-links">
+<h3><span class="section-number">2.1.4.1. </span>Strong Links<a class="headerlink" href="#strong-links" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>A strong link between two ccells A and B, is formed with either:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>A conjugate pair, that is, they are in the same house with:</dt><dd><p>◦ same candidate value and
+◦ the only two occurrences of that candidate value in that house.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Or a bi-value cell, that is, they are in the same cell with:</dt><dd><p>◦ different candidate values and
+◦ they are the only two candidate values in that cell.  (Termed a bi-value) cell.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>The pair of same value candidates of a strong link in a house are called a conjugate pair.  This is a reference to the candidates not the links – a subtle distinction.  A cell containing only two candidates is referred to as a bi-value cell.</p>
+<dl class="simple">
+<dt>Strong links are indicated by a “=” linking the two ccells and obey the following inferences:</dt><dd><p>A  =  B
+T  &gt;  F If A is True then B is False
+F  &lt;  T If B is True then A is False.
+F  &gt;  T If A is False then B is True
+T  &lt;  F If B is False then A is True</p>
+</dd>
+</dl>
+<p>Note that lines 1 and 2 are the reverse of each other, as with lines 2 and 3.  2r1c1=2r1c5 and 9r1c1=9r1c5 in the above example are strong links as is 5r1c7=8r1c7 and all of the other bi-value cells in the puzzle.</p>
+<p>The conclusion drawn from a Strong Link is that the ends have opposing polarity, like a magnet.  If the one end is True, the other is always False.  The ends of a strong link can never both be True or False.</p>
+</section>
+<section id="robust-links">
+<h3><span class="section-number">2.1.4.2. </span>Robust Links<a class="headerlink" href="#robust-links" title="Permalink to this heading">#</a></h3>
+<p>Robust links are derived from other structures such as (but not limited to) Alternating Inference
+Chains.  These exhibit opposite characteristics to Weak links.  A robust link is shown as |~| where
+outer “|” (bars) indicate a derived link.</p>
+<blockquote>
+<div><p>A  =  B
+T  &gt;  F If A is True then B is not determined.
+F  &lt;  T If B is True then A is not determined.
+F  &gt;  T If A is False then B is True
+T  &lt;  F If B is False then A is True</p>
+</div></blockquote>
+<p>Note that lines 1 and 2 are the reverse of each other, as with lines 2 and 3.  2r1c1|~|2r1c5.</p>
+<dl class="simple">
+<dt>The inference drawn from a Robust Link is that one if the one end is False, the other End is True, and the same in the other direction.  That is</dt><dd><ul class="simple">
+<li><p>Both ends of a Robust Link can never be False, but both can be True.</p></li>
+<li><p>At least one of A or B is True.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Applying a premise is different to guessing.  A premise is used to infer logical conclusions,
+whereas guessing is taking a chance on randomly selecting what might be the correct cell value.</p>
+</section>
+<section id="group-ccell-links">
+<h3><span class="section-number">2.1.4.3. </span>Group (Ccell) Links<a class="headerlink" href="#group-ccell-links" title="Permalink to this heading">#</a></h3>
+<p>By taking advantage of the Locked Singles property of line / box intersections, it is possible to
+group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
+intersections behave much like regular ccells in the formation of links and chains.</p>
+<figure class="align-right" id="id12">
+<span id="fig-grouped-ccell-link-cd1"></span><a class="reference internal image-reference" href="../_images/grouped-ccell-link-cd1.png"><img alt="Grouped Ccell Link" src="../_images/grouped-ccell-link-cd1.png" style="width: 378.0px; height: 158.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Grouped Ccell Link</span><a class="headerlink" href="#id12" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
+ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
+together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
+A=(BC).</p>
+<p>This linkage in isolation does not give us much, however when used in the formation of other
+patterns like chains, may yield many more productive option.</p>
+<p>If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
+of B or C is True.  Both being True will violate <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
+</section>
+</section>
+<section id="a-truth-and-the-truth">
+<h2><span class="section-number">2.1.5. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="spatial-representation">
+<h2><span class="section-number">2.1.6. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="02-language.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">2.2. </span>Language</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">2. </span>Foundation</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:59f3d49*, Mon, 29 Aug 2022, 23:09:41
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2.1. Core Concepts</a><ul>
+<li><a class="reference internal" href="#ccells">2.1.1. Ccells</a></li>
+<li><a class="reference internal" href="#premises-and-inferences-links">2.1.2. Premises and Inferences (Links)</a><ul>
+<li><a class="reference internal" href="#weak-links">2.1.2.1. Weak Links</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#table-styles">2.1.3. Table Styles</a></li>
+<li><a class="reference internal" href="#table-styling-extension">2.1.4. <span class="xref std std-doc">Table Styling Extension</span></a><ul>
+<li><a class="reference internal" href="#strong-links">2.1.4.1. Strong Links</a></li>
+<li><a class="reference internal" href="#robust-links">2.1.4.2. Robust Links</a></li>
+<li><a class="reference internal" href="#group-ccell-links">2.1.4.3. Group (Ccell) Links</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a-truth-and-the-truth">2.1.5. ‘A Truth’ and ‘The Truth’</a></li>
+<li><a class="reference internal" href="#spatial-representation">2.1.6. Spatial Representation</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    </body>
+</html>

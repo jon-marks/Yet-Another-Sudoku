@@ -1,9 +1,0 @@
-.. title:: Yet another Sudoku | Human Solvable Patterns | Hybrids
-
-=======
-Hybrids
-=======
-
-Hybrid patterns combine other patterns using their strong and weak link characteristics
-in building chains and nets.
-

@@ -146,9 +146,4 @@ Let's go for a sample table too.  This is dummy text.
    | .. image:: images/AIM.png    | Mountain              |
    +------------------------------+-----------------------+
 
-Underlining :underline:`some text`
-
-Overlining :overline:`Some Text`
-
-Strikethrough :strikethrough:`some text`
 

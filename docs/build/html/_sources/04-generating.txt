@@ -1,7 +1,0 @@
-.. title:: Yet another Sudoku | Generating Puzzles
-
-==================
-Generating Puzzles
-==================
-
-Generating puzzles stub.
