@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.4. Base Sets (Truths) and Cover Sets (Links)" href="04-base-cover-sets.html" /><link rel="prev" title="2.2. Language" href="02-language.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.4. Base Sets and Cover Sets" href="04-base-cover-sets.html" /><link rel="prev" title="2.2. Language" href="02-language.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Yet Another Sudoku | Foundation | Subsets</title>
@@ -165,7 +165,7 @@
 <li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html">2.1. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-language.html">2.2. Language</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets (Truths) and Cover Sets (Links)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">2.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">2.7. Uniqueness</a></li>
@@ -235,7 +235,32 @@
         <article role="main">
           <section id="subsets">
 <h1><span class="section-number">2.3. </span>Subsets<a class="headerlink" href="#subsets" title="Permalink to this heading">#</a></h1>
-<p>Subsets stub</p>
+<p>Subsets refer to ‘n’ cell by ‘n’ candidate grouping, where each cell in the grouping contains between
+2 and ‘n’ of the candidates. ‘n’ ranges between 2 and 4, (pairs, triples and quads).  For values
+of “n” &gt; 4, a reciprocal subset relationship of 9 – ‘n’ candidate values exists, so it is
+unnecessary to look for subsets larger than 4.</p>
+<p>A “Straight Subset” (also simply a “Subset”) occurs when this grouping of Ccells is found in a
+single house/group.  “Straight” is a bit of misnomer as the cells may not be in a straight line if
+the house is Box.  A “Bent subset” occurs when this grouping of Ccells occur in two intersecting
+houses/groups with at least one cell in the intersection. At least three cells are required to make
+the bend. The pattern must describe at least two arms about a pivot.</p>
+<p>Subsets can be exposed or hidden:</p>
+<ul class="simple">
+<li><p>An exposed subset is where ‘n’ candidate values are the only values occurring between 2 and
+‘n’ times in the ‘n’ cells.</p></li>
+<li><p>A hidden subset is where ‘n’ candidate values can are confined to ‘n’ cells, but are not
+necessarily the only candidates in those cells.</p></li>
+</ul>
+<p>The logic behind resolving Straight Exposed Subsets is that the ‘n’ candidates can only be True in
+one of the ‘n’ cells they collectively only occupy.  Therefore, they cannot be True outside those ‘n’
+cells, and any of the ‘n’ candidates outside the ‘n’ cells can be eliminated.</p>
+<p>As the ‘n’ candidates are confined to only the ‘n’ cells in a Straight Hidden Subset, those ‘n’
+candidates form ‘A Truth’ in those ‘n’ cells. Therefore, any additional candidates in those ‘n’
+cells cannot be True and can be eliminated.</p>
+<p>The logic for <a class="reference internal" href="04-base-cover-sets.html#exp-str-ssets1"><span class="std std-ref">Exposed</span></a> and <a class="reference internal" href="04-base-cover-sets.html#hid-str-ssets1"><span class="std std-ref">Hidden</span></a> Straight subsets
+can be proven with a bit more algebraic rigour using <a class="reference internal" href="04-base-cover-sets.html#bsets-and-csets1"><span class="std std-ref">Base and Cover Sets</span></a></p>
+<p>Bent Subset patterns are somewhat more varied and complex to identify and resolve, and are
+considered in depth <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#bent-subsets-ch1"><span class="std std-ref">here</span></a>.</p>
 </section>
 
         </article>
@@ -248,7 +273,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">2.4. </span>Base Sets (Truths) and Cover Sets (Links)</div>
+                <div class="title"><span class="section-number">2.4. </span>Base Sets and Cover Sets</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -267,7 +292,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:59f3d49*, Mon, 29 Aug 2022, 23:09:41
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4ce18ae*, Fri, 02 Sep 2022, 00:12:39
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

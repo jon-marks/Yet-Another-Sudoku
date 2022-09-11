@@ -14,7 +14,7 @@ Ccells are three-dimensional tuples of value, row and column, each dimension ran
 between 1 and 9.  In Sudoku, 729 unique (9 value x 9 row x 9 column) possible Ccells exist.  A
 solved Sudoku puzzle comprises 81 unique Ccells of the 729 unique possibilities.  That is each cell
 in the 9 row by 9 column has only one value, all values in all cells obeying
-:ref:`Sudoku Rules <sudoku_rules>`.
+:ref:`Sudoku Rules <sudoku-rules>`.
 
 The term Ccell is not to be confused with a:
 
@@ -30,14 +30,17 @@ Premises and Inferences (Links)
 Source: http://sudopedia.enjoysudoku.com/Inference.html
 
 Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
-inferred.
+inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
+conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
+cell value and testing it.
 
 The most basic assertion of a premise is on the state of a Ccell. For example, asserting
 Ccell 3r7c2 True.
 
-An inference implies a relationship (link) between two Ccells, characterised by how the other Ccell
-responds when premise is asserted on the first Ccell.  For example If 3r7c2 is True, then according
-to :ref:`Sudoku Rules <sudoku_rules>`, 3r7c5 is False.
+An inference implies a relationship (link) between two Ccells, characterised by the other Ccell's
+response to the assertion of a premise on the first Ccell.  For example, If
+:raw-html:`<mong>3r7c2</mong>` is True, then according to :ref:`Sudoku Rules <sudoku-rules>`,
+:raw-html:`<mong>3r7c5</mong>` is False.
 
 The full nature of the inference (link) between two ccells is characterised by the outcome of
 asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:
@@ -51,16 +54,11 @@ Weak Links
 
 A weak link is formed by two ccells A and B, where they are either:
 
-*  In the same house with:
-    * same candidate value, and
-    * more than two occurrences of that candidate value in that house.
-*  In the same cell with:
-    * different candidate values, and
-    * more than two candidates in that cell.
-
-.. _fig-links-eg1:
+* Two or more same valued candidates in that house, or
+* Two of three or more candidates in a cell.
 
 .. figure:: images/links-eg1.png
+   :name: fig-links-eg1
    :scale: 100%
    :alt: Links Example
    :align: right
@@ -71,234 +69,119 @@ A weak link is formed by two ccells A and B, where they are either:
 Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
 Notice that:
 
-*  if 7r7c2 is True, then none of the same valued Ccells in row 7 can be True.
-*  if 7r7c2 is False, it does not infer state of any other same valued Ccell in the row.
+*  if :raw-html:`<mong>7r7c2</mong>` is True, then none of the same valued Ccells in row 7 can be
+   True.
+*  if :raw-html:`<mong>7r7c2</mong>` is False, it does not infer state of any other same valued
+   Ccell in the row.
 
 This is the characteristic defining a Weak Link.
 
-Testing :raw-html:`<b><small><span class="mono"><span class="overline"><span class="italic">Testing</span></span></span></small></b>` Testing.
+Weak links are indicated by a “-”(dash) between the two Ccells, for example, A-B and conform to the following
+inferences:
 
-Testing :raw-html:`<b><span class="mono">Testing</span></b>` Testing.
+.. table:: Weak Link Inference Table
+   :name: tbl-weak-link-it
+   :width: 65%
+   :widths: 30 70
+   :header-alignment: center left
+   :header-columns: 1
+   :column-alignment: center left
+   :column-dividers: single single none
+   :column-wrapping: nn
 
-:raw-html:`<small><span class="mono">qwertyui<b>opasdfgh</b>jkl;;;;;;zxcvbnm,,,,,.</span></small><br>`
-:raw-html:`<span class="mono">.,mnbvcxz';lkjhgfdsa][poiuytrewq90876654</span>`
+   ================================================ =======================================
+   :raw-html:`<mono>A &nbsp;-&nbsp; B</mono>`
+   ================================================ =======================================
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If A is True then B is False
+   :raw-html:`<mono>F &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is False
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; ?</mono>`  If A is False then B is not determined
+   :raw-html:`<mono>? &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is not determined
+   ================================================ =======================================
 
-Weak links are indicated by a “-”, and conform to the following inferences:
+The conclusion drawn from weak link inferences is that if one end is True, the other
+end is False, and if the one end is False, the other end can be either True or False.  That is,
+both ends can never be simultaneously True, and at least one end is always False.
 
-Table Styles
-============
-
-.. table:: Default Table
-
-    =========== =========== ===========
-    Header1     Header2     Header3
-    =========== =========== ===========
-    Row 1       Row 1       Row 1
-    Row 2       Row 2       Row 2
-    Row 3       Row 3       Row 3
-    =========== =========== ===========
-
-.. rst-class:: plain
-
-.. table:: Plain Table (no row shading)
-
-    =========== =========== ===========
-    Header1     Header2     Header3
-    =========== =========== ===========
-    Row 1       Row 1       Row 1
-    Row 2       Row 2       Row 2
-    Row 3       Row 3       Row 3
-    =========== =========== ===========
-
-.. table:: Left Table
-    :align: left
-
-    =========== =========== ===========
-    Header1     Header2     Header3
-    =========== =========== ===========
-    Row 1       Row 1       Row 1
-    Row 2       Row 2       Row 2
-    Row 3       Row 3       Row 3
-    =========== =========== ===========
-
-..
-    :align: center
-
-
-.. table:: Center Table
-
-
-    =========== =========== ===========
-    Header1     Header2     Header3
-    =========== =========== ===========
-    Row 1       Row 1       Row 1
-    Row 2       Row 2       Row 2
-    Row 3       Row 3       Row 3
-    =========== =========== ===========
-
-.. table:: Right Table
-    :align: right
-
-    =========== =========== ===========
-    Header1     Header2     Header3
-    =========== =========== ===========
-    Row 1       Row 1       Row 1
-    Row 2       Row 2       Row 2
-    Row 3       Row 3       Row 3
-    =========== =========== ===========
-
-.. rst-class:: fullwidth
-
-.. table:: Full Width Table
-
-    =========== =========== ===========
-    Header1     Header2     Header3
-    =========== =========== ===========
-    Row 1       Row 1       Row 1
-    Row 2       Row 2       Row 2
-    Row 3       Row 3       Row 3
-    =========== =========== ===========
-
-:doc:`Table Styling Extension <lib/cloud_sptheme.ext.table_styling>`
-====================================================================
-
-.. table:: Column Separators
-    :widths: 1 2 3
-    :header-columns: 1
-    :column-alignment: left center right
-    :column-dividers: none single double single
-    :column-wrapping: nnn
-
-    =========== =========== ===========
-    Width x1    Width x2    Width x3
-    =========== =========== ===========
-    Header 1    Center 1    Right 1
-    Header 2    Center 2    Right 2
-    Header 3    Center 3    Right 3
-    =========== =========== ===========
-
-.. table:: Header Alignment & Body Colspans
-    :widths: 1 1 1 1 2 2 4 4
-    :header-alignment: lrlrlrlr
-    :column-alignment: lccccccc
-    :column-wrapping: tttttttt
-    :column-dividers: 122222221
-
-    ======== ======== ======== ======== ======== ======== ================= =================
-    Left x1  Right x1 Left x1  Right x1 Left x2  Right x2 Left x4           Right x4
-    ======== ======== ======== ======== ======== ======== ================= =================
-    Left Span x1+1    Center Span x1+1+2+2                Center Span x4+4
-    ----------------- ----------------------------------- -----------------------------------
-    Left Span xALL
-    -----------------------------------------------------------------------------------------
-    Left Span xALL
-    =========================================================================================
-
-.. table:: Multi-Row Header & Header Colspans
-    :widths: 1 1 1 1 2 2 4 4
-    :header-alignment: lrlrlrlr
-    :column-alignment: lccccccc
-    :column-wrapping: tttttttt
-    :column-dividers: 122222221
-    :header-columns: 1
-
-    ======== ======== ======== ======== ======== ======== ================= =================
-    Left x1  Right x1 Left x1  Right x1 Left x2  Right x2 Left x4           Right x4
-    -------- -------- -------- -------- -------- -------- ----------------- -----------------
-    Left Span x1+1    Center Span x1+1+2+2                Center Span x4+4
-    ================= =================================== ===================================
-    H x1     x1       Center Span x1+1  Center Span x2+2  Center Span x4+4
-    -------- -------- ----------------- ----------------- -----------------------------------
-    H x1     Center Span xALL
-    ======== ================================================================================
-
-
-
-
-
-.. _tbl-weak-link-it:
-
-.. list-table:: Weak Link Inference Table
-   :widths: 20 80
-   :align: right
-   :width: 50%
-
-   *  -  ``A  -  B``
-      -  :raw-html:`&lArr;`
-   *  -  :raw-html:`<pre><span class="align-center"><pre><b>A  -  B</b></span></pre>` And some more text
-      -  If A is True then B is False
-   *  -  ``F  :raw-html:`&larr;`  T``
-      -  If B is True then A is False
-   *  -  \+
-      -  An appended “+” indicates presence of additional candidates
-   *  -  :raw-html:`<span class="overline">X</span>`
-      -  (overline) Not X, X must be absent
-   *  -  \*
-      -  (wildcard) Any Candidate indicated in the pattern can be eliminated.
-   *  -  :raw-html:`<span class="strikethrough">X</span>`
-      -  (strikethrough) If Candidate is present, it can be eliminated.
-
-..
-	A  -  B
-	T  >  F	If A is True then B is False
-	F  <  T	If B is True then A is False.
-	F  >  ?	If A is False then B is not determined
-	?  <  F	If B is False then A is not determined
-
-In this Truth Table A and B are Weakly Linked Ccells as indicated by the "-".
-The conclusion drawn from a weak link is that one if the one end is True, the other End is False, and the same in the other direction.  That is
-
-    • Both ends of a Weak Link can never be True, but both can be False.
-    • At least one of A or B is False.
-
+Ccells see each other through weak links (directly or indirectly - e.g. Weakly Ended Chain).  When
+any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
+False.
 
 Strong Links
 ------------
 
-A strong link between two ccells A and B, is formed with either:
-    • A conjugate pair, that is, they are in the same house with:
-        ◦ same candidate value and
-        ◦ the only two occurrences of that candidate value in that house.
-    • Or a bi-value cell, that is, they are in the same cell with:
-        ◦ different candidate values and
-        ◦ they are the only two candidate values in that cell.  (Termed a bi-value) cell.
+A strong link between two Ccells A and B, exists either:
+   *  In a conjugate pair (like :raw-html:`<mong>3r7c23</mong>` in :numref:`fig-links-eg1`), where
+      two same valued Ccells are the only same valued Ccells in that house, or
+   *  In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
+      like :raw-html:`<mong>78r7c4</mong>`.
 
-The pair of same value candidates of a strong link in a house are called a conjugate pair.  This is a reference to the candidates not the links – a subtle distinction.  A cell containing only two candidates is referred to as a bi-value cell.
+In :numref:`fig-links-eg1` above:
+
+*  If :raw-html:`<mong>3r7c2</mong>` is False, then :raw-html:`<mong>7r7c3</mong>` must be True, as only one of the conjugate pair must be True.
+*  if :raw-html:`<mong>3r7c2</mong>` is True, then :raw-html:`<mong>7r7c3</mong>` must be False, as only one of the conjugate pair must be False
 
 Strong links are indicated by a “=” linking the two ccells and obey the following inferences:
-	A  =  B
-	T  >  F	If A is True then B is False
-	F  <  T	If B is True then A is False.
-	F  >  T	If A is False then B is True
-	T  <  F	If B is False then A is True
 
-Note that lines 1 and 2 are the reverse of each other, as with lines 2 and 3.  2r1c1=2r1c5 and 9r1c1=9r1c5 in the above example are strong links as is 5r1c7=8r1c7 and all of the other bi-value cells in the puzzle.
+.. table:: Strong Link Inference Table
+   :name: tbl-strong-link-it
+   :width: 65%
+   :widths: 30 70
+   :header-alignment: center left
+   :header-columns: 1
+   :column-alignment: center left
+   :column-dividers: single single none
+   :column-wrapping: nn
 
-The conclusion drawn from a Strong Link is that the ends have opposing polarity, like a magnet.  If the one end is True, the other is always False.  The ends of a strong link can never both be True or False.
+   ================================================ =============================
+   :raw-html:`<mono>A &nbsp;=&nbsp; B</mono>`
+   ================================================ =============================
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If A is True then B is False
+   :raw-html:`<mono>F &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is False
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T</mono>`  If A is False then B is True
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is True
+   ================================================ =============================
+
+The conclusion drawn from a Strong Links is that ends always have opposite state.
+
+Any two Strongly Linked Ccells must be of alternate state, therefore
+
+* if the one end is True the other end is False
+* Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
+  guarantees one of its ends to be True.
 
 Robust Links
 ------------
 
 Robust links are derived from other structures such as (but not limited to) Alternating Inference
-Chains.  These exhibit opposite characteristics to Weak links.  A robust link is shown as \|~| where
-outer "|" (bars) indicate a derived link.
+Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a "\|\~|"
+where the outer bars indicate that this link is derived/indirect resulting from another structure.
 
-	A  =  B
-	T  >  F	If A is True then B is not determined.
-	F  <  T	If B is True then A is not determined.
-	F  >  T	If A is False then B is True
-	T  <  F	If B is False then A is True
+.. table:: Robust Link Inference Table
+   :name: tbl-robust-link-it
+   :width: 65%
+   :widths: 30 70
+   :header-alignment: center left
+   :header-columns: 1
+   :column-alignment: center left
+   :column-dividers: single single none
+   :column-wrapping: nn
 
-Note that lines 1 and 2 are the reverse of each other, as with lines 2 and 3.  2r1c1|~|2r1c5.
+   ================================================ =============================
+   :raw-html:`<mono>A |~| B</mono>`
+   ================================================ =============================
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; ?</mono>`  If A is True then B is not determined
+   :raw-html:`<mono>? &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is not determined
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T</mono>`  If A is False then B is True
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is True
+   ================================================ =============================
 
-The inference drawn from a Robust Link is that one if the one end is False, the other End is True, and the same in the other direction.  That is
-    • Both ends of a Robust Link can never be False, but both can be True.
-    • At least one of A or B is True.
+The conclusion drawn from Robust Link Inferences is that if the one end is False, the other end is
+True, and if the one end is True, the other end can be either True or False.  That is, both ends can
+never be simultaneously False, at least one end is always True.
 
-
-Applying a premise is different to guessing.  A premise is used to infer logical conclusions,
-whereas guessing is taking a chance on randomly selecting what might be the correct cell value.
-
+Any third Ccell that can see both ends of a Robust Link cannot be True, because at least one end is
+guaranteed to be True. But if one end is asserted True, it is impossible to determine the state of
+the other end with a Robust link.
 
 Group (Ccell) Links
 -------------------
@@ -307,9 +190,8 @@ By taking advantage of the Locked Singles property of line / box intersections, 
 group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
 intersections behave much like regular ccells in the formation of links and chains.
 
-.. _fig-grouped-ccell-link-cd1:
-
 .. figure:: images/grouped-ccell-link-cd1.png
+   :name: fig-grouped-ccell-link-cd1
    :scale: 100%
    :alt: Grouped Ccell Link
    :align: right
@@ -323,17 +205,91 @@ together and treated as a “Truth unit”.  Now A and the grouping of B and C f
 A=(BC).
 
 This linkage in isolation does not give us much, however when used in the formation of other
-patterns like chains, may yield many more productive option.
+patterns like chains, may yield many more productive outcomes.
 
 If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
-of B or C is True.  Both being True will violate :ref:`Sudoku Rules <sudoku_rules>`.
-
-
+of B or C is True.  Both B and C being True will violate :ref:`Sudoku Rules <sudoku-rules>`.
 
 'A Truth' and 'The Truth'
 =========================
 
+'A Truth' and 'The Truth' describe the relationships of Ccells in a House or Cell.  For each
+unsolved value in a House or Cell, 'A Truth' is a set of possible values within that group where
+at least one Ccell in that group will ultimately be True.
+
+A Truth is unconditionally True for a puzzle.  A Truth is that set of Ccells in which one (yet to
+be determined) element will be 'The Truth'.  'The Truth' is that last remaining Ccell in a Cell or
+that only remaining uniquely valued Ccell in a House – The Solved Value.
+
+'The Truth' is an individual element of 'A Truth'.
+
+In a House, 'A Truth' is any set of same value Ccells in that house.  In a Cell, 'A Truth' is the
+set of Ccells in that cell.  In a Suduko Grid, 324 Truths exist.  Nine Truths for each row,
+column, box and cell in the grid.
+
+.. figure:: images/truths-eg1.png
+   :name: fig-truths-eg1
+   :scale: 65%
+   :alt: 'A Truth' and 'The Truth' Example
+   :align: right
+   :figwidth: 359px
+
+   'A Truth' and 'The Truth' Example
+
+   :raw-html:`<mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong>`
+
+For example:
+
+*  In Row 4, an 'A Truths' is :raw-html:`<mong>3r4c3468</mong>`. That is all the cells in row 4 containing candidate 3.
+   'The Truth'  will be a 3 in one of those yet to be determined 4 cells.
+*  In Column 4, an 'A Truths' is :raw-html:`<mong>5r1679c4</mong>`.  That is all the cells in column 4 containing 5.  'The
+   Truth' will be a 5 in one of those yet to be determined 4 cells.
+*  In Box 9, an 'A Truth' is :raw-html:`<mong>8r8c7,r9c79</mong>`.  That is all the cells in box 9 containing 8.  'The
+   Truth' will be the 8 in one of those yet to be determined 3 cells.
+*  In Cell :raw-html:`<mong>r6c1</mong>, <mong>1347r6c1</mong>` is 'A Truth'.  'The Truth' will be one of those Ccells in that cell.
+
+|
+|
+|
 
 Spatial Representation
 ======================
+
+This concept comes from Denis Berthier’s Hidden Logic of Sudoku.
+https://github.com/denis-berthier.
+
+A solved puzzle can be described as a unique selection and ordering of 81 ccells (value,
+row, column tuples) out of an exhaustive set of 729 ccells – where values, rows and columns can
+assume any value between 1 and 9, and Sudoku rules apply Sudoku is a Finite Constraint Satisfaction
+problem, and the recognition of patterns and their resolutions in solving the puzzle are the
+constraint propagation techniques.
+
+Conventionally, Sudoku puzzles are spatially represented as values on a 9 row by 9 column grid of
+cells.  However, this is not the only possible spacial representation for Sudoku.  The same
+puzzle can be represented as row numbers on a value x column number or any of the other 6 spatial
+domains:
+
+*  values on a row x column grid (default)
+*  row numbers on a value x column grid
+*  column numbers on a value x row grid
+*  values on a cell x box grid
+*  box numbers on a value x cell grid
+*  cell numbers on a value x box grid
+
+These are simply different representations of the exactly same puzzle board.  Nothing is
+mathematically or logically different about a puzzle in any of these spatial representations.
+The spatial representations simply view the puzzle from different perspectives.
+
+Each perspective, exposes patterns that are hidden in other perspectives.  For example, a hidden
+single or subset patten that is hidden in a row will be exposed when viewed as rows on a value by
+column grid.
+
+The true power of this concept is not in revealing hidden singles and subsets as exposed ones as
+the effort of transforming the perspectives exceeds that of resolving those hidden patterns.
+However, more complex patterns that were hidden become exposed, justifying the transformation
+effort.
+
+Viewing puzzles from different perspectives, come into their own with more complex patterns
+such as chains, loops, nets, bent hidden subsets, etc. Transforming to another domain may make it
+easier to spot exposed patterns that are hidden in the former domain.
 

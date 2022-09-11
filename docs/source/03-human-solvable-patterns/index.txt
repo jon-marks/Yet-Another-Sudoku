@@ -4,9 +4,9 @@
 Human Solvable Patterns
 =======================
 
-The distinction between what is human solvable and what is computer solvable has a wide murky
-subjective middle ground.  With experience and practice this middle ground narrows and tends
-towards computer solvable end.
+The distinction between what is human solvable and what is computer solvable has a wide, murky,
+and subjective middle ground.  With experience and practice this middle ground narrows towards
+computer solvable end.
 
 Practically, there comes a point of diminishing returns between:
    *  the complexity of the pattern,
@@ -14,14 +14,15 @@ Practically, there comes a point of diminishing returns between:
    *  the probability of the pattern’s occurrence.
 
 This text does not claim to be an exhaustive coverage of all possible conditional logic techniques.
-The decision of what to include or not is purely subjective especially those esoteric and convoluted
-techniques involving a mix of other complex techniques.  Many patterns can be identified and
-resolved by more than one logic technique.  Where multiple techniques can resolve a pattern, the technique with the
-broadest reach is favoured, unless it is rather more complex than another technique.
+The decision of what or not to include is subjective especially when it comes to those esoteric and
+convoluted techniques involving a mix of other complex techniques.
+
+Many patterns can be identified and resolved by more than one logic technique.  Where multiple
+techniques can resolve a pattern, the technique with the broadest reach is favoured, unless it is
+rather more complex than another technique.
 
 .. toctree::
    :maxdepth: 5
-
 
    01-singles
    02-subsets

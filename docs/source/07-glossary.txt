@@ -9,24 +9,44 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
 .. glossary::
 
+   **Bi-value Cell**
+      A cell on a Sudoku board containing only 2 candidate values.  A :term:`Strong Link` exists between
+      these two candidates in that cell.
+
    **Board**
       A solved, filled or completed puzzle.
 
    **Box**
       A 3x3 Grid of which 9, also arranged as 3x3 to create a Sudoku grid.
 
-   Grid
-      9x9 grid, subdivided into 9  – 3x3 :Term:`Box`\es  (Blocks) on to which Sudoku puzzles are spatially
-      represented. I generally call an empty grid a grid, a partially filled grid a puzzle and
-      a filled grid, a board.
+   **Ccell**
+      A three dimensional tuple uniquely identifying a candidate element by value, row,
+      and column in a Sudoku Grid.
 
+   **Conjugate Pair**
+      The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
+      reference to the candidates not the links – a subtle distinction.
 
-   Puzzle
-      A partially completed Sudoku in a puzzle, it may only be populated with the givens or with givens and some solved values.
+   **Grid**
+      9x9 grid, subdivided into 9  – 3x3 :Term:`Box`\es  (Blocks) on to which Sudoku puzzles are
+      spatially represented.
 
-   Ccell
-      Blah, blah, blah
+   **Puzzle**
+      A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
+      givens and some solved values.
 
+   **Robust Link**
+      An inference between two Ccells at the ends of a Strongly Ended Alternating Inference Chain.
+      Neither end can be simultaneously False, and at least one end is always True
+
+   **Strong Link**
+      An inference between two Ccells where neither can be simultaneously False, nor simultaneously
+      True.  If one Ccell is True, the other is False and vice-versa.
+
+   **Weak Link**
+      An inference between two Ccells where neither can be simultaneously True, and at least one end
+      is always False.  A Weak Link is formed by 3 or more same valued candidates in a
+      house or three or more candidates in a cell.
 
 Box / Block:	One of the 9 3x3 sub grids making up the 9 x 9 Sudoku grid.
 Chute/Band:	3 Boxes in a row or column.  A horizontal chute is known as a Floor, a vertical chute is known as a Tower.

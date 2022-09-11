@@ -165,7 +165,7 @@
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.1. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-language.html">2.2. Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-subsets.html">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets (Truths) and Cover Sets (Links)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">2.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">2.7. Uniqueness</a></li>
@@ -257,12 +257,15 @@ Rules.</p></li>
 <h2><span class="section-number">2.1.2. </span>Premises and Inferences (Links)<a class="headerlink" href="#premises-and-inferences-links" title="Permalink to this heading">#</a></h2>
 <p>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Inference.html">http://sudopedia.enjoysudoku.com/Inference.html</a></p>
 <p>Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
-inferred.</p>
+inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
+conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
+cell value and testing it.</p>
 <p>The most basic assertion of a premise is on the state of a Ccell. For example, asserting
 Ccell 3r7c2 True.</p>
-<p>An inference implies a relationship (link) between two Ccells, characterised by how the other Ccell
-responds when premise is asserted on the first Ccell.  For example If 3r7c2 is True, then according
-to <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>, 3r7c5 is False.</p>
+<p>An inference implies a relationship (link) between two Ccells, characterised by the other Ccell’s
+response to the assertion of a premise on the first Ccell.  For example, If
+<span class="raw-html"><mong>3r7c2</mong></span> is True, then according to <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>,
+<span class="raw-html"><mong>3r7c5</mong></span> is False.</p>
 <p>The full nature of the inference (link) between two ccells is characterised by the outcome of
 asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:</p>
 <ul class="simple">
@@ -274,408 +277,163 @@ asserting each Ccell True and False.  The important link (inference) relationshi
 <h3><span class="section-number">2.1.2.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Permalink to this heading">#</a></h3>
 <p>A weak link is formed by two ccells A and B, where they are either:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>In the same house with:</dt><dd><ul>
-<li><p>same candidate value, and</p></li>
-<li><p>more than two occurrences of that candidate value in that house.</p></li>
+<li><p>Two or more same valued candidates in that house, or</p></li>
+<li><p>Two of three or more candidates in a cell.</p></li>
 </ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>In the same cell with:</dt><dd><ul>
-<li><p>different candidate values, and</p></li>
-<li><p>more than two candidates in that cell.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-<figure class="align-right" id="id1">
-<span id="fig-links-eg1"></span><a class="reference internal image-reference" href="../_images/links-eg1.png"><img alt="Links Example" src="../_images/links-eg1.png" style="width: 378.0px; height: 76.0px;" /></a>
+<figure class="align-right" id="fig-links-eg1">
+<a class="reference internal image-reference" href="../_images/links-eg1.png"><img alt="Links Example" src="../_images/links-eg1.png" style="width: 378.0px; height: 76.0px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.1:  </span><span class="caption-text">Links Example</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.1:  </span><span class="caption-text">Links Example</span><a class="headerlink" href="#fig-links-eg1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
 Notice that:</p>
 <ul class="simple">
-<li><p>if 7r7c2 is True, then none of the same valued Ccells in row 7 can be True.</p></li>
-<li><p>if 7r7c2 is False, it does not infer state of any other same valued Ccell in the row.</p></li>
+<li><p>if <span class="raw-html"><mong>7r7c2</mong></span> is True, then none of the same valued Ccells in row 7 can be
+True.</p></li>
+<li><p>if <span class="raw-html"><mong>7r7c2</mong></span> is False, it does not infer state of any other same valued
+Ccell in the row.</p></li>
 </ul>
 <p>This is the characteristic defining a Weak Link.</p>
-<p>Testing <span class="raw-html"><b><small><span class="mono"><span class="overline"><span class="italic">Testing</span></span></span></small></b></span> Testing.</p>
-<p>Testing <span class="raw-html"><b><span class="mono">Testing</span></b></span> Testing.</p>
-<p><span class="raw-html"><small><span class="mono">qwertyui<b>opasdfgh</b>jkl;;;;;;zxcvbnm,,,,,.</span></small><br></span>
-<span class="raw-html"><span class="mono">.,mnbvcxz';lkjhgfdsa][poiuytrewq90876654</span></span></p>
-<p>Weak links are indicated by a “-”, and conform to the following inferences:</p>
+<p>Weak links are indicated by a “-”(dash) between the two Ccells, for example, A-B and conform to the following
+inferences:</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-weak-link-it">
+<table class="styled-table docutils align-default" id="tbl-weak-link-it" style="width: 65%">
+<caption><span class="caption-number">Table 2.1:  </span><span class="caption-text">Weak Link Inference Table</span><a class="headerlink" href="#tbl-weak-link-it" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A &nbsp;-&nbsp; B</mono></span></p></th>
+<th class="head left-align nowrap single-left-divider no-right-divider"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is True then B is False</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&larr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is True then A is False</p></td>
+</tr>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&rarr;&nbsp; ?</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is False then B is not determined</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>? &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is False then A is not determined</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The conclusion drawn from weak link inferences is that if one end is True, the other
+end is False, and if the one end is False, the other end can be either True or False.  That is,
+both ends can never be simultaneously True, and at least one end is always False.</p>
+<p>Ccells see each other through weak links (directly or indirectly - e.g. Weakly Ended Chain).  When
+any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
+False.</p>
 </section>
-</section>
-<section id="table-styles">
-<h2><span class="section-number">2.1.3. </span>Table Styles<a class="headerlink" href="#table-styles" title="Permalink to this heading">#</a></h2>
-<div class="table-wrapper styled-table docutils container" id="id2">
-<table class="styled-table docutils align-default" id="id2">
-<caption><span class="caption-number">Table 2.1:  </span><span class="caption-text">Default Table</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
-<th class="head left-align"><p>Header2</p></th>
-<th class="head left-align"><p>Header3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-</tr>
-<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper styled-table plain docutils container" id="id3">
-<table class="styled-table plain docutils align-default" id="id3">
-<caption><span class="caption-number">Table 2.2:  </span><span class="caption-text">Plain Table (no row shading)</span><a class="headerlink" href="#id3" title="Permalink to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
-<th class="head left-align"><p>Header2</p></th>
-<th class="head left-align"><p>Header3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-</tr>
-<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper styled-table docutils container" id="id4">
-<table class="styled-table docutils align-left" id="id4">
-<caption><span class="caption-number">Table 2.3:  </span><span class="caption-text">Left Table</span><a class="headerlink" href="#id4" title="Permalink to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
-<th class="head left-align"><p>Header2</p></th>
-<th class="head left-align"><p>Header3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-</tr>
-<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper styled-table docutils container" id="id5">
-<table class="styled-table docutils align-default" id="id5">
-<caption><span class="caption-number">Table 2.4:  </span><span class="caption-text">Center Table</span><a class="headerlink" href="#id5" title="Permalink to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
-<th class="head left-align"><p>Header2</p></th>
-<th class="head left-align"><p>Header3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-</tr>
-<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper styled-table docutils container" id="id6">
-<table class="styled-table docutils align-right" id="id6">
-<caption><span class="caption-number">Table 2.5:  </span><span class="caption-text">Right Table</span><a class="headerlink" href="#id6" title="Permalink to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
-<th class="head left-align"><p>Header2</p></th>
-<th class="head left-align"><p>Header3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-</tr>
-<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper styled-table fullwidth docutils container" id="id7">
-<table class="styled-table fullwidth docutils align-default" id="id7">
-<caption><span class="caption-number">Table 2.6:  </span><span class="caption-text">Full Width Table</span><a class="headerlink" href="#id7" title="Permalink to this table">#</a></caption>
-<thead>
-<tr class="row-odd"><th class="head left-align"><p>Header1</p></th>
-<th class="head left-align"><p>Header2</p></th>
-<th class="head left-align"><p>Header3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-<td class="left-align"><p>Row 1</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-<td class="left-align"><p>Row 2</p></td>
-</tr>
-<tr class="row-even"><td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-<td class="left-align"><p>Row 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="table-styling-extension">
-<h2><span class="section-number">2.1.4. </span><span class="xref std std-doc">Table Styling Extension</span><a class="headerlink" href="#table-styling-extension" title="Permalink to this heading">#</a></h2>
-<div class="table-wrapper colwidths-given styled-table docutils container" id="id8">
-<table class="styled-table docutils align-default" id="id8">
-<caption><span class="caption-number">Table 2.7:  </span><span class="caption-text">Column Separators</span><a class="headerlink" href="#id8" title="Permalink to this table">#</a></caption>
-<colgroup>
-<col style="width: 16.7%" />
-<col style="width: 33.3%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head stub left-align nowrap no-left-divider single-right-divider"><p>Width x1</p></th>
-<th class="head left-align nowrap single-left-divider double-right-divider"><p>Width x2</p></th>
-<th class="head left-align nowrap double-left-divider single-right-divider"><p>Width x3</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><th class="stub left-align nowrap no-left-divider single-right-divider"><p>Header 1</p></th>
-<td class="center-align nowrap single-left-divider double-right-divider"><p>Center 1</p></td>
-<td class="right-align nowrap double-left-divider single-right-divider"><p>Right 1</p></td>
-</tr>
-<tr class="row-odd"><th class="stub left-align nowrap no-left-divider single-right-divider"><p>Header 2</p></th>
-<td class="center-align nowrap single-left-divider double-right-divider"><p>Center 2</p></td>
-<td class="right-align nowrap double-left-divider single-right-divider"><p>Right 2</p></td>
-</tr>
-<tr class="row-even"><th class="stub left-align nowrap no-left-divider single-right-divider"><p>Header 3</p></th>
-<td class="center-align nowrap single-left-divider double-right-divider"><p>Center 3</p></td>
-<td class="right-align nowrap double-left-divider single-right-divider"><p>Right 3</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper colwidths-given styled-table docutils container" id="id9">
-<table class="styled-table docutils align-default" id="id9">
-<caption><span class="caption-number">Table 2.8:  </span><span class="caption-text">Header Alignment &amp; Body Colspans</span><a class="headerlink" href="#id9" title="Permalink to this table">#</a></caption>
-<colgroup>
-<col style="width: 6.2%" />
-<col style="width: 6.2%" />
-<col style="width: 6.2%" />
-<col style="width: 6.2%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 25.0%" />
-<col style="width: 25.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head left-align single-left-divider double-right-divider"><p>Left x1</p></th>
-<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
-<th class="head left-align double-left-divider double-right-divider"><p>Left x1</p></th>
-<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
-<th class="head left-align double-left-divider double-right-divider"><p>Left x2</p></th>
-<th class="head right-align double-left-divider double-right-divider"><p>Right x2</p></th>
-<th class="head left-align double-left-divider double-right-divider"><p>Left x4</p></th>
-<th class="head right-align double-left-divider single-right-divider"><p>Right x4</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td class="left-align single-left-divider double-right-divider" colspan="2"><p>Left Span x1+1</p></td>
-<td class="center-align double-left-divider double-right-divider" colspan="4"><p>Center Span x1+1+2+2</p></td>
-<td class="center-align double-left-divider single-right-divider" colspan="2"><p>Center Span x4+4</p></td>
-</tr>
-<tr class="row-odd"><td class="left-align single-left-divider single-right-divider" colspan="8"><p>Left Span xALL</p></td>
-</tr>
-<tr class="row-even"><td class="left-align single-left-divider single-right-divider" colspan="8"><p>Left Span xALL</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper colwidths-given styled-table docutils container" id="id10">
-<table class="styled-table docutils align-default" id="id10">
-<caption><span class="caption-number">Table 2.9:  </span><span class="caption-text">Multi-Row Header &amp; Header Colspans</span><a class="headerlink" href="#id10" title="Permalink to this table">#</a></caption>
-<colgroup>
-<col style="width: 6.2%" />
-<col style="width: 6.2%" />
-<col style="width: 6.2%" />
-<col style="width: 6.2%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 25.0%" />
-<col style="width: 25.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head stub left-align single-left-divider double-right-divider"><p>Left x1</p></th>
-<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
-<th class="head left-align double-left-divider double-right-divider"><p>Left x1</p></th>
-<th class="head right-align double-left-divider double-right-divider"><p>Right x1</p></th>
-<th class="head left-align double-left-divider double-right-divider"><p>Left x2</p></th>
-<th class="head right-align double-left-divider double-right-divider"><p>Right x2</p></th>
-<th class="head left-align double-left-divider double-right-divider"><p>Left x4</p></th>
-<th class="head right-align double-left-divider single-right-divider"><p>Right x4</p></th>
-</tr>
-<tr class="row-even"><th class="head stub left-align single-left-divider double-right-divider" colspan="2"><p>Left Span x1+1</p></th>
-<th class="head left-align double-left-divider double-right-divider" colspan="4"><p>Center Span x1+1+2+2</p></th>
-<th class="head left-align double-left-divider single-right-divider" colspan="2"><p>Center Span x4+4</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-odd"><th class="stub left-align single-left-divider double-right-divider"><p>H x1</p></th>
-<td class="center-align double-left-divider double-right-divider"><p>x1</p></td>
-<td class="center-align double-left-divider double-right-divider" colspan="2"><p>Center Span x1+1</p></td>
-<td class="center-align double-left-divider double-right-divider" colspan="2"><p>Center Span x2+2</p></td>
-<td class="center-align double-left-divider single-right-divider" colspan="2"><p>Center Span x4+4</p></td>
-</tr>
-<tr class="row-even"><th class="stub left-align single-left-divider double-right-divider"><p>H x1</p></th>
-<td class="center-align double-left-divider single-right-divider" colspan="7"><p>Center Span xALL</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="table-wrapper colwidths-given docutils container" id="id11">
-<span id="tbl-weak-link-it"></span><span id="tbl-weak-link-it"></span><table class="docutils align-right" id="id11" style="width: 50%">
-<caption><span class="caption-number">Table 2.10:  </span><span class="caption-text">Weak Link Inference Table</span><a class="headerlink" href="#id11" title="Permalink to this table">#</a></caption>
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 80.0%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">A</span>&#160; <span class="pre">-</span>&#160; <span class="pre">B</span></code></p></td>
-<td><p><span class="raw-html">&lArr;</span></p></td>
-</tr>
-<tr class="row-even"><td><p><span class="raw-html"><pre><span class="align-center"><pre><b>A  -  B</b></span></pre></span> And some more text</p></td>
-<td><p>If A is True then B is False</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">F</span>&#160; <span class="pre">:raw-html:`&amp;larr;`</span>&#160; <span class="pre">T</span></code></p></td>
-<td><p>If B is True then A is False</p></td>
-</tr>
-<tr class="row-even"><td><p>+</p></td>
-<td><p>An appended “+” indicates presence of additional candidates</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="raw-html"><span class="overline">X</span></span></p></td>
-<td><p>(overline) Not X, X must be absent</p></td>
-</tr>
-<tr class="row-even"><td><p>*</p></td>
-<td><p>(wildcard) Any Candidate indicated in the pattern can be eliminated.</p></td>
-</tr>
-<tr class="row-odd"><td><p><span class="raw-html"><span class="strikethrough">X</span></span></p></td>
-<td><p>(strikethrough) If Candidate is present, it can be eliminated.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>In this Truth Table A and B are Weakly Linked Ccells as indicated by the “-“.
-The conclusion drawn from a weak link is that one if the one end is True, the other End is False, and the same in the other direction.  That is</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Both ends of a Weak Link can never be True, but both can be False.</p></li>
-<li><p>At least one of A or B is False.</p></li>
-</ul>
-</div></blockquote>
 <section id="strong-links">
-<h3><span class="section-number">2.1.4.1. </span>Strong Links<a class="headerlink" href="#strong-links" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.1.2.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Permalink to this heading">#</a></h3>
 <dl class="simple">
-<dt>A strong link between two ccells A and B, is formed with either:</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>A conjugate pair, that is, they are in the same house with:</dt><dd><p>◦ same candidate value and
-◦ the only two occurrences of that candidate value in that house.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Or a bi-value cell, that is, they are in the same cell with:</dt><dd><p>◦ different candidate values and
-◦ they are the only two candidate values in that cell.  (Termed a bi-value) cell.</p>
-</dd>
-</dl>
-</li>
+<dt>A strong link between two Ccells A and B, exists either:</dt><dd><ul class="simple">
+<li><p>In a conjugate pair (like <span class="raw-html"><mong>3r7c23</mong></span> in <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.1: </span></a>), where
+two same valued Ccells are the only same valued Ccells in that house, or</p></li>
+<li><p>In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
+like <span class="raw-html"><mong>78r7c4</mong></span>.</p></li>
 </ul>
 </dd>
 </dl>
-<p>The pair of same value candidates of a strong link in a house are called a conjugate pair.  This is a reference to the candidates not the links – a subtle distinction.  A cell containing only two candidates is referred to as a bi-value cell.</p>
-<dl class="simple">
-<dt>Strong links are indicated by a “=” linking the two ccells and obey the following inferences:</dt><dd><p>A  =  B
-T  &gt;  F If A is True then B is False
-F  &lt;  T If B is True then A is False.
-F  &gt;  T If A is False then B is True
-T  &lt;  F If B is False then A is True</p>
-</dd>
-</dl>
-<p>Note that lines 1 and 2 are the reverse of each other, as with lines 2 and 3.  2r1c1=2r1c5 and 9r1c1=9r1c5 in the above example are strong links as is 5r1c7=8r1c7 and all of the other bi-value cells in the puzzle.</p>
-<p>The conclusion drawn from a Strong Link is that the ends have opposing polarity, like a magnet.  If the one end is True, the other is always False.  The ends of a strong link can never both be True or False.</p>
+<p>In <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.1: </span></a> above:</p>
+<ul class="simple">
+<li><p>If <span class="raw-html"><mong>3r7c2</mong></span> is False, then <span class="raw-html"><mong>7r7c3</mong></span> must be True, as only one of the conjugate pair must be True.</p></li>
+<li><p>if <span class="raw-html"><mong>3r7c2</mong></span> is True, then <span class="raw-html"><mong>7r7c3</mong></span> must be False, as only one of the conjugate pair must be False</p></li>
+</ul>
+<p>Strong links are indicated by a “=” linking the two ccells and obey the following inferences:</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-strong-link-it">
+<table class="styled-table docutils align-default" id="tbl-strong-link-it" style="width: 65%">
+<caption><span class="caption-number">Table 2.2:  </span><span class="caption-text">Strong Link Inference Table</span><a class="headerlink" href="#tbl-strong-link-it" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A &nbsp;=&nbsp; B</mono></span></p></th>
+<th class="head left-align nowrap single-left-divider no-right-divider"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is True then B is False</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&larr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is True then A is False</p></td>
+</tr>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&rarr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is False then B is True</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is False then A is True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The conclusion drawn from a Strong Links is that ends always have opposite state.</p>
+<p>Any two Strongly Linked Ccells must be of alternate state, therefore</p>
+<ul class="simple">
+<li><p>if the one end is True the other end is False</p></li>
+<li><p>Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
+guarantees one of its ends to be True.</p></li>
+</ul>
 </section>
 <section id="robust-links">
-<h3><span class="section-number">2.1.4.2. </span>Robust Links<a class="headerlink" href="#robust-links" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.1.2.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Permalink to this heading">#</a></h3>
 <p>Robust links are derived from other structures such as (but not limited to) Alternating Inference
-Chains.  These exhibit opposite characteristics to Weak links.  A robust link is shown as |~| where
-outer “|” (bars) indicate a derived link.</p>
-<blockquote>
-<div><p>A  =  B
-T  &gt;  F If A is True then B is not determined.
-F  &lt;  T If B is True then A is not determined.
-F  &gt;  T If A is False then B is True
-T  &lt;  F If B is False then A is True</p>
-</div></blockquote>
-<p>Note that lines 1 and 2 are the reverse of each other, as with lines 2 and 3.  2r1c1|~|2r1c5.</p>
-<dl class="simple">
-<dt>The inference drawn from a Robust Link is that one if the one end is False, the other End is True, and the same in the other direction.  That is</dt><dd><ul class="simple">
-<li><p>Both ends of a Robust Link can never be False, but both can be True.</p></li>
-<li><p>At least one of A or B is True.</p></li>
-</ul>
-</dd>
-</dl>
-<p>Applying a premise is different to guessing.  A premise is used to infer logical conclusions,
-whereas guessing is taking a chance on randomly selecting what might be the correct cell value.</p>
+Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a “|~|”
+where the outer bars indicate that this link is derived/indirect resulting from another structure.</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-robust-link-it">
+<table class="styled-table docutils align-default" id="tbl-robust-link-it" style="width: 65%">
+<caption><span class="caption-number">Table 2.3:  </span><span class="caption-text">Robust Link Inference Table</span><a class="headerlink" href="#tbl-robust-link-it" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A |~| B</mono></span></p></th>
+<th class="head left-align nowrap single-left-divider no-right-divider"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; ?</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is True then B is not determined</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>? &nbsp;&larr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is True then A is not determined</p></td>
+</tr>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&rarr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is False then B is True</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is False then A is True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The conclusion drawn from Robust Link Inferences is that if the one end is False, the other end is
+True, and if the one end is True, the other end can be either True or False.  That is, both ends can
+never be simultaneously False, at least one end is always True.</p>
+<p>Any third Ccell that can see both ends of a Robust Link cannot be True, because at least one end is
+guaranteed to be True. But if one end is asserted True, it is impossible to determine the state of
+the other end with a Robust link.</p>
 </section>
 <section id="group-ccell-links">
-<h3><span class="section-number">2.1.4.3. </span>Group (Ccell) Links<a class="headerlink" href="#group-ccell-links" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.1.2.4. </span>Group (Ccell) Links<a class="headerlink" href="#group-ccell-links" title="Permalink to this heading">#</a></h3>
 <p>By taking advantage of the Locked Singles property of line / box intersections, it is possible to
 group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
 intersections behave much like regular ccells in the formation of links and chains.</p>
-<figure class="align-right" id="id12">
-<span id="fig-grouped-ccell-link-cd1"></span><a class="reference internal image-reference" href="../_images/grouped-ccell-link-cd1.png"><img alt="Grouped Ccell Link" src="../_images/grouped-ccell-link-cd1.png" style="width: 378.0px; height: 158.0px;" /></a>
+<figure class="align-right" id="fig-grouped-ccell-link-cd1">
+<a class="reference internal image-reference" href="../_images/grouped-ccell-link-cd1.png"><img alt="Grouped Ccell Link" src="../_images/grouped-ccell-link-cd1.png" style="width: 378.0px; height: 158.0px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Grouped Ccell Link</span><a class="headerlink" href="#id12" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Grouped Ccell Link</span><a class="headerlink" href="#fig-grouped-ccell-link-cd1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
@@ -683,16 +441,82 @@ ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, th
 together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
 A=(BC).</p>
 <p>This linkage in isolation does not give us much, however when used in the formation of other
-patterns like chains, may yield many more productive option.</p>
+patterns like chains, may yield many more productive outcomes.</p>
 <p>If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
-of B or C is True.  Both being True will violate <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
+of B or C is True.  Both B and C being True will violate <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
 </section>
 </section>
 <section id="a-truth-and-the-truth">
-<h2><span class="section-number">2.1.5. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.1.3. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Permalink to this heading">#</a></h2>
+<p>‘A Truth’ and ‘The Truth’ describe the relationships of Ccells in a House or Cell.  For each
+unsolved value in a House or Cell, ‘A Truth’ is a set of possible values within that group where
+at least one Ccell in that group will ultimately be True.</p>
+<p>A Truth is unconditionally True for a puzzle.  A Truth is that set of Ccells in which one (yet to
+be determined) element will be ‘The Truth’.  ‘The Truth’ is that last remaining Ccell in a Cell or
+that only remaining uniquely valued Ccell in a House – The Solved Value.</p>
+<p>‘The Truth’ is an individual element of ‘A Truth’.</p>
+<p>In a House, ‘A Truth’ is any set of same value Ccells in that house.  In a Cell, ‘A Truth’ is the
+set of Ccells in that cell.  In a Suduko Grid, 324 Truths exist.  Nine Truths for each row,
+column, box and cell in the grid.</p>
+<figure class="align-right" id="fig-truths-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/truths-eg1.png"><img alt="'A Truth' and 'The Truth' Example" src="../_images/truths-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.3:  </span><span class="caption-text">‘A Truth’ and ‘The Truth’ Example</span><a class="headerlink" href="#fig-truths-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>For example:</p>
+<ul class="simple">
+<li><p>In Row 4, an ‘A Truths’ is <span class="raw-html"><mong>3r4c3468</mong></span>. That is all the cells in row 4 containing candidate 3.
+‘The Truth’  will be a 3 in one of those yet to be determined 4 cells.</p></li>
+<li><p>In Column 4, an ‘A Truths’ is <span class="raw-html"><mong>5r1679c4</mong></span>.  That is all the cells in column 4 containing 5.  ‘The
+Truth’ will be a 5 in one of those yet to be determined 4 cells.</p></li>
+<li><p>In Box 9, an ‘A Truth’ is <span class="raw-html"><mong>8r8c7,r9c79</mong></span>.  That is all the cells in box 9 containing 8.  ‘The
+Truth’ will be the 8 in one of those yet to be determined 3 cells.</p></li>
+<li><p>In Cell <span class="raw-html"><mong>r6c1</mong>, <mong>1347r6c1</mong></span> is ‘A Truth’.  ‘The Truth’ will be one of those Ccells in that cell.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
 </section>
 <section id="spatial-representation">
-<h2><span class="section-number">2.1.6. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.1.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Permalink to this heading">#</a></h2>
+<p>This concept comes from Denis Berthier’s Hidden Logic of Sudoku.
+<a class="reference external" href="https://github.com/denis-berthier">https://github.com/denis-berthier</a>.</p>
+<p>A solved puzzle can be described as a unique selection and ordering of 81 ccells (value,
+row, column tuples) out of an exhaustive set of 729 ccells – where values, rows and columns can
+assume any value between 1 and 9, and Sudoku rules apply Sudoku is a Finite Constraint Satisfaction
+problem, and the recognition of patterns and their resolutions in solving the puzzle are the
+constraint propagation techniques.</p>
+<p>Conventionally, Sudoku puzzles are spatially represented as values on a 9 row by 9 column grid of
+cells.  However, this is not the only possible spacial representation for Sudoku.  The same
+puzzle can be represented as row numbers on a value x column number or any of the other 6 spatial
+domains:</p>
+<ul class="simple">
+<li><p>values on a row x column grid (default)</p></li>
+<li><p>row numbers on a value x column grid</p></li>
+<li><p>column numbers on a value x row grid</p></li>
+<li><p>values on a cell x box grid</p></li>
+<li><p>box numbers on a value x cell grid</p></li>
+<li><p>cell numbers on a value x box grid</p></li>
+</ul>
+<p>These are simply different representations of the exactly same puzzle board.  Nothing is
+mathematically or logically different about a puzzle in any of these spatial representations.
+The spatial representations simply view the puzzle from different perspectives.</p>
+<p>Each perspective, exposes patterns that are hidden in other perspectives.  For example, a hidden
+single or subset patten that is hidden in a row will be exposed when viewed as rows on a value by
+column grid.</p>
+<p>The true power of this concept is not in revealing hidden singles and subsets as exposed ones as
+the effort of transforming the perspectives exceeds that of resolving those hidden patterns.
+However, more complex patterns that were hidden become exposed, justifying the transformation
+effort.</p>
+<p>Viewing puzzles from different perspectives, come into their own with more complex patterns
+such as chains, loops, nets, bent hidden subsets, etc. Transforming to another domain may make it
+easier to spot exposed patterns that are hidden in the former domain.</p>
 </section>
 </section>
 
@@ -725,7 +549,7 @@ of B or C is True.  Both being True will violate <a class="reference internal" h
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:59f3d49*, Mon, 29 Aug 2022, 23:09:41
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4ce18ae*, Fri, 02 Sep 2022, 00:12:39
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -757,17 +581,13 @@ of B or C is True.  Both being True will violate <a class="reference internal" h
 <li><a class="reference internal" href="#ccells">2.1.1. Ccells</a></li>
 <li><a class="reference internal" href="#premises-and-inferences-links">2.1.2. Premises and Inferences (Links)</a><ul>
 <li><a class="reference internal" href="#weak-links">2.1.2.1. Weak Links</a></li>
+<li><a class="reference internal" href="#strong-links">2.1.2.2. Strong Links</a></li>
+<li><a class="reference internal" href="#robust-links">2.1.2.3. Robust Links</a></li>
+<li><a class="reference internal" href="#group-ccell-links">2.1.2.4. Group (Ccell) Links</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#table-styles">2.1.3. Table Styles</a></li>
-<li><a class="reference internal" href="#table-styling-extension">2.1.4. <span class="xref std std-doc">Table Styling Extension</span></a><ul>
-<li><a class="reference internal" href="#strong-links">2.1.4.1. Strong Links</a></li>
-<li><a class="reference internal" href="#robust-links">2.1.4.2. Robust Links</a></li>
-<li><a class="reference internal" href="#group-ccell-links">2.1.4.3. Group (Ccell) Links</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a-truth-and-the-truth">2.1.5. ‘A Truth’ and ‘The Truth’</a></li>
-<li><a class="reference internal" href="#spatial-representation">2.1.6. Spatial Representation</a></li>
+<li><a class="reference internal" href="#a-truth-and-the-truth">2.1.3. ‘A Truth’ and ‘The Truth’</a></li>
+<li><a class="reference internal" href="#spatial-representation">2.1.4. Spatial Representation</a></li>
 </ul>
 </li>
 </ul>

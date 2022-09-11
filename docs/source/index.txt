@@ -33,19 +33,27 @@ List of Figures
 
 |  :numref:`fig-links-eg1` :ref:`fig-links-eg1`
 |  :numref:`fig-grouped-ccell-link-cd1` :ref:`fig-grouped-ccell-link-cd1`
+|  :numref:`fig-truths-eg1` :ref:`fig-truths-eg1`
 |  :numref:`fig-locked-exposed-pair-cd1` :ref:`fig-locked-exposed-pair-cd1`
 |  :numref:`fig-y-wing-cd1` :ref:`fig-y-wing-cd1`
 |  :numref:`fig-locked-pointing-single-cd1` :ref:`fig-locked-pointing-single-cd1`
 |  :numref:`fig-xyz-wing-cd1` :ref:`fig-xyz-wing-cd1`
 |  :numref:`fig-locked-exposed-triple-cd1` :ref:`fig-locked-exposed-triple-cd1`
+|  :numref:`fig-base-cover-eg1` :ref:`fig-base-cover-eg1`
+|  :numref:`fig-base-cover-eg2` :ref:`fig-base-cover-eg2`
+|  :numref:`fig-hidden-pair-eg1` :ref:`fig-hidden-pair-eg1`
+|  :numref:`fig-x-wing-eg1` :ref:`fig-x-wing-eg1`
 |  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
 
 ==============
 List of Tables
 ==============
 
-|  :numref:`tbl-cand-diag-comps` :ref:`tbl-cand-diag-comps`
+|  :numref:`tbl-weak-link-it` :ref:`tbl-weak-link-it`
+|  :numref:`tbl-strong-link-it` :ref:`tbl-strong-link-it`
+|  :numref:`tbl-robust-link-it` :ref:`tbl-robust-link-it`
 |  :numref:`tbl-cand-diag-symbs` :ref:`tbl-cand-diag-symbs`
+|  :numref:`tbl-cand-diag-expr` :ref:`tbl-cand-diag-expr`
 
 ..
    ==================

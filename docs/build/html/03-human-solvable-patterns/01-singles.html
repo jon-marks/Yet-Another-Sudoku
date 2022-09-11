@@ -165,7 +165,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/01-core-concepts.html">2.1. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-language.html">2.2. Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/03-subsets.html">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../02-foundation/04-base-cover-sets.html">2.4. Base Sets (Truths) and Cover Sets (Links)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-foundation/04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/06-unlocked-sets.html">2.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/07-uniqueness.html">2.7. Uniqueness</a></li>
@@ -320,49 +320,6 @@ be True and can be eliminated.</p></li>
 </ul>
 <p>A box with two same value candidates can be resolved as an Empty Rectangle, however these patterns overlap
 with Turbot Fish and Grouped X Chains.  Of these three patterns, a Turbot Fish is the easiest to resolve.</p>
-<p>Let’s go for a sample table too.  This is dummy text.</p>
-<div class="table-wrapper colwidths-given docutils container" id="id2">
-<span id="tbl-dummy"></span><span id="tbl-dummy"></span><table class="docutils align-left" id="id2" style="width: 97%">
-<caption><span class="caption-number">Table 3.1:  </span><span class="caption-text">A Dummy Table</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 80.0%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">r6c5</span></code></p></td>
-<td><p>The cell in location row 6, column 5 in the 9x9 cell grid</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">b4</span></code></p></td>
-<td><p>The cells in box 4.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">b4p5</span></code></p></td>
-<td><p>The cell in box 4, position 5, boxes and positions in boxes are counted left to right then
-top to bottom, translates to <code class="docutils literal notranslate"><span class="pre">r5c2</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">r2</span></code></p></td>
-<td><p>The cells in row 2</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">c6</span></code></p></td>
-<td><p>The cells in column 6</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">5r2c6</span></code></p></td>
-<td><p>The candidate 5 in cell <code class="docutils literal notranslate"><span class="pre">r2c6</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">r34c245</span></code></p></td>
-<td><p>The grid of 6 cells – <code class="docutils literal notranslate"><span class="pre">r3c2</span></code>, <code class="docutils literal notranslate"><span class="pre">r3c4</span></code>, <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>, <code class="docutils literal notranslate"><span class="pre">r4c2</span></code>, <code class="docutils literal notranslate"><span class="pre">r4c4</span></code> and <code class="docutils literal notranslate"><span class="pre">r4c5</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">r2r5,r3c456,r56c56</span></code></p></td>
-<td><p>A collection of cells in a comma separated list</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">r2c!378</span></code></p></td>
-<td><p>All the cells in row 2 excluding <code class="docutils literal notranslate"><span class="pre">r2c378</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">r!34c6</span></code></p></td>
-<td><p>All the cells in column 6 excluding <code class="docutils literal notranslate"><span class="pre">r35c6</span></code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </section>
 </section>
 
@@ -395,7 +352,7 @@ top to bottom, translates to <code class="docutils literal notranslate"><span cl
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:59f3d49*, Mon, 29 Aug 2022, 23:09:41
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4ce18ae*, Fri, 02 Sep 2022, 00:12:39
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

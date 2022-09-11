@@ -39,7 +39,6 @@ source_suffix = {
 }
 
 
-
 rst_epilog = """
 .. role:: raw-html(raw)
    :format: html
@@ -55,13 +54,12 @@ html_css_files = ['overrides.css']
 html_logo = 'images/AIM.png'
 html_favicon = 'images/AIM.ico'
 html_use_index = True
+extensions.append('cloud_sptheme.ext.table_styling')
+
+html_theme = 'furo'
 
 # Furo is not supporting sourcelinks https://github.com/pradyunsg/furo/issues/478
 html_copy_source = False
 html_show_sourcelink = False
 
-extensions.append('cloud_sptheme.ext.table_styling')
-
-
-html_theme = 'furo'
 

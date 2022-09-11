@@ -9,6 +9,7 @@ and how the concepts are related.
 
 In the effort to be consistent and unambiguous, some terms have been refined or
 renamed such that they are:
+
 *  less overloaded,
 *  more consistent,
 *  more self descriptive, and

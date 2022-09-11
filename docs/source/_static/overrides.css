@@ -9,26 +9,70 @@ figcaption {
       text-align: center;
 }
 
-.underline {
+.legend {
+   overflow-x: scroll;
+   white-space: nowrap;
+   line-height: 16px;
+   font-size: 75%;
+}
+
+figcaption p {
+   margin-top: 4px;
+   margin-bottom: 4px
+}
+
+.legend p {
+   margin-top: 0px;
+   margin-bottom: 4px
+}
+
+uline, .underline {
    text-decoration: underline;
 }
 
-.overline {
+oline, .overline {
    text-decoration: overline;
 }
 
-.strikethrough {
+mline, strike, .strike {
    text-decoration: line-through;
 }
 
-.italic {
+ital, .italic {
    font-style: italic;
 }
 
-.mono {
-   font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+mono, .mono {
+   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+   overflow-x: scroll;
 }
+
+mong, .mong {
+   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+   background-color: #eee;
+   overflow-x: scroll;
+}
+
+mongp, .mongp {
+   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+   background-color: #eee;
+   overflow-x: scroll;
+   white-space: pre;
+   font-size: 17.6px;
+/*   line-height: 23px;*/
+}
+
+  /*  margin-bottom: 10px;
+  overflow: auto;
+  width: auto;
+  padding: 5px;
+  background-color: #eee;
+  width: 650px!ie7;
+  padding-bottom: 20px!ie7;
+  max-height: 600px;
+}*/
 
 a[href ^= "http"]:after {
      content: " " url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);
 }
+

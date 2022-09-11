@@ -165,7 +165,7 @@
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/01-core-concepts.html">2.1. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/02-language.html">2.2. Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/03-subsets.html">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/04-base-cover-sets.html">2.4. Base Sets (Truths) and Cover Sets (Links)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/06-unlocked-sets.html">2.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/07-uniqueness.html">2.7. Uniqueness</a></li>
@@ -251,81 +251,91 @@
 </dd>
 </dl>
 <p>In July 1895 in France, the Newspaper La France, refined a numbers game puzzle appearing in a rival
-newspaper Le Siècle.  La France called the puzzles <em>Carré Magique Diabolique</em>.  They were a precursor
-to modern Sudoku.  La France published these puzzles until about the time of the First World War.</p>
-<p>Modern Sudoku started out published in Dell Magazines from about 1979 called <em>Number Place</em>.  It is thought
-that they were designed by Howard Garns, a retired 74-year-old Architect.  In 1984 the Nikoli Puzzle Company
-in Japan introduced <em>Number Place</em> puzzles as <em>Sūji wa dokushin ni kagiru</em> which was later abbreviated (in Kanji)
-to <em>Sudoku</em>, despite it being ubiquitously called <em>Nanpure</em> in Japan.</p>
-<p>In 1997, Wayne Gould, a retired Hong Kong Judge, developed the first computer program to produce unique puzzles
-rapidly.  He then introduced Sudoku to the Times newspaper in Britain.  The publicity gained from this exposure in the Times
-secured the puzzle’s worldwide popularity.</p>
+newspaper Le Siècle.  La France called the puzzles <em>Carré Magique Diabolique</em>.  They were a
+precursor to modern Sudoku.  La France published these puzzles until about the time of the First
+World War.</p>
+<p>Modern Sudoku started out published in Dell Magazines from about 1979 called <em>Number Place</em>.  It is
+thought that they were designed by Howard Garns, a retired 74-year-old Architect.  In 1984 the
+Nikoli Puzzle Company in Japan introduced <em>Number Place</em> puzzles as <em>Sūji wa dokushin ni kagiru</em>
+which was later abbreviated (in Kanji) to <em>Sudoku</em>, despite it being ubiquitously called <em>Nanpure</em>
+in Japan.</p>
+<p>In 1997, Wayne Gould, a retired Hong Kong Judge, developed the first computer program to produce
+unique puzzles rapidly.  He then introduced Sudoku to the Times newspaper in Britain.  The
+publicity gained from this exposure in the Times secured the puzzle’s worldwide popularity.</p>
 </section>
 <section id="what-is-sudoku">
 <h2><span class="section-number">1.2. </span>What is Sudoku<a class="headerlink" href="#what-is-sudoku" title="Permalink to this heading">#</a></h2>
-<p>Sudoku is a puzzle laid out on a 9x9 grid of cells, where each cell is either empty or contains a number
-between 1 and 9.  The puzzle is solved by filling the empty cells with digits 1 to 9 such each digit only
-occurs once in each row, column and 3x3 box.</p>
+<p>Sudoku is a puzzle laid out on a 9x9 grid of cells, where each cell is either empty or contains a
+number between 1 and 9.  The puzzle is solved by filling the empty cells with digits 1 to 9 such
+that each digit only occurs once in each row, column and 3x3 box.</p>
 </section>
 <section id="sudoku-rules">
 <span id="id1"></span><h2><span class="section-number">1.3. </span>Sudoku Rules<a class="headerlink" href="#sudoku-rules" title="Permalink to this heading">#</a></h2>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>A completed Sudoku Puzzle is one where each cell on a 9x9 grid contains a digit between 1 and 9
-such that each digit only occurs once in each row, column and 3x3 box, and</p></li>
+<li><p>A completed Sudoku Puzzle is one where each cell on a 9x9 grid contains a digit between 1 and
+9 such that each digit only occurs once in each row, column and 3x3 box, and</p></li>
 <li><p>The puzzle has a unique solution.</p></li>
 </ol>
 </div></blockquote>
 </section>
 <section id="sudoku-facts">
 <h2><span class="section-number">1.4. </span>Sudoku Facts<a class="headerlink" href="#sudoku-facts" title="Permalink to this heading">#</a></h2>
-<dl class="simple">
-<dt>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Mathematics_of_Sudoku.html">http://sudopedia.enjoysudoku.com/Mathematics_of_Sudoku.html</a></dt><dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Sudoku">https://en.wikipedia.org/wiki/Sudoku</a></p>
+<dl>
+<dt>Sources:</dt><dd><div class="line-block">
+<div class="line"><a class="reference external" href="http://sudopedia.enjoysudoku.com/Mathematics_of_Sudoku.html">http://sudopedia.enjoysudoku.com/Mathematics_of_Sudoku.html</a></div>
+<div class="line"><a class="reference external" href="https://en.wikipedia.org/wiki/Sudoku">https://en.wikipedia.org/wiki/Sudoku</a></div>
+</div>
 </dd>
 </dl>
-<p>Sudoku is a finite constraint satisfaction problem (fCSP).  A Sudoku grid comprises 9 rows by 9 columns
-making 81 cells, and each cell can assume one of 9 values.  Therefore, the out of a Domain set of 729
-(9 rows x 9 columns x 9 Values) elements, any Solution set comprises 81 elements (9 rows x 9 columns x 1 value)
-that are constrained by Sudoku Rules and further constraint propagation.</p>
+<p>Sudoku is a <a class="reference external" href="https://en.wikipedia.org/wiki/Constraint_satisfaction_problem">finite constraint satisfaction problem (fCSP)</a>.  A Sudoku grid comprises 9 rows
+by 9 columns making 81 cells, and each cell can assume one of 9 values.  Therefore, the out of a
+Domain set of 729 (9 rows x 9 columns x 9 Values) elements, any Solution set comprises 81 elements
+(9 rows x 9 columns x 1 value) that are constrained by Sudoku Rules and further <a class="reference external" href="https://en.wikipedia.org/wiki/Local_consistency#Constraint_propagation_for_arc_and_path_consistency">constraint
+propagation</a>.</p>
 <p><a class="reference external" href="http://www.afjarvis.staff.shef.ac.uk/sudoku/">Fraser Jarvis, et al</a> has determined
-6670903752021072936960 (6.6709e+21) solved puzzles exist, of which 5472730538 (5.4727e+9) are mathematical
-unique.  Mathematically unique puzzles cannot be created by transforming another puzzle.  Also termed
-non-isomorphic; they are not canonical forms of each other.</p>
-<p><a class="reference external" href="http://www.carva.org/denis.berthier">Denis Berthier</a> has estimated to within a 0,065% error that the
-average amount of minimal puzzles that can be from any solved puzzle is 4.6655e+15.  Therefore,
-approximately 6.6709e+21 x 4.6655e+15 = 3,1123e+37 possible minimal puzzles exist, of which 2.5533e+25 are
-mathematically unique.</p>
-<p>If it was possible to solve a puzzle every second, only 31 557 600 (3,1557e+7) puzzles can be solved
-in a year.  Solving a puzzle every second since the beginning of time (estimated 14 billion years ago),
-only 4,4180e+15 puzzles will be solved.  If everyone on earth (approximately 8 billion people) have solving
-unique Sudoku puzzles at the rate of one a second since the beginning of time, only 3.5345e+27 puzzles will
-be solved.  This number is an infinitesimally small one 8.8 billionth (8.8055e-9) of all possible puzzles.</p>
-<p>To date no unique puzzles have been found with less than 17 givens, and only 49158 puzzles have been found
-with 17 givens. A method to prove the theoretical minimum givens for any unique puzzle is yet to be found.</p>
-<p>All puzzles with 40 or more givens have one unique solution. Most unique minimal puzzles have between 23
-and 26 givens.</p>
-<p>In a valid puzzle at least 8 of the 9 digits must occur one or more times as givens.  However, meeting this
-criterion does not presume a puzzle is valid.</p>
+6670903752021072936960 (6.6709e+21) solved puzzles exist, of which 5472730538 (5.4727e+9) are
+mathematical unique.  Mathematically unique puzzles cannot be created by transforming another
+puzzle.  Also termed non-isomorphic; they are not canonical forms of each other.</p>
+<p><a class="reference external" href="http://www.carva.org/denis.berthier">Denis Berthier</a> has estimated to within a 0,065% error that
+the average amount of minimal puzzles that can be from any solved puzzle is 4.6655e+15.  Therefore,
+approximately 6.6709e+21 x 4.6655e+15 = 3,1123e+37 possible minimal puzzles exist, of which
+2.5533e+25 are mathematically unique.</p>
+<p>If it is possible to solve a puzzle every second, only 31 557 600 (3,1557e+7) puzzles will be solved
+in a year.  Solving a puzzle every second since the beginning of time (estimated 14 billion years
+ago), only 4,4180e+15 puzzles will be solved.  If everyone on earth (approximately 8 billion people)
+is solving unique Sudoku puzzles at the rate of one a second since the beginning of time, only
+3.5345e+27 puzzles will be solved.  This number is an infinitesimally small one 8.8 billionth
+(8.8055e-9) of all possible puzzles.</p>
+<p>To date no unique puzzles have been found with less than 17 givens, and only 49158 puzzles have
+been found with 17 givens. A method to prove the theoretical minimum givens for any unique puzzle is
+yet to be found.</p>
+<p>All puzzles with 40 or more givens have one unique solution. Most unique minimal puzzles have
+between 23 and 26 givens.</p>
+<p>In a valid puzzle at least 8 of the 9 digits must occur one or more times as givens.  However,
+meeting this criterion does not presume a puzzle is valid.</p>
 </section>
 <section id="intended-audience">
 <h2><span class="section-number">1.5. </span>Intended Audience<a class="headerlink" href="#intended-audience" title="Permalink to this heading">#</a></h2>
-<p>The intended audience are people who have at least mastered the basics of Sudoku, and are seeking to improve
-their skills.  <a class="reference external" href="https://www.google.com/search?client=firefox-b-d&amp;q=Sudoku+basics">Many excellent sources on the internet</a> that do a better job than I could in
+<p>The intended audience are people who have at least mastered the basics of Sudoku, and are seeking
+to improve their skills.  <a class="reference external" href="https://www.google.com/search?client=firefox-b-d&amp;q=Sudoku+basics">Many excellent sources on the internet</a> do a better job than I in
 covering the basics.  I defer to them.</p>
-<p>Static pages do not have a comment mechanism like bogs.  Please feel free to comment here, and I will endeavour
+<p>Static pages do not have a comment mechanism like blogs.  Please feel free to comment <a class="reference external" href="https://github.com/jon-marks/Yet-Another-Sudoku/issues">here</a>, and I will endeavour
 to review and include community comments and contributions.</p>
 </section>
 <section id="acknowledgements">
 <h2><span class="section-number">1.6. </span>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this heading">#</a></h2>
 <p>I acknowledge the Sudoku Community, the many reports, web-pages, and videos found on the Internet.
-This tomb brings together many, many related bits of information.  If anything is original here, it is
-the insights and conclusions gained from the collective works before me.</p>
-<p>A complete list acknowledging all the media contributing to my understanding would be so vast incomplete
-and constantly changing thereby diluting its intent.</p>
-<p>Sources of information and puzzles are acknowledged throughout the text.  A <a class="reference internal" href="08-references.html#references"><span class="std std-ref">list of references</span></a>
-is included too.  Some sources have been lost.  I apologise in advance.  Please contact me if you notice information
-from a source that needs acknowledgement.  I fear that with the passage of time, linked references will disappear,
-frustrating readers seeking sources.  For this too, I apologise in advance.</p>
+This tomb brings together many, many related bits of information.  If anything is original here, it
+is the insights and conclusions gained from the collective works before me.</p>
+<p>A complete list acknowledging all the media contributing to my understanding would be so vast,
+incomplete and constantly changing thereby diluting its intent.</p>
+<p>Sources of information and puzzles are acknowledged throughout the text.  A
+<a class="reference internal" href="08-references.html#references"><span class="std std-ref">list of references</span></a>  is included too.  Some sources have been lost.  I apologise
+for this.  Please <a class="reference external" href="https://github.com/jon-marks/Yet-Another-Sudoku/issues">contact me</a> if you
+notice information 0from a source that needs acknowledgement.  I fear that with the passage of time,
+linked references will disappear, frustrating readers seeking sources.  For this too, I apologise
+in advance.</p>
 </section>
 </section>
 
@@ -358,7 +368,7 @@ frustrating readers seeking sources.  For this too, I apologise in advance.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:59f3d49*, Mon, 29 Aug 2022, 23:09:41
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4ce18ae*, Fri, 02 Sep 2022, 00:12:39
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

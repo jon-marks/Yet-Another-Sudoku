@@ -1,7 +1,37 @@
 .. title:: Yet Another Sudoku | Foundation | Subsets
 
-=======
+*******
 Subsets
-=======
+*******
 
-Subsets stub
+Subsets refer to 'n' cell by 'n' candidate grouping, where each cell in the grouping contains between
+2 and 'n' of the candidates. 'n' ranges between 2 and 4, (pairs, triples and quads).  For values
+of “n” > 4, a reciprocal subset relationship of 9 – 'n' candidate values exists, so it is
+unnecessary to look for subsets larger than 4.
+
+A “Straight Subset” (also simply a “Subset”) occurs when this grouping of Ccells is found in a
+single house/group.  “Straight” is a bit of misnomer as the cells may not be in a straight line if
+the house is Box.  A “Bent subset” occurs when this grouping of Ccells occur in two intersecting
+houses/groups with at least one cell in the intersection. At least three cells are required to make
+the bend. The pattern must describe at least two arms about a pivot.
+
+Subsets can be exposed or hidden:
+
+*  An exposed subset is where 'n' candidate values are the only values occurring between 2 and
+   'n' times in the 'n' cells.
+*  A hidden subset is where 'n' candidate values can are confined to 'n' cells, but are not
+   necessarily the only candidates in those cells.
+
+The logic behind resolving Straight Exposed Subsets is that the 'n' candidates can only be True in
+one of the 'n' cells they collectively only occupy.  Therefore, they cannot be True outside those 'n'
+cells, and any of the 'n' candidates outside the 'n' cells can be eliminated.
+
+As the 'n' candidates are confined to only the 'n' cells in a Straight Hidden Subset, those 'n'
+candidates form 'A Truth' in those 'n' cells. Therefore, any additional candidates in those 'n'
+cells cannot be True and can be eliminated.
+
+The logic for :ref:`Exposed <exp-str-ssets1>` and :ref:`Hidden <hid-str-ssets1>` Straight subsets
+can be proven with a bit more algebraic rigour using :ref:`Base and Cover Sets <bsets-and-csets1>`
+
+Bent Subset patterns are somewhat more varied and complex to identify and resolve, and are
+considered in depth :ref:`here <bent-subsets-ch1>`.

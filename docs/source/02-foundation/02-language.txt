@@ -4,13 +4,12 @@
 Language
 ********
 
-Agreement on a common language, that is comprehensive, and comprehensible to describe
-and communicate Sudoku puzzles, concepts, patterns and resolutions,
-appears to be lacking in the literature surveyed.  Without it, a `Confusion of Tongues
-<https://en.wikipedia.org/wiki/Tower_of_Babel#Confusion_of_tongues>`_ as in the building of the Tower
-of Babel prevails.  This is my attempt to draw from what I consider best practices in the literature
-and put forward a precise, consistent and unambiguous language for Sudoku.  The notation is loosely
-based on and develops from `Eureka <http://sudopedia.enjoysudoku.com/Eureka.html>`_
+Without agreement on a comprehensive language to communicate Sudoku concepts, a
+`Confusion of Tongues <https://en.wikipedia.org/wiki/Tower_of_Babel#Confusion_of_tongues>`_ as in
+the building of the Tower of Babel prevails.  This is my attempt to draw from what I consider best
+practices in the literature and put forward a precise, descriptive, comprehensive, consistent and
+unambiguous language for Sudoku.  The notation is loosely based on and develops from
+`Eureka <http://sudopedia.enjoysudoku.com/Eureka.html>`_
 
 Sudoku Language Syntax
 ======================
@@ -18,130 +17,160 @@ Sudoku Language Syntax
 Location Specifiers
 -------------------
 
-.. list-table::
+.. table::
+   :width: 97%
    :widths: 20 80
    :align: left
-   :width: 97%
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  ``r6c5``
-      -  The cell in location row 6, column 5 in the 9x9 cell grid
-   *  -  ``b4``
-      -  The cells in box 4.
-   *  -  ``b4p5``
-      -  The cell in box 4, position 5, boxes and positions in boxes are counted left to right then
-         top to bottom, translates to ``r5c2``
-   *  -  ``r2``
-      -  The cells in row 2
-   *  -  ``c6``
-      -  The cells in column 6
-   *  -  ``5r2c6``
-      -  The candidate 5 in cell ``r2c6``
-   *  -  ``r34c245``
-      -  The grid of 6 cells – ``r3c2``, ``r3c4``, ``r3c5``, ``r4c2``, ``r4c4`` and ``r4c5``
-   *  -  ``r2r5,r3c456,r56c56``
-      -  A collection of cells in a comma separated list
-   *  -  ``r2c!378``
-      -  All the cells in row 2 excluding ``r2c378``
-   *  -  ``r!34c6``
-      -  All the cells in column 6 excluding ``r35c6``
+   ============================================ =================================================================
+   :raw-html:`<mono>r6c5</mono>`                The cell in location row 6, column 5 in the 9x9 cell grid
+   :raw-html:`<mono>b4</mono>`                  The cells in box 4.
+   :raw-html:`<mono>b4p6</mono>`                The cell in box 4, position 5, boxes and positions in boxes are
+                                                counted left to right then top to bottom, translates to
+                                                :raw-html:`<mong>r5c2</mong>`
+   :raw-html:`<mono>r2</mono>`                  The cells in row 2
+   :raw-html:`<mono>c4</mono>`                  The cells in column 4
+   :raw-html:`<mono>5r2c6</mono>`               The candidate 5 in cell r2c6
+   :raw-html:`<mono>r34c245</mono>`             The grid of 6 cells – :raw-html:`<mong>r3c2, r3c4,
+                                                r3c5, r4c2, r4c4, r4c5</mong>`
+   :raw-html:`<mono>r2r5,r3c456,r56c56</mono>`  A collection of cells in a comma separated list
+   :raw-html:`<mono>r2c!378</mono>`             All the cells in row 2 excluding
+                                                :raw-html:`<mong>r2c378</mong>`
+   :raw-html:`<mono>r!34c6</mono>`              All the cells in column 6 excluding
+                                                :raw-html:`<mong>r35c6</mong>`
+   ============================================ =================================================================
 
 Ccell Specifiers
 ----------------
 
-.. list-table::
+.. table::
+   :width: 97%
    :widths: 20 80
    :align: left
-   :width: 97%
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  ``3r6c5``
-      -  The Ccell of candidate 3 in row 6 column 5.
-   *  -  ``3r6``
-      -  All Ccells with candidate value 3 in row 6
-   *  -  ``347b6p2``
-      -  Three ccells with candidate values 3, 4, 7 in block 2 position 2 (same as ``r4c8``)
+   ================================= =================================================================
+   :raw-html:`<mono>3r6c5</mono>`    The Ccell of Candidate value 3 in row 6, column 5
+   :raw-html:`<mono>3r6</mono>`      All Ccells with Candidate value 3 in row 6
+   :raw-html:`<mono>347b6p2</mono>`  Three ccells with candidate values 3, 4, 7 in block 6 position 2
+                                     (same as :raw-html:`<mong>r4c8</mong>)`
+   ================================= =================================================================
 
 Operators
 ---------
 
-.. list-table::
+.. table::
+   :width: 97%
    :widths: 20 80
    :align: left
-   :width: 97%
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  ``:=``
-      -  Placement of a value in a cell, eg. ``r4c5:=5``
-   *  -  ``-=``
-      -  Elimination of a ccell or ccells - candidate(s) from a cell eg. ``r7c2-=24``
+   =============================== =================================================================
+   :raw-html:`<mono>:=</mono>`     Placement of a value in a cell, eg.
+                                   :raw-html:`<mong>r4c5:=5</mong>`
+   :raw-html:`<mono>-=</mono>`     Elimination of a ccell or ccells - candidate(s) from a cell eg.
+                                   :raw-html:`<mong>r7c2-=24</mong>`
+   =============================== =================================================================
 
 Conditionals
 ------------
 
-.. list-table::
+.. table::
+   :width: 97%
    :widths: 20 80
    :align: left
-   :width: 97%
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  ``==``
-      -  Presence of only value or candidates in cells  eg. ``23==r2c57``
-   *  -  ``~=``
-      -  Presence of only 2 or more of specified candidates in each specified cell in a cell grouping,
-         such that union of candidates in specified cells match specified candidates. eg.  ``347~=r2c456``,
-         or ``347~=r2Ib2`` - ``r2Ib2`` are the three cells lying in the intersection of ``r2Ib2``,
-   *  -  ``--``
-      -  Presence of at least the specified candidate(s) in cells e.g. ``34—r2c8``.  This relationship is also
-         specified by ``34r2c8``, a shorthand where the “--” is implied.
-   *  -  ``~-``
-      -  Presence of at least one instance of each specified candidate, amongst other candidates in a cell
-         grouping.  ``34~-r3Ib3``
-   *  -  ``!-``
-      -  Absence of candidate(s) in cells, eg. ``34!-r2c235``
+   =============================== =================================================================
+   :raw-html:`<mono>==</mono>`     Presence of only value or candidates in cells,  e.g.
+                                   :raw-html:`<mong>23==r2c57</mong>`
+   :raw-html:`<mono>~=</mono>`     Presence of only 2 or more of specified candidates in each
+                                   specified cell in a cell grouping, such that union of candidates
+                                   in specified cells match specified candidates. e.g.
+                                   :raw-html:`<mong>347~=r2c259</mong>`, an exposed subset.
+   :raw-html:`<mono>--</mono>`     Presence of at least the specified candidate(s) in cells e.g.
+                                   :raw-html:`<mong>34--r2c8</mong>`.  This condition is also
+                                   specified by :raw-html:`<mong>34r2c8</mong>`, a shorthand where
+                                   the “--” is implied.
+   :raw-html:`<mono>~-</mono>`     Presence of at least one instance of each specified candidate,
+                                   amongst other candidates in a cell grouping. e.g.
+                                   :raw-html:`<mong>34~-r3Ib3</mong>`, candidates 3 and 4 with other
+                                   candidates, are present in the intersection of row 3 with box 3
+   :raw-html:`<mono>!-</mono>`     Absence of candidate(s) in cells, eg.
+                                   :raw-html:`<mong>34!-r2c235</mong>`, candidates 3 and 4 are not
+                                   present in cells :raw-html:`<mong>r2c2, r2c3, r2c5</mong>`
+   =============================== =================================================================
 
 Relational Specifiers
 ---------------------
 
-.. list-table::
+.. table::
+   :width: 97%
    :widths: 20 80
    :align: left
-   :width: 97%
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  ``#``
-      -  Count, eg. ``17#2r3`` candidates 1 and 7 occur twice in row 3
-   *  -  ``U``
-      -  House unions, e.g. ``r5Ub6`` – the 15 cells in union of row 5 and box 6
-   *  -  ``I``
-      -  House intersections, e.g. ``r5Ib6`` the 3 cell in the intersection of row 5 and box 6
-   *  -  ``=``
-      -  Strong Link between two ccells. If X is True then Y is False and if X is False then Y is True
-   *  -  ``-``
-      -  Weak Link between two ccells. If X is True then Y is False and if X is False then Y is Unknown
-   *  -  ``|-|``
-      -  Weak Chain – Chain creates a Weak Link between its ends
-   *  -  ``|=|``
-      -  Strong Chain – Chain creates a Strong Link between its ends
-   *  -  ``|~|``
-      -  Robust Chain – Chain creates a link that behaves opposite to a weak link. If X is True, Y is Unknown
-         and if X is False then Y is True
-   *  -  ``( ... )``
-      -  Parenthesis – Associative contraction: ``5r3c2=3r3c2 is the same as (5=3)r3c2``
-   *  -  ``{ ... , ...}``
-      -  Braces – Groupings of sub-patterns in Nets, etc.
-   *  -  ``[ ... ]``
-      -  Square Brackets – To group sub-structures of larger structures
-   *  -  ``< ... >``
-      -  Pointy Brackets – Contain relationships between grouped sub-structures
+   =================================== =================================================================
+   :raw-html:`<mono>#</mono>`          Count, e.g. :raw-html:`<mong>17#2r3<mong>`, candidates 1 and 7
+                                       occur twice in row 3.
+   :raw-html:`<mono>U</mono>`          House union, e.g. :raw-html:`<mong>r5Ub6<mong>`, the 15 cells
+                                       in union of row 5 and box 6
+   :raw-html:`<mono>I</mono>`          House intersections, e.g. :raw-html:`<mong>r5Ib6<mong>`,  the 3
+                                       cell in the intersection of row 5 and box 6
+   :raw-html:`<mono>=</mono>`          Direct Strong Link between two Ccells. If X is True then Y is
+                                       False and if X is False then Y is True
+   :raw-html:`<mono>-</mono>`          Direct Weak Link between two Ccells. If X is True then Y is False
+                                       and if X is False then Y is Unknown
+   :raw-html:`<mono>~</mono>`          Strong Link masquerading as a Weak Link in a pattern
+   :raw-html:`<mono>|=|</mono>`        Indirect Strong Link between two Ccells, resulting from
+                                       a pattern
+   :raw-html:`<mono>|-|</mono>`        Indirect Weak Link between two Ccells, resulting from
+                                       a pattern
+   :raw-html:`<mono>|~|</mono>`        (Indirect) Robust link between two Ccells. Opposite to a Weak
+                                       Link, If X is True, then Y is unknown, and if X is False, Y is
+                                       True
+   :raw-html:`<mono>(...)</mono>`      Parenthesis - Distributive Property
+                                       :raw-html:`<mong>5r3c2=3r3c2</mong> &equiv; <mong>(5=3)r3c2</mong>`
+   :raw-html:`<mono>{...,...}</mono>`  Braces – Groupings of sub-patterns in Nets, etc.
+   :raw-html:`<mono>[...]</mono>`      Square Brackets - To group sub-patterns of larger patterns
+   :raw-html:`<mono><...></mono>`      Pointy Brackets - contain relationships between grouped
+                                       sub-patterns
+   =================================== =================================================================
 
 Candidate Dressing
 ------------------
 
-.. list-table::
+.. table::
+   :width: 97%
    :widths: 20 80
    :align: left
-   :width: 97%
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  ``/``
-      -  Restricted Candidate, e.g. ``3/456r3Ub2`` - 4 is the restricted candidate.
-   *  -  ``\``
-      -  Unrestricted Candidate, e.g. ``34\56c7Ub4`` - 5 is the unrestricted candidate.
+   ============================= ====================================================================
+   :raw-html:`<mono>/</mono>`    Restricted Candidate, :raw-html:`<mong>3/456r3Ub2<mong>`, 4 is the
+                                 restricted candidate in the union of row 3 and box 2
+   :raw-html:`<mono>\</mono>`    Unrestricted Candidate, :raw-html:`<mong>34\56c7Ub4<mong>`, 5 is the
+                                 unrestricted candidate in the union of column 7 and box 4
+   ============================= ====================================================================
 
 Sudoku Language Semantics
 =========================
@@ -158,106 +187,254 @@ Note:
 Singles
 -------
 
-**Exposed Single**
-   ``3==r7c1``
-      3 is the only candidate in r7c1 and can be placed.
+**Exposed Singles**
+   :raw-html:`<mong>3==r7c1</mong`
+      3 is the only candidate in r7c1 (and can be placed)
 
-**Hidden Single**
-   ``3#1b7,b7p3``
-      3 occurs only once in box 7, and that is in position 3.
+**Hidden Singles**
+   :raw-html:`<mong>3#1b7,b7p3</mong>`
+      3 occurs only once in box 7, and that is in position 3
 
 **Pointing Locked Singles**
-   ``7r9c12,!-b7``
-      7 occurs in r9, only in cells r9c1, and r9c2, and nowhere else in box 7.
+   :raw-html:`<mong>7r9c12,!-b7</mong>`
+      7 occurs in r9, n cells r9c1, and r9c2, and nowhere else in box 7.
       Therefore, the pattern is locked to row 9.
 
-**Claiming Locked Single**
-   ``4r45c2,!-c2``
-      4 occurs in column 2, only in cells r4c2 and r5c2, and nowhere else in column 2.
+**Claiming Locked Singles**
+   :raw-html:`<mong>4r45c2,!-c2</mong>`
+      4 occurs in column 2, in cells r4c2 and r5c2, and nowhere else in column 2.
       Therefore, the pattern is locked to box 4.
 
 **Empty Rectangles**
-   ``7#4b4,r4,c3;7r4c4=7r7c4``
+   :raw-html:`<mong>7#4b4,r4,c3;7r4c4=7r7c4</mong>`
       7 occurs 4 times in box 4 describing lines r4 and c3 and 7r4c4 is strongly linked to 7r7c4.
 
 (Straight) Subsets
 ------------------
 
-**Exposed Pair**
-   ``56==r4c59``
-      In row 4, only candidates 5 and 6 present in r4c5 and r4c9
+**Exposed Pairs**
+   :raw-html:`<mong>56==r4c59</mong>`
+      Only Candidates 5 and 6 are only present in both r4c5 and r4c9 in row 4.
 
-**Exposed Triple**
-   ``14==r3c1,15==r3c5,145==r3c6``
-      In row 3, only candidates 1 and 4 in r3c1, 1 and 5 in r3c5, and 145 in r3c6
 
-**Exposed Quad**
-   ``5789==r4c4,579==r4c5,78==r4c6,5789==r4c8``
-      In row 4, only candidates 5, 7, 8 and 9 in r4c4, only 5, 7 and 9 present in r4c5, only 7 and
-      8 present in r4c6, and only 5, 7, 8, and 9 present in r4c8
+**Exposed Triples**
+   :raw-html:`<mong>14==r3c1,15==r3c5,145==r3c6</mong>`
+      Only candidates 1 and 4 are present in r3c1, 1 and 5 in r3c5, and 145 in r3c6, all in row 3
 
-**Exposed Locked Pair**
-   ``68==r89c1``
-      In both column 1 and box 7, Only candidates 6 and 8 are present
+**Exposed Quads**
+      :raw-html:`<mong>5789==r4c4,579==r4c5,78==r4c6,5789==r4c8</mong>`
+      Only candidates 5, 7, 8 and 9 are present in r4c4, 5, 7, and 9 in r4c5, 7 and
+      8 present in r4c6, and 5, 7, 8, and 9 present in r4c8, all in row 4
 
-**Exposed Locked Pair**
-   ``345==r2c4,45==r2c5,35==r2c6``
-      In both row 2 and box 5, only candidates 3, 4, 5 are present r2c4, only 4 and 5 present in r2c5,
-      and only 3 and 5 present in r2c6
+**Exposed Locked Pairs**
+   :raw-html:`<mong>68==r89c1</mong>`
+      Only candidates 6 and 8 are present in r89c1 which lies in the intersection of column1 and
+      box 7
 
-**Hidden Pair**
-   ``45#2r3c38``
-      Candidates 4 and 5 only occur twice in r3, in cells r3c3 and r3c8.  These candidates can be hidden
-      by other candidates in those cells
+**Exposed Locked Triples**
+   :raw-html:`<mong>345==r2c4,45==r2c5,35==r2c6</mong>`
+      Only candidates 3, 4, 5 are present r2c4, 4 and 5 in r2c5, and 3 and 5 in r2c6, all in
+      row 2 and box 5,
+
+**Hidden Pairs**
+   :raw-html:`<mong>45#2r3c38</mong>`
+      Candidates 4 and 5 only occur twice in r3, in cells r3c3 and r3c8.  These candidates can be
+      hidden by other candidates in those cells
 
    OR
 
-   ``45!-r3c!38``
+   :raw-html:`<mong>45!-r3c!38</mong>`
       Candidates 4 and 5 are not present in row 3 outside of cells r3c3 and r3c8
 
-**Hidden Triple**
-   ``259!-r1c!135``
+**Hidden Triples**
+   :raw-html:`<mong>259!-r1c!135</mong>`
       Candidates 2, 5 and 9 are not present in row 1 outside r1c1, r1c3 and r1c5
 
-**Hidden Quad**
-   ``2689!-r1c!1378``
+**Hidden Quads**
+   :raw-html:`<mong>2689!-r1c!1378</mong>`
       Candidates 2, 6, 8 and 9 are not present in row 1 outside r1c1, r1c3, r1c7 and r1c8
 
 Fish
 ----
 
-**X-Wing**
-   ``5r26c69``
-      Candidate 5 is found in the base rows 2 and 6, which are covered by columns 6 and 9
+**X-Wings**
+   :raw-html:`<mong>5r26c69</mong>`
+      Candidate 5 is found twice in the base rows 2 and 6, which are covered by columns 6 and 9
 
 **Swordfish**
-   ``8c157r234``
-      Candidate 8 is found in base columns 1, 5 and 7, which are covered by rows 2, 3, and 4
+   :raw-html:`<mong>8c157r234</mong>`
+      Candidate 8 is found two to three times in each base column 1, 5 and 7, which are covered by
+      rows 2, 3, and 4
 
 **Jellyfish**
-   ``2r1469c1589``
-      Candidate 2 is found in base rows 1, 4, 6, and 9 which are covered by columns 1, 5, 8 and 9
+   :raw-html:`<mong>2r1469c1589</mong>`
+      Candidate 2 is found two to four times in each base row 1, 4, 6, and 9 which are covered by
+      columns 1, 5, 8 and 9
 
-**Finned X-Wing**
-   ``7r57c39,r7c8;7r8c9-7r7c8``
-      Candidate 7 is found in base rows 5 and 7, which are covered by columns 3 and 9. Base row 7 has
-      a fin 7r7c8.  Ccell 7r8c9 from the column 9 cover set also sees the fin 7r7c8columcover set
+**Finned X-Wings**
+   :raw-html:`<mong>2c57r28,r7c5,r9c5;2r8c6-2r7c5;2r8c6-2r9c5</mong>`
+      Candidate 2 is found twice in base columns 5 and 7, which are covered by rows 2 and 8.
+      Base column 5 also has two fins in r7c5 and row r9c5. Cover Ccell 2r8c6 sees both fins.
 
+**Sashimi X-Wings**
+   :raw-html:`<mong>2r69c2,r6c4,r9c5,r9c6;2r7c4-2r6c4;2r7c4-2r9c5;2r7c4-2r9c6</mong>`
+      Candidate 2 is found twice in base rows 6 and 9, that is only covered by column 4.
+      Three fins exist,r9c5 and r9c6 in base row 9 and r6c4 in base row 6. Ccell 2r7c4 sees all
+      fins.
 
-Basic Fish
-++++++++++
+**Finned Swordfish**
+   :raw-html:`<mong>2r267c345,r7c6;2r8c5-2r7c6;2r9c5-2r7c6</mong>`
+      Candidate 2 is found two to three times in base rows 2, 6 and 7, that are covered by columns 3, 4
+      and 5.  Base column 7 also has a fin r7c6.  Cover Ccell 2r8c5 sees the fin.
 
-Finned Fish
-+++++++++++
+**Sashimi Swordfish**
+   :raw-html:`<mong style="overflow: visible;">6r258c69,r5c1,r8c2,r8c3;6r7c1-6r5c1;6r7c1-6r8c2;6r7c1-6r8c3;6r9c1-6r5c1;6r9c1-6r8c2; 6r9c1-6r8c3</mong>`
+      Candidate 6 is found two to three times in base rows 2, 5 and 8, that is only covered by columns
+      6 and 9.  Three fins exist, r8c2 and r8c3 in base row 8 and r5c1 in base row 5. Ccells 6r7c1
+      and 6r9c1 see all three fins.
 
-Sashimi Fish
-++++++++++++
+**Finned Jellyfish**
+   :raw-html:`<mong>8r1358c4689,r8c7;8r7c9-8r8c7</mong>`
+      Candidate 8 is found two to four times in base rows 1, 3, 5, and 8, that are covered by columns
+      4, 6, 8 and 9.  Fin r8c7 exists in row 8. Cover Ccell 8r7c9 sees this fin.
 
-Kraken Fish
-+++++++++++
+**Sashimi Jellyfish**
 
-And so on
+**Kraken Finned Fish**
+
+**Kraken Sashimi Fish**
+
+**Group Linked Kraken Finned Fish**
+
+**Group Linked Kraken Sashimi Fish**
+
+Bent Subsets
+------------
+
+**Y-Wings**
+
+**XYZ-Wings**
+
+**WXYZ-Wings**
+
+**Bent Exposed Quads**
+
+**Bent Exposed Quints**
+
+**Bent Exposed Sexts**
+
+**Grouped Bent Pair, Exposed Line, Hidden Box**
+
+**Grouped Bent Pair, Hidden Line, Exposed Box**
+
+**Grouped Bent Triple, Exposed Line, Hidden Box**
+
+**Grouped Bent Triple, Hidden Line, Exposed Box**
+
+**Grouped Bent Quad, Exposed Line, Hidden Box**
+
+**Grouped Bent Quad, Hidden Line, Exposed Box**
+
+**Bent Hidden Triples**
+
+Inference Chains, Loops and Nets
+--------------------------------
+
+**Skyscrapers**
+
+**Two String Kites**
+
+**Turbot Fish**
+
+**Longer X-Chains**
+
+**Even X-Loops**
+
+**Strong X-Loops**
+
+**XY-Chains**
+
+**XY-Loops**
+
+**Remote Pairs**
+
+**W-Wings**
+
+**AI-Chains Type 1**
+
+**AI-Chains Type 2**
+
+**AI-Chains Type 3**
+
+**Even AI-Loops**
+
+**Strong AI-Loops**
+
+**Group Linked Chains and Loops**
+
+**Strong Linked Net Type 1**
+
+**Strong Linked Net Type 2**
+
+**Strong Linked Net Type 3**
+
+**Chained Strong Linked Nets**
+
+Unlocked Sets
+-------------
+
+**Unlocked Set Chains**
+
+**Unlocked Set Loops**
+
+**Sue de Coq**
+
+Hybrid Chains
+-------------
+
+**Hidden Subset Loops**
+
+**Mixed Pattern Chains**
+
+Uniqueness
+----------
+
+**BUG+1**
+
+**Unique Rectangles**
+
+**Hidden Rectangles**
+
+**Avoidable Rectangles**
+
+**Extended Rectangles**
+
+Searching
 ---------
+
+**Digit Forcing Chains**
+
+**Nisho Forcing Chains**
+
+**Cell Forcing Chains**
+
+**House Forcing Chains**
+
+**Bowman's Bingo**
+
+**Unaligned Subset Exclusions**
+
+**Pattern Overlays**
+
+Super Human Patterns
+--------------------
+
+**Multi-Fish**
+
+**Exocets**
+
+**Multi Sector Locked Sets**
+
 
 Candidate Diagrams
 ==================
@@ -265,77 +442,75 @@ Candidate Diagrams
 Candidate Representation
 ------------------------
 
-The Candidate Diagrams here varies somewhat from those described in
+Candidate Diagrams here vary from those described in
 `Sudopedia <http://sudopedia.enjoysudoku.com/Diagrams_and_Notations.html>`_ and the
 `Sudoku Forum <https://forum.enjoysudoku.com/>`_.
 
 The contents of a Candidate Diagram Cell is made up of the following components
 
-.. _tbl-cand-diag-comps:
-
-.. list-table:: Candidate Diagram Symbol Components
-   :widths: 10 90
-   :align: left
+.. table:: Candidate Diagram Symbols
+   :name: tbl-cand-diag-symbs
    :width: 97%
+   :widths: 20 80
+   :header-alignment: left left
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  X
-      -  A unique but unspecified candidate value can/may be present
-   *  -  :raw-html:`<span class="underline">X</span>`
-      -  (underline) A unique but unspecified candidate value must be present
-   *  -  \+
-      -  An appended “+” indicates presence of additional candidates
-   *  -  :raw-html:`<span class="overline">X</span>`
-      -  (overline) Not X, X must be absent
-   *  -  \*
-      -  (wildcard) Any Candidate indicated in the pattern can be eliminated.
-   *  -  :raw-html:`<span class="strikethrough">X</span>`
-      -  (strikethrough) If Candidate is present, it can be eliminated.
+   ================================ ===========================================================
+   Symbol                           Description
+   ================================ ===========================================================
+   X                                A unique but unspecified candidate value that may be
+                                    present in that cell
+   :raw-html:`<uline>X</uline>`     (Underline) A unique but unspecified candidate value that
+                                    that must be present in that cell
+   \+                               An appended "+" indicates the presence of other candidates
+   :raw-html:`<oline>X</oline>`     (Overline) Not X.  X must be absent from that cell
+   \*                               (Wildcard) Any candidate indicated in the pattern can be
+                                    eliminated from that cell.
+   :raw-html:`<mline>X</mline>`     (Strikethrough). If candidate is present in that cell it
+                                    can be eliminated.
+   ================================ ===========================================================
 
-These components are combined in cells for further pattern meaning.  This is not an exhaustive list of all possible Candidate combinations, but hopefully enough to develop the understanding necessary for their use.
-
-.. _tbl-cand-diag-symbs:
-
-.. list-table:: Candidate Diagram Symbols
-   :widths: 10 90
-   :align: left
+.. table:: Candidate Diagram Expressions
+   :name: tbl-cand-diag-expr
    :width: 97%
+   :widths: 20 80
+   :header-alignment: left left
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
 
-   *  -  X+
-      -  X can/may be present with other candidates (verbose form of X)
-   *  -  :raw-html:`<span class="underline">XY</span>`
-      -  XY are the only two candidates
-   *  -  :raw-html:`<span class="underline">XY</span>`\+
-      -  X and Y must be present, optionally other candidates too
-   *  -  XY
-      -  At least two of X and Y must be the only values present (synonym of :raw-html:`<span class="underline">XY</span>`)
-   *  -  XY\+
-      -  X and Y must be present, optionally other candidates too (synonym of :raw-html:`<span class="underline">XY</span>`\+)
-   *  -  XYZ
-      -  At least two of X, Y, and Z must be the only values present
-   *  -  XYZ\+
-      -  At least two of X, Y,  and Z must be present, optionally other candidates too
-   *  -  :raw-html:`<span class="underline">XY</span>`\Z
-      -  X and Y must be present, optionally Z, and no other candidates
-   *  -  :raw-html:`<span class="underline">XYZ</span>`
-      -  X, Y, and Z are the only candidates present
-   *  -  :raw-html:`<span class="underline">XYX</span>`\+
-      -  X, Y and Z must be present optionally other candidates too
-   *  -  WXYZ
-      -  At least two of W, X, Y and Z must be the only values present
-   *  -  WXYZ\+
-      -  At least two of W, X, Y, and Z must be present optionally other candidates too
-   *  -  :raw-html:`<span class="underline">WX<s/pan>`\YZ
-      -  W and X must be present, optionally Y and Z and no other candidates
-   *  -  :raw-html:`<span class="underline">WXY</span>`\Z+
-      -  W, X and Y must be present, optionally Z and other candidates
-   *  -  :raw-html:`<span class="underline">WXYZ</span>`
-      -  All of W, X, Y and Z are the only values present
-   *  -  :raw-html:`<span class="underline">WXYZ<span>`\+
-      -  All of W, X, Y, and Z must be present, optionally other candidates too
-   *  -  X\*
-      -  Any candidate other X can be eliminated
-   *  -  :raw-html:`<span class="underline">XY</span>`\Z\*
-      -  X and Y must be present, optionally Z present and any other candidate can be eliminated
+   ================================ ================================================================
+   Expression                       Description
+   ================================ ================================================================
+   X+                               X may be present, optionally other candidates too
+   :raw-html:`<uline>XY</uline>`    X and Y are the only two candidates in that cell
+   :raw-html:`<uline>XY</uline>+`   X and Y must be in that cell, optionally other candidates too
+   XY                               X and Y are the only two candidates in that cell (synonym of :raw-html:`<uline>XY</uline>`)
+   XY+                              X and Y must be present, optionally others (synonym of :raw-html:`<uline>XY</uline>+`)
+   XYZ                              At least two of X, Y and Z are the only candidates present in
+                                    that cell
+   XYZ+                             At least two of X, Y, and Z are present, optionally other
+                                    candidates too
+   :raw-html:`<uline>XY</uline>Z`   X and Y must be present, optionally Z only
+   :raw-html:`<uline>XYZ</uline>`   X, Y and Z are the only candidates present in that cell
+   :raw-html:`<uline>XYZ</uline>+`  X, Y and Z are present, optionally other candidates too
+   WXYZ                             At least two of W, X, Y, and Z are the only candidates present in
+                                    that cell
+   WXYZ+                            At least two of W, X, Y abd Z are present, optionally other
+                                    candidates too.
+   :raw-html:`<uline>WX</uline>YZ`  W and X must be present, optionally Y and Z only
+   :raw-html:`<uline>WXY</uline>+`  W, X and Y must be present, optionally other candidates too
+   :raw-html:`<uline>WXYZ</uline>`  W, X, Y and Z must be the only candidates present
+   :raw-html:`<uline>WXYZ</uline>+` W, X, Y and Z must be present in that cell, optionally other
+                                    candidates too
+   X*                               Any candidate other than X can be eliminated
+   :raw-html:`<uline>XY</uline>Z*`  X and Y must be present, optionally Z, and any other candidate
+                                    can be eliminated
+   ================================ ================================================================
 
 Many patterns rely on the presence of Candidate values anywhere in the intersection of a line and
 a box.  For these patterns, Candidate Diagrams merge the three cells in the intersection into one
@@ -347,9 +522,8 @@ Some Examples
 Locked Exposed Pair
 +++++++++++++++++++
 
-.. _fig-locked-exposed-pair-cd1:
-
 .. figure:: images/locked-exposed-pair-cd1.png
+   :name: fig-locked-exposed-pair-cd1
    :scale: 100%
    :alt: Locked Exposed Pair
    :align: right
@@ -365,9 +539,8 @@ can see the cells of the exposed pair.  If X or Y exists in the cells with a \*,
 Y-Wing
 ++++++
 
-.. _fig-y-wing-cd1:
-
 .. figure:: images/y-wing-cd1.png
+   :name: fig-y-wing-cd1
    :scale: 100%
    :alt: Y-Wing
    :align: right
@@ -388,9 +561,8 @@ candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated
 Locked Pointing Single
 ++++++++++++++++++++++
 
-.. _fig-locked-pointing-single-cd1:
-
 .. figure:: images/locked-pointing-single-cd1.png
+   :name: fig-locked-pointing-single-cd1
    :scale: 100%
    :alt: Locked Pointing Single
    :align: right
@@ -408,9 +580,8 @@ along row 3 outside the intersection cannot be True and can be eliminated.
 XYZ-Wing
 ++++++++
 
-.. _fig-xyz-wing-cd1:
-
 .. figure:: images/xyz-wing-cd1.png
+   :name: fig-xyz-wing-cd1
    :scale: 100%
    :alt: XYZ-Wing
    :align: right
@@ -426,9 +597,8 @@ can see all the pincers and pivot lies in the intersection of row 1 and box 1.
 Locked Exposed Triple
 +++++++++++++++++++++
 
-.. _fig-locked-exposed-triple-cd1:
-
 .. figure:: images/locked-exposed-triple-cd1.png
+   :name: fig-locked-exposed-triple-cd1
    :scale: 100%
    :alt: Locked Exposed Triple
    :align: right
@@ -441,69 +611,3 @@ with no other candidates, they identify an Exposed Triple.  X, Y, Z are True in 
 Exposed Triple, therefore any Ccells that can see all the same value Ccells in the Exposed
 Triple cannot be True and can be eliminated.
 
-
-
-2.1.3.6.   Straight Subsets
-Exposed Subsets:
-345==r5c268	345 are the only candidates in the combination of cells r5c2, r5c6, r5c8 in row 5.
-Hidden Subsets
-34!-r2c!235	Candidates 34 are not present in r2 outside of r2c2, r2c3, r2c5.  That is 34 is only present in r2c235
-2.1.3.7.   Fish
-Base Set Lines precede Cover Set Lines.
-9c234r135,r7c3	Candidate 9 with bases in columns 2, 3 and 4, covers in rows 1, 3, and 5 with a fin in r7c3.
-
-2.1.3.8.   Chains, Loops and Nets
-Follows AIC notation
-4r2c7=5r2c7-5r2c2=4r2c2-4r3c1=5r3c1-5r6c1=4r6c1  (prefer expanded)
-(4=5)r2c7-(5=4)r2c2-(4=5)r3c1-(5=4)r6c1
-
-Loops
-Note last appended link indicating last ccell linked to first ccell.
-4r2c7=5r2c7-5r2c2=4r2c2-4r3c1=5r3c1-5r2c1=2r2c7~  (prefer expanded)
-
-Single digit chains
-4(r2c7=r2c2-r3c1=r6c1)
-4r2c7=4r2c2-4r3c1=4r6c1  (preferred expanded)
-
-Bi-Value Cell Nets – Remote Pairs
-(2=8)(r8c4~r5c4{~r5c9~r4c7~r4c6, ~r7c4~r2c4~r2c8})
-(1=8)(r1c1{~r1c7~r2c9{~r2c5,~r4c9~r4c6~r5c6},~r3c3})  (prefer compacted, expanded (not shown) is too verbose)
-Note:  Braces group all the Children of a Node.
-
-Bi-Value (XY-) Chains and Loops
-(2=3)r2c6-(3=5)r7c6~(5=9)r7c5~(9=2)r5c5  (prefer compacted, expanded is too verbose)
-
-Strong Linked Nets
-1r1c1n=1r1c4p=1r6c4n={1r6c7p=1r4c7n=1r4c5p=1r2c5n=1r2c1p,9r6c4p}
-Note:
-
-    1. All the links are Strong
-    2. Braces are used to group all the Children of a Node.
-    3. Ccells are postfixed with a polarity symbol, “n” or “p”.  All nodes in a Strong net have polarity. Polarity indicates a possible Truth.  Either the one polarity or the other polarity is the Truth, however which it is, is unknown.
-
-2.1.3.9.   Bent Subsets
-Exposed Bent Subsets
-34\56r7Ub9	Candidates 3456 form a Bent Exposed Quad in r7 and b9 where 5 has been identified as the unrestricted candidate.
-
-Grouped Bent Subsets
-345(r3Ib3,==r3c14,!-b3p!15)  Candidate 345 lie in the intersection of row 3 and box 3 (r3c789) where the exposed subset is in the rows, r3c14, and the hidden subset is in the box, where 345 is not present in positions 1, 5 in box 3. - that is only present in b3p15, or r1c7 and r2c8.
-2.1.3.10.   Unlocked Sets
-Z(ALS1)X1(ALS2)X2(ALS3)Z
-1(127r1c3,89r2c3,279r3c3,189r5c3)27(278r1c1)8(78r1c9,79r3c9,16r4c9,69r6c9)1
-
-2(26r7c2,246r9c1)4(46r2c4,24r9c4)4(46r2c1,26r3c2)2–
-Note:
-
-    1. The candidates Z and X can be individual or sets of.
-    2. The dash on the end of the last example indicates that this is an ULS-loop where the end candidate can directly see the starting candidate.
-
-2.1.3.11.   Complex Patterns
-Chained Strong Linked Nets.
-[1r1c1n=1r1c4p=1r6c4n={1r6c7p=1r4c7n=1r4c5p=1r2c5n=1r2c1p,9r6c4p}]
-<1r1c4p-5r1c4n>
-[4r5c4n={4r9c4p={4r9c5n=7r9c5p,5r9c4n={5r1c4p,5r8c6p}},9r5c4p}],
-4r9c5-4r2c5-1r2c5
-Note:
-
-    1. Each Strong Linked Net is braced with Square brackets
-    2. The phrase describing the relationship between the two chains is braced with Pointy brackets <1r1c4p-5r1c5n>
