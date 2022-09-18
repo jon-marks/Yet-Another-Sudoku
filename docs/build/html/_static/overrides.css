@@ -53,13 +53,19 @@ mong, .mong {
    overflow-x: scroll;
 }
 
+/*
 mongp, .mongp {
    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
    background-color: #eee;
    overflow-x: scroll;
    white-space: pre;
    font-size: 17.6px;
-/*   line-height: 23px;*/
+   line-height: 23px;
+}
+*/
+
+li.toctree-l1, li.toctree-l2, li.toctree-l3, li.toctree-l4, li.toctree-l5 {
+   list-style-type: none;
 }
 
   /*  margin-bottom: 10px;

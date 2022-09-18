@@ -63,6 +63,24 @@ Ccell Specifiers
                                      (same as :raw-html:`<mong>r4c8</mong>)`
    ================================= =================================================================
 
+Ccell Postfixes
+
+.. table::
+   :width: 97%
+   :widths: 20 80
+   :align: left
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
+
+   ================================= =================================================================
+   :raw-html:`<mono>o</mono>`        The Ccell is a member of the odd parity :ref:`Super Node<super-node>`
+                                     in a :ref:`SL Pattern <strong-linked-patterns>`
+   :raw-html:`<mono>e</mono>`        The Ccell is a member of the even parity :ref:`Super Node<super-node>`
+                                     in a :ref:`SL Pattern <strong-linked-patterns>`
+   ================================= =================================================================
+
 Operators
 ---------
 
@@ -175,14 +193,19 @@ Candidate Dressing
 Sudoku Language Semantics
 =========================
 
-How to read and interpret this Sudoku language syntax is explained with examples.  The significance and
-resolution of these patterns is left to later sections.
+How to read and interpret this Sudoku language syntax is explained by examples.  Albeit a
+comprehensive list, it is not an exhaustive list of all patterns, but enough to get a good
+understanding of the semantics.
 
 Note:
-   1. Values always precede operators and/or cell specifiers when describing or specifying a pattern.
-   2. Values always follow an operator when cell(s) are being modified (either assigning a value or eliminating a Ccell).
-   3. A Ccell that is part of a structure such as a Chain or Net is always called a Node to distinguish it from other
-      Ccells that are not part of the structure.
+
+#. Values always precede operators and/or cell specifiers when describing or specifying a pattern.
+#. Values always follow an operator when cell(s) are being modified (either assigning a value or
+   eliminating a Ccell).
+#. A Ccell that is part of a structure such as a Chain or Net is always called a Node to distinguish
+   it from other Ccells that are not part of the structure.
+#. A Ccell that is part of a Set is called either a Member or Element of the Set to distinguish it
+   from other Ccells that are not part of the Set.
 
 Singles
 -------
@@ -299,43 +322,50 @@ Fish
       4, 6, 8 and 9.  Fin r8c7 exists in row 8. Cover Ccell 8r7c9 sees this fin.
 
 **Sashimi Jellyfish**
+   :raw-html:`<mong>7r1569c468,r9c7,r5c9;7r7c9-7r9c7;7r7c9~7r5c9</mong>`
+      Candidate 7 is found two to four times in base rows 1, 5, 6 and 9, that are covered by only
+      three columns 4, 6, and 8.  Two fins exist r9c7 and r5c7.  Ccell 7r7c9 sees both Fins.
 
 **Kraken Finned Fish**
+   :raw-html:`<mong>2r69c12,r9c6;2r9c6-2r9c1=3r9c1-3r9c2=3r6c2-2r6c2=2r6c1-2r7c1</mong>`
+      In this Kraken Finned X-Wing, Candidate 2 is found twice in base row 6 and 9, which are
+      covered by columns 1 and 2. A fin is present in r9c6, seen by Ccell 2r7c1 through the
+      WE-AIC: 2r9c6-2r9c1=3r9c1-3r9c2=3r6c2-2r6c2=2r6c1-2r7c1.
 
 **Kraken Sashimi Fish**
-
-**Group Linked Kraken Finned Fish**
-
-**Group Linked Kraken Sashimi Fish**
+   :raw-html:`<mong>2r13c5,r1c8,r3c9;2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9;2r3c9~2r9c9</mong>`
+      In this Kraken Sashimi X-Wing, Candidate 2 is found twice in base rows 1 and 3, and is only
+      covered by column 5.  Two fins exist r1c8 and r3c9.  Ccell 2r9c9 sees 2r3c9 directly and 2r1c8
+      indirectly through the WE-AIC: 2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9.
 
 Bent Subsets
 ------------
 
 **Y-Wings**
+   :raw-html:`<mong>23==r1c6,26==r1c7,36==r2c8</mong>`
+      Y-Wing spanning row 1 and box 3, with unrestricted candidate 3 in the pincers.
 
 **XYZ-Wings**
-
-**WXYZ-Wings**
+   :raw-html:`<mong>359==r6c7,35==r6c8,39==r7c7</mong>`
+      XYZ Wing spanning column 7 and box 7 with unrestricted candidate 3 in all three cells.
 
 **Bent Exposed Quads**
-
-**Bent Exposed Quints**
-
-**Bent Exposed Sexts**
+   :raw-html:`<mong>459==r7c1,14==r7c5,45==r7c7,19==r8c4</mong>`
+      Bent exposed quad spanning row 7 and box 7, with unrestricted candidate 9.
 
 **Grouped Bent Pair, Exposed Line, Hidden Box**
+   :raw-html:`<mong>U89r8c456,89==r8c1,89--r7c4</mong>`
+      Grouped Bent Pair with the union of candidates 8 and 0 in the intersection of row 8 and box 8
+      with exposed pair in row 8 and hidden pair in box 8.
 
 **Grouped Bent Pair, Hidden Line, Exposed Box**
-
-**Grouped Bent Triple, Exposed Line, Hidden Box**
-
-**Grouped Bent Triple, Hidden Line, Exposed Box**
-
-**Grouped Bent Quad, Exposed Line, Hidden Box**
-
-**Grouped Bent Quad, Hidden Line, Exposed Box**
+   :raw-html:`<mong>U49r789c3,49==r8c2,49--r6c3</mong>`
+      Grouped Bent Pair with the union of candidates 4 and 9 in the intersection of column 3 and box
+      3.  The exposed pair is box 3 and hidden pair in column 3.
 
 **Bent Hidden Triples**
+   :raw-html:`<mong>18r7c3-189r7c7-89r4c7</mong>`
+      Bent Hidden Triple in made up candidates 1, 8, 9 in row 7 and column 7.
 
 Inference Chains, Loops and Nets
 --------------------------------

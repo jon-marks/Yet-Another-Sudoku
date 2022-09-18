@@ -434,11 +434,11 @@ def tech_hidden_triples(Grid, Step, Cands, Methods):
                         if not X: continue
                         if len(X) == 1: break
                         if n0 > 2: break
-                        B.append((r0, c0, X)); U |= X; n0 += 1
+                        B.append((b0, r0, c0, X)); U |= X; n0 += 1
                     else:
                         if n0 != 3 or len(U) != 3: continue
                         # found a hidden trip in block
-                        for r0, c0, X in B:
+                        for b0, r0, c0, X in B:
                             Elims = Cands[r0][c0] - {Cand0, Cand1, Cand2}
                             if Elims:
                                 Cands[r0][c0] = X

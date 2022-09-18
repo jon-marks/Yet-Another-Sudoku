@@ -40,7 +40,7 @@ def tech_strong_linked_nets(Grid, Step, Cands, Methods):
     for Hash, Trunk in SLNodes.items():
         if Hash in NodesConsidered: continue
         NodesConsidered.add(Hash)
-        SLNet = SLNET(TNODE(Trunk.r, Trunk.c, Trunk.Cand, POL_0))
+        SLNet = SLNET(TNODE(Trunk.r, Trunk.c, Trunk.Cand, PAR_E))
         SLNet.Pol0 = [(Trunk.r, Trunk.c, Trunk.Cand)]
         grow_sln(SLNet, SLNet.Trunk, Trunk.Children, NodesConsidered, SLNodes, 1)
 
@@ -65,7 +65,7 @@ def tech_strong_linked_nets(Grid, Step, Cands, Methods):
             Step.Outcome.append([P_END])
             Step.Method = Method
             Step.NrLks = len(SLNet.Pol0) + len(SLNet.Pol1) - 1
-            Step.Pattern = [[P_VAL, SLNet.Trunk.Cand], [P_ROW, SLNet.Trunk.r], [P_COL, SLNet.Trunk.c], [P_POL, SLNet.Trunk.Lk]]
+            Step.Pattern = [[P_VAL, SLNet.Trunk.Cand], [P_ROW, SLNet.Trunk.r], [P_COL, SLNet.Trunk.c], [P_PAR, SLNet.Trunk.Lk]]
             climb_branch(SLNet.Trunk, Step.Pattern)
             if Pattern: Step.Pattern.extend([[P_CON], *Pattern])
             Step.Pattern.append([P_END])
@@ -87,7 +87,7 @@ def tech_chained_strong_linked_nets(Grid, Step, Cands, Methods):
     for Hash, Trunk in SLNodes.items():
         if Hash in NodesConsidered: continue
         NodesConsidered.add(Hash)
-        SLNet = SLNET(TNODE(Trunk.r, Trunk.c, Trunk.Cand, POL_0))
+        SLNet = SLNET(TNODE(Trunk.r, Trunk.c, Trunk.Cand, PAR_E))
         SLNet.Pol0 = [(Trunk.r, Trunk.c, Trunk.Cand)]
         grow_sln(SLNet, SLNet.Trunk, Trunk.Children, NodesConsidered, SLNodes, 1)
         # Build Forest of SLNet Pairs, each with switched polarity nodes, but same Tree/Net.
@@ -109,8 +109,9 @@ def tech_chained_strong_linked_nets(Grid, Step, Cands, Methods):
                     Step.NrLks += len(SLNNode.SLNet.Pol0) + len(SLNNode.SLNet.Pol1) - 1
                     if SLNNode.Ccell0:
                         r0, c0, Cand0, Pol0 = SLNNode.Ccell0; r1, c1, Cand1, Pol1 = SLNNode.Ccell1
-                        Step.Pattern.extend([[P_OP, OP_LT], [P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_POL, Pol0], [P_OP, OP_WLK], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_POL, Pol1], [P_OP, OP_GT]])
-                    Step.Pattern.extend([[P_OP, OP_SQBO], [P_VAL, SLNNode.SLNet.Trunk.Cand], [P_ROW, SLNNode.SLNet.Trunk.r], [P_COL, SLNNode.SLNet.Trunk.c], [P_POL, SLNNode.SLNet.Trunk.Lk]])
+                        Step.Pattern.extend([[P_OP, OP_LT], [P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, OP_WLK], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_OP, OP_GT]])
+                        # Step.Pattern.extend([[P_OP, OP_LT], [P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_PAR, Pol0], [P_OP, OP_WLK], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_PAR, Pol1], [P_OP, OP_GT]])
+                    Step.Pattern.extend([[P_OP, OP_SQBO], [P_VAL, SLNNode.SLNet.Trunk.Cand], [P_ROW, SLNNode.SLNet.Trunk.r], [P_COL, SLNNode.SLNet.Trunk.c], [P_PAR, SLNNode.SLNet.Trunk.Lk]])
                     climb_branch(SLNNode.SLNet.Trunk, Step.Pattern)
                     Step.Pattern.append([P_OP, OP_SQBC])
                 if State.Pattern1: Step.Pattern.extend([[P_CON], *State.Pattern1])
@@ -147,14 +148,14 @@ def sln_chain_next_level(SLNNode, Chain, Cands, Lvl, Methods, State):
         for X in Prunes: SLNNode.Children.remove(X)
     else:  # at leaves.
         for SLNN1 in State.SLNNodes:
-            for SLNNCh in Chain:  # Ensure SLNN1 or it's mirror are not already in the chain
+            for SLNNCh in Chain:  # Ensure SLNN1 or its mirror are not already in the chain
                 if SLNN1.SLNet.Pol0 == SLNNCh.SLNet.Pol0 or SLNN1.SLNet.Pol0 == SLNNCh.SLNet.Pol1: break
             else:
                 for r0, c0, Cand0 in SLNNode.SLNet.Pol1:
                     for r1, c1, Cand1 in SLNN1.SLNet.Pol0:
                         if ccells_see_each_other(r0, c0, Cand0, r1, c1, Cand1):  # They will only be weak links.
                             SLNN1 = copy(SLNN1)
-                            SLNN1.Ccell0 = (r0, c0, Cand0, POL_1); SLNN1.Ccell1 = (r1, c1, Cand1, POL_0)
+                            SLNN1.Ccell0 = (r0, c0, Cand0, PAR_O); SLNN1.Ccell1 = (r1, c1, Cand1, PAR_E)
                             #  a SLN that can be linked, what resolutions do the ends yield.
                             if resolve_sln_chain_patterns([*Chain, SLNN1], Cands, Methods, State): return
                             SLNNode.Children.append(SLNN1)
@@ -251,7 +252,7 @@ def sl_net_elims(Tree, Methods, Cands):
                 Lk = how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands)
                 if Lk:
                     if Lk & LK_STRG: Lk |= Lk_WKST
-                    Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_POL, POL_0], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_POL, POL_0]]
+                    Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_PAR, PAR_E], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_PAR, PAR_E]]
                     Elims = {}
                     for r2, c2, Cand2 in Tree.Pol0:
                         K = str(r2)+str(c2)
@@ -264,7 +265,7 @@ def sl_net_elims(Tree, Methods, Cands):
                 Lk = how_ccells_linked(r0, c0, Cand0, r1, c1, Cand1, Cands)
                 if Lk:
                     if Lk & LK_STRG: Lk |= Lk_WKST
-                    Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_POL, POL_1], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_POL, POL_1]]
+                    Pattern = [[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_PAR, PAR_O], [P_OP, token_link(Lk & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_PAR, PAR_O]]
                     Elims = {}
                     for r2, c2, Cand2 in Tree.Pol1:
                         K = str(r2)+str(c2)
@@ -286,7 +287,7 @@ def sl_net_elims(Tree, Methods, Cands):
                             break
                     else: break
                 if Links and len(Links) == len(Cands[r][c]):
-                    Pol = POL_0
+                    Pol = PAR_E
                     for r2, c2, Cand2 in Tree.Pol0:
                         K = str(r2)+str(c2)
                         if K in Elims.keys(): Elims[K].append(Cand2)
@@ -304,7 +305,7 @@ def sl_net_elims(Tree, Methods, Cands):
                                 break
                         else: break
                     if Links and len(Links) == len(Cands[r][c]):
-                        Pol = POL_1
+                        Pol = PAR_O
                         for r2, c2, Cand2 in Tree.Pol1:
                             K = str(r2)+str(c2)
                             if K in Elims.keys(): Elims[K].append(Cand2)
@@ -314,10 +315,10 @@ def sl_net_elims(Tree, Methods, Cands):
                     Pattern = []
                     for ((r0, c0, Cand0, Lk0), (r1, c1, Cand1, Lk1)) in Links:
                         if Pattern: Pattern.append([P_CON])
-                        Pattern.extend([[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk0 & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_POL, Pol]])
+                        Pattern.extend([[P_VAL, Cand0], [P_ROW, r0], [P_COL, c0], [P_OP, token_link(Lk0 & 0x000f)], [P_VAL, Cand1], [P_ROW, r1], [P_COL, c1], [P_PAR, Pol]])
                     return T_STRONG_LINKED_NET_T2, Elims, Plcmts, Pattern
     if T_STRONG_LINKED_NET_T3 in Methods:
-        # look for cells that are not part of the net that can see both an odd and even node.
+        # look for non-net cells that see both an odd and even nodes
         Pattern = []; Elims = {}
         for r in range(9):
             for c in range(9):
@@ -333,8 +334,8 @@ def sl_net_elims(Tree, Methods, Cands):
                                 if Lko:
                                     if Lko & LK_STRG: Lko |= LK_WKST
                                     if Pattern:  Pattern.append([P_CON])
-                                    Pattern.extend([[P_VAL, Cando], [P_ROW, re], [P_COL, ce], [P_POL, POL_0], [P_OP, token_link(Lke & 0x000f)], [P_VAL, Cand], [P_ROW, r], [P_COL, c],
-                                                    [P_OP, token_link(Lko & 0x000f)], [P_VAL, Cando], [P_ROW, ro], [P_COL, co], [P_POL, POL_1]])
+                                    Pattern.extend([[P_VAL, Cando], [P_ROW, re], [P_COL, ce], [P_PAR, PAR_E], [P_OP, token_link(Lke & 0x000f)], [P_VAL, Cand], [P_ROW, r], [P_COL, c],
+                                                    [P_OP, token_link(Lko & 0x000f)], [P_VAL, Cando], [P_ROW, ro], [P_COL, co], [P_PAR, PAR_O]])
                                     K = str(r)+str(c)
                                     if K in Elims.keys():
                                         if Cand not in Elims[K]: Elims[K].append(Cand)
@@ -354,7 +355,7 @@ def climb_branch(TNode, Pattern):
     for Child in TNode.Children:
         if First: First = False
         else: Pattern.append([P_CON])
-        Pattern.extend([[P_VAL, Child.Cand], [P_ROW, Child.r], [P_COL, Child.c], [P_POL, Child.Lk]])
+        Pattern.extend([[P_VAL, Child.Cand], [P_ROW, Child.r], [P_COL, Child.c], [P_PAR, Child.Lk]])
         climb_branch(Child, Pattern)
     if nChildren > 1: Pattern.append([P_OP, OP_BRCC])
 
@@ -367,8 +368,8 @@ def grow_sln(Tree, TNode, SLNChildren, NodesConsidered, SLNodes, Lvl):
         if Hash not in SLNodes.keys(): continue
         if Lvl & 0x01:
             Tree.Pol1.append((SLNC.r, SLNC.c, SLNC.Cand))
-            TNode.Children.append(TNODE(SLNC.r, SLNC.c, SLNC.Cand, POL_1))
+            TNode.Children.append(TNODE(SLNC.r, SLNC.c, SLNC.Cand, PAR_O))
         else:
             Tree.Pol0.append((SLNC.r, SLNC.c, SLNC.Cand))
-            TNode.Children.append(TNODE(SLNC.r, SLNC.c, SLNC.Cand, POL_0))
+            TNode.Children.append(TNODE(SLNC.r, SLNC.c, SLNC.Cand, PAR_E))
         grow_sln(Tree, TNode.Children[-1], SLNodes[Hash].Children, NodesConsidered, SLNodes, Lvl+1)

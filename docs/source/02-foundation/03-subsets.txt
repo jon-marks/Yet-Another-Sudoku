@@ -9,7 +9,7 @@ Subsets refer to 'n' cell by 'n' candidate grouping, where each cell in the grou
 of “n” > 4, a reciprocal subset relationship of 9 – 'n' candidate values exists, so it is
 unnecessary to look for subsets larger than 4.
 
-A “Straight Subset” (also simply a “Subset”) occurs when this grouping of Ccells is found in a
+A “Straight Subset” (also simply a “Subset”) occurs when the grouping of Ccells is found in a
 single house/group.  “Straight” is a bit of misnomer as the cells may not be in a straight line if
 the house is Box.  A “Bent subset” occurs when this grouping of Ccells occur in two intersecting
 houses/groups with at least one cell in the intersection. At least three cells are required to make

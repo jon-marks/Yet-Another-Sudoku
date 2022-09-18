@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -176,7 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html">3.3. Bent Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">3.7. Uniqueness</a></li>
@@ -196,9 +196,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/03-algorithms.html">6.3. Algorithms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary and Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
 </ul>
 
@@ -227,7 +228,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -235,7 +236,30 @@
         <article role="main">
           <section id="straight-subsets">
 <h1><span class="section-number">3.2. </span>(Straight) Subsets<a class="headerlink" href="#straight-subsets" title="Permalink to this heading">#</a></h1>
-<p>Straight Subsets stub.</p>
+<section id="exposed-pairs">
+<span id="id1"></span><h2><span class="section-number">3.2.1. </span>Exposed Pairs<a class="headerlink" href="#exposed-pairs" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="locked-exposed-pairs">
+<h2><span class="section-number">3.2.2. </span>Locked Exposed Pairs<a class="headerlink" href="#locked-exposed-pairs" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="hidden-pairs">
+<h2><span class="section-number">3.2.3. </span>Hidden Pairs<a class="headerlink" href="#hidden-pairs" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="exposed-triples">
+<h2><span class="section-number">3.2.4. </span>Exposed Triples<a class="headerlink" href="#exposed-triples" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="locked-exposed-triples">
+<h2><span class="section-number">3.2.5. </span>Locked Exposed Triples<a class="headerlink" href="#locked-exposed-triples" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="hidden-triples">
+<h2><span class="section-number">3.2.6. </span>Hidden Triples<a class="headerlink" href="#hidden-triples" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="exposed-quads">
+<h2><span class="section-number">3.2.7. </span>Exposed Quads<a class="headerlink" href="#exposed-quads" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="hidden-quads">
+<h2><span class="section-number">3.2.8. </span>Hidden Quads<a class="headerlink" href="#hidden-quads" title="Permalink to this heading">#</a></h2>
+</section>
 </section>
 
         </article>
@@ -267,7 +291,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:f3952f5*, Sun, 11 Sep 2022, 23:19:09
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4275535*, Sun, 18 Sep 2022, 18:01:31
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -283,8 +307,34 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3.2. (Straight) Subsets</a><ul>
+<li><a class="reference internal" href="#exposed-pairs">3.2.1. Exposed Pairs</a></li>
+<li><a class="reference internal" href="#locked-exposed-pairs">3.2.2. Locked Exposed Pairs</a></li>
+<li><a class="reference internal" href="#hidden-pairs">3.2.3. Hidden Pairs</a></li>
+<li><a class="reference internal" href="#exposed-triples">3.2.4. Exposed Triples</a></li>
+<li><a class="reference internal" href="#locked-exposed-triples">3.2.5. Locked Exposed Triples</a></li>
+<li><a class="reference internal" href="#hidden-triples">3.2.6. Hidden Triples</a></li>
+<li><a class="reference internal" href="#exposed-quads">3.2.7. Exposed Quads</a></li>
+<li><a class="reference internal" href="#hidden-quads">3.2.8. Hidden Quads</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

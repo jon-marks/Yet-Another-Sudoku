@@ -950,7 +950,7 @@ def tech_grouped_bent_triple(Grid, Step, Cands, Methods):
                                             if Elims:
                                                 Cands[HC[0]][c] -= Elims
                                                 if Step.Outcome: Step.Outcome.append([P_SEP])
-                                                Step.Outcome.extend([[P_ROW, HC[0], [P_COL, c]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                Step.Outcome.extend([[P_ROW, HC[0]], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                             Elims = Cands[HC[1]][c] - Trip
                                             if Elims:
                                                 Cands[HC[1]][c] -= Elims
@@ -1170,7 +1170,7 @@ def tech_grouped_bent_quad(Grid, Step, Cands, Methods):
                                                 if Elims:
                                                     Cands[HC[0]][c] -= Elims
                                                     if Step.Outcome: Step.Outcome.append([P_SEP])
-                                                    Step.Outcome.extend([[P_ROW, HC[0], [P_COL, c]], [P_OP, OP_ELIM], [P_VAL, Elims]])
+                                                    Step.Outcome.extend([[P_ROW, HC[0]], [P_COL, c], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                                 Elims = Cands[HC[1]][c] - Quad
                                                 if Elims:
                                                     Cands[HC[1]][c]-= Elims

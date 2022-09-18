@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -176,7 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
@@ -196,9 +196,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/03-algorithms.html">6.3. Algorithms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary and Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
 </ul>
 
@@ -227,7 +228,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -235,7 +236,673 @@
         <article role="main">
           <section id="chains-loops-and-nets">
 <h1><span class="section-number">2.5. </span>Chains, Loops and Nets<a class="headerlink" href="#chains-loops-and-nets" title="Permalink to this heading">#</a></h1>
-<p>Chains, Loops and Nets stub.</p>
+<p>In this section a Node refers to Ccell that is part of a Chain, Loop or Net structure to
+distinguish it from Ccells that are not part of the pattern.</p>
+<p>This section builds substantially on the <a class="reference internal" href="01-core-concepts.html#a-truth"><span class="std std-ref">Truths</span></a> and
+<a class="reference internal" href="01-core-concepts.html#premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a> concepts developed in
+<a class="reference internal" href="01-core-concepts.html#core-concepts"><span class="std std-ref">Core Concepts</span></a>.</p>
+<p>A Link is an inference describing the relationship between two Ccells.  A Direct Link describes the
+relationship between two Ccells that see each directly.  An Indirect Link describes the relationship
+between two Ccells that are connected indirectly by a pattern such as a chain, etc.</p>
+<section id="direct-links">
+<h2><span class="section-number">2.5.1. </span>Direct Links<a class="headerlink" href="#direct-links" title="Permalink to this heading">#</a></h2>
+<dl class="simple">
+<dt>Recall:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="01-core-concepts.html#weak-links"><span class="std std-ref">Direct Weak Links</span></a>:  If one end is True, the other end must be False, and
+that both ends cannot be simultaneously True, but can be simultaneously False.  These Links
+characterise the following Ccell relationships:</p>
+<ul>
+<li><p>Between two same valued Ccells in a House that has 3 or more same valued Ccells.</p></li>
+<li><p>Between two different valued Ccells in a cell that has 3 or more Ccells.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="01-core-concepts.html#strong-links"><span class="std std-ref">Direct Strong Links</span></a>:  The ends are always the opposite state of each
+other.  The ends cannot be simultaneously True or False.  These Links characterise the following
+Ccell relationships</p>
+<ul>
+<li><p>Between the only two same valued Ccells in a house (a Conjugate Pair).</p></li>
+<li><p>Between the only two Ccells in a Cell (Bi-value Cell)</p></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="chains-and-nets">
+<h2><span class="section-number">2.5.2. </span>Chains and Nets<a class="headerlink" href="#chains-and-nets" title="Permalink to this heading">#</a></h2>
+<section id="chains">
+<h3><span class="section-number">2.5.2.1. </span>Chains<a class="headerlink" href="#chains" title="Permalink to this heading">#</a></h3>
+<p>A chain is simply a stream of inferences (links).  Starting with an assertion of a premise (state is
+True or False) of a Ccell at one end, and propagating the inferences from Ccell to Ccell reaching
+another end Ccell.</p>
+<dl class="simple">
+<dt>The only link patterns that propagate in chains are:</dt><dd><ul class="simple">
+<li><p>concatenated Strong Links forming Strong Link Chains (SLC), and</p></li>
+<li><p>alternating Strong and Weak Links forming Alternating Inference Chains (AIC).</p></li>
+</ul>
+</dd>
+</dl>
+<p>Concatenating Weak Links cannot propagate because it is impossible to infer the state of a next
+node from a False node.</p>
+<p>A Chain of ‘n’ nodes will have ‘n - 1’ links.</p>
+<p>A Node can only be used once in the construction of a chain.  If a specific node is encountered a
+second time in a chain, then a loop can be formed by pruning the chain in front of the first
+occurrence of the node, and have the chain link back on itself.  Any other cross-linking of nodes
+in a chain breaks the inference logic forming the chain.</p>
+<p>Chain Patterns are productive when they form indirect links that behave as Weak Links, Strong Links,
+or Robust Links.</p>
+</section>
+<section id="nets">
+<h3><span class="section-number">2.5.2.2. </span>Nets<a class="headerlink" href="#nets" title="Permalink to this heading">#</a></h3>
+<p>A Chain is made up of interior Nodes that are linked to Nodes on either side and two End Nodes that
+are linked to an Interior Node.  A net or a tree structure permits Nodes to link to more than two
+Nodes.</p>
+<p>In its simplest form, a chain is a Net or Tree with no branches off the Trunk.  If this chain is
+picked up by an interior Node, making that node the Base of the Net, it forms a Net of two branches.</p>
+<p>In a Sudoku Grid, it is possible for a Node to have a branch to every Node that it can see.  A
+potential maximum of 32 weak links or 4 strong links to children.</p>
+<p>Alternate Inference Nets are constructed to search for productive Alternate Inference Chains in
+Sudoku puzzles, where each chain is a path from each Net leaf back to the base.</p>
+<p>Strong Linked Nets are productive in their own right with the
+resolution techniques that depend on adjacent net level nodes always having opposite True/False
+state.</p>
+<dl class="simple">
+<dt>Net generations of Children / Tree branches grow until:</dt><dd><ul class="simple">
+<li><p>No more children / branches can be found</p></li>
+<li><p>A child / branch loops back on its chain created so far.</p></li>
+<li><p>the maximum recursion limit is reached. Nets / Trees grow by successively recusing down all the
+children found at each level.  The growth in nodes is    explosive often exceeding tens of
+millions of nodes, especially when considering Group Link Nodes.  It is practical to limit the
+successive levels searched to contain the time required to find a chain or not.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="indirect-links">
+<h2><span class="section-number">2.5.3. </span>Indirect Links<a class="headerlink" href="#indirect-links" title="Permalink to this heading">#</a></h2>
+<section id="weak-link-ended-alternating-inference-chains-we-aic">
+<h3><span class="section-number">2.5.3.1. </span>Weak Link Ended Alternating Inference Chains (WE-AIC)<a class="headerlink" href="#weak-link-ended-alternating-inference-chains-we-aic" title="Permalink to this heading">#</a></h3>
+<p>Consider two end Nodes A and B connected with AI Linked six node Chain, where the end links are Weak
+Links.</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>A - W = X - Y = Z - B</pre>
+</div></div>
+<p><span></span></p>
+<p>The chain’s inferences are described in the following table.</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-we-aic-it">
+<table class="styled-table docutils align-default" id="tbl-we-aic-it" style="width: 80%">
+<caption><span class="caption-number">Table 2.6:  </span><span class="caption-text"><span class="raw-html">&nbsp;<b><mong>A |-| B</mong></b>:&nbsp;</span> Weak Link Ended AIC Inference Table</span><a class="headerlink" href="#tbl-we-aic-it" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A &nbsp;-&nbsp; W &nbsp;=&nbsp; X &nbsp;-&nbsp; Y &nbsp;=&nbsp; Z &nbsp;-&nbsp; B</mono></span></p></th>
+<th class="head left-align nowrap single-left-divider no-right-divider"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is True then B is False</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is True then A is False</p></td>
+</tr>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ?</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is False then B is unknown</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is False then A is unknown</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A WE-AIC has an Even Node count to preserve the weak end link requirement of the chain. If an End
+Node is True, the other is False, and if the other end is True, then the first is False.  The chain
+identifies a reversible opposing inference relationship (True to False) between the End Nodes.
+The ends of WE-AIC behave in the same as <a class="reference internal" href="01-core-concepts.html#weak-links"><span class="std std-ref">Weak Links</span></a>.</p>
+<p>With an Odd Node count chain, if the one end is True, so is the other.  But the chain is not
+reversible. The other starting link is Strong, and a True assertion from that end does not
+propagate passed the second link.  This passing forward of the True state in one direction may be
+useful.  But it is this reversible opposing inference relationship found in Even Node
+Count chains that gives them the same behaviour as Weak Links.  And like weak links, can be used in
+the characterisation of Truths.</p>
+<p>The symbol <span class="raw-html"><mono>"|-|"</mono></span> describes the indirect linkage of the end Nodes of a WE-AIC.  The bars
+indicating that the end nodes are indirectly related.</p>
+</section>
+<section id="strong-link-ended-alternating-inference-chains-se-aic">
+<h3><span class="section-number">2.5.3.2. </span>Strong Link Ended Alternating Inference Chains (SE-AIC)<a class="headerlink" href="#strong-link-ended-alternating-inference-chains-se-aic" title="Permalink to this heading">#</a></h3>
+<p>Consider two end Nodes A and B connected with AI Linked six node Chain, where the end links are
+Strong Links.</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>A = W - X = Y - Z = B</pre>
+</div></div>
+<p><span></span></p>
+<p>The chain’s inferences are described in the following table.</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-se-aic-it">
+<table class="styled-table docutils align-default" id="tbl-se-aic-it" style="width: 80%">
+<caption><span class="caption-number">Table 2.7:  </span><span class="caption-text"><span class="raw-html">&nbsp;<b><mong>A |~| B</mong></b>:&nbsp;</span> Strong Link Ended AIC Inference Table</span><a class="headerlink" href="#tbl-se-aic-it" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A &nbsp;=&nbsp; W &nbsp;-&nbsp; X &nbsp;=&nbsp; Y &nbsp;-&nbsp; Z &nbsp;=&nbsp; B</mono></span></p></th>
+<th class="head left-align nowrap single-left-divider no-right-divider"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ? &nbsp;&rarr;&nbsp; ?</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is True then B is unknown</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; ? &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is True then A is unknown</p></td>
+</tr>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is False then B is True</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is False then A is True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A SE-AIC has an Even node count to preserve the strong end link requirement of the chain.  If an End
+Node is False, the other is True, and if the other is False then the first is True.  The chain
+identifies a reversible opposing inference relationship (False to True) between the end Nodes. The
+ends of a SE-AIC behave like <a class="reference internal" href="01-core-concepts.html#robust-links"><span class="std std-ref">Robust Links</span></a>.</p>
+<p>With an Odd Node count chain, if the one end is False so is the other.  But the chain is not
+reversible. The other starting link is Weak and a False assertion from that end does not propagate.
+This False to False one way passing forward may be useful.  But it is this reversible opposing
+inference relationship found in Even Node count chains that give it the behavior of Robust Links.</p>
+<p>The Robust Link symbol <span class="raw-html"><mono>"|~|"</mono></span> describes the indirect linkage of the end Nodes of a
+SE-AIC.  The bars indicating that the end nodes are indirectly related.</p>
+<p>Because at least one end of a Robust link is always True, any Ccell (including interior nodes,
+see <a class="reference internal" href="#cannibalism"><span class="std std-ref">Cannibalism</span></a> below), cannot be True and can be eliminated.</p>
+</section>
+<section id="strong-linked-patterns">
+<span id="id1"></span><h3><span class="section-number">2.5.3.3. </span>Strong Linked Patterns<a class="headerlink" href="#strong-linked-patterns" title="Permalink to this heading">#</a></h3>
+<p>Chain Patterns refer to Chains, Nets and Loops.</p>
+<p>Consider two end Nodes A and B, connected by Strongly Linked six node chain:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>A = W = X = Y = Z = B</pre>
+</div></div>
+<p><span></span></p>
+<p>The end Nodes behave exactly as a Direct Strong Link.  This relationship is indicated with a
+<span class="raw-html"><mono>"|=|"</mono></span> symbol to differentiate this Link type from a Direct Strong Link</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-slc-it">
+<table class="styled-table docutils align-default" id="tbl-slc-it" style="width: 80%">
+<caption><span class="caption-number">Table 2.8:  </span><span class="caption-text"><span class="raw-html">&nbsp;<b><mong>A |=| B</mong></b>:&nbsp;</span> Strongly Linked Chain Inference Table</span><a class="headerlink" href="#tbl-slc-it" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 60.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A &nbsp;=&nbsp; W &nbsp;=&nbsp; X &nbsp;=&nbsp; Y &nbsp;=&nbsp; Z &nbsp;=&nbsp; B</mono></span></p></th>
+<th class="head left-align nowrap single-left-divider no-right-divider"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is True then B is False</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is True then A is False</p></td>
+</tr>
+<tr class="row-even"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; F &nbsp;&rarr;&nbsp; T</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If A is False then B is True</p></td>
+</tr>
+<tr class="row-odd"><th class="stub center-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F</mono></span></p></th>
+<td class="left-align nowrap single-left-divider no-right-divider"><p>If B is False then A is True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Because one end of a Strongly Linked Chain is always True, any other Ccell (including interior
+nodes, see <a class="reference internal" href="#cannibalism"><span class="std std-ref">Cannibalism</span></a> below), cannot be True and can be eliminated.</p>
+<p>However, an SLC or SLN physically requires at least two nodes of each state, for another Ccell to
+see a node of either State.  Therefore, the minimum node count for a productive SLC or Net is four
+with two of either state.  In an SLC there will always be ‘n / 2’ nodes of either state, but not
+necessarily in a SLN where is possible for four Nodes to be made up of one parent and three
+children.  In this scenario it is physically not possible to for any cell to see a node of either
+state.</p>
+<p>Strong Linked Chains have a valuable additional property which greatly increases its productivity.
+All consecutive nodes of a Strongly linked chain will always be of opposite state.  Therefore, any
+Ccell that is not part of the pattern that sees both an odd count Node and even count Node in the
+chain cannot be True and can be eliminated.  This property envelops the Strong Link property because
+Chain End Nodes of an Even node count Strongly Linked Chain will always have opposing state.</p>
+<p id="super-node">In working with Strong Linked Chains it is useful to consecutively number the nodes from one end to
+the other and identify odd and even parity nodes.  Similarly, odd and even parity nodes are
+determined by the parity of the net level count.  Odd and even parity nodes will have opposing (yet
+to be determined) state.  Therefore, any Ccell that is not part of the SL pattern that sees two
+nodes in the pattern of opposing parity cannot be True and can be eliminated.</p>
+<p>All the odd parity nodes are grouped into the Odd Parity Super Node Set of the SL pattern.
+Similarly, the even parity are grouped int the Even Parity Super Node Set of the SL pattern. These
+two Super-Nodes are Strongly linked, implying all the Nodes in each set are strongly linked to all
+the nodes in the other set.</p>
+<p>When solving as humans, it is useful use different colours to distinguish parity.</p>
+</section>
+<section id="chained-strong-linked-patterns">
+<span id="chained-strong-linked-pattern"></span><h3><span class="section-number">2.5.3.4. </span>Chained Strong Linked Patterns<a class="headerlink" href="#chained-strong-linked-patterns" title="Permalink to this heading">#</a></h3>
+<dl>
+<dt>Developed from:</dt><dd><div class="line-block">
+<div class="line"><a class="reference external" href="http://www.sudocue.net/guide.php#MedusaBridge">http://www.sudocue.net/guide.php#MedusaBridge</a>, and</div>
+<div class="line"><a class="reference external" href="http://forum.enjoysudoku.com/3d-medusa-help-on-a-specific-puzzle-t31070.html">http://forum.enjoysudoku.com/3d-medusa-help-on-a-specific-puzzle-t31070.html</a>.</div>
+</div>
+</dd>
+</dl>
+<p>Often puzzles with multiple SL Patterns have node in each pattern that see nodes in other SL
+patterns.  These nodes form a Weak Link between the SL pattern.  From the perspective of the SL
+pattern being two Strongly Linked <a class="reference internal" href="../07-glossary.html#term-Super-Node"><span class="xref std std-term">Super-Node</span></a>s, a chain of Super-Nodes is formed.</p>
+<p>The Types 1, 2, and 3 pattern resolutions available to AI-Chains are also available to these ‘Super
+Node’ AI-Chains where the actual chain end nodes can be any in the end ‘Super-Nodes’.</p>
+<p>Unlike regular SL Nets, Chained SL Nets can be of any Super Node count.  Each ‘Super-Node’ set
+can be as small as one node.</p>
+</section>
+</section>
+<section id="some-chain-examples">
+<h2><span class="section-number">2.5.4. </span>Some Chain Examples<a class="headerlink" href="#some-chain-examples" title="Permalink to this heading">#</a></h2>
+<p>Examples applying some concepts covered.</p>
+<figure class="align-right" id="fig-two-string-kite-eg2" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/two-string-kite-eg2.png"><img alt="Sudoku Two String Kite Example" src="../_images/two-string-kite-eg2.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.16:  </span><span class="caption-text">Two String Kite Example</span><a class="headerlink" href="#fig-two-string-kite-eg2" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>.81.2.+6...+4+2.+6..+89.+568..+24.+6+931+4+27+5+8+4+28+357916+1+7+5+6+8+9+3+245+1..+36+89223...84+6.+8+6.+2.....||Two String Kite||5r2c7=5r9c7-5r8c9=5r8c4,5r2c7-5r2c4-5r8c4,5r2c7-5r2c4-5r8c4|r2c4-=5|+781+92+4+6+3+5+3+4+2+7+6+5+1+89+9+568+1+3+24+7+6+931+4+27+5+8+4+28+357916+1+7+5+6+8+9+3+245+1+7+4+36+89223+9+5+784+6+1+8+6+4+2+9+1+5+7+3</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>The chain in this example is <span class="raw-html"><mong>5r2c7=5r9c7-5r8c9=5r8c4</mong></span>, source:
+<a class="reference external" href="http://hodoku.sourceforge.net/en/tech_sdp.php#t2sk">Hodoku</a>.  This is an alternating strong/weak
+link chain four nodes long starting and ending with a strong link.  A short chain was chosen for
+simplicity but the logic applies to any even node count chain.</p>
+<p>Starting at with ccell 5r2c7, assert the premise that it is False. The strong link between 5r2c7 and
+5r9c7, infers 5r9c7 True.  The weak link between 5r9c7 and 5r8c9 infers 5r8c9 False.  The strong
+link between 5r8c9 and 5r8c4 infers 5r8c4 True.  Also walking the chain in the opposite direction
+starting with 5r8c4 as False will ultimately infer 5r2c7 True.  Thus concluding neither 5r2c7 nor
+5r8c4 can be simultaneously False, one or the other has to be True.</p>
+<p>But with this AIC if 5r2c7 is asserted True, then 5r8c4 can be either True or False.  For example,
+The premise that 5r2c7 is True, infers 5r9c7 False.  Because 5r9c7 is weakly linked to 5r8c9,
+nothing can be inferred about its state when it is False, which breaks the inferences for the rest
+of the chain.</p>
+<p>The important conclusions to be drawn from AIC/Inferred links is that same value candidates that can
+see both ends of the AIC can be eliminated.  This is because at least one end Ccell will always be
+True.  In this example 5 is eliminated from r2c4 (r2c4-=5).</p>
+<figure class="align-right" id="fig-skyscraper-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/skyscraper-eg1.png"><img alt="Sudoku Skyscraper Example" src="../_images/skyscraper-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.17:  </span><span class="caption-text">Skyscraper Example</span><a class="headerlink" href="#fig-skyscraper-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>+6+9+7.....+2..19+72.6+3..+3..679.9+12...6.+737+4+2+6.95.+8+65+7.+9.+2414+8+6+93+2+757.9.24..+6..+68.+7..+9||Skyscraper||1r1c6=1r5c6~1r5c9=1r3c9,1r1c6-1r1c7-1r3c9,1r1c6-1r1c8-1r3c9,1r1c6-1r3c4-1r3c9,1r1c6-1r3c5-1r3c9|r1c7-=1;r1c8-=1;r3c4-=1;r3c5-=1|+6+9+7+3+1+5+8+4+2+4+819+72+56+3+5+2+3+4+8679+19+12+5+4+86+3+737+4+2+6+195+8+8+65+7+3+9+1+2414+8+6+93+2+757+59+124+3+8+6+2+3+68+5+7+4+1+9</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>The chain in this example is <span class="raw-html"><mong>1r1c6=1r5c6~1r5c9=1r3c9</mong></span>, source: <a class="reference external" href="http://hodoku.sourceforge.net/en/tech_sdp.php#sk">Hodoku</a>.  This is another AI chain of four nodes with
+strong end links.  Note that the centre link is a Strong Link masquerading as a Weak Link.</p>
+<p>Walking the chain exactly like the previous example, the indirect Robust link
+<span class="raw-html"><mong>1r1c6|~|1r2c9</mong></span> is found.  Recall that at least one end will always be true,
+therefore any Ccell that can see both ends cannot be True.  Four such Ccells exist in this pattern
+which can be eliminated: <span class="raw-html"><mong>r1c7-=1, r1c8-=1, r3c4-=1, r3c5-=1</mong></span>.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>This is an example of three Strong Linked Nets in a Chain.  Source: <a class="reference external" href="https://www.sudokuwiki.org/Aligned_Pair_Exclusion">SudokuWiki</a></p>
+<figure class="align-right" id="fig-chained-sln-t2-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/chained-sln-t2-eg1.png"><img alt="Sudoku Chained Strong Linked Net Type 2 Example" src="../_images/chained-sln-t2-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.18:  </span><span class="caption-text">Chained Strong Linked Net Type 2 Example</span><a class="headerlink" href="#fig-chained-sln-t2-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>.7+2.+8.64..9+67..8....8+6....1...3...84681........+4.5+8.6.2+1.+8+39+4.+6+84.2...+13.+63..1..+8|r2c5-=4;r3c5-=4;r4c7-=57;r5c6-=4;r5c7-=7;r5c8-=7;r6c7-=37|Chained Strong Linked Net T2||[3r1c1e=3r1c6o=5r1c6e]<3r1c1-1r1c1>[1r1c1e=1r1c4o=1r6c4e={1r6c7o=1r4c7e=1r4c5o=1r2c5e={1r2c1o,2r2c5o},9r6c4o}]<1r2c1-4r2c1>[4r2c1e=4r2c6o=4r3c6e=4r3c1o],3r1c6-3r2c6-4r2c6|r2c6-=3|+172+98+364+5+4967+1+58+3+2+3+586+2+4+7+91+5+2+73+9+6+184681+4+7+2+3+5+9+9+34+158+26+721+58394+7684+92+6+7+513+763+5+41+9+28</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>The three chains are:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>SLN1 = 3r1c1e=3r1c6o=5r1c6e</mong></span></p></li>
+<li><p><span class="raw-html"><mong>SLN2 = 1r1c1e=1r1c4o=1r6c4e={1r6c7o=1r4c7e=1r4c5o=1r2c5e={1r2c1o,2r2c5o},9r6c4o}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>SLN3 = 4r2c1e=4r2c6o=4r3c6e=4r3c1o</mong></span></p></li>
+</ul>
+<p>Viewed from the perspective of Odd and Even Parity Super Nodes:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>SLN1e = {3r1c1, 5r1c6}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>SLN1o = {3r1c6}</mong><br><br></span></p></li>
+<li><p><span class="raw-html"><mong>SLN2e = {1r1c1, 1r6c4, 1r4c7, 1r2c5}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>SLN2o = {1r1c4, 1r6c7, 1r4cp, 1r2c1, 2r2c5, 9r6c4}</mong><br><br></span></p></li>
+<li><p><span class="raw-html"><mong>SLN3e = {4r2c1, 4r3c6}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>SLN3e = {4r2c6, 4r3c1}</mong></span></p></li>
+</ul>
+<p>These three chains are linked by:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>SLN1e-SLN2e &nbsp;&rArr;&nbsp; 3r1c1-1r1c1</mong></span></p></li>
+<li><p><span class="raw-html"><mong>SLN2o-SLN3e &nbsp;&rArr;&nbsp; 1r2c1-4r2c1</mong></span></p></li>
+</ul>
+<p>The Super Node Chain is:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>SLN1o=SLN1e-SLN2e=SLN2o-SLN3e=SLN3o</mong></span></p></li>
+</ul>
+<p>Because <span class="raw-html"><mong>3r1c6</mong> in SLN1o and <mong>4r2c6</mong> in SLN3o are in the same
+house, and because of the Chain, at least one of them will be True, any Ccell (such as
+<mong>3r2c6</mong>) that sees both, cannot be True and can be eliminated <mong>r2c6-=3</mong></span>.</p>
+</section>
+<section id="chain-eliminations-and-placements">
+<h2><span class="section-number">2.5.5. </span>Chain Eliminations and Placements<a class="headerlink" href="#chain-eliminations-and-placements" title="Permalink to this heading">#</a></h2>
+<section id="weak-link-ended-chains-we-aic">
+<h3><span class="section-number">2.5.5.1. </span>Weak Link Ended Chains (WE-AIC)<a class="headerlink" href="#weak-link-ended-chains-we-aic" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>Recall, Weak Link Ended AI-Chain characteristics are:</dt><dd><ul class="simple">
+<li><p>An even count of Nodes,</p></li>
+<li><p>Link count is one less than Node Count, an odd number,</p></li>
+<li><p>Both outer links are Weak Links,</p></li>
+<li><p>Reversible.  Asserting the one end True and traversing the inferences will find the other end
+False.</p></li>
+<li><p>Although both ends cannot be simultaneously True, they can be simultaneously False.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The ends of Weak Link Ended Chains behave exactly as Weak Links and can be used as such.  Ccells
+‘See’ each other through weak links.  Two Ccells that ‘See’ each other both cannot be True.  This
+application of the Sudoku rule on its own, does not give much.  Its real power is in linking Ccells
+to all the elements of <a class="reference internal" href="01-core-concepts.html#a-truth"><span class="std std-ref">‘A Truth’</span></a>.  If a Ccell sees all the elements of ‘A Truth’,
+it cannot be True and can be eliminated</p>
+<p>This will be covered in detail when reviewing the application of <a class="reference internal" href="../03-human-solvable-patterns/04-fish.html#kraken-fish"><span class="std std-ref">Kraken Fish</span></a>.</p>
+</section>
+<section id="strong-link-ended-chains-se-aic">
+<h3><span class="section-number">2.5.5.2. </span>Strong Link Ended Chains (SE-AIC)<a class="headerlink" href="#strong-link-ended-chains-se-aic" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>Recall, Strong Ended AI-Chain characteristics are that of <a class="reference internal" href="01-core-concepts.html#robust-links"><span class="std std-ref">Robust Links</span></a>:</dt><dd><ul class="simple">
+<li><p>An even count of Nodes</p></li>
+<li><p>Link count is one less than Node Count, an odd number,</p></li>
+<li><p>Both outer links are Strong Links,</p></li>
+<li><p>Reversible.  Asserting the one end False and traversing the inferences will find the other end
+True.</p></li>
+<li><p>Although both ends cannot be simultaneously False, they can be simultaneously True.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Because at least one end of a SE-AIC is always True, any Ccell (including interior nodes, see
+<a class="reference internal" href="#cannibalism"><span class="std std-ref">Cannibalism</span></a>) seeing both ends cannot be True and can be eliminated.</p>
+<section id="type-1-same-end-values">
+<h4><span class="section-number">2.5.5.2.1. </span>Type 1:  Same end Values<a class="headerlink" href="#type-1-same-end-values" title="Permalink to this heading">#</a></h4>
+<p>Considering SE-AIC’s with the same candidate values, eliminations depend on the locations of the
+ends relative to each other:</p>
+<figure class="align-right" id="fig-se-aic-diff-chute-cd1" style="width: 320px">
+<a class="reference internal image-reference" href="../_images/se-aic-diff-chute-cd1.png"><img alt="Sudoku Robust Link Different Chutes Candidate Diagram" src="../_images/se-aic-diff-chute-cd1.png" style="width: 318.5px; height: 318.5px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.19:  </span><span class="caption-text">Robust Link Different Chutes Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-diff-chute-cd1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>With ends in different <a class="reference internal" href="../07-glossary.html#term-Chute"><span class="xref std std-term">Chute</span></a>s, the only cells that can see both ends are the two diagonally
+opposite to the ends.  In the figure on the right, hypothetical chain ends are marked X and the
+cells that can see both ends are highlighted green.  Any same valued Ccell in the highlighted green
+cells cannot be True and can be eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<figure class="align-right" id="fig-se-aic-same-chute-cd1" style="width: 320px">
+<a class="reference internal image-reference" href="../_images/se-aic-same-chute-cd1.png"><img alt="Sudoku Robust Link Same Chutes Candidate Diagram" src="../_images/se-aic-same-chute-cd1.png" style="width: 322.5px; height: 322.5px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.20:  </span><span class="caption-text">Robust Link Same Chutes Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-same-chute-cd1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>With ends in the same <a class="reference internal" href="../07-glossary.html#term-Chute"><span class="xref std std-term">Chute</span></a>, six cells can see both ends.  In the figure on the right,
+hypothetical chain ends are marked X and the cells that can see both ends are highlighted green.
+Any same valued Ccell in the highlighted green cells cannot be True and can be eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<figure class="align-right" id="fig-se-aic-same-house-cd1" style="width: 320px">
+<a class="reference internal image-reference" href="../_images/se-aic-same-house-cd1.png"><img alt="Sudoku Robust Link Same House Candidate Diagram" src="../_images/se-aic-same-house-cd1.png" style="width: 320.5px; height: 320.5px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.21:  </span><span class="caption-text">Robust Link Same House Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-same-house-cd1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>With ends in the Same <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>, seven cells can see both ends.  In the figure on the right,
+hypothetical chain ends are marked X and the cells that can see both ends are highlighted green.
+Any same valued Ccell in the highlighted green cells cannot be True and can be eliminated.</p>
+<p>Furthermore and perhaps more importantly, An <a class="reference internal" href="#even-loops"><span class="std std-ref">Even Loop</span></a> by the SE-AIC ends seeing
+each other.  An Even Loop pattern strengthens all the weak links, causing all the other same value
+Ccells in the Weak Links never to be True, resulting in their elimination.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="type-2-different-end-values">
+<h4><span class="section-number">2.5.5.2.2. </span>Type 2:  Different End Values<a class="headerlink" href="#type-2-different-end-values" title="Permalink to this heading">#</a></h4>
+<p>Eliminations are only possible if the different ends occur in the same house or cell.</p>
+<figure class="align-right" id="fig-se-aic-diff-ends-s1" style="width: 360px">
+<a class="reference internal image-reference" href="../_images/se-aic-diff-ends-s1.png"><img alt="Sudoku Robust Link Different Ends Grid Snip Example 1" src="../_images/se-aic-diff-ends-s1.png" style="width: 356.2px; height: 79.95px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.22:  </span><span class="caption-text">Robust Link Different Ends Grid Snip Example 1</span><a class="headerlink" href="#fig-se-aic-diff-ends-s1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In this grid snippet say <span class="raw-html"><mong>2r3c2</mong> and <mong>7r3c8</mong> are the chain ends.
+<mong>7r3c2</mong> can see both chain ends.  Therefore, it cannot be True and can be
+eliminated. <mong>r3c2-=7</mong></span>.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<figure class="align-right" id="fig-se-aic-diff-ends-s2" style="width: 360px">
+<a class="reference internal image-reference" href="../_images/se-aic-diff-ends-s2.png"><img alt="Sudoku Robust Link Different Ends Grid Snip Example 2" src="../_images/se-aic-diff-ends-s2.png" style="width: 358.15000000000003px; height: 74.75px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.23:  </span><span class="caption-text">Robust Link Different Ends Grid Snip Example 2</span><a class="headerlink" href="#fig-se-aic-diff-ends-s2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In this grid snippet say <span class="raw-html"><mong>6r6c3</mong> and <mong>7r6c7</mong> are the chain ends.
+<mong>7r6c3</mong> and <mong>6r6c7</mong> can both see both chain ends and can be eliminated.
+<mong>r6c3-=7</mong> and <mong>r6c7-=6</mong></span>.</p>
+<p>To summarise: Considering different value chain ends of a SE-AIC in the same house, if a Ccell of
+same value as the one end is in the other end, it can be eliminated.  This pattern can yield a
+maximum of two eliminations.</p>
+</section>
+<section id="type-3-opposing-exposed-pair-ends">
+<h4><span class="section-number">2.5.5.2.3. </span>Type 3:  Opposing Exposed Pair Ends<a class="headerlink" href="#type-3-opposing-exposed-pair-ends" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-se-aic-opp-exp-pair-ends-s1" style="width: 360px">
+<a class="reference internal image-reference" href="../_images/se-aic-opp-exp-pair-ends-s1.png"><img alt="Sudoku Robust Link Opposing Conjugate Pair Ends Grid Snip" src="../_images/se-aic-opp-exp-pair-ends-s1.png" style="width: 358.8px; height: 84.5px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.24:  </span><span class="caption-text">Robust Link Opposing Conjugate Pair Ends Grid Snip</span><a class="headerlink" href="#fig-se-aic-opp-exp-pair-ends-s1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In this grid snippet, say <span class="raw-html"><mong>9r4c2</mong> and <mong>5r4c5</mong></span> of the
+<a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html#exposed-pairs"><span class="std std-ref">Exposed Pair</span></a> <span class="raw-html"><mong>59r4c25</mong>.  The Ccells in the Exposed Pair
+that are not part Chain can both see both end of the chain, and therefore cannot be True and can be
+eliminated, <mong>r4c2-=5</mong> and <mong>r4c5-=9</mong>.  This leaves the Chain Ccells as the only
+Ccells in the Chain end cells respectively and they can be placed.  <mong>r4c2:=9</mong> and
+<mong>r4c5:=5</mong></span>.</p>
+</section>
+</section>
+<section id="id2">
+<h3><span class="section-number">2.5.5.3. </span>Strong Linked Patterns<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p>FROM HERE.</p>
+<p>Strong Linked Patterns include Chains, Nets and Loops.</p>
+<dl class="simple">
+<dt>From the definition of an SLC:</dt><dd><ul class="simple">
+<li><p>The chain is reversible, it can be traversed from either end with the same predictable results, and</p></li>
+<li><p>Consecutive nodes always alternate in polarity, unlike chains constructed with weak links.</p></li>
+</ul>
+</dd>
+<dt>There is more to gained by working with SLN’s instead of SLC’s.  SLN’s are created using Tree structures.</dt><dd><ul class="simple">
+<li><p>Structures often comprise a larger number of nodes/ccells, never less.</p></li>
+<li><p>Any ccell in a SLN will not be part of another SLN, but can be part of multiple SLC’s.</p></li>
+<li><p>In a puzzle fewer larger SLNs are built than SLC’s reducing search effort for similar outcome.</p></li>
+<li><p>In a tree structure, adjacent links traverse up and down the net, never between nodes on the same net.  Therefore the polarity of the net level in the tree corresponds to the opposing polarity of the nodes/ccells at that level.  That is, odd level nodes are all True and even level nodes are all False, or vise-versa.</p></li>
+</ul>
+</dd>
+</dl>
+<p>A SLC or SLN net requires at least two odd and two even nodes to be productive.  Less than that and it is not possible to find another ccell that can see both an odd and even node, or for two same parity nodes to see each other.  This has been shown in greater detail in the context of Remote Pairs, which are an application of SLC Nets.</p>
+<p>In this discussion a ccell refers specifically to a ccell that is not part of the chain, and a node refers to a ccell that is part of the chain or net.</p>
+<p>Because SL Chains are made of only strong links, when links are numbered consecutively, the Parity (Odd or Even) correlates directly with the polarity (True or False) of the ccells.  Similarly with SL Nets nodes at Odd and Even levels of the tree will have opposing polarity.  Although Parity and Polarity have been used synonymously here, considering a Strongly Linked structure as a pair of opposing polarity lists serves resolving these patterns better.  One of the two lists will contain all truths – the solved values for the puzzle, and the cells in the other list can be eliminated.  However which list contains the Truths is yet to be determined:</p>
+<section id="type1-same-state-nodes-see-each-other">
+<h4><span class="section-number">2.5.5.3.1. </span>Type1: Same State Nodes See Each Other<a class="headerlink" href="#type1-same-state-nodes-see-each-other" title="Permalink to this heading">#</a></h4>
+<p>As only one Truth can exist in a house, any two same polarity nodes that see each other (in same house) cannot be True.  Therefore all nodes of that polarity cannot be True and can be eliminated.  By implication, all nodes of opposing polarity must be True and can be placed.</p>
+</section>
+<section id="type2-all-candidates-in-a-cell-see-same-state-nodes">
+<h4><span class="section-number">2.5.5.3.2. </span>Type2: All Candidates in a Cell See Same State Nodes<a class="headerlink" href="#type2-all-candidates-in-a-cell-see-same-state-nodes" title="Permalink to this heading">#</a></h4>
+<p>The candidates of any cell outside of the chain that can see same polarity nodes identify a contradiction that cannot be a Truth.  If the same polarity nodes seen are True, then none of the Candidates in the cell can be True, which is not possible, as there needs to be a Truth for that Cell. Therefore all nodes of this polarity cannot be True and can be eliminated.  By implication, all nodes of the opposing parity must be True and can be placed.</p>
+</section>
+<section id="type3-ccells-see-opposing-state-nodes">
+<h4><span class="section-number">2.5.5.3.3. </span>Type3: Ccells See Opposing State Nodes<a class="headerlink" href="#type3-ccells-see-opposing-state-nodes" title="Permalink to this heading">#</a></h4>
+<p>Any Ccell that can see nodes of opposing polarity nodes in the SL structure can be eliminated.  As either the one polarity is True or the other polarity is True, any ccells seeing nodes of opposing polarity cannot be True and can be eliminated.</p>
+</section>
+</section>
+</section>
+<section id="sub-chains">
+<h2><span class="section-number">2.5.6. </span>Sub Chains<a class="headerlink" href="#sub-chains" title="Permalink to this heading">#</a></h2>
+<p>An important observation about chains with 5 or more links is that any consecutive subset of odd number of links is also a (sub) chain that can yield its own possible eliminations.</p>
+<p>Viewed differently, if the chain nodes/Ccells are numbered consecutively in sequence, any Ccell that can see that can see both an odd numbered node/Ccell and an even numbered node/Ccell can be eliminated.  Because, in a chain, either all the Odd nodes/Ccells are True or all the Even nodes/Ccells are True.  It is not possible for both an odd node/Ccell and an even node/Ccell to be simultaneously True or False.  As either the Odd Node/Ccell is True or the Even Node/Ccell is True, any other Ccell outside of the chain seeing both an Odd and an Even Node/Ccell, cannot be True and can be eliminated.</p>
+<blockquote>
+<div><p>1 = 2 – 3 = 4 – 5 = 6 – 7 = 8 – 9 = 10 …
+F &gt; T &gt; F &gt; T &gt; F &gt; T &gt; F &gt; T &gt; F &gt; T
+T &lt; F &lt; T &lt; F &lt; T &lt; F &lt; T &lt; F &lt; T &lt; F</p>
+</div></blockquote>
+<p>Practically, the candidate needs to be the same in the Odd and Even Ccells, and the Ccell “seeing” the Odd and Even Ccells.</p>
+<p>For each chain type (X-, XY-, AIC, etc.), YAS constructs all chains from short to long.  That is all three link chains are found and checked for eliminations before looking for all five link chains until the first chain that yields eliminations is found.  Therefore YAS’s algorithms implicitly exploit this property of chains.</p>
+<p>This logic is developed from: <a class="reference external" href="http://forum.enjoysudoku.com/x-chain-optimalisation-t38330.html">http://forum.enjoysudoku.com/x-chain-optimalisation-t38330.html</a>.</p>
+</section>
+<section id="cannibalism">
+<span id="id3"></span><h2><span class="section-number">2.5.7. </span>Cannibalism<a class="headerlink" href="#cannibalism" title="Permalink to this heading">#</a></h2>
+<p>In a Puzzle where a chain is found, if one of the resulting eliminations is one of the interior ccells in the chain, can it be eliminated, breaking the chain that was used to find it?</p>
+<p>A chain (or any pattern for that matter) is used to find a condition/constraint of the puzzle.  That is, the constraint exists irrespective of the pattern used to identify it.  The pattern just made the constraint visible.  If the chain is made invalid, say by a cannibalistic placement or elimination, that does not alter the existence of the constraint,  it just means that the pattern used to find the constraint gets destroyed by the resolution of the constraint.  Because the constraint exists irrespective of the pattern, the constraint is not reliant on the pattern, even if the pattern is used to identify the constraint.</p>
+<p>Therefore, the answer is yes.  Cannibalistic eliminations of interior links of chains is logically sound because it does not interfere with the resulting constraint of the puzzle that the chain found.</p>
+<p>The below example finds the chain end ccells 4r9c7 and 4r5c9, resulting in the cannibalistic elimination of 4r7c9</p>
+<p>(Sudoku Swami)
+This example below find the chain end points 5r1c3 and 5r2c7 resulting in the cannibalistic eliminations of 5r2c3 and 5r1c8</p>
+</section>
+<section id="loops">
+<span id="id4"></span><h2><span class="section-number">2.5.8. </span>Loops<a class="headerlink" href="#loops" title="Permalink to this heading">#</a></h2>
+<p>A loop is an AIC that loops back on itself.  An even length AIC looping back on itself will have the same number of strong and weak links.  An odd length AIC that loops back on itself can either have an extra strong link or extra weak link in the loop.  That is one node will have either two strong links or two weak links.</p>
+<p>Each of these three loop types result in different type of eliminations or placements.</p>
+<section id="even-loops">
+<span id="id5"></span><h3><span class="section-number">2.5.8.1. </span>Even Loops<a class="headerlink" href="#even-loops" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>Take the following even loop for example:</dt><dd><p>A = B – C = D –</p>
+</dd>
+<dt>The ending dash indicates a weak link looping back to Node A.  If Node A is False, following the chain we know that D will be True.  There are now two routes for A to get to D:</dt><dd><ul class="simple">
+<li><p>Via the chain, there is a Robust link</p></li>
+</ul>
+</dd>
+</dl>
+<p>Following the chain A through to D.  If A is False then If Node A is True, following the chain we are unable to infer the state of D.  However, because of the loop, D is weakly linked to A, ensuring D is False when A is True.  This logic holds true for each node in the Even loop.</p>
+<p>Thus an Even loop strengthens all the Weak links in the loop, and the loop behaves as a strongly linked chain/loop.  Therefore all strongly linked chain placements and eliminations also apply to Even Loops.</p>
+</section>
+<section id="strong-loops">
+<h3><span class="section-number">2.5.8.2. </span>Strong Loops<a class="headerlink" href="#strong-loops" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>Take the following Strong Loop for example:</dt><dd><p>A = B – C = D – E =</p>
+</dd>
+</dl>
+<p>The ending ‘=’ indicates a strong link looping back from Node E to node A.  Node A is the only node in the chain sporting two strong links.</p>
+<p>If Node A is False, following the chain, B-&gt;True, C-&gt;False, D-&gt;True, E-&gt; False, A-&gt;True.  This is a contradiction; Node A cannot be simultaneously True and False.  This contradiction ensures that the premise that A is never False it has to be always True and can be placed.</p>
+</section>
+<section id="weak-loops">
+<h3><span class="section-number">2.5.8.3. </span>Weak Loops<a class="headerlink" href="#weak-loops" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>Take the following Weak loop for example:</dt><dd><p>A = B – C = D – E –</p>
+</dd>
+</dl>
+<p>The ending dash indicates a weak link between node E looping back to A.  This is equivalent to E seeing the ends A and D of a SE-AIC.  And because of the SE-AIC, either or both of the ends A and D are True.  As E sees both A and D it can never be true and therefore can be eliminated.  This is a narrower defining of SE AIC eliminations and placements</p>
+</section>
+</section>
+<section id="group-links">
+<h2><span class="section-number">2.5.9. </span>Group Links<a class="headerlink" href="#group-links" title="Permalink to this heading">#</a></h2>
+<section id="characterising-group-links">
+<h3><span class="section-number">2.5.9.1. </span>Characterising Group Links<a class="headerlink" href="#characterising-group-links" title="Permalink to this heading">#</a></h3>
+<p>By taking advantage of the Locked Singles property of line / box intersections, it it is possible to group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box intersections behave much like regular ccells in the formation of links and chains.
+[TODO – fix with correct concept diag syntax]</p>
+<p>Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two ccells, A-B, B-C and A-C.  However because B and C are also housed in box 3, they can be grouped together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.  A=(BC).  This linkage in isolation does not give us much, however when used in the formation of chains, may be able to give us a whole lot by creating validly linked chains, where links would have otherwise not existed.</p>
+<dl class="simple">
+<dt>Expressed in Cell Grammar, say for example the candidate value is 5:</dt><dd><ul class="simple">
+<li><p>A is 5r2c2, B is 5r2c7 and C is 5r2c9</p></li>
+<li><dl class="simple">
+<dt>The weak links are:</dt><dd><p>◦ 5(r2c2-r2c7), 5(r2c2-r2c9) and 5(r2c7-r2c9)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>The strong grouped ccell link is:</dt><dd><p>◦ 5(r2c2=r2c79).  Note the two column values in the grouped ccell.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Extending the above example, in addition to A, B and C, consider additional same value ccells, D, E and F, where D and E are strongly linked, and both A and E “see” F.  If A is strongly linked to E, then it is possible to eliminate ccell F.  Only by grouping B and C, does it become possible to form the strong ended chain:</dt><dd><p>A=(BC)~D=E, or in cell grammar:
+5(r2c2=r2c79~r3c8=r7c8), thus forcing the elimination of 5r7c2.</p>
+</dd>
+</dl>
+<p>Note the use of “~” to denote a strong link masquerading as a weak link.</p>
+</section>
+<section id="group-link-properties">
+<h3><span class="section-number">2.5.9.2. </span>Group Link Properties<a class="headerlink" href="#group-link-properties" title="Permalink to this heading">#</a></h3>
+<dl class="simple">
+<dt>[TODO Correct with concept diag syntax]</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Group links are only formed as strong links:</dt><dd><p>◦ Along a line (row or column) where the only common candidates are bounded by two boxes..  For example:.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>The green links are correct: a(r2c1=r2c79), a(r2c1=r56c1) and a(r8c23=r8c789). Incorrect link highlighted in red.  No no inference can be drawn between ar5c8 and ar6c5.  If ar5c8 is False, ar6c5 can be either true of False.  Similarly if ar6c5 is True, are6c5 can be True or False.</dt><dd><dl class="simple">
+<dt>◦ Between the only common candidates in a box that form two lines or a cell and a line. The lines can be:</dt><dd><p>▪ A cell and a line in the box, for example: b4, a(r5c123=r6c3)
+▪ Either two rows or columns in the box, for example: b5, a(r4c46=r6c56)
+▪ A row and column in box, for example: b1, a(r1c23=r23c1); b3, a(r1c79=r23c8); b4, a(r5c12=r56c3); b8, a(r789c4=r9c56) or a(r78c4=r9c456).
+▪ Observe that some patterns produce two sets of strong links.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>[TODO ditto – plus fix colouring alternating for adj link]</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Joining Grouped strong links in AI Chains.  Best explained by following the construction of the following group linked AI Chain.  Solid lines are strong links, dashed lines weak links.</p></li>
+</ul>
+</div></blockquote>
+<p>[TODO diito.  Plus correct per discription below.]</p>
+<p>The Chain starts with the strong link ‘a’(r23c1=r1c23).  This Strong link cannot connect to a(r12c5=r5c5) because:  If both ar23c1 is False, then one of ar1c23 is True.  Irrespective of which of ar1c23 is True, ar1c5 is False, but no inference can be drawn about ar2c5, it could be True or False.  Therefore it is not possible to make an inference from ar1c23 that will cause both ar23c5 to be False, hence the chain cannot propagate along this path.</p>
+<p>However if one of ‘a’r1c23 is True, then both ‘a’r1c79 are False, therefore one of strongly linked ‘a’r23c8 is True, making ar6c8 False, making ar5c9 True, making both ar78c9 False, making one of ‘a’r9c78 True.  In this chain if all the candidates in blue cells are False, then of the cells in the green groupings are True.  Therefore any cell grouping in the same house as the green group is False.  The chain propagates in reverse from ‘a’r9c78 to ‘a’r23c1 where if all green cell groupings are False one of the cells in the blue groupings will be True.  Therefore, because if both ‘a’r23c1 are False, one of ‘a’r9c78 is True, and if both ‘a’r9c78 are False, one of ‘a’r23c1 is True.  Therefore this chain ensures ‘a’  is True in either or both c1 and r9.  Therefore  ‘a’r9c1 (highlighted red) can never be True and can be eliminated.</p>
+<p>There are other interesting conditions in this pattern:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The chain creates a “Robust” link between ‘a’r23c1 and ‘a’r23c8, that is, both these chain nodes with ensure a Truth in both rows 2 and 3.  Therefore no other cell in row 2 and 3 can be True and can be eliminated.  ‘a’r2c5 can be eliminated.</p></li>
+<li><p>There is another chain that forms a loop. ‘a’(r5c5=r1c5-r1c79=r23c8-r6c8=r5c9~).  A loop, strengthens all the weak links in a chain resulting in the elimination of ‘a’r9c8.  Note that the original loop between ‘a’(r23c1|~|r9c7) is still valid.</p></li>
+<li><p>With ‘a’r2c5 gone, If ‘a’r2c1 is True, then ‘a’r3c1 and ‘a’r2c8 are False, making ‘a’r3c8 True.  And vice-versa for ‘a’r3c1 and ‘a’r2c8.  Therefore no other nodes in c1 and c8 can be True (This is an X-Wing fish pattern).  ‘a’r6c8 can eliminated.</p></li>
+<li><p>There is another grouped Even X Loop.  ‘a’(r23c1=r1c23-r1c79=r23c8~), strengthening the link in r1 resulting in the elimination of ‘a’r1c5.</p></li>
+<li><p>‘a’r5c5 is the only Truth in column five and can be placed, resulting in the elimination of ‘a’r5c9.</p></li>
+<li><p>Oops!  There are no ‘a’candidates left in b6.  This is an incomplete pattern.  An extra candidate ‘a’r6c9 would fix this.  Can you see that?</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="group-links-in-even-loops">
+<h3><span class="section-number">2.5.9.3. </span>Group Links in Even Loops<a class="headerlink" href="#group-links-in-even-loops" title="Permalink to this heading">#</a></h3>
+<p>An Even AI-Loop, makes all the links in the loop strong.  Therefore if a Type 1 (two same parity nodes see each other) or Type 2 (all candidates in a cell see same parity nodes).  That parity of nodes in the chain are the eliminations and the opposing parity are the placements.  But what happens if the node is a grouped ccell?</p>
+<p>Take for example this snippet of a chain:  …-3r6c4=3r6c79~3r4c8=2r4c8~…  If 3r6c4 is True then both 3r6c7 and 3 r6c9 are False, but if 3r6c4 is False it is not possible to know which of 3r6c7 or 3r6c9 will be True?  Therefore if there are group links in the parity of links being placed, they must be stepped over as it is not possible to know which ccell in the grouped node is the Truth.</p>
+</section>
+</section>
 </section>
 
         </article>
@@ -267,7 +934,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:f3952f5*, Sun, 11 Sep 2022, 23:19:09
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4275535*, Sun, 18 Sep 2022, 18:01:31
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -283,8 +950,70 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2.5. Chains, Loops and Nets</a><ul>
+<li><a class="reference internal" href="#direct-links">2.5.1. Direct Links</a></li>
+<li><a class="reference internal" href="#chains-and-nets">2.5.2. Chains and Nets</a><ul>
+<li><a class="reference internal" href="#chains">2.5.2.1. Chains</a></li>
+<li><a class="reference internal" href="#nets">2.5.2.2. Nets</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indirect-links">2.5.3. Indirect Links</a><ul>
+<li><a class="reference internal" href="#weak-link-ended-alternating-inference-chains-we-aic">2.5.3.1. Weak Link Ended Alternating Inference Chains (WE-AIC)</a></li>
+<li><a class="reference internal" href="#strong-link-ended-alternating-inference-chains-se-aic">2.5.3.2. Strong Link Ended Alternating Inference Chains (SE-AIC)</a></li>
+<li><a class="reference internal" href="#strong-linked-patterns">2.5.3.3. Strong Linked Patterns</a></li>
+<li><a class="reference internal" href="#chained-strong-linked-patterns">2.5.3.4. Chained Strong Linked Patterns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#some-chain-examples">2.5.4. Some Chain Examples</a></li>
+<li><a class="reference internal" href="#chain-eliminations-and-placements">2.5.5. Chain Eliminations and Placements</a><ul>
+<li><a class="reference internal" href="#weak-link-ended-chains-we-aic">2.5.5.1. Weak Link Ended Chains (WE-AIC)</a></li>
+<li><a class="reference internal" href="#strong-link-ended-chains-se-aic">2.5.5.2. Strong Link Ended Chains (SE-AIC)</a><ul>
+<li><a class="reference internal" href="#type-1-same-end-values">2.5.5.2.1. Type 1:  Same end Values</a></li>
+<li><a class="reference internal" href="#type-2-different-end-values">2.5.5.2.2. Type 2:  Different End Values</a></li>
+<li><a class="reference internal" href="#type-3-opposing-exposed-pair-ends">2.5.5.2.3. Type 3:  Opposing Exposed Pair Ends</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id2">2.5.5.3. Strong Linked Patterns</a><ul>
+<li><a class="reference internal" href="#type1-same-state-nodes-see-each-other">2.5.5.3.1. Type1: Same State Nodes See Each Other</a></li>
+<li><a class="reference internal" href="#type2-all-candidates-in-a-cell-see-same-state-nodes">2.5.5.3.2. Type2: All Candidates in a Cell See Same State Nodes</a></li>
+<li><a class="reference internal" href="#type3-ccells-see-opposing-state-nodes">2.5.5.3.3. Type3: Ccells See Opposing State Nodes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sub-chains">2.5.6. Sub Chains</a></li>
+<li><a class="reference internal" href="#cannibalism">2.5.7. Cannibalism</a></li>
+<li><a class="reference internal" href="#loops">2.5.8. Loops</a><ul>
+<li><a class="reference internal" href="#even-loops">2.5.8.1. Even Loops</a></li>
+<li><a class="reference internal" href="#strong-loops">2.5.8.2. Strong Loops</a></li>
+<li><a class="reference internal" href="#weak-loops">2.5.8.3. Weak Loops</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#group-links">2.5.9. Group Links</a><ul>
+<li><a class="reference internal" href="#characterising-group-links">2.5.9.1. Characterising Group Links</a></li>
+<li><a class="reference internal" href="#group-link-properties">2.5.9.2. Group Link Properties</a></li>
+<li><a class="reference internal" href="#group-links-in-even-loops">2.5.9.3. Group Links in Even Loops</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

@@ -778,8 +778,8 @@ def new_find_cvr_seeing_all_fins(Fins, Cvrs, Cand, Cands, Method, Status):
                     Hash = str(Cand0) + str(r0) + str(c0)
                     if Hash in SLNodes:
                         SLN = SLNodes[Hash]
-                        ANode = ANODE(Hash, Lkf)
                         if Lkf & LK_STRG: Lkf |= LK_WKST
+                        ANode = ANODE(Hash, Lkf)
                         for SLNC in SLN.Children:
                             if (rf, cf, Cand) == (SLNC.r, SLNC.c, SLNC.Cand): continue
                             Lkc = how_ccells_linked(SLNC.r, SLNC.c, SLNC.Cand, rc, cc, Cand, Cands, GrpLks)

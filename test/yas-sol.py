@@ -42,7 +42,7 @@ def yas_sol():
     Mode = M_SLVR
     Add = False
     for i in range(1, len(argv)):
-        if   argv[i][:2] in ["s=", "S="]: sPzl = argv[i][2:]
+        if argv[i][:2] in ["s=", "S="]: sPzl = argv[i][2:]
         elif argv[i][:2] in ["i=", "I="]:
             if argv[i][:2]: Src = argv[i][2:]
         elif argv[i][:2] in ["o=", "O="]:
@@ -98,6 +98,7 @@ def yas_sol():
         for Oride in sOverrides.split(";"):
             if "=" in Oride: Key, Val = Oride.split("="); Overrides[Key] = Val
             else: print(f"Error: Malformed Overrides: {sOverrides} in v= switch.\n"); exit()
+        BTime = perf_timer()
         with open(Src, "rt") as f:
             with open(Dst, "wt") as f1:
                 while 1:
@@ -106,7 +107,7 @@ def yas_sol():
                     if not Line: break
                     nPzl += 1
                     if not Begin <= nLine <= End: continue
-                    if Line[:3] == "## ": print(f"\n{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[:-1]}", flush = True)
+                    if Line[:3] == "## ": print(f"\n{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[:-1]}", flush = True)
                     if Line == "\n" or Line[0] == "#":
                         f1.write(Line); f1.flush()
                         continue
@@ -117,7 +118,7 @@ def yas_sol():
                     else: NrFlds, sErr = pzl_str_to_pzl(TD[0] + "|" + TD[1], oPzl)
                     if not NrFlds:
                         f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
-                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
+                        print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                         Errs += 1
                         continue
                     nPzl += 1
@@ -131,7 +132,7 @@ def yas_sol():
                         else:
                             St = f"Invalid Puzzle|  {Found} solutions found| {Line}"
                             f1.write(St); f1.flush()
-                            print(f"{time_str(StTime)}| Line: {nLine}| Puzzle:{nPzl}| Error:{St}", flush = True)
+                            print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle:{nPzl}| Error:{St}", flush = True)
                             Errs += 1
                             continue
 
@@ -141,12 +142,13 @@ def yas_sol():
                         NrEmpties, Elims = determine_cands(Step.Grid, Step.Cands)
                         sPzl = f"{pzl_to_pzl_str(PZL(Grid = Step.Grid, Givens = oPzl.Givens, Elims = Elims, Method = Meth, Pattern = Step.Pattern, Outcome = Step.Outcome), sOverrides, sSoln)}"
                         f1.write(f"{sPzl}\n"); f1.flush()
-                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sPzl}", flush = True)
+                        print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sPzl}", flush = True)
                         Found += 1
                     else:
-                        if not Steps: print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Nothing found")
-        print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Found: {Found}, Errors: {Errs}.")
+                        if not Steps: print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Nothing found")
+        print(f"{time_str(BTime, StTime)}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Found: {Found}, Errors: {Errs}.")
     else:  # Complete Solve Mode.
+        BTime = perf_counter()
         print("Complete Solve Mode:")
         if sPzl:
             StTime = perf_counter()
@@ -163,10 +165,10 @@ def yas_sol():
                             Difficulty += Step.Difficulty
                         sOut = f"{pzl_to_pzl_str(PZL(Givens = oPzl.Givens, Grid = oPzl.Grid, Soln = oPzl.Soln))}|{EXPS[Expertise]}|{Difficulty}"
                         sOut = sOut.replace("+", "")
-                        print(f"{time_str(StTime)}|{sOut}")
+                        print(f"{time_str(BTime, StTime)}|{sOut}")
                         exit()
                 else: sErr = f"Invalid puzzle, {nFound} solutions"
-            print(f"{time_str(StTime)}|Error: {sErr}")
+            print(f"{time_str(BTime, StTime)}|Error: {sErr}")
             exit()
         with open(Src, "rt") as f:
             with open(Dst, "wt") as f1:
@@ -177,7 +179,7 @@ def yas_sol():
                     if not Line: break
                     nLine += 1
                     if not Begin <= nLine <= End: continue
-                    if Line[:3] == "## ": print(f"\n{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[:-1]}", flush = True)
+                    if Line[:3] == "## ": print(f"\n{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[:-1]}", flush = True)
                     if Line == "\n" or Line[0] == "#":
                         f1.write(Line); f1.flush()
                         continue
@@ -189,16 +191,16 @@ def yas_sol():
                     else: NrFlds, sErr = pzl_str_to_pzl(TD[0] + "|" + TD[1], oPzl)
                     if not NrFlds:
                         f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
-                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
+                        print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                         Errs += 1
                         continue
                     nFound, oPzl.Soln = check_puzzle(oPzl.Grid)
-                    if nFound == 1: # only one solution
+                    if nFound == 1:  # only one solution
                         Expertise, Steps, Err = logic_solve_puzzle(Grid = oPzl.Grid, Soln = oPzl.Soln)
                     else: Err = f"Invalid puzzle, {nFound} solutions"
                     if Err:
                         f1.write(f"# Error: {Err}| {Line}"); f1.flush()
-                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {Err}:", flush = True)
+                        print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {Err}:", flush = True)
                         Errs += 1
                         continue
                     sAdd = ""
@@ -211,17 +213,17 @@ def yas_sol():
                     sOut = f"{pzl_to_pzl_str(PZL(Givens = oPzl.Givens, Grid = oPzl.Grid, Soln = oPzl.Soln))}{sAdd}"
                     sOut = sOut.replace("+", "")
                     f1.write(sOut + "\n"); f1.flush()
-                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}|{sOut}", flush = True)
-        print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl}, Errors: {Errs}.")
+                    print(f"{time_str(BTim, StTime)}| Line: {nLine}| Puzzle: {nPzl}|{sOut}", flush = True)
+        print(f"{time_str(BTime, StTinme)}| End Run| Lines: {nLine}| Puzzles: {nPzl}, Errors: {Errs}.")
 
-def time_str(STime = 0):
+def time_str(BTime, STime = 0):
 
     ETime = perf_counter()
     DTime = ETime - STime
+    ETime -= BTime
     ESecs = ETime % 60; EMins = int((ETime//60)%60); EHrs = int(ETime//3600)
     DSecs = DTime % 60; DMins = int((DTime//60)%60); DHrs = int(DTime//3600)
     return f"{EHrs:02d}:{EMins:02d}:{ESecs:010.7f}|{DHrs:02d}:{DMins:02d}:{DSecs:010.7f}"
 
 if __name__ == "__main__":
     yas_sol()
-

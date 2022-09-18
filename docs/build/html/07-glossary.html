@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="8. References" href="08-references.html" /><link rel="prev" title="6.2. File Formats" href="06-software/02-file-formats.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="8. References" href="08-references.html" /><link rel="prev" title="6.3. Algorithms" href="06-software/03-algorithms.html" />
 
     <link rel="shortcut icon" href="_static/AIM.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Yet Another Sudoku | Glossary</title>
@@ -176,7 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
@@ -196,9 +196,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-software/03-algorithms.html">6.3. Algorithms</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">7. Glossary</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">7. Glossary and Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08-references.html">8. References</a></li>
 </ul>
 
@@ -233,25 +234,74 @@
           </label>
         </div>
         <article role="main">
-          <section id="glossary">
-<h1><span class="section-number">7. </span>Glossary<a class="headerlink" href="#glossary" title="Permalink to this heading">#</a></h1>
+          <section id="glossary-and-abbreviations">
+<h1><span class="section-number">7. </span>Glossary and Abbreviations<a class="headerlink" href="#glossary-and-abbreviations" title="Permalink to this heading">#</a></h1>
 <p><a class="reference external" href="https://www.sudocue.net/glossary.php">https://www.sudocue.net/glossary.php</a> and <a class="reference external" href="http://sudopedia.enjoysudoku.com/Terminology.html">http://sudopedia.enjoysudoku.com/Terminology.html</a></p>
 <dl class="simple glossary">
+<dt id="term-A-Truth"><strong>A Truth</strong><a class="headerlink" href="#term-A-Truth" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s where at least one of the (yet to be
+determined) elements is True.</p>
+</dd>
+<dt id="term-AI"><strong>AI</strong><a class="headerlink" href="#term-AI" title="Permalink to this term">#</a></dt><dd><p>Alternating Inferences - A patterns where adjacent links between nodes alternate strong and
+weak.</p>
+</dd>
+<dt id="term-AIC"><strong>AIC</strong><a class="headerlink" href="#term-AIC" title="Permalink to this term">#</a></dt><dd><p>Alternating Inference Chain.  A Chain made up with alternating Strong and Weak Links.</p>
+</dd>
+<dt id="term-Band"><strong>Band</strong><a class="headerlink" href="#term-Band" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Chute"><span class="xref std std-term">Chute</span></a>.</p>
+</dd>
 <dt id="term-Bi-value-Cell"><strong>Bi-value Cell</strong><a class="headerlink" href="#term-Bi-value-Cell" title="Permalink to this term">#</a></dt><dd><p>A cell on a Sudoku board containing only 2 candidate values.  A <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a> exists between
 these two candidates in that cell.</p>
 </dd>
+<dt id="term-Block"><strong>Block</strong><a class="headerlink" href="#term-Block" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Box"><span class="xref std std-term">Box</span></a>.</p>
+</dd>
 <dt id="term-Board"><strong>Board</strong><a class="headerlink" href="#term-Board" title="Permalink to this term">#</a></dt><dd><p>A solved, filled or completed puzzle.</p>
 </dd>
-<dt id="term-Box"><strong>Box</strong><a class="headerlink" href="#term-Box" title="Permalink to this term">#</a></dt><dd><p>A 3x3 Grid of which 9, also arranged as 3x3 to create a Sudoku grid.</p>
+<dt id="term-Box"><strong>Box</strong><a class="headerlink" href="#term-Box" title="Permalink to this term">#</a></dt><dd><p>A 3x3 Grid.  A Sudoku <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a> is made up of 9 boxes, 3 accross, 3 down.
+Also known as a Block.</p>
 </dd>
 <dt id="term-Ccell"><strong>Ccell</strong><a class="headerlink" href="#term-Ccell" title="Permalink to this term">#</a></dt><dd><p>A three dimensional tuple uniquely identifying a candidate element by value, row,
 and column in a Sudoku Grid.</p>
 </dd>
+<dt id="term-Cell"><strong>Cell</strong><a class="headerlink" href="#term-Cell" title="Permalink to this term">#</a></dt><dd><p>A location in a Sudoku grid into which a Given is present or a Solved value can be placed.</p>
+</dd>
+<dt id="term-Chain-Patterns"><strong>Chain Patterns</strong><a class="headerlink" href="#term-Chain-Patterns" title="Permalink to this term">#</a></dt><dd><p>Chain patterns refer to the collection of Chain, Net and Loop patterns, typically referring
+to <a class="reference internal" href="#term-AI"><span class="xref std std-term">AI</span></a> Chains</p>
+</dd>
+<dt id="term-Chute"><strong>Chute</strong><a class="headerlink" href="#term-Chute" title="Permalink to this term">#</a></dt><dd><p>A grouping of three <a class="reference internal" href="#term-Box"><span class="xref std std-term">Box</span></a>es in a row or a column.
+Three boxes in a row is a <a class="reference internal" href="#term-Floor"><span class="xref std std-term">Floor</span></a>.  Three boxes in a column is a <a class="reference internal" href="#term-Tower"><span class="xref std std-term">Tower</span></a>.
+Also known as a Band.</p>
+</dd>
+<dt id="term-Column"><strong>Column</strong><a class="headerlink" href="#term-Column" title="Permalink to this term">#</a></dt><dd><p>A vertical line of 9 cells in a Sudoku <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
+</dd>
 <dt id="term-Conjugate-Pair"><strong>Conjugate Pair</strong><a class="headerlink" href="#term-Conjugate-Pair" title="Permalink to this term">#</a></dt><dd><p>The only two same value candidates in a house forming a <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a>.  This is a
 reference to the candidates not the links – a subtle distinction.</p>
 </dd>
+<dt id="term-Eliminations"><strong>Eliminations</strong><a class="headerlink" href="#term-Eliminations" title="Permalink to this term">#</a></dt><dd><p>Removing Ccells in puzzles that have been determined impossible to be True.</p>
+</dd>
+<dt id="term-Element"><strong>Element</strong><a class="headerlink" href="#term-Element" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is a member of a Set in a pattern.</p>
+</dd>
+<dt id="term-Floor"><strong>Floor</strong><a class="headerlink" href="#term-Floor" title="Permalink to this term">#</a></dt><dd><p>A row oriented <a class="reference internal" href="#term-Chute"><span class="xref std std-term">Chute</span></a>.</p>
+</dd>
+<dt id="term-Givens"><strong>Givens</strong><a class="headerlink" href="#term-Givens" title="Permalink to this term">#</a></dt><dd><p>The initial filled values in cells of a Sudoku puzzle.</p>
+</dd>
 <dt id="term-Grid"><strong>Grid</strong><a class="headerlink" href="#term-Grid" title="Permalink to this term">#</a></dt><dd><p>9x9 grid, subdivided into 9  – 3x3 <a class="reference internal" href="#term-Box"><span class="xref std std-term">Box</span></a>es  (Blocks) on to which Sudoku puzzles are
 spatially represented.</p>
+</dd>
+<dt id="term-Group"><strong>Group</strong><a class="headerlink" href="#term-Group" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-House"><span class="xref std std-term">House</span></a>.</p>
+</dd>
+<dt id="term-House"><strong>House</strong><a class="headerlink" href="#term-House" title="Permalink to this term">#</a></dt><dd><p>A specific nine cell <a class="reference internal" href="#term-Row"><span class="xref std std-term">Row</span></a>, <a class="reference internal" href="#term-Column"><span class="xref std std-term">Column</span></a> or <a class="reference internal" href="#term-Box"><span class="xref std std-term">box</span></a> in a Sudoku <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.
+Also known as a Group, Sector, or Unit.</p>
+</dd>
+<dt id="term-Line"><strong>Line</strong><a class="headerlink" href="#term-Line" title="Permalink to this term">#</a></dt><dd><p>Either a <a class="reference internal" href="#term-Row"><span class="xref std std-term">Row</span></a> or a <a class="reference internal" href="#term-Column"><span class="xref std std-term">Column</span></a>.</p>
+</dd>
+<dt id="term-Link"><strong>Link</strong><a class="headerlink" href="#term-Link" title="Permalink to this term">#</a></dt><dd><p>A relationship between two Nodes (Ccells) in a pattern.</p>
+</dd>
+<dt id="term-Loop"><strong>Loop</strong><a class="headerlink" href="#term-Loop" title="Permalink to this term">#</a></dt><dd><p>An (<a class="reference internal" href="#term-AI"><span class="xref std std-term">AI</span></a>) :term`Chain` that loops back on itself closing the chain.</p>
+</dd>
+<dt id="term-Node"><strong>Node</strong><a class="headerlink" href="#term-Node" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is linked to other nodes in a pattern.</p>
+</dd>
+<dt id="term-Pattern"><strong>Pattern</strong><a class="headerlink" href="#term-Pattern" title="Permalink to this term">#</a></dt><dd><p>An arrangement of Ccells that have the potential of yielding eliminations or placements</p>
+</dd>
+<dt id="term-Placement"><strong>Placement</strong><a class="headerlink" href="#term-Placement" title="Permalink to this term">#</a></dt><dd><p>Placing of a single solved value in a Cell.</p>
 </dd>
 <dt id="term-Puzzle"><strong>Puzzle</strong><a class="headerlink" href="#term-Puzzle" title="Permalink to this term">#</a></dt><dd><p>A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
 givens and some solved values.</p>
@@ -259,39 +309,42 @@ givens and some solved values.</p>
 <dt id="term-Robust-Link"><strong>Robust Link</strong><a class="headerlink" href="#term-Robust-Link" title="Permalink to this term">#</a></dt><dd><p>An inference between two Ccells at the ends of a Strongly Ended Alternating Inference Chain.
 Neither end can be simultaneously False, and at least one end is always True</p>
 </dd>
+<dt id="term-Row"><strong>Row</strong><a class="headerlink" href="#term-Row" title="Permalink to this term">#</a></dt><dd><p>A horizontal line of 9 cells in a Sudoku <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
+</dd>
+<dt id="term-SE-AIC"><strong>SE-AIC</strong><a class="headerlink" href="#term-SE-AIC" title="Permalink to this term">#</a></dt><dd><p>Strong Link Ended Alternating Inference Chain.  A chain pattern of even Node count where the
+end links are both Strong.  The ends of a SE-AIC form a <a class="reference internal" href="#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>.</p>
+</dd>
+<dt id="term-Sector"><strong>Sector</strong><a class="headerlink" href="#term-Sector" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-House"><span class="xref std std-term">House</span></a>.</p>
+</dd>
+<dt id="term-Set"><strong>Set</strong><a class="headerlink" href="#term-Set" title="Permalink to this term">#</a></dt><dd><p>A grouping of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s in a <a class="reference internal" href="#term-Pattern"><span class="xref std std-term">pattern</span></a>. Often the grouping of
+elements that form <a class="reference internal" href="#term-A-Truth"><span class="xref std std-term">A Truth</span></a>.</p>
+</dd>
+<dt id="term-SLC"><strong>SLC</strong><a class="headerlink" href="#term-SLC" title="Permalink to this term">#</a></dt><dd><p>Strong Link Chain.  A Chain where all the links between Nodes are strong.</p>
+</dd>
+<dt id="term-SLN"><strong>SLN</strong><a class="headerlink" href="#term-SLN" title="Permalink to this term">#</a></dt><dd><p>Strong Link Net.  A Net where all the links between Nodes are strong.</p>
+</dd>
 <dt id="term-Strong-Link"><strong>Strong Link</strong><a class="headerlink" href="#term-Strong-Link" title="Permalink to this term">#</a></dt><dd><p>An inference between two Ccells where neither can be simultaneously False, nor simultaneously
 True.  If one Ccell is True, the other is False and vice-versa.</p>
+</dd>
+<dt id="term-Super-Node"><strong>Super-Node</strong><a class="headerlink" href="#term-Super-Node" title="Permalink to this term">#</a></dt><dd><p>The set of <a class="reference internal" href="02-foundation/05-chains-loops-nets.html#super-node"><span class="std std-ref">‘same parity/state nodes’ in a Strong Linked Chain</span></a>, Net or Loop, that is strongly linked to
+the opposing Super-Nodes.</p>
+</dd>
+<dt id="term-Tower"><strong>Tower</strong><a class="headerlink" href="#term-Tower" title="Permalink to this term">#</a></dt><dd><p>A Column oriented <a class="reference internal" href="#term-Chute"><span class="xref std std-term">Chute</span></a>.</p>
+</dd>
+<dt id="term-WE-AIC"><strong>WE-AIC</strong><a class="headerlink" href="#term-WE-AIC" title="Permalink to this term">#</a></dt><dd><p>Weak Link Ended Alternating Inference Chain.  A chain pattern of even Node count where the
+end links are both Strong.</p>
 </dd>
 <dt id="term-Weak-Link"><strong>Weak Link</strong><a class="headerlink" href="#term-Weak-Link" title="Permalink to this term">#</a></dt><dd><p>An inference between two Ccells where neither can be simultaneously True, and at least one end
 is always False.  A Weak Link is formed by 3 or more same valued candidates in a
 house or three or more candidates in a cell.</p>
 </dd>
+<dt id="term-Unit"><strong>Unit</strong><a class="headerlink" href="#term-Unit" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-House"><span class="xref std std-term">House</span></a>.</p>
+</dd>
 </dl>
-<p>Box / Block:    One of the 9 3x3 sub grids making up the 9 x 9 Sudoku grid.
-Chute/Band:     3 Boxes in a row or column.  A horizontal chute is known as a Floor, a vertical chute is known as a Tower.
-Location or Cell:       A position in the 9x9 Grid.  Located as a 2 dimensional array. For example Grid[7,2] is the cell in the 7th row, and 2nd column.  A cell can also be referenced by r7c2.  A cell state can be:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Given:  Populated with a fixed value that defines the puzzle.</p></li>
-<li><p>Solved:  Entered, possibly correct value</p></li>
-<li><p>Empty: No values.  Often empty cells are annotated with candidate pencil marks.</p></li>
-</ul>
-</div></blockquote>
-<p>Group/House/Sector/Unit:        A collection of 9 locations that can hold the 1 to 9 unique solved values
-in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique
-value between 1 and 9 that obeys Sudoku rules.  A group can be referenced by r7 for the 7th row, c2
-for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.
-Blocks/Boxes, Rows and Columns are Groups/Houses.
-Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block
+<p>Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block
 groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values.
 Peers/Buddies are said to “see” each other.</p>
-<p>Group/House/Sector/Unit:        A collection of 9 locations that can hold the 1 to 9 unique solved values in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique value between 1 and 9 that obeys Sudoku rules.  .  A group can be referenced by r7 for the 7th row, c2 for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.  Blocks/Boxes, Rows and Columns are Groups/Houses.
-Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other.</p>
-<p>And and and we are going to to t
-asdf s  dsaf lll sdklf</p>
-<p>Lines:  A line is either a row or a column. This is going to to the zoo. And and because because a
-Row:    Horizontal House/Group or line.
-Column: Vertical House/Group or line.
+<p>Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other.
 Intersection/Overlap:   Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block.
 Conflict/Contradiction/Error:   Two or more cells with the same value in a Group/House.
 Minimal Puzzle: A minimal puzzle is that where no more holes can be dug without the puzzle becoming invalid, that is having multiple solutions.
@@ -324,14 +377,14 @@ Colbox  The intersection of a column and box comprising only three cells.</p>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="06-software/02-file-formats.html">
+          <a class="prev-page" href="06-software/03-algorithms.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">6.2. </span>File Formats</div>
+                <div class="title"><span class="section-number">6.3. </span>Algorithms</div>
                 
               </div>
             </a>
@@ -339,7 +392,7 @@ Colbox  The intersection of a column and box comprising only three cells.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:f3952f5*, Sun, 11 Sep 2022, 23:19:09
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4275535*, Sun, 18 Sep 2022, 18:01:31
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

@@ -176,7 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
@@ -196,9 +196,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/03-algorithms.html">6.3. Algorithms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary and Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
 </ul>
 
@@ -234,31 +235,35 @@
         </div>
         <article role="main">
           <section id="foundation">
-<h1><span class="section-number">2. </span>Foundation<a class="headerlink" href="#foundation" title="Permalink to this heading">#</a></h1>
-<p>This foundation is organised into a logical consistent flow explaining concepts
-and how the concepts are related.</p>
-<p>In the effort to be consistent and unambiguous, some terms have been refined or
-renamed such that they are:</p>
-<ul class="simple">
+<span id="id1"></span><h1><span class="section-number">2. </span>Foundation<a class="headerlink" href="#foundation" title="Permalink to this heading">#</a></h1>
+<p>This foundation is organised into a logical consistent flow explaining concepts and how the concepts
+are related.  This section focuses more developing the theory of logic involved in solving puzzles,
+mostly leaving the practical application of this theory to the next chapter on
+<a class="reference internal" href="../03-human-solvable-patterns/index.html#human-solvable-patterns"><span class="std std-ref">Human Solvable Patterns</span></a> to on the theory that</p>
+<dl class="simple">
+<dt>In the effort to be consistent and unambiguous, some terms have been refined or renamed to be:</dt><dd><ul class="simple">
 <li><p>less overloaded,</p></li>
 <li><p>more consistent,</p></li>
 <li><p>more self descriptive, and</p></li>
 <li><p>relate better within the context that they are described.</p></li>
 </ul>
+</dd>
+</dl>
 <p>To keep the reach of this text as wide as possible, verbal or algorithmic descriptions replace less
-common symbols used for mathematical operations.</p>
+common algebraic symbols and esoteric formulae.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="01-core-concepts.html">2.1. Core Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html#ccells">2.1.1. Ccells</a></li>
-<li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html#premises-and-inferences-links">2.1.2. Premises and Inferences (Links)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#weak-links">2.1.2.1. Weak Links</a></li>
-<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#strong-links">2.1.2.2. Strong Links</a></li>
-<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#robust-links">2.1.2.3. Robust Links</a></li>
-<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#group-ccell-links">2.1.2.4. Group (Ccell) Links</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html#a-truth-and-the-truth">2.1.2. ‘A Truth’ and ‘The Truth’</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html#premises-and-inferences">2.1.3. Premises and Inferences</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#weak-links">2.1.3.1. Weak Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#strong-links">2.1.3.2. Strong Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#robust-links">2.1.3.3. Robust Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#strong-links-masquerading-as-weak">2.1.3.4. Strong Links Masquerading as Weak</a></li>
+<li class="toctree-l3"><a class="reference internal" href="01-core-concepts.html#group-ccell-links">2.1.3.5. Group (Ccell) Links</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html#a-truth-and-the-truth">2.1.3. ‘A Truth’ and ‘The Truth’</a></li>
 <li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html#spatial-representation">2.1.4. Spatial Representation</a></li>
 </ul>
 </li>
@@ -314,11 +319,59 @@ common symbols used for mathematical operations.</p>
 <li class="toctree-l3"><a class="reference internal" href="04-base-cover-sets.html#rank-0-patterns">2.4.4.1. Rank 0 Patterns</a></li>
 <li class="toctree-l3"><a class="reference internal" href="04-base-cover-sets.html#rank-1-patterns">2.4.4.2. Rank 1 Patterns</a></li>
 <li class="toctree-l3"><a class="reference internal" href="04-base-cover-sets.html#rank-r-patterns">2.4.4.3. Rank R Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-base-cover-sets.html#some-more-examples">2.4.4.4. Some More Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html#parting-comment">2.4.5. Parting Comment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#direct-links">2.5.1. Direct Links</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#chains-and-nets">2.5.2. Chains and Nets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#chains">2.5.2.1. Chains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#nets">2.5.2.2. Nets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#indirect-links">2.5.3. Indirect Links</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#weak-link-ended-alternating-inference-chains-we-aic">2.5.3.1. Weak Link Ended Alternating Inference Chains (WE-AIC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-link-ended-alternating-inference-chains-se-aic">2.5.3.2. Strong Link Ended Alternating Inference Chains (SE-AIC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-linked-patterns">2.5.3.3. Strong Linked Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#chained-strong-linked-patterns">2.5.3.4. Chained Strong Linked Patterns</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#some-chain-examples">2.5.4. Some Chain Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#chain-eliminations-and-placements">2.5.5. Chain Eliminations and Placements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#weak-link-ended-chains-we-aic">2.5.5.1. Weak Link Ended Chains (WE-AIC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-link-ended-chains-se-aic">2.5.5.2. Strong Link Ended Chains (SE-AIC)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-1-same-end-values">2.5.5.2.1. Type 1:  Same end Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-2-different-end-values">2.5.5.2.2. Type 2:  Different End Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-3-opposing-exposed-pair-ends">2.5.5.2.3. Type 3:  Opposing Exposed Pair Ends</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#id2">2.5.5.3. Strong Linked Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type1-same-state-nodes-see-each-other">2.5.5.3.1. Type1: Same State Nodes See Each Other</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type2-all-candidates-in-a-cell-see-same-state-nodes">2.5.5.3.2. Type2: All Candidates in a Cell See Same State Nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type3-ccells-see-opposing-state-nodes">2.5.5.3.3. Type3: Ccells See Opposing State Nodes</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#sub-chains">2.5.6. Sub Chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#cannibalism">2.5.7. Cannibalism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#loops">2.5.8. Loops</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#even-loops">2.5.8.1. Even Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-loops">2.5.8.2. Strong Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#weak-loops">2.5.8.3. Weak Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#group-links">2.5.9. Group Links</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#characterising-group-links">2.5.9.1. Characterising Group Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#group-link-properties">2.5.9.2. Group Link Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#group-links-in-even-loops">2.5.9.3. Group Links in Even Loops</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="06-unlocked-sets.html">2.6. Unlocked Sets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07-uniqueness.html">2.7. Uniqueness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08-searching.html">2.8. Searching</a></li>
@@ -355,7 +408,7 @@ common symbols used for mathematical operations.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:f3952f5*, Sun, 11 Sep 2022, 23:19:09
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4275535*, Sun, 18 Sep 2022, 18:01:31
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

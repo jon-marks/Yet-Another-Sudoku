@@ -262,7 +262,7 @@ def tech_empty_rects(Grid, Step, Cands, Methods):
                                     Step.Pattern = [[P_VAL, Cand], [P_OP, OP_CNT, len(BC)], [P_BOX, (rb//3)*3+cb//3], [P_CON], [P_ROW, row], [P_CON], [P_COL, col]]
                                     for r1, c1, r2, c2, r3, c3 in Elim:
                                         Cands[r3][c3].discard(Cand)
-                                        Step.Pattern.extend([[P_CON], [P_VAL, Cand], [P_ROW, r1], [P_COL, c1], [P_OP, OP_EQ], [P_VAL, Cand], [P_ROW, r1], [P_COL, c1]])
+                                        Step.Pattern.extend([[P_CON], [P_VAL, Cand], [P_ROW, r1], [P_COL, c1], [P_OP, OP_EQ], [P_VAL, Cand], [P_ROW, r2], [P_COL, c2]])
                                         if Step.Outcome: Step.Outcome.append([P_SEP])
                                         Step.Outcome.extend([[P_ROW, r3], [P_COL, c3],
                                                              [P_OP, OP_ELIM], [P_VAL, Cand]])

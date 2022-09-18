@@ -1,35 +1,105 @@
 ﻿.. title:: Yet Another Sudoku | Glossary
 
-========
-Glossary 
-======== 
-
+**************************
+Glossary and Abbreviations
+**************************
 
 https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Terminology.html 
 
 .. glossary::
 
+   **A Truth**
+      A :term:`Set` of :term:`Ccell` :term:`Element`\s where at least one of the (yet to be
+      determined) elements is True.
+
+   **AI**
+      Alternating Inferences - A patterns where adjacent links between nodes alternate strong and
+      weak.
+
+   **AIC**
+      Alternating Inference Chain.  A Chain made up with alternating Strong and Weak Links.
+
+   **Band**
+      See :term:`Chute`.
+
    **Bi-value Cell**
       A cell on a Sudoku board containing only 2 candidate values.  A :term:`Strong Link` exists between
       these two candidates in that cell.
+
+   **Block**
+      See :term:`Box`.
 
    **Board**
       A solved, filled or completed puzzle.
 
    **Box**
-      A 3x3 Grid of which 9, also arranged as 3x3 to create a Sudoku grid.
+      A 3x3 Grid.  A Sudoku :term:`Grid` is made up of 9 boxes, 3 accross, 3 down.
+      Also known as a Block.
 
    **Ccell**
       A three dimensional tuple uniquely identifying a candidate element by value, row,
       and column in a Sudoku Grid.
 
+   **Cell**
+      A location in a Sudoku grid into which a Given is present or a Solved value can be placed.
+
+   **Chain Patterns**
+      Chain patterns refer to the collection of Chain, Net and Loop patterns, typically referring
+      to :term:`AI` Chains
+
+   **Chute**
+      A grouping of three :term:`Box`\es in a row or a column.
+      Three boxes in a row is a :term:`Floor`.  Three boxes in a column is a :term:`Tower`.
+      Also known as a Band.
+
+   **Column**
+      A vertical line of 9 cells in a Sudoku :term:`Grid`.
+
    **Conjugate Pair**
       The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
       reference to the candidates not the links – a subtle distinction.
 
+   **Eliminations**
+      Removing Ccells in puzzles that have been determined impossible to be True.
+
+   **Element**
+      A :term:`Ccell` that is a member of a Set in a pattern.
+
+   **Floor**
+      A row oriented :term:`Chute`.
+
+   **Givens**
+      The initial filled values in cells of a Sudoku puzzle.
+
    **Grid**
       9x9 grid, subdivided into 9  – 3x3 :Term:`Box`\es  (Blocks) on to which Sudoku puzzles are
       spatially represented.
+
+   **Group**
+      See :term:`House`.
+
+   **House**
+      A specific nine cell :term:`Row`, :term:`Column` or :term:`box` in a Sudoku :term:`Grid`.
+      Also known as a Group, Sector, or Unit.
+
+   **Line**
+      Either a :term:`Row` or a :term:`Column`.
+
+   **Link**
+      A relationship between two Nodes (Ccells) in a pattern.
+
+   **Loop**
+      An (:term:`AI`) :term`Chain` that loops back on itself closing the chain.
+
+
+   **Node**
+      A :term:`Ccell` that is linked to other nodes in a pattern.
+
+   **Pattern**
+      An arrangement of Ccells that have the potential of yielding eliminations or placements
+
+   **Placement**
+      Placing of a single solved value in a Cell.
 
    **Puzzle**
       A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
@@ -39,28 +109,49 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       An inference between two Ccells at the ends of a Strongly Ended Alternating Inference Chain.
       Neither end can be simultaneously False, and at least one end is always True
 
+   **Row**
+       A horizontal line of 9 cells in a Sudoku :term:`Grid`.
+
+   **SE-AIC**
+      Strong Link Ended Alternating Inference Chain.  A chain pattern of even Node count where the
+      end links are both Strong.  The ends of a SE-AIC form a :term:`Robust Link`.
+
+   **Sector**
+      See :term:`House`.
+
+   **Set**
+      A grouping of :term:`Ccell` :term:`Element`\s in a :term:`pattern`. Often the grouping of
+      elements that form :term:`A Truth`.
+
+   **SLC**
+      Strong Link Chain.  A Chain where all the links between Nodes are strong.
+
+   **SLN**
+      Strong Link Net.  A Net where all the links between Nodes are strong.
+
    **Strong Link**
       An inference between two Ccells where neither can be simultaneously False, nor simultaneously
       True.  If one Ccell is True, the other is False and vice-versa.
+
+   **Super-Node**
+      The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <super-node>`, Net or Loop, that is strongly linked to
+      the opposing Super-Nodes.
+
+   **Tower**
+      A Column oriented :term:`Chute`.
+
+   **WE-AIC**
+      Weak Link Ended Alternating Inference Chain.  A chain pattern of even Node count where the
+      end links are both Strong.
 
    **Weak Link**
       An inference between two Ccells where neither can be simultaneously True, and at least one end
       is always False.  A Weak Link is formed by 3 or more same valued candidates in a
       house or three or more candidates in a cell.
 
-Box / Block:	One of the 9 3x3 sub grids making up the 9 x 9 Sudoku grid.
-Chute/Band:	3 Boxes in a row or column.  A horizontal chute is known as a Floor, a vertical chute is known as a Tower.
-Location or Cell:	A position in the 9x9 Grid.  Located as a 2 dimensional array. For example Grid[7,2] is the cell in the 7th row, and 2nd column.  A cell can also be referenced by r7c2.  A cell state can be:
+   **Unit**
+      See :term:`House`.
 
-    • Given:  Populated with a fixed value that defines the puzzle.
-    • Solved:  Entered, possibly correct value
-    • Empty: No values.  Often empty cells are annotated with candidate pencil marks.
-
-Group/House/Sector/Unit:	A collection of 9 locations that can hold the 1 to 9 unique solved values
-in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique
-value between 1 and 9 that obeys Sudoku rules.  A group can be referenced by r7 for the 7th row, c2
-for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.
-Blocks/Boxes, Rows and Columns are Groups/Houses.
 Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block
 groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values.
 Peers/Buddies are said to “see” each other.
@@ -69,16 +160,8 @@ Peers/Buddies are said to “see” each other.
 
 
 
-Group/House/Sector/Unit:	A collection of 9 locations that can hold the 1 to 9 unique solved values in a Sudoku grid.  A House can refer to a Row, Column or Box, where each house contains a unique value between 1 and 9 that obeys Sudoku rules.  .  A group can be referenced by r7 for the 7th row, c2 for the 2nd column.  Blocks can be referenced by NW for the NW block, or r123c456 for the N block.  Blocks/Boxes, Rows and Columns are Groups/Houses. 
-Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other. 
-
-And and and we are going to to t
-asdf s  dsaf lll sdklf
-
-Lines:	A line is either a row or a column. This is going to to the zoo. And and because because a
-Row:	Horizontal House/Group or line. 
-Column:	Vertical House/Group or line. 
-Intersection/Overlap:	Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block. 
+Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other.
+Intersection/Overlap:	Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block.
 Conflict/Contradiction/Error:	Two or more cells with the same value in a Group/House.
 Minimal Puzzle:	A minimal puzzle is that where no more holes can be dug without the puzzle becoming invalid, that is having multiple solutions. 
 Candidate:	A possible solved value for an unsolved cell.  This definition has a finer distinction in that is only a reference to the candidate value, irrespective of the Cell it is found in.  A Ccell defines a potential solved value for a cell by its value and Cell coordinates. In solving puzzles candidates are whittled away (eliminated) using logic techniques until only one candidate remains, which is the Solved value.

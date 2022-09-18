@@ -378,7 +378,7 @@ P_POS   = 5   # cell position index in box (L to R, T to B)
 P_POSX  = 6   # cell position index exclusion
 P_OP    = 7   # Operator
 P_VAL   = 8   # digit 0 - 9
-P_POL   = 9   # Polarity of a ccell relative its peers.
+P_PAR   = 9   # Polarity of a ccell relative its peers.
 P_SN    = 10  # Strong net
 P_SEP   = 11  # Separator between cell phrases
 P_CON   = 12  # Concatenator for combining cell collections
@@ -394,7 +394,7 @@ OP_NEQ  = 5   # "!=" Cell cannot assume that value
 OP_ASNV = 6   # ":="  Assign value to cell.
 OP_ASNC = 7   # "+=" Add candidate to cell.
 OP_ELIM = 8   # "-=" Eliminate candidate from cell.
-OP_CNT  = 9   # "#"  Number of occurrences or count.
+OP_CNT  = 9   # "#"  count.
 OP_U    = 10  # "U"  Union
 OP_WLK  = 11  # "-"  Weak link
 OP_SLK  = 12  # "="  Strong link
@@ -439,8 +439,8 @@ OP = ["",     # OP_NONE
       "]"]    # OP_SQBC  Closing square bracket
 
 
-POL_1  = "p"  # Positive polarity
-POL_0  = "n"  # Negative polarity
+PAR_O  = "o"  # Positive polarity
+PAR_E  = "e"  # Negative polarity
 
 # Puzzle properties histogram attribute enums
 HT_NR    = 0  # Count of logic technique used

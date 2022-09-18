@@ -176,7 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
@@ -196,9 +196,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/03-algorithms.html">6.3. Algorithms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary and Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
 </ul>
 
@@ -309,6 +310,25 @@ r3c5, r4c2, r4c4, r4c5</mong></span></p></td>
 <tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>347b6p2</mono></span></p></th>
 <td class="left-align single-left-divider no-right-divider"><p>Three ccells with candidate values 3, 4, 7 in block 6 position 2
 (same as <span class="raw-html"><mong>r4c8</mong>)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Ccell Postfixes</p>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>o</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The Ccell is a member of the odd parity <a class="reference internal" href="05-chains-loops-nets.html#super-node"><span class="std std-ref">Super Node</span></a>
+in a <a class="reference internal" href="05-chains-loops-nets.html#strong-linked-patterns"><span class="std std-ref">SL Pattern</span></a></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>e</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The Ccell is a member of the even parity <a class="reference internal" href="05-chains-loops-nets.html#super-node"><span class="std std-ref">Super Node</span></a>
+in a <a class="reference internal" href="05-chains-loops-nets.html#strong-linked-patterns"><span class="std std-ref">SL Pattern</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -462,17 +482,19 @@ unrestricted candidate in the union of column 7 and box 4</p></td>
 </section>
 <section id="sudoku-language-semantics">
 <h2><span class="section-number">2.2.2. </span>Sudoku Language Semantics<a class="headerlink" href="#sudoku-language-semantics" title="Permalink to this heading">#</a></h2>
-<p>How to read and interpret this Sudoku language syntax is explained with examples.  The significance and
-resolution of these patterns is left to later sections.</p>
-<dl class="simple">
-<dt>Note:</dt><dd><ol class="arabic simple">
+<p>How to read and interpret this Sudoku language syntax is explained by examples.  Albeit a
+comprehensive list, it is not an exhaustive list of all patterns, but enough to get a good
+understanding of the semantics.</p>
+<p>Note:</p>
+<ol class="arabic simple">
 <li><p>Values always precede operators and/or cell specifiers when describing or specifying a pattern.</p></li>
-<li><p>Values always follow an operator when cell(s) are being modified (either assigning a value or eliminating a Ccell).</p></li>
-<li><p>A Ccell that is part of a structure such as a Chain or Net is always called a Node to distinguish it from other
-Ccells that are not part of the structure.</p></li>
+<li><p>Values always follow an operator when cell(s) are being modified (either assigning a value or
+eliminating a Ccell).</p></li>
+<li><p>A Ccell that is part of a structure such as a Chain or Net is always called a Node to distinguish
+it from other Ccells that are not part of the structure.</p></li>
+<li><p>A Ccell that is part of a Set is called either a Member or Element of the Set to distinguish it
+from other Ccells that are not part of the Set.</p></li>
 </ol>
-</dd>
-</dl>
 <section id="singles">
 <h3><span class="section-number">2.2.2.1. </span>Singles<a class="headerlink" href="#singles" title="Permalink to this heading">#</a></h3>
 <dl class="simple">
@@ -609,28 +631,64 @@ and 6r9c1 see all three fins.</p>
 </dd>
 </dl>
 </dd>
+<dt><strong>Sashimi Jellyfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>7r1569c468,r9c7,r5c9;7r7c9-7r9c7;7r7c9~7r5c9</mong></span></dt><dd><p>Candidate 7 is found two to four times in base rows 1, 5, 6 and 9, that are covered by only
+three columns 4, 6, and 8.  Two fins exist r9c7 and r5c7.  Ccell 7r7c9 sees both Fins.</p>
+</dd>
 </dl>
-<p><strong>Sashimi Jellyfish</strong></p>
-<p><strong>Kraken Finned Fish</strong></p>
-<p><strong>Kraken Sashimi Fish</strong></p>
-<p><strong>Group Linked Kraken Finned Fish</strong></p>
-<p><strong>Group Linked Kraken Sashimi Fish</strong></p>
+</dd>
+<dt><strong>Kraken Finned Fish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>2r69c12,r9c6;2r9c6-2r9c1=3r9c1-3r9c2=3r6c2-2r6c2=2r6c1-2r7c1</mong></span></dt><dd><p>In this Kraken Finned X-Wing, Candidate 2 is found twice in base row 6 and 9, which are
+covered by columns 1 and 2. A fin is present in r9c6, seen by Ccell 2r7c1 through the
+WE-AIC: 2r9c6-2r9c1=3r9c1-3r9c2=3r6c2-2r6c2=2r6c1-2r7c1.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Kraken Sashimi Fish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>2r13c5,r1c8,r3c9;2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9;2r3c9~2r9c9</mong></span></dt><dd><p>In this Kraken Sashimi X-Wing, Candidate 2 is found twice in base rows 1 and 3, and is only
+covered by column 5.  Two fins exist r1c8 and r3c9.  Ccell 2r9c9 sees 2r3c9 directly and 2r1c8
+indirectly through the WE-AIC: 2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 <section id="bent-subsets">
 <h3><span class="section-number">2.2.2.4. </span>Bent Subsets<a class="headerlink" href="#bent-subsets" title="Permalink to this heading">#</a></h3>
-<p><strong>Y-Wings</strong></p>
-<p><strong>XYZ-Wings</strong></p>
-<p><strong>WXYZ-Wings</strong></p>
-<p><strong>Bent Exposed Quads</strong></p>
-<p><strong>Bent Exposed Quints</strong></p>
-<p><strong>Bent Exposed Sexts</strong></p>
-<p><strong>Grouped Bent Pair, Exposed Line, Hidden Box</strong></p>
-<p><strong>Grouped Bent Pair, Hidden Line, Exposed Box</strong></p>
-<p><strong>Grouped Bent Triple, Exposed Line, Hidden Box</strong></p>
-<p><strong>Grouped Bent Triple, Hidden Line, Exposed Box</strong></p>
-<p><strong>Grouped Bent Quad, Exposed Line, Hidden Box</strong></p>
-<p><strong>Grouped Bent Quad, Hidden Line, Exposed Box</strong></p>
-<p><strong>Bent Hidden Triples</strong></p>
+<dl class="simple">
+<dt><strong>Y-Wings</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>23==r1c6,26==r1c7,36==r2c8</mong></span></dt><dd><p>Y-Wing spanning row 1 and box 3, with unrestricted candidate 3 in the pincers.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>XYZ-Wings</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>359==r6c7,35==r6c8,39==r7c7</mong></span></dt><dd><p>XYZ Wing spanning column 7 and box 7 with unrestricted candidate 3 in all three cells.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Bent Exposed Quads</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>459==r7c1,14==r7c5,45==r7c7,19==r8c4</mong></span></dt><dd><p>Bent exposed quad spanning row 7 and box 7, with unrestricted candidate 9.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Grouped Bent Pair, Exposed Line, Hidden Box</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>U89r8c456,89==r8c1,89--r7c4</mong></span></dt><dd><p>Grouped Bent Pair with the union of candidates 8 and 0 in the intersection of row 8 and box 8
+with exposed pair in row 8 and hidden pair in box 8.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Grouped Bent Pair, Hidden Line, Exposed Box</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>U49r789c3,49==r8c2,49--r6c3</mong></span></dt><dd><p>Grouped Bent Pair with the union of candidates 4 and 9 in the intersection of column 3 and box
+3.  The exposed pair is box 3 and hidden pair in column 3.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Bent Hidden Triples</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>18r7c3-189r7c7-89r4c7</mong></span></dt><dd><p>Bent Hidden Triple in made up candidates 1, 8, 9 in row 7 and column 7.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 <section id="inference-chains-loops-and-nets">
 <h3><span class="section-number">2.2.2.5. </span>Inference Chains, Loops and Nets<a class="headerlink" href="#inference-chains-loops-and-nets" title="Permalink to this heading">#</a></h3>
@@ -927,7 +985,7 @@ Triple cannot be True and can be eliminated.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:f3952f5*, Sun, 11 Sep 2022, 23:19:09
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4275535*, Sun, 18 Sep 2022, 18:01:31
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

@@ -31,9 +31,9 @@ Table of Contents
 List of Figures
 ===============
 
+|  :numref:`fig-truths-eg1` :ref:`fig-truths-eg1`
 |  :numref:`fig-links-eg1` :ref:`fig-links-eg1`
 |  :numref:`fig-grouped-ccell-link-cd1` :ref:`fig-grouped-ccell-link-cd1`
-|  :numref:`fig-truths-eg1` :ref:`fig-truths-eg1`
 |  :numref:`fig-locked-exposed-pair-cd1` :ref:`fig-locked-exposed-pair-cd1`
 |  :numref:`fig-y-wing-cd1` :ref:`fig-y-wing-cd1`
 |  :numref:`fig-locked-pointing-single-cd1` :ref:`fig-locked-pointing-single-cd1`
@@ -43,6 +43,18 @@ List of Figures
 |  :numref:`fig-base-cover-eg2` :ref:`fig-base-cover-eg2`
 |  :numref:`fig-hidden-pair-eg1` :ref:`fig-hidden-pair-eg1`
 |  :numref:`fig-x-wing-eg1` :ref:`fig-x-wing-eg1`
+|  :numref:`fig-finned-x-wing-eg1` :ref:`fig-finned-x-wing-eg1`
+|  :numref:`fig-two-string-kite-eg1` :ref:`fig-two-string-kite-eg1`
+|  :numref:`fig-uls-chain-cd1` :ref:`fig-uls-chain-cd1`
+|  :numref:`fig-two-string-kite-eg2` :ref:`fig-two-string-kite-eg2`
+|  :numref:`fig-skyscraper-eg1` :ref:`fig-skyscraper-eg1`
+|  :numref:`fig-chained-sln-t2-eg1` :ref:`fig-chained-sln-t2-eg1`
+|  :numref:`fig-se-aic-diff-chute-cd1` :ref:`fig-se-aic-diff-chute-cd1`
+|  :numref:`fig-se-aic-same-chute-cd1` :ref:`fig-se-aic-same-chute-cd1`
+|  :numref:`fig-se-aic-same-house-cd1` :ref:`fig-se-aic-same-house-cd1`
+|  :numref:`fig-se-aic-diff-ends-s1` :ref:`fig-se-aic-diff-ends-s1`
+|  :numref:`fig-se-aic-diff-ends-s2` :ref:`fig-se-aic-diff-ends-s2`
+|  :numref:`fig-se-aic-opp-exp-pair-ends-s1` :ref:`fig-se-aic-opp-exp-pair-ends-s1`
 |  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
 
 ==============
@@ -54,6 +66,9 @@ List of Tables
 |  :numref:`tbl-robust-link-it` :ref:`tbl-robust-link-it`
 |  :numref:`tbl-cand-diag-symbs` :ref:`tbl-cand-diag-symbs`
 |  :numref:`tbl-cand-diag-expr` :ref:`tbl-cand-diag-expr`
+|  :numref:`tbl-we-aic-it` :ref:`tbl-we-aic-it`
+|  :numref:`tbl-se-aic-it` :ref:`tbl-se-aic-it`
+|  :numref:`tbl-slc-it` :ref:`tbl-slc-it`
 
 ..
    ==================

@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Concepts
 
+.. _core-concepts:
+
 *************
 Core Concepts
 *************
@@ -24,191 +26,7 @@ The term Ccell is not to be confused with a:
 *  **Candidate**:  which is a lesser reference to only the possible values in cells that obey Sudoku
    Rules.
 
-Premises and Inferences (Links)
-===============================
-
-Source: http://sudopedia.enjoysudoku.com/Inference.html
-
-Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
-inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
-conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
-cell value and testing it.
-
-The most basic assertion of a premise is on the state of a Ccell. For example, asserting
-Ccell 3r7c2 True.
-
-An inference implies a relationship (link) between two Ccells, characterised by the other Ccell's
-response to the assertion of a premise on the first Ccell.  For example, If
-:raw-html:`<mong>3r7c2</mong>` is True, then according to :ref:`Sudoku Rules <sudoku-rules>`,
-:raw-html:`<mong>3r7c5</mong>` is False.
-
-The full nature of the inference (link) between two ccells is characterised by the outcome of
-asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:
-
-*  Weak Links
-*  Strong Links
-*  Robust Links
-
-Weak Links
-----------
-
-A weak link is formed by two ccells A and B, where they are either:
-
-* Two or more same valued candidates in that house, or
-* Two of three or more candidates in a cell.
-
-.. figure:: images/links-eg1.png
-   :name: fig-links-eg1
-   :scale: 100%
-   :alt: Links Example
-   :align: right
-   :figwidth: image
-
-   Links Example
-
-Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
-Notice that:
-
-*  if :raw-html:`<mong>7r7c2</mong>` is True, then none of the same valued Ccells in row 7 can be
-   True.
-*  if :raw-html:`<mong>7r7c2</mong>` is False, it does not infer state of any other same valued
-   Ccell in the row.
-
-This is the characteristic defining a Weak Link.
-
-Weak links are indicated by a “-”(dash) between the two Ccells, for example, A-B and conform to the following
-inferences:
-
-.. table:: Weak Link Inference Table
-   :name: tbl-weak-link-it
-   :width: 65%
-   :widths: 30 70
-   :header-alignment: center left
-   :header-columns: 1
-   :column-alignment: center left
-   :column-dividers: single single none
-   :column-wrapping: nn
-
-   ================================================ =======================================
-   :raw-html:`<mono>A &nbsp;-&nbsp; B</mono>`
-   ================================================ =======================================
-   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If A is True then B is False
-   :raw-html:`<mono>F &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is False
-   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; ?</mono>`  If A is False then B is not determined
-   :raw-html:`<mono>? &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is not determined
-   ================================================ =======================================
-
-The conclusion drawn from weak link inferences is that if one end is True, the other
-end is False, and if the one end is False, the other end can be either True or False.  That is,
-both ends can never be simultaneously True, and at least one end is always False.
-
-Ccells see each other through weak links (directly or indirectly - e.g. Weakly Ended Chain).  When
-any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
-False.
-
-Strong Links
-------------
-
-A strong link between two Ccells A and B, exists either:
-   *  In a conjugate pair (like :raw-html:`<mong>3r7c23</mong>` in :numref:`fig-links-eg1`), where
-      two same valued Ccells are the only same valued Ccells in that house, or
-   *  In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
-      like :raw-html:`<mong>78r7c4</mong>`.
-
-In :numref:`fig-links-eg1` above:
-
-*  If :raw-html:`<mong>3r7c2</mong>` is False, then :raw-html:`<mong>7r7c3</mong>` must be True, as only one of the conjugate pair must be True.
-*  if :raw-html:`<mong>3r7c2</mong>` is True, then :raw-html:`<mong>7r7c3</mong>` must be False, as only one of the conjugate pair must be False
-
-Strong links are indicated by a “=” linking the two ccells and obey the following inferences:
-
-.. table:: Strong Link Inference Table
-   :name: tbl-strong-link-it
-   :width: 65%
-   :widths: 30 70
-   :header-alignment: center left
-   :header-columns: 1
-   :column-alignment: center left
-   :column-dividers: single single none
-   :column-wrapping: nn
-
-   ================================================ =============================
-   :raw-html:`<mono>A &nbsp;=&nbsp; B</mono>`
-   ================================================ =============================
-   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If A is True then B is False
-   :raw-html:`<mono>F &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is False
-   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T</mono>`  If A is False then B is True
-   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is True
-   ================================================ =============================
-
-The conclusion drawn from a Strong Links is that ends always have opposite state.
-
-Any two Strongly Linked Ccells must be of alternate state, therefore
-
-* if the one end is True the other end is False
-* Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
-  guarantees one of its ends to be True.
-
-Robust Links
-------------
-
-Robust links are derived from other structures such as (but not limited to) Alternating Inference
-Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a "\|\~|"
-where the outer bars indicate that this link is derived/indirect resulting from another structure.
-
-.. table:: Robust Link Inference Table
-   :name: tbl-robust-link-it
-   :width: 65%
-   :widths: 30 70
-   :header-alignment: center left
-   :header-columns: 1
-   :column-alignment: center left
-   :column-dividers: single single none
-   :column-wrapping: nn
-
-   ================================================ =============================
-   :raw-html:`<mono>A |~| B</mono>`
-   ================================================ =============================
-   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; ?</mono>`  If A is True then B is not determined
-   :raw-html:`<mono>? &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is not determined
-   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T</mono>`  If A is False then B is True
-   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is True
-   ================================================ =============================
-
-The conclusion drawn from Robust Link Inferences is that if the one end is False, the other end is
-True, and if the one end is True, the other end can be either True or False.  That is, both ends can
-never be simultaneously False, at least one end is always True.
-
-Any third Ccell that can see both ends of a Robust Link cannot be True, because at least one end is
-guaranteed to be True. But if one end is asserted True, it is impossible to determine the state of
-the other end with a Robust link.
-
-Group (Ccell) Links
--------------------
-
-By taking advantage of the Locked Singles property of line / box intersections, it is possible to
-group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
-intersections behave much like regular ccells in the formation of links and chains.
-
-.. figure:: images/grouped-ccell-link-cd1.png
-   :name: fig-grouped-ccell-link-cd1
-   :scale: 100%
-   :alt: Grouped Ccell Link
-   :align: right
-   :figwidth: image
-
-   Grouped Ccell Link
-
-Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
-ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
-together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
-A=(BC).
-
-This linkage in isolation does not give us much, however when used in the formation of other
-patterns like chains, may yield many more productive outcomes.
-
-If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
-of B or C is True.  Both B and C being True will violate :ref:`Sudoku Rules <sudoku-rules>`.
+.. _a-truth:
 
 'A Truth' and 'The Truth'
 =========================
@@ -251,6 +69,213 @@ For example:
 |
 |
 |
+
+.. _premises-and-inferences:
+
+Premises and Inferences
+=======================
+
+Source: http://sudopedia.enjoysudoku.com/Inference.html
+
+Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
+inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
+conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
+cell value and testing it.
+
+The most basic assertion of a premise is on the state of a Ccell. For example, asserting
+Ccell 3r7c2 True.
+
+An inference implies a relationship (link) between two Ccells, characterised by the other Ccell's
+response to the assertion of a premise on the first Ccell.  For example, If
+:raw-html:`<mong>3r7c2</mong>` is True, then according to :ref:`Sudoku Rules <sudoku-rules>`,
+:raw-html:`<mong>3r7c5</mong>` is False.
+
+The full nature of the inference (link) between two ccells is characterised by the outcome of
+asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:
+
+*  Weak Links
+*  Strong Links
+*  Robust Links
+
+.. _weak-links:
+
+Weak Links
+----------
+
+A weak link is formed by two ccells A and B, where they are either:
+
+* Two or more same valued candidates in that house, or
+* Two of three or more candidates in a cell.
+
+.. figure:: images/links-eg1.png
+   :name: fig-links-eg1
+   :scale: 100%
+   :alt: Links Example
+   :align: right
+   :figwidth: image
+
+   Links Example
+
+Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
+Notice that:
+
+*  if :raw-html:`<mong>7r7c2</mong>` is True, then none of the same valued Ccells in row 7 can be
+   True.
+*  if :raw-html:`<mong>7r7c2</mong>` is False, it does not infer state of any other same valued
+   Ccell in the row.
+
+This is the characteristic defining a Weak Link.
+
+Weak links are indicated by a “-”(dash) between the two Ccells, for example, A-B and conform to the following
+inferences:
+
+.. table:: Weak Link Inference Table
+   :name: tbl-weak-link-it
+   :width: 65%
+   :widths: 30 70
+   :header-alignment: center left
+   :header-columns: 1
+   :column-alignment: center left
+   :column-dividers: single single none
+   :column-wrapping: nn
+
+   ================================================ ================================
+   :raw-html:`<mono>A &nbsp;-&nbsp; B</mono>`
+   ================================================ ================================
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If A is True then B is False
+   :raw-html:`<mono>F &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is False
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; ?</mono>`  If A is False then B is unknown
+   :raw-html:`<mono>? &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is unknown
+   ================================================ ================================
+
+The conclusion drawn from weak link inferences is that if one end is True, the other
+end is False, and if the one end is False, the other end can be either True or False.  That is,
+both ends can never be simultaneously True, and at least one end is always False.
+
+Ccells see each other through weak links (directly or indirectly - e.g. Weakly Ended Chain).  When
+any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
+False.
+
+.. _strong-links:
+
+Strong Links
+------------
+
+A strong link between two Ccells A and B, exists either:
+   *  In a conjugate pair (like :raw-html:`<mong>3r7c23</mong>` in :numref:`fig-links-eg1`), where
+      two same valued Ccells are the only same valued Ccells in that house, or
+   *  In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
+      like :raw-html:`<mong>78r7c4</mong>`.
+
+In :numref:`fig-links-eg1` above:
+
+*  If :raw-html:`<mong>3r7c2</mong>` is False, then :raw-html:`<mong>7r7c3</mong>` must be True, as only one of the conjugate pair must be True.
+*  if :raw-html:`<mong>3r7c2</mong>` is True, then :raw-html:`<mong>7r7c3</mong>` must be False, as only one of the conjugate pair must be False
+
+Strong links are indicated by a “=” linking the two ccells and obey the following inferences:
+
+.. table:: Strong Link Inference Table
+   :name: tbl-strong-link-it
+   :width: 65%
+   :widths: 30 70
+   :header-alignment: center left
+   :header-columns: 1
+   :column-alignment: center left
+   :column-dividers: single single none
+   :column-wrapping: nn
+
+   ================================================ =============================
+   :raw-html:`<mono>A &nbsp;=&nbsp; B</mono>`
+   ================================================ =============================
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If A is True then B is False
+   :raw-html:`<mono>F &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is False
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T</mono>`  If A is False then B is True
+   :raw-html:`<mono>T &nbsp;&larr;&nbsp; F</mono>`  If B is False then A is True
+   ================================================ =============================
+
+The conclusion drawn from a Strong Links is that ends always have opposite state.
+
+Any two Strongly Linked Ccells must be of alternate state, therefore
+
+* if the one end is True the other end is False
+* Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
+  guarantees one of its ends to be True.
+
+.. _robust-links:
+
+Robust Links
+------------
+
+Robust links are derived from other structures such as (but not limited to) Alternating Inference
+Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a "\|\~|"
+where the outer bars indicate that this link is derived/indirect resulting from another structure.
+
+.. table:: Robust Link Inference Table
+   :name: tbl-robust-link-it
+   :width: 65%
+   :widths: 30 70
+   :header-alignment: center left
+   :header-columns: 1
+   :column-alignment: center left
+   :column-dividers: single single none
+   :column-wrapping: nn
+
+   ================================================ ===============================
+   :raw-html:`<mono>A |~| B</mono>`
+   ================================================ ===============================
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; ?</mono>`  If A is True then B is unknown
+   :raw-html:`<mono>? &nbsp;&larr;&nbsp; T</mono>`  If B is True then A is unknown
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T</mono>`  If A is False then B is True
+   :raw-html:`<mono>T &nbsp;&rarr;&nbsp; F</mono>`  If B is False then A is True
+   ================================================ ===============================
+
+The conclusion drawn from Robust Link Inferences is that if the one end is False, the other end is
+True, and if the one end is True, the other end can be either True or False.  That is, both ends can
+never be simultaneously False, at least one end is always True.
+
+Any third Ccell that can see both ends of a Robust Link cannot be True, because at least one end is
+guaranteed to be True. But if one end is asserted True, it is impossible to determine the state of
+the other end with a Robust link.
+
+Strong Links Masquerading as Weak
+---------------------------------
+
+A Strong link possesses all the attributes of a Weak Link (reversible and True to False linkage),
+and then some (False to True linkage).  Therefore, it is possible to substitute a Strong link
+for a Weak Link in the identifying patterns.
+
+The same cannot be said in the reverse direction because a Weak Link is lacking the False to True
+linkage.
+
+When a strong link is substituted for a weak link, the Strong Link is said to be masquerading as a
+Weak link.  The :raw-html:`<mono>'~'</mono>` symbol is used to indicate a masqueraded weak link.
+
+Group (Ccell) Links
+-------------------
+
+By taking advantage of the Locked Singles property of line / box intersections, it is possible to
+group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
+intersections behave much like regular ccells in the formation of links and chains.
+
+.. figure:: images/grouped-ccell-link-cd1.png
+   :name: fig-grouped-ccell-link-cd1
+   :scale: 100%
+   :alt: Grouped Ccell Link
+   :align: right
+   :figwidth: image
+
+   Grouped Ccell Link
+
+Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
+ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
+together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
+A=(BC).
+
+This linkage in isolation does not give us much, however when used in the formation of other
+patterns like chains, may yield many more productive outcomes.
+
+If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
+of B or C is True.  Both B and C being True will violate :ref:`Sudoku Rules <sudoku-rules>`.
 
 Spatial Representation
 ======================

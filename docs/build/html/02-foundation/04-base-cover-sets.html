@@ -176,7 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
@@ -196,9 +196,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/03-algorithms.html">6.3. Algorithms</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary and Abbreviations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
 </ul>
 
@@ -275,7 +276,7 @@ House/Cell Member Peers of those Base Set Elements</p>
 </figure>
 <p>An example for some clarity:</p>
 <ul class="simple">
-<li><p>In Row 1, <span class="raw-html"><mong>3r1c49</mong>`</span> form a Base Set where 3 can only be True in one of
+<li><p>In Row 1, <span class="raw-html"><mong>3r1c49</mong></span> form a Base Set where 3 can only be True in one of
 <span class="raw-html"><mong>r1c4</mong></span> or <span class="raw-html"><mong>r1rc9</mong></span>.</p></li>
 <li><p>In Row 7, another Base Set is formed by <span class="raw-html"><mong>3r7c49</mong></span>, where 3 can only be True
 in one of <span class="raw-html"><mong>r7c4</mong></span> or <span class="raw-html"><mong>r7c9</mong></span>.</p></li>
@@ -304,21 +305,25 @@ Elements <span class="raw-html"><mong>3r12467c4</mong></span>.</p></li>
 </dd>
 <dt><strong>I(A, B, C, …)</strong></dt><dd><p>Intersection of Sets A, B, C, and so on</p>
 </dd>
-<dt>Recall the first <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rule</span></a></dt><dd><p>A completed Sudoku Puzzle is one where each cell on a 9x9 grid contains a digit between 1 and
-9 such that each digit only occurs once in each row, column and 3x3 box.</p>
-</dd>
-<dt>This Rule can be interpreted as follows:</dt><dd><p>If a Base Set Element is ‘The Truth’ in a Base Set, then it is also ‘The Truth’ in any other
-intersecting Cover Set, where the Base Set Element  is in the intersection.  Therefore, any other
-same valued Ccell in the Cover Set cannot be part of ‘The Truth’, and can be eliminated.</p>
-</dd>
 </dl>
+<p>Recall the first <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rule</span></a></p>
+<blockquote>
+<div><p>A completed Sudoku Puzzle is one where each cell on a 9x9 grid contains a digit between 1 and
+9 such that each digit only occurs once in each row, column and 3x3 box.</p>
+</div></blockquote>
+<p>This Rule, in the context of Base Sets and Cover Sets can be expressed as:</p>
+<blockquote>
+<div><p>If a Base Set Element is ‘The Truth’ in a Base Set, then it is also ‘The Truth’ in any other
+intersecting Cover Set, where the Base Set Element is in the intersection.  Therefore, any other
+same valued Ccell in the Cover Set cannot be part of ‘The Truth’, and can be eliminated.</p>
+</div></blockquote>
 <p>That is, if X is ‘The Truth’ in one house or cell, then it is also the Truth in any other
 intersecting house or cell.</p>
 <p>Expressed using Set Algebra:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Base Set B = {X}     #  X is the only element (‘The Truth’) in house.
 Cover Set C = {X,*}  #  X is also one of the members of a covering house.  * =&gt; other members.
 IF: B &amp; C == B       #  if X is the member of the intersection between the Base Set and Cover Set
-   THEN:  Elims = C – B #  Set of Ccells to Eliminate = Cover Set Elements not in the Base Set
+   THEN  Elims = C – B #  Set of Ccells to Eliminate = Cover Set Elements not in the Base Set
 </pre></div>
 </div>
 <p>Because X lies in the Base Set / Cover Set intersection, all other Cover Set Elements that are not
@@ -370,11 +375,11 @@ IF BS3r8 & CS3c6 == BS3r8 => {3r8c6} & {<strike>3r2c6</strike>, <strike>3r3c6</s
 &nbsp;
 # Similarly, applying the Sudoku Rule to the Box Cover Set CS3b8
 IF: BS3r8 & CS3b8 == BS3r8: => {3r8c6} & {<strike>3r7c4</strike>, <strike>3r7c6</strike>, 3r8c6} => True
-&nbsp;  THEN: Elims = {3r7c4, 3r7c6, 3r8c6} - {3r8c6} => {3r7c4, 3r7c6}
+&nbsp;  THEN Elims = {3r7c4, 3r7c6, 3r8c6} - {3r8c6} => {3r7c4, 3r7c6}
 &nbsp;
 # And Similarly, applying the Sudoku Rule to the Cell Cover Set CSr8c6
 IF: BS3r8 & CSr8c6 == BS3r8:  => {3r8c6} & {3r8c6, <strike>9r8c6</strike>} => True
-&nbsp;  THEN: Elims = {3r8c6, 9r8c6} – { 3r8c6} => {9r8c6}</pre>
+&nbsp;  THEN Elims = {3r8c6, 9r8c6} – { 3r8c6} => {9r8c6}</pre>
 </div></div>
 <p><span></span></p>
 <p>All same value Ccells in intersecting houses that can see 3r8c6 in the intersection have been
@@ -397,7 +402,7 @@ over of Base Sets is permitted (like a row and column) where no common ccell in 
 exists.</p>
 <p id="n-base-n-cover-sud-rule">This Sudoku Rule for ‘n’ Base Sets and ‘n’ Cover Sets can be expressed algebraically:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS1 | ... | BSn) &amp; (CS1 | CS2 | ... | CSn) == (BS1 | ... | BSn)
-   THEN: Elims = (CS1 | ... | CSn) – (BS1 | ... | BSn)
+   THEN Elims = (CS1 | ... | CSn) – (BS1 | ... | BSn)
 </pre></div>
 </div>
 <p>If the Intersection of the Union of Base Sets with the Union of Cover Sets is equal to the Union of
@@ -566,7 +571,7 @@ valued Cover Set Element that is not in an intersection, cannot be True and can 
 <p>The algebraic expression of the Sudoku Rule developed for ‘n’ Base Set, ‘n’ Cover Set patterns
 as developed <a class="reference internal" href="#n-base-n-cover-sud-rule"><span class="std std-ref">above</span></a> can be applied.  Repeated here for convenience:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS1 | ... | BSn) &amp; (CS1 | ... | CSn) == (BS1 | ... | BSn)
-   THEN: Elims = (CS1 | ... | CSn) – (BS1 | ... | BSn)
+   THEN Elims = (CS1 | ... | CSn) – (BS1 | ... | BSn)
 </pre></div>
 </div>
 </section>
@@ -591,125 +596,229 @@ Sets can be eliminated.</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>IF (BS1 | ... | BSn) & (CS1 | ... | CSn | CSn+1) == (BS1 | ... | BSn)
-&nbsp;  THEN: Elims = (Union of (Intersections of all combinations of 2 Cover Sets)) - (BS1 | ... | BSn)</pre>
+&nbsp;  THEN Elims = (Union of (Intersections of all combinations of 2 Cover Sets)) - (BS1 | ... | BSn)</pre>
 </div></div>
 <p><span></span></p>
 </section>
 <section id="rank-r-patterns">
 <h3><span class="section-number">2.4.4.3. </span>Rank R Patterns<a class="headerlink" href="#rank-r-patterns" title="Permalink to this heading">#</a></h3>
 <p>The concept of Rank can be extended beyond 1.</p>
-<p>A Rank 2 pattern requires ‘n + 2’ Cover Set Links to connect all Base Set Elements in ‘n’ Base Sets to complete a potentially productive pattern.</p>
-<p>If ‘n + 2’ Links are required to cover all Base Set Elements in ‘n’ Base Sets, then there will be at least one combination  3 Cover Sets required to cover all ‘n’ Base Sets.  That is, not all single Cover Sets, or pairs of Cover Sets will cover all Base Sets, however all combinations of 3 Cover Sets will always cover all Base Sets in Rank 2 patterns.  Therefore any Cover Set Element that is not part of a Base Set that lies in the intersection of 3 Cover Sets, sees a Truth and itself cannot be True and can be eliminated.</p>
-<p>Rank 2 Rule:  Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 3 Cover Sets can be eliminated.</p>
-<p>Rank 2 Rule is expressed algebraically as:
-IF (BS1 | BS2 | … | BSn) &amp; (CS1 | CS2 | … | CSn | CSn+1, CSn+2) == (BS1 | BS2 | … | BSn)
-THEN: E =       (Union of (Intersections of all combinations of 3 Cover Sets)
-|         BS1 | BS2 | … | Bsn)</p>
-<p>A Rank R pattern requires ‘n + R’ Cover Set Links to connect all Base Set Elements in ‘n’ Base Sets to complete a potentially productive pattern.</p>
-<p>If ‘n + R’ Links are required to cover all Base Set Elements in ‘n’ Base Sets, then there will be at least one combination R + 1 Cover Sets required to cover all ‘n’ Base Sets.  That is, not all single Cover Sets, or combinations of R or less Cover Sets will cover all Base Sets, however all combinations of  R + 1 Cover Sets will always cover all Base Sets in Rank R patterns.  Therefore any Cover Set Element that is not part of a Base Set that lies in the intersection of  R + 1 Cover Sets, sees a Truth and itself cannot be True and can be eliminated.</p>
-<p>Rank R Rule:  Any Cover Set Element that is not part of a Base Set that lies in the intersection of any R + 1 Cover Sets can be eliminated.</p>
-<p>Rank R Rule is expressed algebraically as:
-IF (BS1 | BS2 | … | BSn) &amp; (CS1 | CS2 | … | CSn+R) == (BS1 | BS2 | … | BSn)
-THEN: E =       (Union of (Intersections of all combinations of R+1 Cover Sets)
-BS1 | BS2 | … | Bsn)</p>
-<p>2.6.3.4.   Some More Examples</p>
-<dl class="simple">
-<dt>The Rank 1 puzzle pattern on the right is a Finned X-Wing 3c35r38,r9c3.  Two base sets for Candidate 3 are</dt><dd><ul class="simple">
-<li><p>BS3c3 = {3r3c3, 3r8c3, 3r9c3}, and</p></li>
-<li><p>BS3c5 = {3r3c5, 3r8c5}.</p></li>
-</ul>
-</dd>
-<dt>The intersecting Cover Sets are:</dt><dd><ul class="simple">
-<li><p>CS3r3 = {3r3c3, 3r3c4, 3r3c5, 3r3c6},</p></li>
-<li><p>CS3r8 = {3r8c1, 3r8c3, 3r8c5, 3r8c6}, and</p></li>
-<li><p>CS3b7 = {3r8c1, 3r8c3, 3r9c3}.</p></li>
-</ul>
-</dd>
-</dl>
-<p>From the formula for Rank 1 patterns, evaluating the IF conditional Expression:
-(BS3c3 | BS3c5) &amp; (CS3r3 | CS3c8 | CS3b7) == (BS3c3 | BS3c5)</p>
-<p>{3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5} &amp; { 3r3c3, 3r3c4, 3r3c5, 3r3c6, 3r8c1, 3r8c3, 3r8c5, 3r8c6,  3r8c1, 3r8c3, 3r9c3} == {3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5}</p>
-<p>TRUE</p>
-<p>Therefore
-E =     ((CS3r3 &amp; CS3r8) | (CS3r3 &amp; CS3b7) | (CS3r8 &amp; 3b7)) – (BS3c3 | BS3c5)</p>
-<p>E =     (({3r3c3, 3r3c4, 3r3c5, 3r3c6} &amp; {3r8c1, 3r8c3, 3r8c5, 3r8c6})
-| ({3r3c3, 3r3c4, 3r3c5, 3r3c6} &amp; {3r8c1, 3r8c3, 3r9c3})
-| ({3r8c1, 3r8c3, 3r8c5, 3r8c6} &amp; {3r8c1, 3r8c3, 3r9c3})) – ({3r3c3, 3r8c3, 3r9c3} | {3r3c5, 3r8c5})</p>
-<p>E =     (({})
-| ({})
-| ({3r8c1, 3r8c3}) – ({3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5})</p>
-<p>E =     {3r8c1}</p>
-<p>Double checking this result intuitively, we know that either the Fish pattern will be True or the Fin will be True.  If one or the other is True, then any Ccell that can see both the Fish Truth and the Fin Truth can be eliminated. From the perspective of 3r8c1 (the ccell being tested  for elimination) the Fish Truth is that either 3r8c3 or 3r8c5 is True, which means that 3r8c1 cannot be True.  If the Fin 3r9c3 is True, then by way of Box 7 3r8c1 also cannot be True.  That is 3r8c1 is False irrespective of either the Fish being True or the Fin being True, and can therefore be eliminated.</p>
-<dl class="simple">
-<dt>The Rank 1 puzzle pattern on the right is a Two String Kite 9(r6c6=r6c1-r4c2=r7c2.  This pattern is also an example of two base sets crossing over each other.  The two Base Sets for Candidate 9 are:</dt><dd><ul class="simple">
-<li><p>BS9r7 = {9r6c1, 9r6c6}</p></li>
-<li><p>BS9c2 = {9r4c2, 9r7c2}</p></li>
-</ul>
-</dd>
-<dt>The intersecting Cover Sets are:</dt><dd><ul class="simple">
-<li><p>CS9b4 = {9r4c2, 9r6c1}</p></li>
-<li><p>CS9r7 = {9r7c2, 9r7c6}</p></li>
-<li><p>CS9c6 = {9r6c6, 9r7c6}</p></li>
-</ul>
-</dd>
-</dl>
-<p>Evaluating the IF conditional expression:
-(BS9r7 | BS9c2) &amp; (CS9b4 | CS9r7 | CS9c6) == (BS9r7 | BS9c2)</p>
-<p>{9r6c1, 9r6c6, 9r4c2, 9r7c2} &amp; {9r4c2, 9r6c1} | ({9r7c2, 9r7c6} | {9r6c6, 9r7c6}) == {9r6c1, 9r6c6, 9r4c2, 9r7c2}</p>
-<p>TRUE.</p>
-<p>Therefore:
-E =     ((CS9b4 &amp; CS9r7) | CS9r4 &amp; CS9c6) | (CS9r7 &amp; CS9c6) – (BS9r7 | BS9c2)</p>
-<dl>
-<dt>E =     ({9r4c2, 9r6c1} &amp; {9r7c2, 9r7c6}</dt><dd><div class="line-block">
-<div class="line">{9r4c2, 9r6c1} &amp; {9r6c6, 9r7c6}</div>
-<div class="line">{9r7c2, 9r7c6} &amp; {9r6c6, 9r7c6}) – {9r6c1, 9r6c6, 9r4c2, 9r7c2}</div>
+<p>A Rank 2 pattern requires ‘n + 2’ Cover Set Links to connect all Base Set Elements in ‘n’ Base
+Sets to complete a potentially productive pattern.</p>
+<p>If ‘n + 2’ Links are required to cover all Base Set Elements in ‘n’ Base Sets, then there will be at
+least one combination  3 Cover Sets required to cover all ‘n’ Base Sets.  That is, not all single
+Cover Sets, or pairs of Cover Sets will cover all Base Sets, however all combinations of 3 Cover
+Sets will always cover all Base Sets in Rank 2 patterns.  Therefore, any Cover Set Element that is
+not part of a Base Set that lies in the intersection of 3 Cover Sets, sees a Truth and itself cannot
+be True and can be eliminated.</p>
+<div class="admonition-rank-2-rule admonition">
+<p class="admonition-title">Rank 2 Rule</p>
+<p>Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 3 Cover
+Sets can be eliminated.</p>
 </div>
-</dd>
-<dt>E =     ({}</dt><dd><div class="line-block">
-<div class="line">{}</div>
-<div class="line">{9r7c6} – {9r6c1, 9r6c6, 9r4c2, 9r7c2})</div>
+<p>Rank 2 Rule is expressed algebraically as:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>IF (BS1 | ... | BSn) & (CS1 | ... | CSn | CSn+1, CSn+2) == (BS1 | ... | BSn)
+&nbsp;  THEN Elims = (Union of (Intersections of all combinations of 3 Cover Sets)) - (BS1 | ... | Bsn)</pre>
+</div></div>
+<p><span></span></p>
+<p>A Rank R pattern requires ‘n + R’ Cover Set Links to connect all Base Set Elements in ‘n’ Base Sets
+to complete a potentially productive pattern.</p>
+<p>If ‘n + R’ Links are required to cover all Base Set Elements in ‘n’ Base Sets, then there will be at
+least one combination R + 1 Cover Sets required to cover all ‘n’ Base Sets.  Not all single
+Cover Sets, or combinations of R or less Cover Sets will cover all Base Sets.  However, all
+combinations of  R + 1 Cover Sets will always cover all Base Sets in Rank R patterns.  Therefore,
+any Cover Set Element that is not part of a Base Set that lies in the intersection of  R + 1 Cover
+Sets, sees a Truth and itself cannot be True and can be eliminated.</p>
+<div class="admonition-rank-r-rule admonition">
+<p class="admonition-title">Rank R Rule</p>
+<p>Any Cover Set Element that is not part of a Base Set that lies in the intersection of any R + 1
+Cover Sets can be eliminated.</p>
 </div>
-</dd>
-</dl>
-<p>E = {9r7c6}</p>
-<p>The Rank 1 Puzzle pattern on the right, is both an XY-Chain: (Z=Y)r1c4~(Y=X)r5c4~(X=W)r5c7~(W=Z)r6c8, and a 2 Node Unlocked Set Chain:
-Z(YZr1c4,XYr5c4)X(WXr5c7,WZr6c8)Z.</p>
-<p>As an XY Chain the Ccells in the Bi Value cells are the Strong links of the AI Chain.  They are weakly linked by a common value Ccell connecting two Bi Value Ccells.  The Chain ends are Zr1c4 and Zr6c8 and the Chain ensures that neither end is simultaneously False, at least one end is True, which it is is yet to be determined.  Therefore any Ccell that can see both ends of the chain cannot be True, and can be eliminated.
-As the 2 Node Unlocked Set Chain, X is the only member in the RCS connecting the two ULS’s.  The other common candidate is “Z”.  If X is True in the first ULS, then Z is True in ULS2, and if X is True in the second ULS, then Z is True in the first ULS.  This locks  Zr1c4 and Zr6c8 are locked into “A Truth”.  Therefore any same valued (Z) Ccell that can see all the elements of this “A Truth” cannot be True and can be eliminated.</p>
-<p>So as either an XY-Chain or a ULS-Chain, Zr1c8 and Zr6c4 can be eliminated.</p>
-<dl class="simple">
-<dt>As a Rank 1 Base Set / Cover Set Pattern, the 4 Base Sets are the Cells:</dt><dd><ul class="simple">
-<li><p>BSr1c4 = {Yr1c4, Zr1c4}</p></li>
-<li><p>BSr5c4 = {Xr5c4, Yr5c4}</p></li>
-<li><p>BSr5c7 = {Wr5c7, Xr5c7}</p></li>
-<li><p>BSr6c8 = {Wr6c8, Zr6c8}</p></li>
-</ul>
-</dd>
-<dt>There are 3 Cover Set connecting the 4 Base Sets</dt><dd><ul class="simple">
-<li><p>CSc4 = {Yr1c4, Yr5c4}</p></li>
-<li><p>CSr5 = {Xr5c4, Xr5c7}</p></li>
-<li><p>CSb6 = {Wr5c7, Wr6c8}</p></li>
-</ul>
-</dd>
-<dt>There are two equally valid possibilities for the remaining two cover sets, the one being:</dt><dd><ul class="simple">
-<li><p>CSc4a = {Zr1c4, Zr6c4}</p></li>
-<li><p>CSr6 = {Zr6c4, Zr6c8}</p></li>
-</ul>
-</dd>
-</dl>
-<p>Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the elimination of Zr6c4.</p>
-<dl class="simple">
-<dt>The other two equally valid Cover Sets are:</dt><dd><ul class="simple">
-<li><p>CSc8 = {Zr1c8, Zr6c8}</p></li>
-<li><p>CSr1 = {Zr1c4, Zr1c8}</p></li>
-</ul>
-</dd>
-</dl>
-<p>Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the elimination of Zr1c8.</p>
-<p>All three resolution paths yield the same outcome.</p>
-<p>2.6.4.   Parting Comment
-Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to contribute to the finding of productive patterns in a Puzzle.  It’s true strength is in being able to identify, prove or verify the resolutions of any pattern.  I think this is why Allan Barker calls this the General Logic of Sudoku.</p>
+<p>Rank R Rule is expressed algebraically as:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>IF (BS1 | ... | BSn) & (CS1 | ... | CSn+R) == (BS1 | ... | BSn)
+&nbsp;  THEN Elims = (Union of (Intersections of all combinations of R+1 Cover Sets)) - (BS1 | ... | Bsn)</pre>
+</div></div>
+<p><span></span></p>
+<p>Rank 2 and higher patterns are in the realm of the scarce and rarely encountered.  Although most of
+the focus is on Rank 0 and Rank 1 patterns, a deeper understanding of Sudoku logic comes from
+appreciating the overall concept of Rank R patterns.</p>
 </section>
+<section id="some-more-examples">
+<h3><span class="section-number">2.4.4.4. </span>Some More Examples<a class="headerlink" href="#some-more-examples" title="Permalink to this heading">#</a></h3>
+<figure class="align-right" id="fig-finned-x-wing-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/finned-x-wing-eg1.png"><img alt="Sudoku Finned-X-Wing Example" src="../_images/finned-x-wing-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.13:  </span><span class="caption-text">Finned X-Wing</span><a class="headerlink" href="#fig-finned-x-wing-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>+156+87+49+3+2.4+762.+18+528....+4+7+6....8.+5+9.73....618+8.5...+32.........+3.7.5...49....487.1||Finned X-Wing||3c35r38,r9c3;3r8c1-3r9c3|r8c1-=3|+156+87+49+3+2+34+762+9+18+528+9+1+5+3+4+7+6+4+6+1+38+2+5+9+773+2+4+9+5618+8+95+7+1+6+32+4+9+1+4+2+6+7+8+5+3+67+85+3+1+249+5+2+3+9487+61</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>The Rank 1 puzzle pattern on the right is a Finned X-Wing <span class="raw-html"><mong>3c35r38,r9c3</mong></span>.
+Two base sets for Candidate 3 are</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>BS3c3 = {3r3c3, 3r8c3, 3r9c3}</mong></span>, and</p></li>
+<li><p><span class="raw-html"><mong>BS3c5 = {3r3c5, 3r8c5}</mong></span></p></li>
+</ul>
+<p>The intersecting Cover Sets are:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>CS3r3 = {3r3c3, 3r3c4, 3r3c5, 3r3c6}</mong></span>,</p></li>
+<li><p><span class="raw-html"><mong>CS3r8 = {3r8c1, 3r8c3, 3r8c5, 3r8c6}</mong></span>, and</p></li>
+<li><p><span class="raw-html"><mong>CS3b7 = {3r8c1, 3r8c3, 3r9c3}</mong></span></p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>Applying the Sudoku Rule for Rank 1 Patterns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS3c3 | BS3c5) &amp; (CS3r3 | CS3c8 | CS3b7) == (BS3c3 | BS3c5)
+   THEN Elims = ((CS3r3 &amp; CS3r8) | (CS3r3 &amp; CS3b7) | (CS3r8 &amp; 3b7)) – (BS3c3 | BS3c5)
+</pre></div>
+</div>
+<p>Evaluating the IF condition:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>(BS3c3 | BS3c5) & (CS3r3 | CS3c8 | CS3b7) == (BS3c3 | BS3c5)
+{3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5} & {3r3c3, <strike>3r3c4</strike>, 3r3c5, <strike>3r3c6</strike>, <strike>3r8c1</strike>, 3r8c3, 3r8c5, <strike>3r8c6</strike>, 3r9c3} == {3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5}
+{3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5} == {3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5}
+True</pre>
+</div></div>
+<p><span></span></p>
+<p>Because the IF condition evaluates True, the Elims are computed:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>Elims = ((CS3r3 & CS3r8) | (CS3r3 & CS3b7) | (CS3r8 & CS3b7)) – (BS3c3 | BS3c5)
+Elims = (({3r3c3, 3r3c4, 3r3c5, 3r3c6} & {3r8c1, 3r8c3, 3r8c5, 3r8c6}) | ({3r3c3, 3r3c4, 3r3c5, 3r3c6} & {3r8c1, 3r8c3, 3r9c3}) | ({3r8c1, 3r8c3, 3r8c5, 3r8c6} & {3r8c1, 3r8c3, 3r9c3})) – ({3r3c3, 3r8c3, 3r9c3} | {3r3c5, 3r8c5})
+Elims = (({}) | ({}) | ({3r8c1, 3r8c3}) – ({3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5})
+Elims = {3r8c1}</pre>
+</div></div>
+<p><span></span></p>
+<p>Double-checking this result intuitively, either the Fish pattern will be True or the Fin will be
+True.  Therefore, any Ccell that is any Cover Set Ccell outside the
+intersections that can also see the Fin cannot be True and can be eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<figure class="align-right" id="fig-two-string-kite-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/two-string-kite-eg1.png"><img alt="Sudoku Two String Kite Example" src="../_images/two-string-kite-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.14:  </span><span class="caption-text">Two String Kite</span><a class="headerlink" href="#fig-two-string-kite-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>+3617..+2+95842+395+6+7+1.5.+26+14+8+3+1.+8+5+2+6.3+4+625....+1+8.+341..+526+4..+6+1.+8+5+2+58...+2+1672+1+6+8+5+7349||Two String Kite||9r6c6=9r6c1~9r4c2=9r7c2,9r6c6-9r7c6-9r7c2|r7c6-=9|+3617+8+4+2+95842+395+6+7+1+75+9+26+14+8+3+1+7+8+5+2+6+93+4+625+4+3+9+7+1+8+9+341+7+8+526+4+9+7+6+1+3+8+5+2+58+3+9+4+2+1672+1+6+8+5+7349</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>The Rank 1 puzzle pattern on the right is a Two String Kite
+<span class="raw-html"><mong>9(r6c6=r6c1-r4c2=r7c2)</mong></span>.  This pattern is also an example of two base sets
+crossing over each other without intersecting.  The two Base Sets for Candidate 9 are:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>BS9r7 = {9r6c1, 9r6c6}<mong></span>, and</p></li>
+<li><p><span class="raw-html"><mong>BS9c2 = {9r4c2, 9r7c2}<mong></span></p></li>
+</ul>
+<p>The intersecting Cover Sets are:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>CS9b4 = {9r4c2, 9r6c1}</mong></span>,</p></li>
+<li><p><span class="raw-html"><mong>CS9r7 = {9r7c2, 9r7c6}</mong></span>, and</p></li>
+<li><p><span class="raw-html"><mong>CS9c6 = {9r6c6, 9r7c6}</mong></span></p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>Applying the Sudoku Rule for Rank 1 Patterns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS9r7 | BS9c2) &amp; (CS9b4 | CS9r7 | CS9c6) == (BS9r7 | BS9c2)
+   THEN Elims = ((CS9b4 &amp; CS9r7) | CS9r4 &amp; CS9c6) | (CS9r7 &amp; CS9c6)) – (BS9r7 | BS9c2)
+</pre></div>
+</div>
+<p>Evaluating the IF condition:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>(BS9r7 | BS9c2) & (CS9b4 | CS9r7 | CS9c6) == (BS9r7 | BS9c2)
+{9r6c1, 9r6c6, 9r4c2, 9r7c2} & {9r4c2, 9r6c1, 9r7c2, <strike>9r7c6</strike>, 9r6c6}{9r6c1, 9r6c6, 9r4c2, 9r7c2}
+{9r6c1, 9r6c6, 9r4c2, 9r7c2} == {9r6c1, 9r6c6, 9r4c2, 9r7c2}
+True</pre>
+</div></div>
+<p><span></span></p>
+<p>Because the IF condition evaluates True, the Elims are computed:</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>Elims = ((CS9b4 & CS9r7) | CS9r4 & CS9c6) | (CS9r7 & CS9c6)) – (BS9r7 | BS9c2)
+Elims = ({9r4c2, 9r6c1} & {9r7c2, 9r7c6}) | ({9r4c2, 9r6c1} & {9r6c6, 9r7c6}) | ({9r7c2, 9r7c6} & {9r6c6, 9r7c6}) – {9r6c1, 9r6c6, 9r4c2, 9r7c2}
+Elims = ({}) | ({}) | ({9r7c6}) - {9r6c1, 9r6c6, 9r4c2, 9r7c2}
+Elims = {9r7c6}</pre>
+</div></div>
+<p><span></span></p>
+<p>As a Two String Kite, if <span class="raw-html"><mong>9r6c6</mong> is False, <mong>9r6c2</mong> is True, <mong>9r4c2</mong> is
+False, and <mong>9r2c7</mong> is True.  Similarly walking the links in the opposite direction, if <mong>9r2c7</mong> is
+False, then <mong>9r6c6</mong></span> is True.  This pattern identifies a <a class="reference internal" href="01-core-concepts.html#robust-links"><span class="std std-ref">Robust link</span></a>
+<span class="raw-html"><mong>9r6c6|~|9r7c2</mong></span>. Recall that at least one end of a Robust Link must be True, therefore any Ccell
+that can see both ends cannot be True and can be eliminated.  <span class="raw-html"><mong>9r7c6</mong>`</span> is such a Ccell which can
+be eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<figure class="align-right" id="fig-uls-chain-cd1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/uls-chain-cd1.png"><img alt="Sudoku Unlocked Set Chain Candidate Diagram Example" src="../_images/uls-chain-cd1.png" style="width: 395.85px; height: 281.45px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.15:  </span><span class="caption-text">Unlocked Set Chain Candidate Diagram</span><a class="headerlink" href="#fig-uls-chain-cd1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The Rank 1 Puzzle pattern on the right, is both an XY-Chain:
+<span class="raw-html"><mong>(Z=Y)r1c4~(Y=X)r5c4~(X=W)r5c7~(W=Z)r6c8</mong>, and a 2 Node Unlocked Set Chain:
+<mong>Z(YZr1c4,XYr5c4)X(WXr5c7,WZr6c8)Z</mong></span>.</p>
+<p>As a Rank 1 Base Set / Cover Set Pattern, the 4 Base Sets are the Cells:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>BSr1c4 = {Yr1c4, Zr1c4}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>BSr5c4 = {Xr5c4, Yr5c4}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>BSr5c7 = {Wr5c7, Xr5c7}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>BSr6c8 = {Wr6c8, Zr6c8}</mong></span></p></li>
+</ul>
+<p>3 of the 5 Cover Set connecting the 4 Base Sets are:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>CSc4 = {Yr1c4, Yr5c4}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>CSr5 = {Xr5c4, Xr5c7}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>CSb6 = {Wr5c7, Wr6c8}</mong></span></p></li>
+</ul>
+<p>Two equally valid possibilities for the remaining two cover sets exist, the one pair being:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>CSc4a = {Zr1c4, Zr6c4}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>CSr6 = {Zr6c4, Zr6c8}</mong></span></p></li>
+</ul>
+<p>Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the
+elimination of Zr6c4.</p>
+<p>The other pair of equally valid Cover Sets are:</p>
+<ul class="simple">
+<li><p><span class="raw-html"><mong>CSc8 = {Zr1c8, Zr6c8}</mong></span></p></li>
+<li><p><span class="raw-html"><mong>CSr1 = {Zr1c4, Zr1c8}</mong></span></p></li>
+</ul>
+<p>Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the
+elimination of Zr1c8.</p>
+<p>As an XY Chain the Ccells in the Bi Value cells are the Strong links of the AI Chain.  They are
+weakly linked by a common value Ccell connecting two Bi Value Ccells.  The Chain ends are Zr1c4
+and Zr6c8 and the Chain ensures that neither end is simultaneously False, at least one end is True,
+which it is yet to be determined.  Therefore, any Ccell that can see both ends of the chain
+cannot be True, and can be eliminated.</p>
+<p>As the 2 Node Unlocked Set Chain, X is the only member in the RCS connecting the two ULS’s.  The
+other common candidate is “Z”.  If X is True in the first ULS, then Z is True in ULS2, and if X is
+True in the second ULS, then Z is True in the first ULS.  This locks  Zr1c4 and Zr6c8 are locked
+into “A Truth”.  Therefore, any same valued (Z) Ccell that can see all the elements of this
+‘A Truth’ cannot be True and can be eliminated.</p>
+<p>So as either an XY-Chain or a ULS-Chain, Zr1c8 and Zr6c4 can be eliminated, and Base/Cover Set
+logic can be used to verify the pattern resolution.</p>
+</section>
+</section>
+<section id="parting-comment">
+<h2><span class="section-number">2.4.5. </span>Parting Comment<a class="headerlink" href="#parting-comment" title="Permalink to this heading">#</a></h2>
+<p>Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to contribute to the
+finding of productive patterns in a Puzzle.  Its true strength is in proving or verifying the
+resolution of any patterns.  I think this may be why Allan Barker calls this <a class="reference external" href="http://sudoku.allanbarker.com/sweb/general.htm">‘the General Logic of
+Sudoku’</a></p>
 </section>
 </section>
 
@@ -742,7 +851,7 @@ Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to cont
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:f3952f5*, Sun, 11 Sep 2022, 23:19:09
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:4275535*, Sun, 18 Sep 2022, 18:01:31
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -784,8 +893,10 @@ Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to cont
 <li><a class="reference internal" href="#rank-0-patterns">2.4.4.1. Rank 0 Patterns</a></li>
 <li><a class="reference internal" href="#rank-1-patterns">2.4.4.2. Rank 1 Patterns</a></li>
 <li><a class="reference internal" href="#rank-r-patterns">2.4.4.3. Rank R Patterns</a></li>
+<li><a class="reference internal" href="#some-more-examples">2.4.4.4. Some More Examples</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#parting-comment">2.4.5. Parting Comment</a></li>
 </ul>
 </li>
 </ul>

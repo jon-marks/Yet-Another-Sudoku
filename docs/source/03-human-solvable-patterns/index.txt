@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Human Solvable Patterns
 
+.. _human-solvable-patterns:
+
 =======================
 Human Solvable Patterns
 =======================

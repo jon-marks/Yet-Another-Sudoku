@@ -121,7 +121,7 @@ def logic_solve_puzzle(Grid, Elims = None, Meth = T_UNDEF, Soln = None, StepOver
     # solution steps.
     #
     # If the first method is not T_UNDEF and the first step cannot be solved
-    # with the the specified method, then try to solve without the method
+    # with the specified method, then try to solve without the method
     # constraint
 
     NrEmpties, Cands = determine_cands(Grid, Elims)

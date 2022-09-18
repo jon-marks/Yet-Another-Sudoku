@@ -139,6 +139,7 @@ def yas_gen():
                   f"from any non minimal puzzle, and the remaining holes to dig are selected randomly.")
             exit()
 
+    BTime = perf_counter()
     if len(argv) == 1:  # No parameters given, simply output a random puzzle string.
         StTime = perf_counter()
         oPzl = PZL(Sym = SYM_RAND)
@@ -146,8 +147,8 @@ def yas_gen():
         oPzl.Grid = oPzl.Givens
         sPzl = pzl_to_pzl_str(oPzl)
 
-        print(f"{time_str(StTime)}|{sPzl.replace('+','')}")
-        print(f"{time_str()}| End Run.")
+        print(f"{time_str(BTime, StTime)}|{sPzl.replace('+','')}")
+        print(f"{time_str(BTime)}| End Run.")
         exit()
 
     if Mode & M_FILE: # I/O to and from files.
@@ -162,9 +163,7 @@ def yas_gen():
                     if not Line: break
                     nLine += 1
                     if not Begin <= nLine <= End: continue
-                    # if Line[:3] == "## ": print(f"\n{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[:-1]}", flush = True)
                     if Line == "\n" or Line[0] == "#":
-                        # f1.write(Line); f1.flush()
                         continue
                     TD = Line.rstrip(" \n").split("|")
                     lenTD = len(TD)
@@ -173,7 +172,7 @@ def yas_gen():
                     else: NrFlds, sErr = pzl_str_to_pzl(TD[0] + "|" + TD[1], oPzl)
                     if not NrFlds:
                         f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
-                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
+                        print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                         Errs += 1
                         continue
                     if Mode & M_DIG:
@@ -185,13 +184,13 @@ def yas_gen():
                                 lPzls.append(mPzl)
                                 nPzl += 1
                                 f1.write(mPzl+"\n"); f1.flush()
-                                print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}|{mPzl}", flush = True)
+                                print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}|{mPzl}", flush = True)
                         else:
                             sErr = f"Givens yield {nFound} Solutions"
                             f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
-                            print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
+                            print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                     else: print("Generating and Shuffling using file I/O not yet supported", flush = True)
-        print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl}, Duplicates: {nDups}, Errors: {Errs}.")
+        print(f"{time_str(BTime, StTime)}| End Run| Lines: {nLine}| Puzzles: {nPzl}, Duplicates: {nDups}, Errors: {Errs}.")
     else:  # console entry
         if Mode & M_SHUFFLE:
             ShuffleSpec = parse_shuffle_spec(sShuffleSpec)
@@ -298,10 +297,11 @@ def yas_gen():
             print(pzl_to_pzl_str(oPzl))
         else: print("Digging and minimizing in Console mode not yet supported")
 
-def time_str(STime = 0):
+def time_str(BTime, STime = 0):
 
     ETime = perf_counter()
     DTime = ETime - STime
+    ETime -= BTime
     ESecs = ETime % 60; EMins = int((ETime//60)%60); EHrs = int(ETime//3600)
     DSecs = DTime % 60; DMins = int((DTime//60)%60); DHrs = int(DTime//3600)
     return f"{EHrs:02d}:{EMins:02d}:{ESecs:010.7f}|{DHrs:02d}:{DMins:02d}:{DSecs:010.7f}"

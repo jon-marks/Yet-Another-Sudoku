@@ -1,22 +1,24 @@
 .. title:: Yet Another Sudoku | Foundation
 
+.. _foundation:
+
 ==========
 Foundation
 ==========
 
-This foundation is organised into a logical consistent flow explaining concepts
-and how the concepts are related.
+This foundation is organised into a logical consistent flow explaining concepts and how the concepts
+are related.  This section focuses more developing the theory of logic involved in solving puzzles,
+mostly leaving the practical application of this theory to the next chapter on
+:ref:`Human Solvable Patterns <human-solvable-patterns>` to on the theory that
 
-In the effort to be consistent and unambiguous, some terms have been refined or
-renamed such that they are:
-
-*  less overloaded,
-*  more consistent,
-*  more self descriptive, and
-*  relate better within the context that they are described.
+In the effort to be consistent and unambiguous, some terms have been refined or renamed to be:
+   *  less overloaded,
+   *  more consistent,
+   *  more self descriptive, and
+   *  relate better within the context that they are described.
 
 To keep the reach of this text as wide as possible, verbal or algorithmic descriptions replace less
-common symbols used for mathematical operations.
+common algebraic symbols and esoteric formulae.
 
 .. toctree::
    :maxdepth: 5

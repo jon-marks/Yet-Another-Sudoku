@@ -1,7 +1,33 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Singles
 
-==================
+******************
 (Straight) Subsets
-==================
+******************
 
-Straight Subsets stub.
+.. _exposed-pairs:
+
+Exposed Pairs
+=============
+
+Locked Exposed Pairs
+====================
+
+Hidden Pairs
+============
+
+Exposed Triples
+===============
+
+Locked Exposed Triples
+======================
+
+Hidden Triples
+==============
+
+Exposed Quads
+=============
+
+Hidden Quads
+============
+
+

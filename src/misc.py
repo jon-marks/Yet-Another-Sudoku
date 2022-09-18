@@ -266,7 +266,7 @@ def tkns_to_str(Tkns):
                 else:
                     for v in sorted(Tkn[i]):
                         St += f"{v}"
-        elif Tkn[0] == P_POL:
+        elif Tkn[0] == P_PAR:
             St += Tkn[1]
         elif Tkn[0] == P_SEP:
             St += "; "

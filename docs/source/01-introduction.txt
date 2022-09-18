@@ -87,6 +87,14 @@ between 23 and 26 givens.
 In a valid puzzle at least 8 of the 9 digits must occur one or more times as givens.  However,
 meeting this criterion does not presume a puzzle is valid.
 
+What's Ahead?
+=============
+
+Chapter Two develops foundational theory that is used in the solving of Sudoku patterns.  Chapter
+Three applies the theory to the actual practical solving of Sudoku patterns.  Chapter Four examines
+generation of puzzles, and Chapter five, the Grading of Puzzles.  Lastly Chapter Six describes the
+software developed for this project.
+
 Intended Audience
 =================
 
@@ -112,6 +120,6 @@ incomplete and constantly changing thereby diluting its intent.
 Sources of information and puzzles are acknowledged throughout the text.  A
 :ref:`list of references <references>`  is included too.  Some sources have been lost.  I apologise
 for this.  Please `contact me <https://github.com/jon-marks/Yet-Another-Sudoku/issues>`_ if you
-notice information 0from a source that needs acknowledgement.  I fear that with the passage of time,
+notice information from a source that needs acknowledgement.  I fear that with the passage of time,
 linked references will disappear, frustrating readers seeking sources.  For this too, I apologise
 in advance.

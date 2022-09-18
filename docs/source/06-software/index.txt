@@ -9,4 +9,5 @@ Software
 
    01-programs/index
    02-file-formats
+   03-algorithms
 

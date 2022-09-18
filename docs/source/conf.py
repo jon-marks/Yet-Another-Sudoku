@@ -38,7 +38,6 @@ source_suffix = {
     '.md': 'markdown',
 }
 
-
 rst_epilog = """
 .. role:: raw-html(raw)
    :format: html

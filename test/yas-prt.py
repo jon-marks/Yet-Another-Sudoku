@@ -65,13 +65,14 @@ def yas_prt():
     nLine = 0; nPzl = 0; Diffs = 0; Errs = 0
     with open(Src, "rt") as f:
         with open(Dst, "wt") as f1:
+            BTime = perf_counter()
             while 1:
                 StTime = perf_counter()
                 Line = f.readline()
                 if not Line: break
                 nLine += 1
                 if not Begin <= nLine <= End: continue
-                if Line[:3] == "## ": print(f"\n{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[0:-1]}", flush = True)
+                if Line[:3] == "## ": print(f"\n{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[0:-1]}", flush = True)
                 if Line == "\n" or Line[0] == "#":
                     f1.write(Line); f1.flush()
                     continue
@@ -79,7 +80,7 @@ def yas_prt():
                 NrFlds, sErr = pzl_str_to_pzl(Line, oPzl)
                 if not NrFlds:
                     f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
-                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
+                    print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                     Errs += 1
                     continue
                 nPzl += 1
@@ -96,7 +97,7 @@ def yas_prt():
                     else:
                         St = f"Invalid Puzzle:  {Found} solutions found: {Line}"
                         f1.write(St); f1.flush()
-                        print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {St}", flush = True)
+                        print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {St}", flush = True)
                         Errs += 1
                         continue
                 else: sSoln = TD[6]  # if lenTD >= 6 else ""
@@ -115,7 +116,7 @@ def yas_prt():
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True, oPzl.Overrides)
                 if Err:
                     f1.write(f"# Warning: Error encountered: {Err}, Actual: {Tech[Step.Method].Text}, Solving:  {Line}")
-                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Expected: {sExpMeth}| Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
+                    print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Expected: {sExpMeth}| Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
                     Errs += 1
                     continue
 
@@ -131,22 +132,23 @@ def yas_prt():
                         if set(sExpCond.split(";")) != set(sCond.split(";")): Match = False
                     if sExpOutc:
                         if set(sExpOutc.split(";")) != set(sOutc.split(";")): Match = False
-                if Match or Ignore: print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sActMeth}", flush = True)
+                if Match or Ignore: print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| {sActMeth}", flush = True)
                 else:
                     if sExpMeth != sActMeth:  sWarn = "Different Method"
                     elif sExpOutc != sOutc:   sWarn = "Different Outcome"
                     elif sExpCond != sCond:   sWarn = "Different Pattern"
                     f1.write(f"# Warning: {sWarn} found for: {Line}")
-                    print(f"{time_str(StTime)}| Line: {nLine}| Puzzle: {nPzl}| Warning: {sWarn}|{sExpMeth}|{sExpCond}|{sExpOutc}| Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
+                    print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Warning: {sWarn}|{sExpMeth}|{sExpCond}|{sExpOutc}| Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
                     Diffs += 1
                 f1.write(f"{sGr}|{sElims}|{sActMeth}|{sOverrides}|{sCond}|{sOutc}|{sSoln}\n")
                 f1.flush()
-    print(f"{time_str()}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Differences: {Diffs}, Errors: {Errs}.")
+    print(f"{time_str(BTime, StTime)}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Differences: {Diffs}, Errors: {Errs}.")
 
-def time_str(STime = 0):
+def time_str(BTime, STime = 0):
 
     ETime = perf_counter()
     DTime = ETime - STime
+    ETime -= BTime
     ESecs = ETime % 60; EMins = int((ETime//60)%60); EHrs = int(ETime//3600)
     DSecs = DTime % 60; DMins = int((DTime//60)%60); DHrs = int(DTime//3600)
     return f"{EHrs:02d}:{EMins:02d}:{ESecs:010.7f}|{DHrs:02d}:{DMins:02d}:{DSecs:010.7f}"
