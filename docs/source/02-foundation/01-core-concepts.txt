@@ -207,8 +207,9 @@ Robust Links
 ------------
 
 Robust links are derived from other structures such as (but not limited to) Alternating Inference
-Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a "\|\~|"
-where the outer bars indicate that this link is derived/indirect resulting from another structure.
+Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a
+"\|\~|" where the outer bars indicate that this link is derived/indirect resulting from another
+structure.
 
 .. table:: Robust Link Inference Table
    :name: tbl-robust-link-it
@@ -249,33 +250,6 @@ linkage.
 
 When a strong link is substituted for a weak link, the Strong Link is said to be masquerading as a
 Weak link.  The :raw-html:`<mono>'~'</mono>` symbol is used to indicate a masqueraded weak link.
-
-Group (Ccell) Links
--------------------
-
-By taking advantage of the Locked Singles property of line / box intersections, it is possible to
-group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
-intersections behave much like regular ccells in the formation of links and chains.
-
-.. figure:: images/grouped-ccell-link-cd1.png
-   :name: fig-grouped-ccell-link-cd1
-   :scale: 100%
-   :alt: Grouped Ccell Link
-   :align: right
-   :figwidth: image
-
-   Grouped Ccell Link
-
-Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
-ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
-together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
-A=(BC).
-
-This linkage in isolation does not give us much, however when used in the formation of other
-patterns like chains, may yield many more productive outcomes.
-
-If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
-of B or C is True.  Both B and C being True will violate :ref:`Sudoku Rules <sudoku-rules>`.
 
 Spatial Representation
 ======================

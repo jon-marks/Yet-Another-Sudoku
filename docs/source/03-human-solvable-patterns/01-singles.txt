@@ -17,12 +17,14 @@ Many good sites that describe these techniques instead of me rehashing the infor
 Exposed Singles
 ---------------
 
-A good explanation of `Exposed Singles here <http://hodoku.sourceforge.net/en/tech_singles.php#n1>`_, thank you Hodoku
+`Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#n1>`_ provides a good explanation of
+Exposed Singles.
 
 Hidden Singles
 --------------
 
-A good explanation of `Hidden Singles here <http://hodoku.sourceforge.net/en/tech_singles.php#h1>`_, thank you Hodoku
+`Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#h1>`_, provides a good explanation of
+Hidden Singles
 
 Locked Singles
 --------------
@@ -30,13 +32,14 @@ Locked Singles
 Pointing Locked Candidates
 ++++++++++++++++++++++++++
 
-A good explanation of `Pointing Locked Candidates here <http://hodoku.sourceforge.net/en/tech_intersections.php#lc1>`_, thank you Hodoku
-
+`Hodoku <http://hodoku.sourceforge.net/en/tech_intersections.php#lc1>`_ provides a good explanation
+of Pointing Locked Candidates.
 
 Claiming Locked Candidates
 ++++++++++++++++++++++++++
 
-A good explanation of `Claiming Locked Candidates here <http://hodoku.sourceforge.net/en/tech_intersections.php#lc2>`_, thank you Hodoku
+`Hodoku <http://hodoku.sourceforge.net/en/tech_intersections.php#lc2>`_, provides a good explanation
+of Claiming Locked Candidates.
 
 Empty Rectangles
 ----------------
@@ -62,10 +65,9 @@ X can only be True once in Box 1, **therefore**:
 
    *  X cannot be True anywhere else along column 2, and
    *  Xr3c13 cannot be True in the box either, X is True somewhere along row 3 outside box 1.
-   *  Where an X is found along column 2, such as Xr7c2, and it forms a strong link with another
-      candidate X along row 7 outside of tower 1, such as Xr7c8, then
-      because Xr7c2 cannot be True, Xr7c8 must be True, and if Xr7c8 is True, Xr3c8 cannot be 'The Truth'
-      along row3.
+   *  If an X is found along column 2, such as Xr7c2, and if it forms a strong link with another
+      candidate X along row 7 outside of tower 1, such as Xr7c8; then because Xr7c2 cannot be True,
+      Xr7c8 must be True, and if Xr7c8 is True, Xr3c8 cannot be True.
 
 *  If Xr1c2 is False then:
 

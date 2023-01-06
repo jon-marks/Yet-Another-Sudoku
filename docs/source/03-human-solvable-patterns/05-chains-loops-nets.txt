@@ -1,0 +1,10 @@
+.. title:: Yet another Sudoku | Human Solvable Patterns | Chains, Loops and Nets
+
+
+.. _human-solvable-chain-patterns:
+
+======================
+Chains, Loops and Nets
+======================
+
+Chains, Loops and Nets stub.

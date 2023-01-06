@@ -13,18 +13,26 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       determined) elements is True.
 
    **AI**
-      Alternating Inferences - A patterns where adjacent links between nodes alternate strong and
+      Alternating Inference - A patterns where adjacent links between nodes alternate strong and
       weak.
 
    **AIC**
       Alternating Inference Chain.  A Chain made up with alternating Strong and Weak Links.
 
+   **AIL**
+      Alternating Inference Loop.  An AIC that loops back on itself, begining and end link are the
+      same.
+
+   **AIN**
+      Alternating Inference Net.  A network of linked nodes where the links alternate between net
+      levels.
+
    **Band**
       See :term:`Chute`.
 
    **Bi-value Cell**
-      A cell on a Sudoku board containing only 2 candidate values.  A :term:`Strong Link` exists between
-      these two candidates in that cell.
+      A cell on a Sudoku board containing only 2 candidate values.  A :term:`Strong Link` exists
+      between these two candidates in that cell.
 
    **Block**
       See :term:`Box`.
@@ -35,6 +43,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Box**
       A 3x3 Grid.  A Sudoku :term:`Grid` is made up of 9 boxes, 3 accross, 3 down.
       Also known as a Block.
+
+   **Buddy**
+      See :term:`Peer`.
 
    **Ccell**
       A three dimensional tuple uniquely identifying a candidate element by value, row,
@@ -47,6 +58,10 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       Chain patterns refer to the collection of Chain, Net and Loop patterns, typically referring
       to :term:`AI` Chains
 
+   **Chain**
+      Chain is short for Inference Chain, a stream of inference links connecting Ccells to each
+      other.
+
    **Chute**
       A grouping of three :term:`Box`\es in a row or a column.
       Three boxes in a row is a :term:`Floor`.  Three boxes in a column is a :term:`Tower`.
@@ -57,13 +72,16 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Conjugate Pair**
       The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
-      reference to the candidates not the links – a subtle distinction.
+      reference to the candidates not the links between them – a subtle distinction.
 
    **Eliminations**
       Removing Ccells in puzzles that have been determined impossible to be True.
 
    **Element**
-      A :term:`Ccell` that is a member of a Set in a pattern.
+      A :term:`Ccell` that is a member of a :term:`Set`.
+
+   **End Node**
+      In an AI-Chain of Nodes, the End Nodes mark the start and end of Chain.
 
    **Floor**
       A row oriented :term:`Chute`.
@@ -79,18 +97,22 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :term:`House`.
 
    **House**
-      A specific nine cell :term:`Row`, :term:`Column` or :term:`box` in a Sudoku :term:`Grid`.
+      A specific nine cell :term:`Row`, :term:`Column` or :term:`Box` in a Sudoku :term:`Grid`.
       Also known as a Group, Sector, or Unit.
+
+   **Interior Node**
+      In an AI-Chain of Nodes, the Interior Nodes lie between the :term:`End Node`\s.
 
    **Line**
       Either a :term:`Row` or a :term:`Column`.
 
    **Link**
-      A relationship between two Nodes (Ccells) in a pattern.
+      A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
+      a :term:`Weak Link`, a :term:`Strong Link` or a :term:`Robust Link`.
+      See :ref:`premises-and-inferences`
 
    **Loop**
-      An (:term:`AI`) :term`Chain` that loops back on itself closing the chain.
-
+      An (:term:`AI`) :term:`Chain` that loops back on itself closing the chain.
 
    **Node**
       A :term:`Ccell` that is linked to other nodes in a pattern.
@@ -100,6 +122,10 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Placement**
       Placing of a single solved value in a Cell.
+
+   **Peer**
+      A :term:`Ccell`\s that can :term:`See` other Ccells.  Peers are a set of Ccells that see
+      each other.
 
    **Puzzle**
       A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
@@ -119,12 +145,16 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Sector**
       See :term:`House`.
 
+   **See**
+      :term:`Ccell`\s that have an :term:`Link` between them are said to see each other.
+
    **Set**
-      A grouping of :term:`Ccell` :term:`Element`\s in a :term:`pattern`. Often the grouping of
-      elements that form :term:`A Truth`.
+      A grouping of :term:`Ccell` :term:`Element`\s in a :term:`pattern` that form :term:`A Truth`.
+      That is any one of the Elements in that Set can be :term:`The Truth`.
 
    **SLC**
-      Strong Link Chain.  A Chain where all the links between Nodes are strong.
+      Strong Link Chain.  A Chain where all the links between Nodes are strong. A SLC is a special
+      case of an AIC where every alternate link is masquerading as a Weak Link.
 
    **SLN**
       Strong Link Net.  A Net where all the links between Nodes are strong.
@@ -134,8 +164,12 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       True.  If one Ccell is True, the other is False and vice-versa.
 
    **Super-Node**
-      The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <super-node>`, Net or Loop, that is strongly linked to
-      the opposing Super-Nodes.
+      The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <super-node>`, Net or
+      Loop, that is strongly linked to the opposing Super-Nodes.
+
+   **The Truth**
+      That :term:`Element` of a :term:`Set` that ultimately ends up being True, and is the Ccell
+      that is placed in that Cell.
 
    **Tower**
       A Column oriented :term:`Chute`.
@@ -152,9 +186,6 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Unit**
       See :term:`House`.
 
-Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block
-groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values.
-Peers/Buddies are said to “see” each other.
 
 
 

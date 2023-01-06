@@ -6,16 +6,15 @@
 Human Solvable Patterns
 =======================
 
-The distinction between what is human solvable and what is computer solvable has a wide, murky,
-and subjective middle ground.  With experience and practice this middle ground narrows towards
-computer solvable end.
+Human solvable patterns rely on logic that is not too complicated and involved to resolve.  As
+expertise in solving puzzles improves, one can resolve more complicated patterns
 
-Practically, there comes a point of diminishing returns between:
+Practically, a point of diminishing returns exists between:
    *  the complexity of the pattern,
    *  the complexity of the logic to resolve the pattern, and
    *  the probability of the pattern’s occurrence.
 
-This text does not claim to be an exhaustive coverage of all possible conditional logic techniques.
+This text is not an exhaustive coverage of all possible conditional logic techniques.
 The decision of what or not to include is subjective especially when it comes to those esoteric and
 convoluted techniques involving a mix of other complex techniques.
 
@@ -30,7 +29,7 @@ rather more complex than another technique.
    02-subsets
    03-bent-subsets
    04-fish
-   05-chains
+   05-chains-loops-nets
    06-unlocked-sets
    07-uniqueness
    08-searching

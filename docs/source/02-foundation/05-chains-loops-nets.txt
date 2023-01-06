@@ -4,8 +4,8 @@
 Chains, Loops and Nets
 **********************
 
-In this section a Node refers to Ccell that is part of a Chain, Loop or Net structure to
-distinguish it from Ccells that are not part of the pattern.
+In this section, a Node refers to a Ccell that is part of a Chain, Loop or Net pattern to
+distinguish it from Ccells that are not part of that pattern.
 
 This section builds substantially on the :ref:`Truths <a-truth>` and
 :ref:`Premises and Inferences <premises-and-inferences>` concepts developed in
@@ -83,7 +83,7 @@ state.
 Net generations of Children / Tree branches grow until:
    *  No more children / branches can be found
    *  A child / branch loops back on its chain created so far.
-   *  the maximum recursion limit is reached. Nets / Trees grow by successively recusing down all the
+   *  The maximum recursion limit is reached. Nets / Trees grow by successively recusing down all the
       children found at each level.  The growth in nodes is    explosive often exceeding tens of
       millions of nodes, especially when considering Group Link Nodes.  It is practical to limit the
       successive levels searched to contain the time required to find a chain or not.
@@ -191,7 +191,7 @@ see :ref:`Cannibalism <cannibalism>` below), cannot be True and can be eliminate
 .. _strong-linked-patterns:
 
 Strong Linked Patterns
-----------------------------
+----------------------
 
 Chain Patterns refer to Chains, Nets and Loops.
 
@@ -278,7 +278,12 @@ can be as small as one node.
 Some Chain Examples
 ===================
 
-Examples applying some concepts covered.
+It is illustrative to provide some examples, simply to explain the mechanics of what is being
+discussed.  The practicalities associated with identifying and resolving these patterns are covered
+in :ref:`Human Solvable Chain Patterns <human-solvable-chain-patterns>`.
+
+A Two String Kite
+-----------------
 
 .. figure:: images/two-string-kite-eg2.png
    :name: fig-two-string-kite-eg2
@@ -311,6 +316,9 @@ The important conclusions to be drawn from AIC/Inferred links is that same value
 see both ends of the AIC can be eliminated.  This is because at least one end Ccell will always be
 True.  In this example 5 is eliminated from r2c4 (r2c4-=5).
 
+A Skyscraper
+------------
+
 .. figure:: images/skyscraper-eg1.png
    :name: fig-skyscraper-eg1
    :scale: 65%
@@ -337,7 +345,10 @@ which can be eliminated: :raw-html:`<mong>r1c7-=1, r1c8-=1, r3c4-=1, r3c5-=1</mo
 |
 |
 
-This is an example of three Strong Linked Nets in a Chain.  Source: `SudokuWiki <https://www.sudokuwiki.org/Aligned_Pair_Exclusion>`__
+A Strong Linked Net (SLN) Chain
+-------------------------------
+
+Here is an example of three Strong Linked Nets in a Chain.  Source: `SudokuWiki <https://www.sudokuwiki.org/Aligned_Pair_Exclusion>`__
 
 .. figure:: images/chained-sln-t2-eg1.png
    :name: fig-chained-sln-t2-eg1
@@ -541,124 +552,253 @@ In this grid snippet, say :raw-html:`<mong>9r4c2</mong> and <mong>5r4c5</mong>` 
 :ref:`Exposed Pair <exposed-pairs>` :raw-html:`<mong>59r4c25</mong>.  The Ccells in the Exposed Pair
 that are not part Chain can both see both end of the chain, and therefore cannot be True and can be
 eliminated, <mong>r4c2-=5</mong> and <mong>r4c5-=9</mong>.  This leaves the Chain Ccells as the only
-Ccells in the Chain end cells respectively and they can be placed.  <mong>r4c2:=9</mong> and
+Ccells in the Chain end cells respectively, and they can be placed.  <mong>r4c2:=9</mong> and
 <mong>r4c5:=5</mong>`.
 
 Strong Linked Patterns
 ----------------------
 
-FROM HERE.
+Recall, SL Patterns:
+   *  Have alternating State Consecutive Nodes.
+   *  Are reversible, inferences can be traversed in either direction with same predictable results.
 
-Strong Linked Patterns include Chains, Nets and Loops.
+More is gained by working with SL Net patterns than SL Chain patterns.
+   *  Net patterns typically capture more nodes than string patterns.
+   *  A Ccell can only be a member of a single SL Net, whereas, the same Ccell can be a member of
+      multiple SL Chains.
+   *  A Puzzle typically contains fewer larger SL-Nets than chains, thereby reducing the search
+      effort for similar outcomes.
 
-From the definition of an SLC:
-    • The chain is reversible, it can be traversed from either end with the same predictable results, and
-    • Consecutive nodes always alternate in polarity, unlike chains constructed with weak links.
+Recall further:
+   *  SL Patterns members can be divided into two Super-Nodes of even and odd parity.  SL Chain
+      parity is found by assigning count numbers to each consecutive nodes. SL Node parity is found
+      by assigning the level number to the Node.  In both cases, all odd and even Nodes to their
+      respective Super-Node.
+   *  Either all the Even or all the Odd Parity nodes will True.  Which it is, is yet to be
+      determined.
+   *  A Strong link exists between the odd and even Super-Nodes of SL patterns.  Any node in the one
+      Super-Node set is strongly linked to all nodes in the other Super Node.
 
-There is more to gained by working with SLN’s instead of SLC’s.  SLN’s are created using Tree structures.
-    • Structures often comprise a larger number of nodes/ccells, never less.
-    • Any ccell in a SLN will not be part of another SLN, but can be part of multiple SLC’s.
-    • In a puzzle fewer larger SLNs are built than SLC’s reducing search effort for similar outcome.
-    • In a tree structure, adjacent links traverse up and down the net, never between nodes on the same net.  Therefore the polarity of the net level in the tree corresponds to the opposing polarity of the nodes/ccells at that level.  That is, odd level nodes are all True and even level nodes are all False, or vise-versa.
+Type 1: Same State Nodes See Each Other
++++++++++++++++++++++++++++++++++++++++
 
-A SLC or SLN net requires at least two odd and two even nodes to be productive.  Less than that and it is not possible to find another ccell that can see both an odd and even node, or for two same parity nodes to see each other.  This has been shown in greater detail in the context of Remote Pairs, which are an application of SLC Nets.
+.. figure:: images/sln-t1-eg1.png
+   :name: fig-sln-t1-eg1
+   :scale: 65%
+   :alt: Sudoku Strong Linked Net Type 1 Example
+   :align: right
+   :figwidth: 359px
 
-In this discussion a ccell refers specifically to a ccell that is not part of the chain, and a node refers to a ccell that is part of the chain or net.
+   Strong Linked Net Type 1 Example
 
-Because SL Chains are made of only strong links, when links are numbered consecutively, the Parity (Odd or Even) correlates directly with the polarity (True or False) of the ccells.  Similarly with SL Nets nodes at Odd and Even levels of the tree will have opposing polarity.  Although Parity and Polarity have been used synonymously here, considering a Strongly Linked structure as a pair of opposing polarity lists serves resolving these patterns better.  One of the two lists will contain all truths – the solved values for the puzzle, and the cells in the other list can be eliminated.  However which list contains the Truths is yet to be determined:
+   :raw-html:`<mong>1..+4.58..4..2.+7.....2...47......6..3....7.91.29.........4...2...+2..48.5....1...8+4||Strong Linked Net T1||2r1c8e=2r1c9o=2r5c9e=2r5c6o=2r9c6e=2r9c5o=2r4c5e=2r4c8o=4r4c8e=4r4c2o=4r5c2e=4r5c6o=4r6c6e=4r6c8o=6r6c8e,2r5c6o-4r5c6o|r1c8:=2;r5c9:=2;r9c6:=2;r4c5:=2;r4c8:=4;r5c2:=4;r6c6:=4;r6c8:=6|1+3+7+4+958+2+64+5+82+6+7+3+9+1+9+62+3+8+147+5+7+8+1+9+26+5+43+6+4+5+87+391+229+3+5+1+4+7+6+8+8+14+6+5+92+3+7+3+2+6+748+15+9+5+7+91+3+2+68+4</mong>`
+
+The puzzle pattern on the right is the SL Net:
+:raw-html:`<mong>2r1c8e=2r1c9o=2r5c9e=2r5c6o=2r9c6e=2r9c5o =2r4c5e=2r4c8o=4r4c8e=4r4c2o=4r5c2e=4r5c6o
+=4r6c6e=4r6c8o=6r6c8e,2r5c6o-4r5c6o</mong>.
+Even Ccells are highlighted green and Odd Ccells highlighted blue.  Two odd parity (same state)
+Ccells <mong>2r5c6</mong> and <mong>4r5c6</mong> are present in cell r5c6.  As it is impossible for
+two Ccells to be True in the Same cell, these two odd Ccells must be False, and so must all the
+other odd Ccells. That means all the even Ccells are True and can be placed:
+<mong>r1c8:=2;r5c9:=2;r9c6:=2;r4c5:=2;r4c8:=4;r5c2:=4;r6c6:=4;r6c8:=6</mong>`.
+
+|
+|
+|
+|
+|
+
+Type 2: All Candidates in a Cell See Same State Nodes
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/sln-t2-eg1.png
+   :name: fig-sln-t2-eg1
+   :scale: 65%
+   :alt: Sudoku Strong Linked Net Type 2 Example
+   :align: right
+   :figwidth: 359px
+
+   Strong Linked Net Type 2 Example
+
+   :raw-html:`<mong>+2..3+5..8.5...+81..38+36.4..+1.4..83...2+6.2.+1+43..9.+3.72..1+3+2+5+46+81+977+6+81+9+3..4+19+4+7+25.+3.|r6c7-=6|Strong Linked Net T2||5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e=6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},9r1c9-9r5c9e,6r1c9-6r1c6e|r6c4:=5;r6c8:=6;r2c4:=6;r4c6:=6;r4c7:=9;r5c4:=9|+2+4+13+5+7+68+95+7+9+6+81+2+438+36+24+9+7+1+54+1+783+6+9+52+6+52+9+1+43+7+89+8+3+572+4+61+3+2+5+46+81+977+6+81+9+3+5+24+19+4+7+25+8+3+6</mong>`
+
+The puzzle pattern on the right is the SL Net:
+:raw-html:`<mong>5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e =6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},
+9r1c9-9r5c9e,6r1c9-6r1c6e</mong>.
+Even Ccells are highlighted green and Odd Ccell highlighted blue.  The Ccells <mong>6r1c9</mong>
+and <mong>9r1c9</mong> in r1c9, both see even Nodes <mong>6r1c6</mong> and <mong>9r5c9</mong>
+respectively.  If the Even Nodes of the pattern are True, then neither <mong>6r1c9</mong> and
+<mong>9r1c9</mong> can be True.  This is impossible as there will be no Truth in r1c9; therefore,
+the Even Nodes must be False.  This in turn makes the Odd Nodes True which can be placed:
+<mong>r6c4:=5;r6c8:=6;r2c4:=6;r4c6:=6;r4c7:=9;r5c4:=9</mong>`.
+
+|
+|
+|
+|
+|
+|
+
+Type 3: Ccells See Opposing State Nodes
++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/sln-t3-eg1.png
+   :name: fig-sln-t3-eg1
+   :scale: 65%
+   :alt: Sudoku Strong Linked Net Type 2 Example
+   :align: right
+   :figwidth: 359px
+
+   Strong Linked Net Type 3 Example
+
+   :raw-html:`<mong>+6.159.....+5+3+2+6..9..2+9.736..+342+9+56+1789+1+6.875....+5.+2..+695+9+8+61274313+7+8+4...+6+2+6+4+7+3....||Strong Linked Net T3||1r3c8e=1r9c8o=1r9c9e=5r9c9o=5r3c9e=5r3c8o,5r3c8e-8r3c8-5r3c8o|r3c8-=8|+6+7159+8+4+3+2+4+5+3+2+6+1+89+7+82+9+4736+1+5+342+9+56+1789+1+6+3875+2+4+7+8+5+1+2+4+3+695+9+8+61274313+7+8+4+9+2+5+6+2+6+4+7+3+5+9+8+1</mong>`
+
+The puzzle pattern on the right is the SL Net:
+:raw-html:`<mong>1r3c8e=1r9c8o=1r9c9e=5r9c9o=5r3c9e=5r3c8o, 5r3c8e-8r3c8-5r3c8o</mong>.  Even Ccells
+are highlighted green and Odd Ccells are highlighted blue.  Ccell <mong>8r3c8</mong> sees both Even
+Node <mong>1r3c8</mong> and Odd Node <mong>5r3c8</mong>.  Because either the Even Node or the Odd
+Node will be True, <mong>8r3c8</mong> cannot be True and can be eliminated: <mong>r3c8-=8</mong>`.
+
+It matters not whether the Even Node, Odd Node and the Ccell that sees both are all in the same
+house or in the same cell.  That the Ccell sees an Odd and Even Node is what results in its demise.
 
 
-Type1: Same State Nodes See Each Other
-++++++++++++++++++++++++++++++++++++++
-
-As only one Truth can exist in a house, any two same polarity nodes that see each other (in same house) cannot be True.  Therefore all nodes of that polarity cannot be True and can be eliminated.  By implication, all nodes of opposing polarity must be True and can be placed.
-
-Type2: All Candidates in a Cell See Same State Nodes
-++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-The candidates of any cell outside of the chain that can see same polarity nodes identify a contradiction that cannot be a Truth.  If the same polarity nodes seen are True, then none of the Candidates in the cell can be True, which is not possible, as there needs to be a Truth for that Cell. Therefore all nodes of this polarity cannot be True and can be eliminated.  By implication, all nodes of the opposing parity must be True and can be placed.
-
-
-Type3: Ccells See Opposing State Nodes
-++++++++++++++++++++++++++++++++++++++
-
-Any Ccell that can see nodes of opposing polarity nodes in the SL structure can be eliminated.  As either the one polarity is True or the other polarity is True, any ccells seeing nodes of opposing polarity cannot be True and can be eliminated.
-
+|
+|
+|
+|
+|
 
 Sub Chains
 ==========
 
-An important observation about chains with 5 or more links is that any consecutive subset of odd number of links is also a (sub) chain that can yield its own possible eliminations.
+Source: http://forum.enjoysudoku.com/x-chain-optimalisation-t38330.html.
 
-Viewed differently, if the chain nodes/Ccells are numbered consecutively in sequence, any Ccell that can see that can see both an odd numbered node/Ccell and an even numbered node/Ccell can be eliminated.  Because, in a chain, either all the Odd nodes/Ccells are True or all the Even nodes/Ccells are True.  It is not possible for both an odd node/Ccell and an even node/Ccell to be simultaneously True or False.  As either the Odd Node/Ccell is True or the Even Node/Ccell is True, any other Ccell outside of the chain seeing both an Odd and an Even Node/Ccell, cannot be True and can be eliminated.
+An important observation about AI Chains with 6 or more Nodes, any lesser even amount consecutive
+count of 4 or more nodes is also a valid chain.  Software algorithms can deal with this
+automagically.  However, as humans it is helpful to keep this in mind when working with chains.
 
-	1 = 2 – 3 = 4 – 5 = 6 – 7 = 8 – 9 = 10 . . .
-	F > T > F > T > F > T > F > T > F > T
-	T < F < T < F < T < F < T < F < T < F
-
-Practically, the candidate needs to be the same in the Odd and Even Ccells, and the Ccell “seeing” the Odd and Even Ccells.
-
-For each chain type (X-, XY-, AIC, etc.), YAS constructs all chains from short to long.  That is all three link chains are found and checked for eliminations before looking for all five link chains until the first chain that yields eliminations is found.  Therefore YAS’s algorithms implicitly exploit this property of chains.
-
-This logic is developed from: http://forum.enjoysudoku.com/x-chain-optimalisation-t38330.html.
 
 .. _cannibalism:
 
 Cannibalism
 ===========
 
-In a Puzzle where a chain is found, if one of the resulting eliminations is one of the interior ccells in the chain, can it be eliminated, breaking the chain that was used to find it?
+In an AI-Chain pattern, if one of the interior Nodes sees both ends of the Chain, can this Node be
+eliminated without breaking the chain?
 
-A chain (or any pattern for that matter) is used to find a condition/constraint of the puzzle.  That is, the constraint exists irrespective of the pattern used to identify it.  The pattern just made the constraint visible.  If the chain is made invalid, say by a cannibalistic placement or elimination, that does not alter the existence of the constraint,  it just means that the pattern used to find the constraint gets destroyed by the resolution of the constraint.  Because the constraint exists irrespective of the pattern, the constraint is not reliant on the pattern, even if the pattern is used to identify the constraint.
+To answer this we need to distinguish between the pattern used to identify a condition, and the
+condition.  The condition in this case is the inference (direct or indirect link) between two
+Ccells.  That condition exists, whatever the current state of the puzzle.  The condition belongs to
+the solution of a puzzle and not its current state.  The condition is unvarying as the solution of a
+puzzle does not change.
 
-Therefore, the answer is yes.  Cannibalistic eliminations of interior links of chains is logically sound because it does not interfere with the resulting constraint of the puzzle that the chain found.
+A pattern, in contrast, is dependent on the current state of a puzzle to identify a condition.
+SE-AIC patterns identify Ccells that both cannot be simultaneously True, This an unvarying condition
+of the puzzle that has been identified.  This condition does not change as puzzle state continuously
+changes as it is solved.
 
-The below example finds the chain end ccells 4r9c7 and 4r5c9, resulting in the cannibalistic elimination of 4r7c9
+Therefore, patterns such as AI Chains can be cannibalistic and consume their interior links.
 
-(Sudoku Swami)
-This example below find the chain end points 5r1c3 and 5r2c7 resulting in the cannibalistic eliminations of 5r2c3 and 5r1c8
+.. figure:: images/cannib-ai-chain-eg1.png
+   :name: fig-cannib-ai-chain-eg1
+   :scale: 65%
+   :alt: Sudoku Cannibalistic AI-Chain Example
+   :align: right
+   :figwidth: 359px
+
+   Cannibalistic AI Chain Example
+
+   :raw-html:`<mong>9.+8...+1.33..89+12.+6.61....8...+3+2.9.18.92...36.81.3......8....63..+39.24+8+577.......1|r1c2-=5;r1c4-=67;r1c5-=47;r1c6-=7;r3c1-=5;r3c4-=5;r3c5-=45;r3c6-=5;r3c7-=47;r3c9-=4;r4c5-=7;r5c4-=45;r5c5-=45;r5c6-=5;r6c5-=7;r6c6-=7;r6c8-=47;r7c5-=5;r9c5-=56;r9c6-=56;r9c8-=4|AI-Chain T1||4r5c9=4r5c1-4r3c1=2r3c1~2r7c1=2r7c9-4r7c9=4r9c7,4r5c9~4r7c9=4r9c7|r4c7-=4;r6c7-=4;r7c9-=4|9+2+8+4+6+5+1+733+7+589+12+4+6+461+7+3+2+98+5+6+4+3+2+59+718+592+1+7+836+481+73+4+6+5+9+2+28+4+5+1+763+9+1+39+624+8+577+5+6+9+8+3+4+21</mong>`
+
+The AI Chain :raw-html:`<mong>4r5c9=4r5c1-4r3c1=2r3c1~2r7c1=2r7c9- 4r7c9=4r9c7,4r5c9~4r7c9=4r9c7</mong>
+identifies the Robust link <mong>4r5c9|~|4r9c7</mong>.  The Ccells that see both ends of this Robust
+link and can be eliminated are<mong>r4c7-=4</mong>, <mong>r6c7-=4</mong> and <mong>r7c9-=4</mong>.
+<Mong4r7c9</mong>,the second last link of the AI-Chain gets consumed.`
+
+Source: https://www.youtube.com/c/SudokuSwami
+
+|
+|
+|
+|
+|
+|
+|
 
 .. _loops:
 
-Loops
-=====
+AI Loops
+========
 
-A loop is an AIC that loops back on itself.  An even length AIC looping back on itself will have the same number of strong and weak links.  An odd length AIC that loops back on itself can either have an extra strong link or extra weak link in the loop.  That is one node will have either two strong links or two weak links.
+An AI loop is an AI Chain that loops back on itself.  An even length AIC looping back on itself has
+the same strong and weak link count.  An odd length AIC that loops back on itself can either have an
+extra strong link or extra weak link in the loop; an odd count loop has either two adjacent strong
+links or two adjacent weak links.
 
-Each of these three loop types result in different type of eliminations or placements.
+These three loop types result in different eliminations or placements.
 
 .. _even-loops:
 
-Even Loops
-----------
+Even AI Loops
+-------------
 
-Take the following even loop for example:
-	A = B – C = D –
-The ending dash indicates a weak link looping back to Node A.  If Node A is False, following the chain we know that D will be True.  There are now two routes for A to get to D:
-    • Via the chain, there is a Robust link
+Consider the following Even AI-Loop:
 
-Following the chain A through to D.  If A is False then If Node A is True, following the chain we are unable to infer the state of D.  However, because of the loop, D is weakly linked to A, ensuring D is False when A is True.  This logic holds true for each node in the Even loop.
+:raw-html:`</span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>A = B – C = D –</pre>
+</div></div>
+<p><span>`
 
-Thus an Even loop strengthens all the Weak links in the loop, and the loop behaves as a strongly linked chain/loop.  Therefore all strongly linked chain placements and eliminations also apply to Even Loops.
+The ending dash indicates a weak link looping back to Node A.  If Node A is False, the AI Chain
+ensures D is True.  If Node A is True, the looped weak link to Node D ensures that Node D is False.
+Thus, the Weak link between Nodes D and A is made Strong by the loop.  The same is said for the Weak
+link between Nodes B and C.
+
+Since the Loop strengthens all the Weak links in the AI Chain, The same eliminations and placements
+that apply to :ref:`Strong Linked Patterns <strong-linked-patterns>`, apply to Even AI Chains.
 
 Strong Loops
 ------------
 
-Take the following Strong Loop for example:
-	A = B – C = D – E =
+Consider the following Strong AI-Loop:
 
-The ending ‘=’ indicates a strong link looping back from Node E to node A.  Node A is the only node in the chain sporting two strong links.
+:raw-html:`</span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>A = B – C = D – E =</pre>
+</div></div>
+<p><span>`
 
-If Node A is False, following the chain, B->True, C->False, D->True, E-> False, A->True.  This is a contradiction; Node A cannot be simultaneously True and False.  This contradiction ensures that the premise that A is never False it has to be always True and can be placed.
+The ending '=' indicates a strong link looping back from Node E to node A.  Node A is the only node
+in the chain sporting two strong links.
 
+If Node A is False, then both Nodes B and E are True because of the Strong Links.  But B and E
+cannot be simultaneously True because :raw-html:`<mong>B - C = D - E</mong>` is a WE-AIC.
+A contradiction exists when Node A is False.  Therefore, Node A must be True and can be placed.
 
 Weak Loops
 ----------
 
-Take the following Weak loop for example:
-	A = B – C = D – E –
+Consider the following Weak AI Loop:
 
-The ending dash indicates a weak link between node E looping back to A.  This is equivalent to E seeing the ends A and D of a SE-AIC.  And because of the SE-AIC, either or both of the ends A and D are True.  As E sees both A and D it can never be true and therefore can be eliminated.  This is a narrower defining of SE AIC eliminations and placements
+:raw-html:`</span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>A = B – C = D – E –</pre>
+</div></div>
+<p><span>`
+
+The ending dash indicates a weak link looping back from Node E to Node A.  Node E is the only node
+in the chain sporting two weak links.
+
+If Node E is True, then both Nodes A and D are False because of the Weak Links.  But A and D cannot
+be simultaneously True because :raw-html:`<mong>A = B - C = D</mong>` is a SE-AIC.  A contradiction
+exists when Node E is True.  Therefore, Node A can only be False and can be eliminated.
+
+Observe that this is a narrower pattern than an AI-Chain Type 1.  Ccell E sees both ends of an
+SE-AIC, and therefore, cannot be True and can be eliminated.  A SE-AIC Type 1 deals with all Ccells
+that can see both chain ends at once, whereas the Weak Loop deals with each Ccell that sees both
+chain ends individually.
 
 Group Links
 ===========
@@ -666,6 +806,35 @@ Group Links
 Characterising Group Links
 --------------------------
 
+It is possible to group Ccells that lie within a Line/Box intersection into a 'Grouped Node' that
+can be considered as a Node when identifying Strong Linked Nodes in patterns.
+
+.. figure:: images/gl-cd1.png
+   :name: fig-gl-cd1
+   :scale: 55%
+   :alt: Sudoku Group Link Example Candidate Diagram
+   :align: right
+   :figwidth: 359px
+
+   Group Link Example Candidate Diagram
+
+By taking advantage of the Locked Singles property of line / box intersections, it is possible to
+group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
+intersections behave much like regular ccells in the formation of links and chains.
+
+
+Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
+ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
+together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
+A=(BC).
+
+In isolation, this linkage does not yield much, however when used in the formation of other
+patterns like chains, may yield many more productive outcomes.
+
+If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
+of B or C is True.  Both B and C being True will violate :ref:`Sudoku Rules <sudoku-rules>`.
+
+searching for Strongly Linked Nodes
 By taking advantage of the Locked Singles property of line / box intersections, it it is possible to group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box intersections behave much like regular ccells in the formation of links and chains.
 [TODO – fix with correct concept diag syntax]
 
@@ -709,7 +878,7 @@ The green links are correct: a(r2c1=r2c79), a(r2c1=r56c1) and a(r8c23=r8c789). I
 
 The Chain starts with the strong link ‘a’(r23c1=r1c23).  This Strong link cannot connect to a(r12c5=r5c5) because:  If both ar23c1 is False, then one of ar1c23 is True.  Irrespective of which of ar1c23 is True, ar1c5 is False, but no inference can be drawn about ar2c5, it could be True or False.  Therefore it is not possible to make an inference from ar1c23 that will cause both ar23c5 to be False, hence the chain cannot propagate along this path.
 
-However if one of ‘a’r1c23 is True, then both ‘a’r1c79 are False, therefore one of strongly linked ‘a’r23c8 is True, making ar6c8 False, making ar5c9 True, making both ar78c9 False, making one of ‘a’r9c78 True.  In this chain if all the candidates in blue cells are False, then of the cells in the green groupings are True.  Therefore any cell grouping in the same house as the green group is False.  The chain propagates in reverse from ‘a’r9c78 to ‘a’r23c1 where if all green cell groupings are False one of the cells in the blue groupings will be True.  Therefore, because if both ‘a’r23c1 are False, one of ‘a’r9c78 is True, and if both ‘a’r9c78 are False, one of ‘a’r23c1 is True.  Therefore this chain ensures ‘a’  is True in either or both c1 and r9.  Therefore  ‘a’r9c1 (highlighted red) can never be True and can be eliminated.
+However, if one of ‘a’r1c23 is True, then both ‘a’r1c79 are False, therefore one of strongly linked ‘a’r23c8 is True, making ar6c8 False, making ar5c9 True, making both ar78c9 False, making one of ‘a’r9c78 True.  In this chain if all the candidates in blue cells are False, then of the cells in the green groupings are True.  Therefore any cell grouping in the same house as the green group is False.  The chain propagates in reverse from ‘a’r9c78 to ‘a’r23c1 where if all green cell groupings are False one of the cells in the blue groupings will be True.  Therefore, because if both ‘a’r23c1 are False, one of ‘a’r9c78 is True, and if both ‘a’r9c78 are False, one of ‘a’r23c1 is True.  Therefore this chain ensures ‘a’  is True in either or both c1 and r9.  Therefore  ‘a’r9c1 (highlighted red) can never be True and can be eliminated.
 
 There are other interesting conditions in this pattern:
 

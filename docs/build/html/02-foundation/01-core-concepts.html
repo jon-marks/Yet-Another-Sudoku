@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. Language" href="02-language.html" /><link rel="prev" title="2. Foundation" href="index.html" />
 
-    <link rel="shortcut icon" href="../_static/AIM.ico"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
         <title>Yet Another Sudoku | Foundation | Concepts</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/table_styling.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/overrides.css" />
@@ -145,7 +145,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   <div class="sidebar-logo-container">
     <img class="sidebar-logo" src="../_static/AIM.png" alt="Logo"/>
@@ -154,7 +154,7 @@
   <span class="sidebar-brand-text">Yet Another Sudoku</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -177,7 +177,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains.html">3.5. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
@@ -220,7 +220,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -473,26 +474,6 @@ linkage.</p>
 <p>When a strong link is substituted for a weak link, the Strong Link is said to be masquerading as a
 Weak link.  The <span class="raw-html"><mono>'~'</mono></span> symbol is used to indicate a masqueraded weak link.</p>
 </section>
-<section id="group-ccell-links">
-<h3><span class="section-number">2.1.3.5. </span>Group (Ccell) Links<a class="headerlink" href="#group-ccell-links" title="Permalink to this heading">#</a></h3>
-<p>By taking advantage of the Locked Singles property of line / box intersections, it is possible to
-group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
-intersections behave much like regular ccells in the formation of links and chains.</p>
-<figure class="align-right" id="fig-grouped-ccell-link-cd1">
-<a class="reference internal image-reference" href="../_images/grouped-ccell-link-cd1.png"><img alt="Grouped Ccell Link" src="../_images/grouped-ccell-link-cd1.png" style="width: 378.0px; height: 158.0px;" /></a>
-<figcaption>
-<p><span class="caption-number">Figure 2.3:  </span><span class="caption-text">Grouped Ccell Link</span><a class="headerlink" href="#fig-grouped-ccell-link-cd1" title="Permalink to this image">#</a></p>
-</figcaption>
-</figure>
-<p>Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
-ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
-together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
-A=(BC).</p>
-<p>This linkage in isolation does not give us much, however when used in the formation of other
-patterns like chains, may yield many more productive outcomes.</p>
-<p>If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
-of B or C is True.  Both B and C being True will violate <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
-</section>
 </section>
 <section id="spatial-representation">
 <h2><span class="section-number">2.1.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Permalink to this heading">#</a></h2>
@@ -543,10 +524,10 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
                 </div>
                 <div class="title"><span class="section-number">2.2. </span>Language</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -560,7 +541,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:8f172cd*, Sun, 18 Sep 2022, 23:42:02
+                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -568,9 +549,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -582,7 +561,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -596,7 +575,6 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
 <li><a class="reference internal" href="#strong-links">2.1.3.2. Strong Links</a></li>
 <li><a class="reference internal" href="#robust-links">2.1.3.3. Robust Links</a></li>
 <li><a class="reference internal" href="#strong-links-masquerading-as-weak">2.1.3.4. Strong Links Masquerading as Weak</a></li>
-<li><a class="reference internal" href="#group-ccell-links">2.1.3.5. Group (Ccell) Links</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#spatial-representation">2.1.4. Spatial Representation</a></li>
@@ -612,10 +590,8 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>

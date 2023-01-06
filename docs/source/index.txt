@@ -33,7 +33,6 @@ List of Figures
 
 |  :numref:`fig-truths-eg1` :ref:`fig-truths-eg1`
 |  :numref:`fig-links-eg1` :ref:`fig-links-eg1`
-|  :numref:`fig-grouped-ccell-link-cd1` :ref:`fig-grouped-ccell-link-cd1`
 |  :numref:`fig-locked-exposed-pair-cd1` :ref:`fig-locked-exposed-pair-cd1`
 |  :numref:`fig-y-wing-cd1` :ref:`fig-y-wing-cd1`
 |  :numref:`fig-locked-pointing-single-cd1` :ref:`fig-locked-pointing-single-cd1`
@@ -55,6 +54,11 @@ List of Figures
 |  :numref:`fig-se-aic-diff-ends-s1` :ref:`fig-se-aic-diff-ends-s1`
 |  :numref:`fig-se-aic-diff-ends-s2` :ref:`fig-se-aic-diff-ends-s2`
 |  :numref:`fig-se-aic-opp-exp-pair-ends-s1` :ref:`fig-se-aic-opp-exp-pair-ends-s1`
+|  :numref:`fig-sln-t1-eg1` :ref:`fig-sln-t1-eg1`
+|  :numref:`fig-sln-t2-eg1` :ref:`fig-sln-t2-eg1`
+|  :numref:`fig-sln-t3-eg1` :ref:`fig-sln-t3-eg1`
+|  :numref:`fig-cannib-ai-chain-eg1` :ref:`fig-cannib-ai-chain-eg1`
+|  :numref:`fig-gl-cd1` :ref:`fig-gl-cd1`
 |  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
 
 ==============
