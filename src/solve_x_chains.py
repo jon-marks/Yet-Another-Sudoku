@@ -187,7 +187,7 @@ def resolve_other_x_chain_patterns(Chain, Cands, Methods, GrpLks, Status):
             Status.Tech = T_GL_EVEN_X_LOOP_T3 if GrpLks else T_EVEN_X_LOOP_T3
             return True
     else:
-        Status.Elims = {}; Status.Tech = T_UNDEF
+        Status.Pattern = []; Status.Pattern1 = []; Status.Elims = {}; Status.Tech = T_UNDEF
         if GrpLks and {T_GL_TWO_STRING_KITE, T_GL_TURBOT_FISH, T_GL_X_CHAIN_T1} and Chain[0].Cand == Chain[-1].Cand:
             for r, c in cells_that_see_all_of([(Chain[0].r, Chain[0].c), (Chain[-1].r, Chain[-1].c)], GrpLks):
                 if Chain[0].Cand in Cands[r][c]:

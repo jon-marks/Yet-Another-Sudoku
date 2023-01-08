@@ -59,6 +59,9 @@ List of Figures
 |  :numref:`fig-sln-t3-eg1` :ref:`fig-sln-t3-eg1`
 |  :numref:`fig-cannib-ai-chain-eg1` :ref:`fig-cannib-ai-chain-eg1`
 |  :numref:`fig-gl-cd1` :ref:`fig-gl-cd1`
+|  :numref:`fig-gl-cd2` :ref:`fig-gl-cd2`
+|  :numref:`fig-gl-cd3` :ref:`fig-gl-cd3`
+|  :numref:`fig-gl-cd4` :ref:`fig-gl-cd4`
 |  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
 
 ==============
@@ -73,6 +76,7 @@ List of Tables
 |  :numref:`tbl-we-aic-it` :ref:`tbl-we-aic-it`
 |  :numref:`tbl-se-aic-it` :ref:`tbl-se-aic-it`
 |  :numref:`tbl-slc-it` :ref:`tbl-slc-it`
+|  :numref:`tbl-se-aic-gl-it` :ref:`tbl-se-aic-gl-it`
 
 ..
    ==================

@@ -20,7 +20,11 @@ convoluted techniques involving a mix of other complex techniques.
 
 Many patterns can be identified and resolved by more than one logic technique.  Where multiple
 techniques can resolve a pattern, the technique with the broadest reach is favoured, unless it is
-rather more complex than another technique.
+much more complex than another technique.
+
+Many resources on the internet exist describing the identification and resolution of patterns
+effectively. Rather than rehashing their information in this text, I, with gratitude, link to their
+descriptions.
 
 .. toctree::
    :maxdepth: 5

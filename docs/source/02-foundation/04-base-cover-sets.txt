@@ -1,6 +1,6 @@
 .. title:: Yet Another Sudoku | Foundation | Base Sets (Truths) and Cover Sets (Links)
 
-.. _bsets-and-csets1:
+..  _found_bsets_and_csets:
 
 ************************
 Base Sets and Cover Sets
@@ -198,7 +198,7 @@ in the Union of Base Sets.  The IF statement conditional expression ensures that
 Element are covered / Linked.  If all bases are not covered, then ‘A Truth’ will not be locked into
 the Cover Set intersections and the pattern is not viable.
 
-.. _exp-str-ssets1:
+.. _exp_ssets:
 
 Cell Base Sets and House Cover Sets – Exposed Subsets
 -----------------------------------------------------
@@ -215,7 +215,7 @@ Cover Set are the Truth, any other Candidates in the Cover Sets that are not par
 intersection are also not part of “The Truth” and can be eliminated. This is the basis for Exposed
 Subsets.
 
-.. _hid-str-ssets1:
+.. _hid_ssets1:
 
 House Base Sets and Cell Cover Sets – Hidden Subsets
 ----------------------------------------------------
@@ -243,13 +243,13 @@ candidate.  The Cover Sets are also houses that see two or more candidates acros
 such that each occurrence of the Candidate in the Base Sets are covered.  According to Sudoku Rules,
 the Ccells in the intersections are the Truth.  Therefore, any other Candidates in the Cover Sets
 that are not part of the intersection (Truth) can be eliminated.
-This is the basis for all “Fish” and Fish Like patterns.
+This is the basis for all :ref:`“Fish” <hsp_fish>` and Fish Like patterns.
 
 Some Examples
--------------
+=============
 
 The above is a bit of a mind-bend to unpack on first blush.  However, with a few examples, practice
-and time, it will all make sense.
+and time, it begins to all make sense.
 
 .. figure:: images/base-cover-eg2.png
    :name: fig-hidden-pair-eg1
@@ -356,7 +356,6 @@ Elims = {5r2c6, 5r2c8, 5r8c8, 5r8c9}</pre>
 The Sudoku Rule is equally applicable for subsets and fish of order 'n' > 2.  Practically, it is
 unnecessary to look beyond order of 'n' == 4 because for every pattern where 'n' > 4, a similar
 reciprocal pattern can be found of order for order 9 – 'n'.
-
 
 The concept of Rank
 ===================
@@ -477,7 +476,7 @@ the focus is on Rank 0 and Rank 1 patterns, a deeper understanding of Sudoku log
 appreciating the overall concept of Rank R patterns.
 
 Some More Examples
-------------------
+==================
 
 .. figure:: images/finned-x-wing-eg1.png
    :name: fig-finned-x-wing-eg1
@@ -596,7 +595,7 @@ Elims = {9r7c6}</pre>
 
 As a Two String Kite, if :raw-html:`<mong>9r6c6</mong> is False, <mong>9r6c2</mong> is True, <mong>9r4c2</mong> is
 False, and <mong>9r2c7</mong> is True.  Similarly walking the links in the opposite direction, if <mong>9r2c7</mong> is
-False, then <mong>9r6c6</mong>` is True.  This pattern identifies a :ref:`Robust link <robust-links>`
+False, then <mong>9r6c6</mong>` is True.  This pattern identifies a :ref:`Robust link <cc_robust_links>`
 :raw-html:`<mong>9r6c6|~|9r7c2</mong>`. Recall that at least one end of a Robust Link must be True, therefore any Ccell
 that can see both ends cannot be True and can be eliminated.  :Raw-html:`<mong>9r7c6</mong>`` is such a Ccell which can
 be eliminated.

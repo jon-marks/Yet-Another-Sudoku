@@ -7,8 +7,8 @@ Chains, Loops and Nets
 In this section, a Node refers to a Ccell that is part of a Chain, Loop or Net pattern to
 distinguish it from Ccells that are not part of that pattern.
 
-This section builds substantially on the :ref:`Truths <a-truth>` and
-:ref:`Premises and Inferences <premises-and-inferences>` concepts developed in
+This section builds substantially on the :ref:`Truths <cc_truth>` and
+:ref:`Premises and Inferences <cc_premises_and_inferences>` concepts developed in
 :ref:`Core Concepts <core-concepts>`.
 
 A Link is an inference describing the relationship between two Ccells.  A Direct Link describes the
@@ -19,16 +19,16 @@ Direct Links
 ============
 
 Recall:
-   *  :ref:`Direct Weak Links <weak-links>`:  If one end is True, the other end must be False, and
-      that both ends cannot be simultaneously True, but can be simultaneously False.  These Links
+   *  :ref:`Direct Weak Links <cc_weak_links>`:  If one end is True, the other end must be False,
+      and both ends cannot be simultaneously True, but can be simultaneously False.  These Links
       characterise the following Ccell relationships:
 
       *  Between two same valued Ccells in a House that has 3 or more same valued Ccells.
       *  Between two different valued Ccells in a cell that has 3 or more Ccells.
 
-   *  :ref:`Direct Strong Links <strong-links>`:  The ends are always the opposite state of each
-      other.  The ends cannot be simultaneously True or False.  These Links characterise the following
-      Ccell relationships
+   *  :ref:`Direct Strong Links <cc_strong_links>`:  The ends are always the opposite state of each
+      other.  The ends cannot be simultaneously True or False.  These Links characterise the
+      following Ccell relationships
 
       *  Between the only two same valued Ccells in a house (a Conjugate Pair).
       *  Between the only two Ccells in a Cell (Bi-value Cell)
@@ -127,7 +127,7 @@ The chain's inferences are described in the following table.
 A WE-AIC has an Even Node count to preserve the weak end link requirement of the chain. If an End
 Node is True, the other is False, and if the other end is True, then the first is False.  The chain
 identifies a reversible opposing inference relationship (True to False) between the End Nodes.
-The ends of WE-AIC behave in the same as :ref:`Weak Links <weak-links>`.
+The ends of WE-AIC behave in the same as :ref:`Weak Links <cc_weak_links>`.
 
 With an Odd Node count chain, if the one end is True, so is the other.  But the chain is not
 reversible. The other starting link is Strong, and a True assertion from that end does not
@@ -175,7 +175,7 @@ The chain's inferences are described in the following table.
 A SE-AIC has an Even node count to preserve the strong end link requirement of the chain.  If an End
 Node is False, the other is True, and if the other is False then the first is True.  The chain
 identifies a reversible opposing inference relationship (False to True) between the end Nodes. The
-ends of a SE-AIC behave like :ref:`Robust Links <robust-links>`.
+ends of a SE-AIC behave like :ref:`Robust Links <cc_robust_links>`.
 
 With an Odd Node count chain, if the one end is False so is the other.  But the chain is not
 reversible. The other starting link is Weak and a False assertion from that end does not propagate.
@@ -406,7 +406,7 @@ Recall, Weak Link Ended AI-Chain characteristics are:
 The ends of Weak Link Ended Chains behave exactly as Weak Links and can be used as such.  Ccells
 'See' each other through weak links.  Two Ccells that 'See' each other both cannot be True.  This
 application of the Sudoku rule on its own, does not give much.  Its real power is in linking Ccells
-to all the elements of :ref:`'A Truth' <a-truth>`.  If a Ccell sees all the elements of 'A Truth',
+to all the elements of :ref:`'A Truth' <cc_truth>`.  If a Ccell sees all the elements of 'A Truth',
 it cannot be True and can be eliminated
 
 This will be covered in detail when reviewing the application of :ref:`Kraken Fish <kraken-fish>`.
@@ -414,7 +414,7 @@ This will be covered in detail when reviewing the application of :ref:`Kraken Fi
 Strong Link Ended Chains (SE-AIC)
 ---------------------------------
 
-Recall, Strong Ended AI-Chain characteristics are that of :ref:`Robust Links <robust-links>`:
+Recall, Strong Ended AI-Chain characteristics are that of :ref:`Robust Links <cc_robust_links>`:
    *  An even count of Nodes
    *  Link count is one less than Node Count, an odd number,
    *  Both outer links are Strong Links,
@@ -549,7 +549,7 @@ Type 3:  Opposing Exposed Pair Ends
    Robust Link Opposing Conjugate Pair Ends Grid Snip
 
 In this grid snippet, say :raw-html:`<mong>9r4c2</mong> and <mong>5r4c5</mong>` of the
-:ref:`Exposed Pair <exposed-pairs>` :raw-html:`<mong>59r4c25</mong>.  The Ccells in the Exposed Pair
+:ref:`Exposed Pair <hsp_exposed_pairs>` :raw-html:`<mong>59r4c25</mong>.  The Ccells in the Exposed Pair
 that are not part Chain can both see both end of the chain, and therefore cannot be True and can be
 eliminated, <mong>r4c2-=5</mong> and <mong>r4c5-=9</mong>.  This leaves the Chain Ccells as the only
 Ccells in the Chain end cells respectively, and they can be placed.  <mong>r4c2:=9</mong> and
@@ -659,25 +659,16 @@ are highlighted green and Odd Ccells are highlighted blue.  Ccell <mong>8r3c8</m
 Node <mong>1r3c8</mong> and Odd Node <mong>5r3c8</mong>.  Because either the Even Node or the Odd
 Node will be True, <mong>8r3c8</mong> cannot be True and can be eliminated: <mong>r3c8-=8</mong>`.
 
-It matters not whether the Even Node, Odd Node and the Ccell that sees both are all in the same
-house or in the same cell.  That the Ccell sees an Odd and Even Node is what results in its demise.
-
-
-|
-|
-|
-|
-|
+It doesn't matter whether the Even Node, Odd Node, and Ccell that sees both are in the same Group
+or Cell; it only matters that the Ccell sees both and Odd and Even Ndoe that results in its demise.
 
 Sub Chains
 ==========
 
 Source: http://forum.enjoysudoku.com/x-chain-optimalisation-t38330.html.
 
-An important observation about AI Chains with 6 or more Nodes, any lesser even amount consecutive
-count of 4 or more nodes is also a valid chain.  Software algorithms can deal with this
-automagically.  However, as humans it is helpful to keep this in mind when working with chains.
-
+An important observation about AI Chains with 6 or more Nodes.  Any lesser Even Node count sub chain
+is also a valid chain.
 
 .. _cannibalism:
 
@@ -812,87 +803,152 @@ can be considered as a Node when identifying Strong Linked Nodes in patterns.
 .. figure:: images/gl-cd1.png
    :name: fig-gl-cd1
    :scale: 55%
-   :alt: Sudoku Group Link Example Candidate Diagram
+   :alt: Sudoku Group Link Candidate Diagram
    :align: right
    :figwidth: 359px
 
-   Group Link Example Candidate Diagram
+   Group Link Candidate Diagram
 
-By taking advantage of the Locked Singles property of line / box intersections, it is possible to
-group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box
-intersections behave much like regular ccells in the formation of links and chains.
+:numref:`fig-gl-cd1` shows the strong link between the Grouped Node Xr2c79 and Xr2c2.  That is
+:raw-html:`<mong>Xr2c2=Xr2c79</mong>`
 
-
-Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two
-ccells, A-B, B-C and A-C.  However, because B and C are also housed in box 3, they can be grouped
-together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.
-A=(BC).
+If Xr2c2 is True, then both of Xr2c79 are False.  If Xr2c2 is False then one of Xr2C79 is True, or
+if one of Xr2c79 is True then Xr2c2 is False.
 
 In isolation, this linkage does not yield much, however when used in the formation of other
 patterns like chains, may yield many more productive outcomes.
 
-If the Grouped Ccell BC is False, then both B and C must be False.  If BC is True, then only one
-of B or C is True.  Both B and C being True will violate :ref:`Sudoku Rules <sudoku-rules>`.
+.. figure:: images/gl-cd2.png
+   :name: fig-gl-cd2
+   :scale: 100%
+   :alt: Sudoku Group Link 2-String Kite Candidate Diagram
+   :align: right
+   :figwidth: 359px
 
-searching for Strongly Linked Nodes
-By taking advantage of the Locked Singles property of line / box intersections, it it is possible to group ccells in these intersections as a grouped ccell.  These grouped ccells in the line / box intersections behave much like regular ccells in the formation of links and chains.
-[TODO – fix with correct concept diag syntax]
+   Group Link 2-String Kite Candidate Diagram
 
-Consider same candidate value ccells A, B and C.  Each ccell is weakly linked to the other two ccells, A-B, B-C and A-C.  However because B and C are also housed in box 3, they can be grouped together and treated as a “Truth unit”.  Now A and the grouping of B and C form a strong link.  A=(BC).  This linkage in isolation does not give us much, however when used in the formation of chains, may be able to give us a whole lot by creating validly linked chains, where links would have otherwise not existed.
+:numref:`fig-gl-cd2` shows a 2 String Kite with a group link:
+:raw-html:`<br><mong>Xr2c2=Xr2c79~Xr3c8=Xr7c8<mong>`
 
-Expressed in Cell Grammar, say for example the candidate value is 5:
-    • A is 5r2c2, B is 5r2c7 and C is 5r2c9
-    • The weak links are:
-        ◦ 5(r2c2-r2c7), 5(r2c2-r2c9) and 5(r2c7-r2c9)
-    • The strong grouped ccell link is:
-        ◦ 5(r2c2=r2c79).  Note the two column values in the grouped ccell.
+Walking the :term:`SE-AIC`, starting with a False premise as the End Links are Strong.  If Xr2c2 is
+False, then one of X2r79 is True, making Xr3c8 is False and Xr7c8 True.  And, if Xr7c8 is False, then
+Xr3c8 is True, making both Xr2c79 False and Xr2c2 True.  That is both ends of the chain cannot be
+simultaneously False, at least one End is True.  Recall this is the definition of a :term:`Robust
+Link`.  Therefore, Xr7c2 if it exists, sees both ends, cannot be True resulting in its elimination.
 
+|
+|
+|
+|
+|
 
-Extending the above example, in addition to A, B and C, consider additional same value ccells, D, E and F, where D and E are strongly linked, and both A and E “see” F.  If A is strongly linked to E, then it is possible to eliminate ccell F.  Only by grouping B and C, does it become possible to form the strong ended chain:
-	A=(BC)~D=E, or in cell grammar:
-	5(r2c2=r2c79~r3c8=r7c8), thus forcing the elimination of 5r7c2.
+Line Group Link Examples
+------------------------
 
-Note the use of “~” to denote a strong link masquerading as a weak link.
+.. figure:: images/gl-cd3.png
+   :name: fig-gl-cd3
+   :scale: 100%
+   :alt: Group Link Line Examples
+   :align: right
+   :figwidth: 359px
 
+   Group Link Line Examples
 
-Group Link Properties
----------------------
+:numref:`fig-gl-cd3`: shows how to correctly identify Group links:
 
-[TODO Correct with concept diag syntax]
-    • Group links are only formed as strong links:
-        ◦ Along a line (row or column) where the only common candidates are bounded by two boxes..  For example:.
+*  In Row 2, if Xr2c1 is False, then one of Xr2c79 is True, and if both Xr2c79 are False, then Xr2c1
+   is True.  In reverse, if Xr2c1 is True, then both Xr2c7 are False, and if one of Xr2c79 is True
+   then Xr2c1 is False. Because the relationship meets the criteria of a
+   :ref:`Strong Link <cc_strong_links>` in both directions, Xr2Xr2c1=Xr2c79 is a valid Group link.
+*  In Column 1, if Xr2c1 is False, then one of Xr56c1 is True, and if both Xr56c1 are
+   False, then Xr2c1 is True.  In reverse, if Xr2c1 is True, then both xr56c1 are False, and if one
+   of Xr56c1 is True, then Xr2c1 is False.  Therefore, Xr2c1=Xr56c1 is a valid Group Link.
+*  These two Group Links pivot through Xr2c1, such that if both Xr56c1 are False, Xr2c1 is True and
+   both of Xr2c79 are False. And if one of Xr56c1 is True, Xr2c1 is False and one of Xr2c79 is True.
+*  In Row 8, if both of Xr8c23 are False, then one of Xr8c789 is True, and if all of Xr8c789 are
+   False, then one of Xr8c23 is True.  In reverse, if one of Xr8c23 is True, then all of Xr8c789 are
+   False, and if one of Xr8c789 is True, then all of Xr8c23 are False.
 
-The green links are correct: a(r2c1=r2c79), a(r2c1=r56c1) and a(r8c23=r8c789). Incorrect link highlighted in red.  No no inference can be drawn between ar5c8 and ar6c5.  If ar5c8 is False, ar6c5 can be either true of False.  Similarly if ar6c5 is True, are6c5 can be True or False.
-        ◦ Between the only common candidates in a box that form two lines or a cell and a line. The lines can be:
-            ▪ A cell and a line in the box, for example: b4, a(r5c123=r6c3)
-            ▪ Either two rows or columns in the box, for example: b5, a(r4c46=r6c56)
-            ▪ A row and column in box, for example: b1, a(r1c23=r23c1); b3, a(r1c79=r23c8); b4, a(r5c12=r56c3); b8, a(r789c4=r9c56) or a(r78c4=r9c456).
-            ▪ Observe that some patterns produce two sets of strong links.
+Avoiding Group Link Identifying errors.  Examining the relationship between:
 
-[TODO ditto – plus fix colouring alternating for adj link]
+*  xr2c79 and Xr8c789 in :term:`Tower` 3. If Xr8c8 in Xr8c789 is True, it does not ensure that all
+   of Xr2c79 is False. It is possible for either Xr2c79 to be True    while Xr8c8 is also True,
+   inhibiting a Strong Link.  Even if Ccell Xr8c8 had previously been eliminated, Xr2c79 still does
+   not form a valid Group Link with Xr8c79.  If Xr2c7 is True, does not prevent Xr8c9 from being
+   False.
+*  Yr3c45 and Yr56c5.  If Yr3c4 in Yr3c45 is True, then Yr3c5 is False.  This permits one of
+   Yr56c5 to be True, inhibiting the strong link.
+*  Yr5c2 and Yr56c5.  If Yr6c5 in Yr56c5 is True, then Yr5c5 is False.  This permits Yr5c2 to be
+   True, inhibiting the Strong Link.
 
+Box Group Link Examples
+-----------------------
 
-    • Joining Grouped strong links in AI Chains.  Best explained by following the construction of the following group linked AI Chain.  Solid lines are strong links, dashed lines weak links.
+.. figure:: images/gl-cd4.png
+   :name: fig-gl-cd4
+   :scale: 100%
+   :alt: Group Link Line Examples
+   :align: right
+   :figwidth: 359px
 
-[TODO diito.  Plus correct per discription below.]
+   Group Link Box Examples
 
-The Chain starts with the strong link ‘a’(r23c1=r1c23).  This Strong link cannot connect to a(r12c5=r5c5) because:  If both ar23c1 is False, then one of ar1c23 is True.  Irrespective of which of ar1c23 is True, ar1c5 is False, but no inference can be drawn about ar2c5, it could be True or False.  Therefore it is not possible to make an inference from ar1c23 that will cause both ar23c5 to be False, hence the chain cannot propagate along this path.
+|
 
-However, if one of ‘a’r1c23 is True, then both ‘a’r1c79 are False, therefore one of strongly linked ‘a’r23c8 is True, making ar6c8 False, making ar5c9 True, making both ar78c9 False, making one of ‘a’r9c78 True.  In this chain if all the candidates in blue cells are False, then of the cells in the green groupings are True.  Therefore any cell grouping in the same house as the green group is False.  The chain propagates in reverse from ‘a’r9c78 to ‘a’r23c1 where if all green cell groupings are False one of the cells in the blue groupings will be True.  Therefore, because if both ‘a’r23c1 are False, one of ‘a’r9c78 is True, and if both ‘a’r9c78 are False, one of ‘a’r23c1 is True.  Therefore this chain ensures ‘a’  is True in either or both c1 and r9.  Therefore  ‘a’r9c1 (highlighted red) can never be True and can be eliminated.
+:numref:`fig-gl-cd4` shows some Box Group Link patterns, out of a total of 81. Box Group Link
+patterns are only possible with no less than 3 and no more than five same value Ccells in
+a box.  The patterns in Boxes 2, 4 and 8 have a Shared Ccell.  A shared Ccell is present on both
+sides of the link equation.  For example, the Group link in box 2 Xr2c56=Xr23c5 shares Xr2c5.
 
-There are other interesting conditions in this pattern:
+Instead of walking through the Group Link of each example like done above, let's examine the (Box)
+Group Link in the context of an :term:`SE-AIC` using the example in box 2.
 
-    • The chain creates a “Robust” link between ‘a’r23c1 and ‘a’r23c8, that is, both these chain nodes with ensure a Truth in both rows 2 and 3.  Therefore no other cell in row 2 and 3 can be True and can be eliminated.  ‘a’r2c5 can be eliminated.
-    • There is another chain that forms a loop. ‘a’(r5c5=r1c5-r1c79=r23c8-r6c8=r5c9~).  A loop, strengthens all the weak links in a chain resulting in the elimination of ‘a’r9c8.  Note that the original loop between ‘a’(r23c1|~|r9c7) is still valid.
-    • With ‘a’r2c5 gone, If ‘a’r2c1 is True, then ‘a’r3c1 and ‘a’r2c8 are False, making ‘a’r3c8 True.  And vice-versa for ‘a’r3c1 and ‘a’r2c8.  Therefore no other nodes in c1 and c8 can be True (This is an X-Wing fish pattern).  ‘a’r6c8 can eliminated.
-    • There is another grouped Even X Loop.  ‘a’(r23c1=r1c23-r1c79=r23c8~), strengthening the link in r1 resulting in the elimination of ‘a’r1c5.
-    • ‘a’r5c5 is the only Truth in column five and can be placed, resulting in the elimination of ‘a’r5c9.
-    • Oops!  There are no ‘a’candidates left in b6.  This is an incomplete pattern.  An extra candidate ‘a’r6c9 would fix this.  Can you see that?
+The chain's inferences are described in the following table.
+
+.. table::  SE-AIC with Box Group Link Inference Table
+   :name: tbl-se-aic-gl-it
+   :header-columns: 1
+   :header-alignment: center center
+   :column-alignment: center center
+   :column-dividers: single single none
+   :column-wrapping: nn
+
+   ============================================================================================================================================================ ====================================
+      :raw-html:`<mono>A &nbsp;=&nbsp; B &nbsp;-&nbsp; Xr2c56 &nbsp;=&nbsp; Xr23c5 &nbsp;-&nbsp; C &nbsp;=&nbsp; D</mono>`
+   ============================================================================================================================================================ ====================================
+   :raw-html:`<mono>F &nbsp;&rarr;&nbsp; T &nbsp;&rarr;&nbsp; <oline>Xr2c56</oline> &nbsp;&rarr;&nbsp; Xr3c5 &nbsp; &rarr;&nbsp; F &nbsp;&rarr;&nbsp; T</mono>` Xr2c56 is False, Xr3c5 is True
+   :raw-html:`<mono>T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; Xr2c6 &nbsp; &larr;&nbsp; <oline>Xr23c5</oline> &nbsp;&larr;&nbsp; T &nbsp;&larr;&nbsp; F</mono>` Xr23c5 is False, Xr2c6 is True
+   :raw-html:`<mono>T &nbsp;&larr;&nbsp; F &nbsp;&larr;&nbsp; &nbsp; &nbsp; &nbsp; Xr2c5 &nbsp;&nbsp; &nbsp; &nbsp; &rarr;&nbsp; F &nbsp;&rarr;&nbsp; T</mono>` Xr2c6,Xr3c5 is False, Xr2c5 is True
+   ============================================================================================================================================================ ====================================
+
+From :numref:`tbl-se-aic-gl-it` the Shared Ccell is always False when walking the Chain in either
+direction and the Chain behaves as a SE-AIC.  Row 3 in the table examines the case when the Shared
+Ccell is True.  In this case, the Chain is walked in both directions to its extremities.   If the
+Shared Ccell is True, both the Chain Ends will also be True.  This is a valid condition of the
+Robust Link formed by the SE-AIC Ends.
+
+This behaviour is consistent across all 81 Box Group Link variants.
 
 Group Links in Even Loops
 -------------------------
 
-An Even AI-Loop, makes all the links in the loop strong.  Therefore if a Type 1 (two same parity nodes see each other) or Type 2 (all candidates in a cell see same parity nodes).  That parity of nodes in the chain are the eliminations and the opposing parity are the placements.  But what happens if the node is a grouped ccell?
+An Even AI-Loop, makes all the links in the loop strong.  Therefore, with a Type 1 (two same parity
+nodes see each other) or Type 2 (all candidates in a cell see same parity nodes) where one (yet to
+be determined) :term:`Parity` will be True and Ccells placed while the other will be false and
+Ccells eliminated.
 
-Take for example this snippet of a chain:  ...-3r6c4=3r6c79~3r4c8=2r4c8~...  If 3r6c4 is True then both 3r6c7 and 3 r6c9 are False, but if 3r6c4 is False it is not possible to know which of 3r6c7 or 3r6c9 will be True?  Therefore if there are group links in the parity of links being placed, they must be stepped over as it is not possible to know which ccell in the grouped node is the Truth.
+But what happens if the node is a grouped ccell?
 
+Take for example this snippet of a chain:
+
+:raw-html:`</span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>...-3r6c4=3r6c79~3r4c8=2r4c8~...</pre>
+</div></div>
+<p><span>`
+
+If 3r6c4 is True then both 3r6c7 and 3r6c9 are False, but if 3r6c4 is False it is impossible to know
+which of 3r6c7 or 3r6c9 will be True?
+
+Therefore, if group links are present in Even loops, they must be stepped over as it is impossible
+to know which ccell in the grouped node is the Truth.

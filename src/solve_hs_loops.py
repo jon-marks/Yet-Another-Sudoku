@@ -1,5 +1,7 @@
 
 #  An SL loop is a Hidden Subset loop.
-def asdf
+
+# This is where sK loops reside
+
 
 # Implement this after ALS's and before going onto uniqueness patterns.

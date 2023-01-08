@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -174,7 +174,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
@@ -229,40 +229,67 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="subsets">
-<h1><span class="section-number">2.3. </span>Subsets<a class="headerlink" href="#subsets" title="Permalink to this heading">#</a></h1>
+<span id="found-subsets"></span><h1><span class="section-number">2.3. </span>Subsets<a class="headerlink" href="#subsets" title="Permalink to this heading">#</a></h1>
 <p>Subsets refer to ‘n’ cell by ‘n’ candidate grouping, where each cell in the grouping contains between
 2 and ‘n’ of the candidates. ‘n’ ranges between 2 and 4, (pairs, triples and quads).  For values
 of “n” &gt; 4, a reciprocal subset relationship of 9 – ‘n’ candidate values exists, so it is
 unnecessary to look for subsets larger than 4.</p>
-<p>A “Straight Subset” (also simply a “Subset”) occurs when the grouping of Ccells is found in a
-single house/group.  “Straight” is a bit of misnomer as the cells may not be in a straight line if
-the house is Box.  A “Bent subset” occurs when this grouping of Ccells occur in two intersecting
-houses/groups with at least one cell in the intersection. At least three cells are required to make
-the bend. The pattern must describe at least two arms about a pivot.</p>
-<p>Subsets can be exposed or hidden:</p>
+<section id="exposed-or-hidden">
+<h2><span class="section-number">2.3.1. </span>Exposed or Hidden<a class="headerlink" href="#exposed-or-hidden" title="Permalink to this heading">#</a></h2>
+<p>Subsets can be Exposed or Hidden:</p>
 <ul class="simple">
 <li><p>An exposed subset is where ‘n’ candidate values are the only values occurring between 2 and
 ‘n’ times in the ‘n’ cells.</p></li>
 <li><p>A hidden subset is where ‘n’ candidate values can are confined to ‘n’ cells, but are not
 necessarily the only candidates in those cells.</p></li>
 </ul>
-<p>The logic behind resolving Straight Exposed Subsets is that the ‘n’ candidates can only be True in
-one of the ‘n’ cells they collectively only occupy.  Therefore, they cannot be True outside those ‘n’
-cells, and any of the ‘n’ candidates outside the ‘n’ cells can be eliminated.</p>
-<p>As the ‘n’ candidates are confined to only the ‘n’ cells in a Straight Hidden Subset, those ‘n’
-candidates form ‘A Truth’ in those ‘n’ cells. Therefore, any additional candidates in those ‘n’
-cells cannot be True and can be eliminated.</p>
-<p>The logic for <a class="reference internal" href="04-base-cover-sets.html#exp-str-ssets1"><span class="std std-ref">Exposed</span></a> and <a class="reference internal" href="04-base-cover-sets.html#hid-str-ssets1"><span class="std std-ref">Hidden</span></a> Straight subsets
-can be proven with a bit more algebraic rigour using <a class="reference internal" href="04-base-cover-sets.html#bsets-and-csets1"><span class="std std-ref">Base and Cover Sets</span></a></p>
-<p>Bent Subset patterns are somewhat more varied and complex to identify and resolve, and are
-considered in depth <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#bent-subsets-ch1"><span class="std std-ref">here</span></a>.</p>
+</section>
+<section id="unbent-or-bent">
+<h2><span class="section-number">2.3.2. </span>Unbent or Bent<a class="headerlink" href="#unbent-or-bent" title="Permalink to this heading">#</a></h2>
+<p>Subsets can be Unbent or Bent:</p>
+<ul class="simple">
+<li><p>An Unbent Subsets, simply called a “Subset”, refers to a collection of ‘n’ Candidates in ‘n’
+Cells in a single <a class="reference internal" href="../07-glossary.html#term-Group"><span class="xref std std-term">Group</span></a>.</p></li>
+<li><p>A “Bent subset” is a collection of ‘n’ Candidates in n Cells spanning the union of two
+<a class="reference internal" href="../07-glossary.html#term-Group"><span class="xref std std-term">Group</span></a>s with at least one cell in the intersection.</p></li>
+</ul>
+</section>
+<section id="unbent-subsets">
+<h2><span class="section-number">2.3.3. </span>Unbent Subsets<a class="headerlink" href="#unbent-subsets" title="Permalink to this heading">#</a></h2>
+<p>In <a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html#hsp-subsets"><span class="std std-ref">Unbent Exposed Subsets</span></a>, the ‘n’ candidates can each only be True in one of
+the ‘n’ cells in a Group they collectively only occupy.  That is the n Candidates are
+<a class="reference internal" href="../07-glossary.html#term-A-Truth"><span class="xref std std-term">A Truth</span></a> for those n cells. Therefore, they cannot be True outside those ‘n’ cells.  Any
+occurrence of those ‘n’ candidates outside the ‘n’ cells can be eliminated.</p>
+<p>In <a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html#hsp-subsets"><span class="std std-ref">Unbent Hidden Subsets</span></a>, the ‘n’ candidates are confined to only ‘n’ cells in
+a Group, forming <a class="reference internal" href="../07-glossary.html#term-A-Truth"><span class="xref std std-term">A Truth</span></a>.  Because of this ‘Truth’, any other candidates in those four cells
+can be eliminated.</p>
+<p><a class="reference internal" href="04-base-cover-sets.html#found-bsets-and-csets"><span class="std std-ref">Base Sets and Cover Sets</span></a> develops an algebra to verify the logic of
+these Subset patterns.</p>
+<p><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-bent-exposed-subsets"><span class="std std-ref">Bent Exposed Subsets</span></a> are a special case of
+<a class="reference internal" href="06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>, where two <a class="reference internal" href="../07-glossary.html#term-ULS"><span class="xref std std-term">ULS</span></a>s are linked in a chain with a
+single <a class="reference internal" href="../07-glossary.html#term-Unrestricted-Candidate"><span class="xref std std-term">Unrestricted Candidate</span></a>.</p>
+</section>
+<section id="grouped-bent-subsets">
+<h2><span class="section-number">2.3.4. </span>Grouped Bent Subsets<a class="headerlink" href="#grouped-bent-subsets" title="Permalink to this heading">#</a></h2>
+<p><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-grouped-bent-subsets"><span class="std std-ref">Grouped Bent Subsets</span></a> are also known as Almost Locked Candidates.
+If a set of candidates are found in a line box intersection such that they can form an Exposed
+Subset in the one Group and a Hidden Subset in the other Group, same value candidates can be
+eliminated from other cells in the Exposed Group and from those cells forming the Hidden Subset in
+the Hidden Group.</p>
+</section>
+<section id="bent-hidden-subsets">
+<h2><span class="section-number">2.3.5. </span>Bent Hidden Subsets<a class="headerlink" href="#bent-hidden-subsets" title="Permalink to this heading">#</a></h2>
+<p>TODO:
+Put most of the verbiage from Bent hidden subsets in HSP (odt) here. Only how to solve the Bent
+Hidden Triple in web HSP</p>
+</section>
 </section>
 
         </article>
@@ -294,7 +321,7 @@ considered in depth <a class="reference internal" href="../03-human-solvable-pat
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -308,8 +335,31 @@ considered in depth <a class="reference internal" href="../03-human-solvable-pat
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2.3. Subsets</a><ul>
+<li><a class="reference internal" href="#exposed-or-hidden">2.3.1. Exposed or Hidden</a></li>
+<li><a class="reference internal" href="#unbent-or-bent">2.3.2. Unbent or Bent</a></li>
+<li><a class="reference internal" href="#unbent-subsets">2.3.3. Unbent Subsets</a></li>
+<li><a class="reference internal" href="#grouped-bent-subsets">2.3.4. Grouped Bent Subsets</a></li>
+<li><a class="reference internal" href="#bent-hidden-subsets">2.3.5. Bent Hidden Subsets</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

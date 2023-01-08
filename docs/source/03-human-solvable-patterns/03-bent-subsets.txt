@@ -1,9 +1,76 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Bent Subsets
 
-.. _bent-subsets-ch1:
+.. _hsp_bent_subsets:
 
-============
+************
 Bent Subsets
-============
+************
 
-Bent Subsets stub.
+Bent Subsets are a family of subsets where the grouping n candidates over n cells span the union of
+two groups with at least one candidate in the intersection.  The two groups can either be a
+:term:`Line` and a :term:`Box`, or two lines.
+
+
+.. _hsp_bent_exposed_subsets:
+
+Bent Exposed Subsets
+====================
+
+Bent Exposed Subsets are often called Wings, but Wings is rather overloaded term in Sudoku-Speak.
+
+These patterns are formed by n Candidates over n Cells in the Union of two Groups where each Cell
+contains between 2 and n Candidates and at least one cell lies in the intersection of the two
+groups.
+
+Bent Exposed_Triples
+--------------------
+
+Y-Wings
++++++++
+
+XYZ-Wings
++++++++++
+
+Bent Exposed Quads
+------------------
+
+WXYZ-Wings
+++++++++++
+
+Bent Exposed Quints and Sexts
+-----------------------------
+
+.. _hsp_grouped_bent_subsets:
+
+Grouped Bent Subsets
+====================
+
+Grouped Bent Pairs
+------------------
+
+Exposed Line, Hidden Box Grouped Bent Pairs
++++++++++++++++++++++++++++++++++++++++++++
+
+Hidden Line, Exposed Box Grouped Bent Pairs
++++++++++++++++++++++++++++++++++++++++++++
+
+Grouped Bent Triples
+--------------------
+
+Exposed Line, Hidden Box Grouped Bent Triples
++++++++++++++++++++++++++++++++++++++++++++++
+
+Hidden Line, Exposed Box Grouped Bent Triples
++++++++++++++++++++++++++++++++++++++++++++++
+
+Grouped Bent Quads
+------------------
+
+Exposed Line, Hidden Box Grouped Bent Quads
++++++++++++++++++++++++++++++++++++++++++++
+
+Hidden Line, Exposed Box Grouped Bent Quads
++++++++++++++++++++++++++++++++++++++++++++
+
+Bent Hidden Triples
+===================

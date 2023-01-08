@@ -26,7 +26,7 @@ The term Ccell is not to be confused with a:
 *  **Candidate**:  which is a lesser reference to only the possible values in cells that obey Sudoku
    Rules.
 
-.. _a-truth:
+.. _cc_truth:
 
 'A Truth' and 'The Truth'
 =========================
@@ -70,7 +70,7 @@ For example:
 |
 |
 
-.. _premises-and-inferences:
+.. _cc_premises_and_inferences:
 
 Premises and Inferences
 =======================
@@ -97,7 +97,7 @@ asserting each Ccell True and False.  The important link (inference) relationshi
 *  Strong Links
 *  Robust Links
 
-.. _weak-links:
+.. _cc_weak_links:
 
 Weak Links
 ----------
@@ -156,7 +156,7 @@ Ccells see each other through weak links (directly or indirectly - e.g. Weakly E
 any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
 False.
 
-.. _strong-links:
+.. _cc_strong_links:
 
 Strong Links
 ------------
@@ -201,7 +201,7 @@ Any two Strongly Linked Ccells must be of alternate state, therefore
 * Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
   guarantees one of its ends to be True.
 
-.. _robust-links:
+.. _cc_robust_links:
 
 Robust Links
 ------------

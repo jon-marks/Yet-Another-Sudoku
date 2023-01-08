@@ -137,14 +137,6 @@ def discard_cand_from_peers(Cand, r, c, Cands):
         for c1 in range(bc, bc+3):
             Cands[r1][c1].discard(Cand)
 
-# def is_in_chain(r, c, Cand, Chain, GrpLks):
-#     # Chain is a list of Node tuples (r, c, Cand, Lk).
-#     # returns the node location in the chain (0 is first location) or -1 if not found.
-#
-#     for i, (rc, cc, Candc, Lkc) in enumerate(Chain):
-#         if ccells_intersect(r, c, Cand, rc, cc, Candc, GrpLks): return i
-#     return -1
-
 def list_ccells_linked_to(r, c, Cand, Cands, Type = LK_STWK, GrpLks = False, InclCell = True):
     # Returns a list of (r, c, Cand, LkType, LkHouse) tuples that the ccell(r, c, Cand) can see.
     # LkType is one of LK_STWK or LK_WEAK, LkHouse is one of LK_ROW, LK_COL, LK_BOX, or LK_CELL
@@ -563,7 +555,7 @@ def ccells_see_each_other(r0, c0, Cand0, r1, c1, Cand1, GrpLks = False):
     #   * they are same value candidates in different cells in a common house.
     #     +  strongly if they are the only occurrences of that candidate value
     #        in the house.
-    #     +  weakly if there other candidate values in that cell.
+    #     +  weakly if other candidate values exist in that cell.
     # Note that a strong link can masquerade as a weak link, but a weak link
     # cannot masquerade as a strong link.
 
@@ -654,10 +646,14 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
                 elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
             else:
             # 2.  Check out Row/Row Patterns: RP == [0, n, m] where n and m are 1, 2, or 3
+            # |   |   |   |   |   |   |   |   |   |   |   | Family
+            # |*  |   |  *|   |  *|   | **|   | **|   |* *|
+            # | ++|   | ++|   |+++|   |++ |   |+++|   |+++|
                 if lenRB0 > 0 and lenRB1 > 0 and lenRB2 == 0:   Lks.extend([((br, RB[0], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX)), ((br1, RB[1], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
                 elif lenRB0 > 0 and lenRB1 == 0 and lenRB2 > 0: Lks.extend([((br, RB[0], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br, RB[0], Cand, LK_STRG | LK_BOX))])
                 elif lenRB0 == 0 and lenRB1 > 0 and lenRB2 > 0: Lks.extend([((br1, RB[1], Cand, LK_NONE), (br2, RB[2], Cand, LK_STRG | LK_BOX)), ((br2, RB[2], Cand, LK_NONE), (br1, RB[1], Cand, LK_STRG | LK_BOX))])
             # 3. Check out Col/Col patterns  CP == [0, n, m] where n and m are 1, 2, or 3
+            # Above rotated by 90degs
                 if lenCB0 > 0 and lenCB1 > 0 and lenCB2 == 0:   Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX)), ((CB[1], bc1, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
                 elif lenCB0 > 0 and lenCB1 == 0 and lenCB2 > 0: Lks.extend([((CB[0], bc, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[0], bc, Cand, LK_STRG | LK_BOX))])
                 elif lenCB0 == 0 and lenCB1 > 0 and lenCB2 > 0: Lks.extend([((CB[1], bc1, Cand, LK_NONE), (CB[2], bc2, Cand, LK_STRG | LK_BOX)), ((CB[2], bc2, Cand, LK_NONE), (CB[1], bc1, Cand, LK_STRG | LK_BOX))])
@@ -742,9 +738,6 @@ def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):
             R1 = {r1} if isinstance(r1, int) else r1
             C1 = {c1} if isinstance(c1, int) else c1
             Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
-            # for ((Ra, Ca, Canda, Lka), (Rb, Cb, Candb, Lkb)) in Lks1:
-            #     if ccells_match(Ra, Ca, Canda, R0, C0, Cand0, GrpLks) and ccells_match(Rb, Cb, Candb, R1, C1, Cand1, GrpLks): break
-            # else: Lks1.append((NL(R0, C0, Cand0, Lk0), NL(R1, C1, Cand1, Lk1)))
     else:  # No group link
         for r in range(9):
             for c in range(9):

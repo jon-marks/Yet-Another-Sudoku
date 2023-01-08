@@ -174,7 +174,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
@@ -481,11 +481,12 @@ unrestricted candidate in the union of column 7 and box 4</p></td>
 </div>
 </section>
 </section>
-<section id="sudoku-language-semantics">
-<h2><span class="section-number">2.2.2. </span>Sudoku Language Semantics<a class="headerlink" href="#sudoku-language-semantics" title="Permalink to this heading">#</a></h2>
-<p>How to read and interpret this Sudoku language syntax is explained by examples.  Albeit a
-comprehensive list, it is not an exhaustive list of all patterns, but enough to get a good
-understanding of the semantics.</p>
+<section id="syntax-examples">
+<h2><span class="section-number">2.2.2. </span>Syntax Examples<a class="headerlink" href="#syntax-examples" title="Permalink to this heading">#</a></h2>
+<p>How to read and interpret this Sudoku language syntax is explained by examples.  An appreciation of
+the meaning (semantics) of this syntax evolves through the balance of this section and the next.
+Albeit a comprehensive list, it is not an exhaustive list of all patterns, but hopefully enough to
+get a good understanding of the syntax mechanics.</p>
 <p>Note:</p>
 <ol class="arabic simple">
 <li><p>Values always precede operators and/or cell specifiers when describing or specifying a pattern.</p></li>
@@ -673,7 +674,7 @@ indirectly through the WE-AIC: 2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9.<
 </dl>
 </dd>
 <dt><strong>Grouped Bent Pair, Exposed Line, Hidden Box</strong></dt><dd><dl class="simple">
-<dt><span class="raw-html"><mong>U89r8c456,89==r8c1,89--r7c4</mong></span></dt><dd><p>Grouped Bent Pair with the union of candidates 8 and 0 in the intersection of row 8 and box 8
+<dt><span class="raw-html"><mong>U89r8c456,89==r8c1,89--r7c4</mong></span></dt><dd><p>Grouped Bent Pair with the union of candidates 8 and 9 in the intersection of row 8 and box 8
 with exposed pair in row 8 and hidden pair in box 8.</p>
 </dd>
 </dl>
@@ -695,17 +696,20 @@ with exposed pair in row 8 and hidden pair in box 8.</p>
 <h3><span class="section-number">2.2.2.5. </span>Inference Chains, Loops and Nets<a class="headerlink" href="#inference-chains-loops-and-nets" title="Permalink to this heading">#</a></h3>
 <dl class="simple">
 <dt><strong>Skyscrapers</strong></dt><dd><dl class="simple">
-<dt><span class="raw-html"><mong>2r5c9=2r7c9~2r7c4=2r6c4,2r5c9~2r6c8-2r6c4</mong></span></dt><dd><p>A four node SE-AIC, where both ends 2r5c9 and 2r6c4 see 2r6c8, resulting in its elimination.</p>
+<dt><span class="raw-html"><mong>2r5c9=2r7c9~2r7c4=2r6c4,2r5c9~2r6c8-2r6c4</mong></span></dt><dd><p>A four node SE-AIC, where both ends 2r5c9 and 2r6c4 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>. 2r6c8 sees
+both ends resulting in its elimination.</p>
 </dd>
 </dl>
 </dd>
 <dt><strong>Two String Kites</strong></dt><dd><dl class="simple">
-<dt><span class="raw-html"><mong>3r2c1=3r2c6-3r3c5=3r8c5,3r2c1-3r8c1-3r8c5</mong></span></dt><dd><p>A four node SE-AIC, where both ends 3r2c1 and 3r8c5 see 3r8c1, resulting in its elimination.</p>
+<dt><span class="raw-html"><mong>3r2c1=3r2c6-3r3c5=3r8c5,3r2c1-3r8c1-3r8c5</mong></span></dt><dd><p>A four node SE-AIC, where both ends 3r2c1 and 3r8c5 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>. 3r8c1 sees
+both ends resulting in its elimination.</p>
 </dd>
 </dl>
 </dd>
 <dt><strong>Turbot Fish</strong></dt><dd><dl class="simple">
-<dt><span class="raw-html"><mong>7r2c8=7r2c6-7r9c6=7r7c5,7r2c8-7r7c8-7r7c5</mong></span></dt><dd><p>A four node SE-AIC, where both ends 7r2c8 and 7r7c5 see 7r7c8, resulting in its elimination.</p>
+<dt><span class="raw-html"><mong>7r2c8=7r2c6-7r9c6=7r7c5,7r2c8-7r7c8-7r7c5</mong></span></dt><dd><p>A four node SE-AIC, where both ends 7r2c8 and 7r7c5 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>. 7r7c8 sees
+both ends resulting in its elimination.</p>
 </dd>
 </dl>
 </dd>
@@ -722,8 +726,8 @@ back on itself with a weak link or masquerading as weak link respectively.</p>
 </dl>
 </dd>
 <dt><strong>Strong X-Loops</strong></dt><dd><dl class="simple">
-<dt><span class="raw-html"><mong>6r1c6=6r4c6-6r4c2=6r2c2-6r2c4=,6r4c6=6r1c6=6r1c6</mong></span></dt><dd><p>A five (odd numbered) node Strong X loop where 6r1c6 pivots on two strong links, resulting in
-its placement.  Note the trailing = specifier, indicating a strong link looping back to the
+<dt><span class="raw-html"><mong>6r1c6=6r4c6-6r4c2=6r2c2-6r2c4=,6r4c6=6r1c6=6r1c6</mong></span></dt><dd><p>A five (odd numbered) node Strong X-Loop where 6r1c6 pivots on two strong links, resulting in
+its placement.  Note the trailing = specifier indicating a strong link looping back to the
 start.</p>
 </dd>
 </dl>
@@ -737,7 +741,7 @@ see both ends of the chain, resulting in its elimination.</p>
 </dd>
 <dt><strong>XY-Loops</strong></dt><dd><dl class="simple">
 <dt><span class="raw-html"><mong>(4=7)r1c7~(7=9)r8c7~(9=8)r9c9~(8=4)r7c7~,9r9c9-9r8c9-9r8c7</mong></span></dt><dd><p>An eight node XY Loop.  Each cell only contains two nodes, a bi-value cell.  The loop causes
-all the links between cells to also become strong.  9r8c9 can see both an odd numbered link
+all the links between cells to become strong.  9r8c9 can see both an odd numbered link
 9r9c9 and an even numbered link 9r8c7, resulting in its elimination. Note the trailing - or ~
 specifier back to the start indicating the chain loops back on itself with a weak link or
 masquerading as weak link respectively.</p>
@@ -746,57 +750,55 @@ masquerading as weak link respectively.</p>
 </dd>
 <dt><strong>Remote Pairs</strong></dt><dd><dl class="simple">
 <dt><span class="raw-html"><mong>(2=3)(r4c5~r4c9~r9c9~r7c7~r6c7),3r4c5-3r7c5-3r7c7</mong></span></dt><dd><p>A 5 Cell, 10 Node Net made up of same valued bi-value cells. 3r7c5 Can see both an odd
-and even numbered Ccell in the net and can be eliminated.</p>
+and even parity Ccell in the net and can be eliminated.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>W-Wings</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>(8=9)r4c3~9r4c4=9r5c4~(9=8)r5c7,8r4c3-8r4c8-8r5c7</mong></span></dt><dd><p>A <a class="reference internal" href="../07-glossary.html#term-Conjugate-Pair"><span class="xref std std-term">Conjugate Pair</span></a> at the ends of a chain with the same <a class="reference internal" href="../07-glossary.html#term-End-Node"><span class="xref std std-term">End Node</span></a> candidate value
+and the inner conjugate pair nodes see each other through an interior <a class="reference internal" href="../07-glossary.html#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a>.
+This pattern forms a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a> between the End Nodes. 8r4c8 can see both ends
+resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>AI-Chains</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>2r4c8=2r4c9-7r4c9=7r8c9-7r9c7=7r9c5-2r9c5=2r8c5,2r4c8-2r8c8-2r8c5</mong></span></dt><dd><dl class="simple">
+<dt>An 8 node AI-Chain forming a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a> between its ends, 2r4c8 and 2r8c5.  2r8c8 can</dt><dd><p>see both ends, resulting in its elimination.</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p><strong>W-Wings</strong></p>
-<p><strong>AI-Chains Type 1</strong></p>
-<p><strong>AI-Chains Type 2</strong></p>
-<p><strong>AI-Chains Type 3</strong></p>
-<p><strong>Even AI-Loops</strong></p>
-<p><strong>Strong AI-Loops</strong></p>
-<p><strong>Group Linked Chains and Loops</strong></p>
-<p><strong>Strong Linked Net Type 1</strong></p>
-<p><strong>Strong Linked Net Type 2</strong></p>
-<p><strong>Strong Linked Net Type 3</strong></p>
-<p><strong>Chained Strong Linked Nets</strong></p>
-</section>
-<section id="unlocked-sets">
-<h3><span class="section-number">2.2.2.6. </span>Unlocked Sets<a class="headerlink" href="#unlocked-sets" title="Permalink to this heading">#</a></h3>
-<p><strong>Unlocked Set Chains</strong></p>
-<p><strong>Unlocked Set Loops</strong></p>
-<p><strong>Sue de Coq</strong></p>
-</section>
-<section id="hybrid-chains">
-<h3><span class="section-number">2.2.2.7. </span>Hybrid Chains<a class="headerlink" href="#hybrid-chains" title="Permalink to this heading">#</a></h3>
-<p><strong>Hidden Subset Loops</strong></p>
-<p><strong>Mixed Pattern Chains</strong></p>
-</section>
-<section id="uniqueness">
-<h3><span class="section-number">2.2.2.8. </span>Uniqueness<a class="headerlink" href="#uniqueness" title="Permalink to this heading">#</a></h3>
-<p><strong>BUG+1</strong></p>
-<p><strong>Unique Rectangles</strong></p>
-<p><strong>Hidden Rectangles</strong></p>
-<p><strong>Avoidable Rectangles</strong></p>
-<p><strong>Extended Rectangles</strong></p>
-</section>
-<section id="searching">
-<h3><span class="section-number">2.2.2.9. </span>Searching<a class="headerlink" href="#searching" title="Permalink to this heading">#</a></h3>
-<p><strong>Digit Forcing Chains</strong></p>
-<p><strong>Nisho Forcing Chains</strong></p>
-<p><strong>Cell Forcing Chains</strong></p>
-<p><strong>House Forcing Chains</strong></p>
-<p><strong>Bowman’s Bingo</strong></p>
-<p><strong>Unaligned Subset Exclusions</strong></p>
-<p><strong>Pattern Overlays</strong></p>
-</section>
-<section id="super-human-patterns">
-<h3><span class="section-number">2.2.2.10. </span>Super Human Patterns<a class="headerlink" href="#super-human-patterns" title="Permalink to this heading">#</a></h3>
-<p><strong>Multi-Fish</strong></p>
-<p><strong>Exocets</strong></p>
-<p><strong>Multi Sector Locked Sets</strong></p>
+</dd>
+<dt><strong>Even AI-Loops</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong style="overflow: visible;">1r4c5=1r6c5-1r6c8=3r6c8-3r4c7=3r4c5-,1r4c5-5r4c5-3r4c5,1r4c5-8r4c5-3r4c5,3r4c7-3r5c7-3r6c8,3r4c7-3r5c8-3r6c8,1r6c8-1r6c3-1r6c5</mong></span></dt><dd><p>A 6 node AI-Loop, strengthening the existing weak links.  All Nodes that can see both an odd
+and even parity link can be eliminated, such as 58r4c5, 3r5c78, and 1r6c3.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Strong AI-Loops</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>1r8c9=1r1c9-6r1c9=6r1c8-3r1c8=3r7c8-3r8c9=,1r1c9=1r8c9=1r8c9</mong></span></dt><dd><p>A seven (odd numbered) node Strong AI-Loop where 3r8c9 pivots on two strong links, resulting in
+its placement.  Note the trailing = specifier indicating a strong link looping back to the
+start.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Group Linked Chains and Loops</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong>8r3c23=8r2c3-8r8c3=8r8c9,8r3c23-8r3c9-8r8c9</mong></span></dt><dd><p>An group linked Turbot fish where the <a class="reference internal" href="../07-glossary.html#term-End-Node"><span class="xref std std-term">End Node</span></a>s 8r3c23 and 8r8c9 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust
+Link</span></a>.  8r3c9 can see both ends resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Strong Linked Net</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><mong style="overflow: visible;">5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e=6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},9r1c9-9r5c9e,6r1c9-6r1c6e</mong></span></dt><dd><p>Note the braces grouping multiple subnet links to a parent.  Also note the net level parity appended to each
+Ccell.  All the candidates in a cell outside the net see even nodes (9r1c9-9r5c9e, 6r1c9-6r1c6e).  If Even nodes
+are True, then none of the candidates in that outside cell can be True.  This is a contradiction, the Truth set
+for that cell must contain at least one candidate.  Therefore, all the Even Parity Nodes are False and can be
+eliminated.  And, by implication, all the Odd Parity Nodes are True and can be placed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </section>
 <section id="candidate-diagrams">
@@ -1035,7 +1037,7 @@ Triple cannot be True and can be eliminated.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1071,17 +1073,12 @@ Triple cannot be True and can be eliminated.</p>
 <li><a class="reference internal" href="#candidate-dressing">2.2.1.6. Candidate Dressing</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sudoku-language-semantics">2.2.2. Sudoku Language Semantics</a><ul>
+<li><a class="reference internal" href="#syntax-examples">2.2.2. Syntax Examples</a><ul>
 <li><a class="reference internal" href="#singles">2.2.2.1. Singles</a></li>
 <li><a class="reference internal" href="#straight-subsets">2.2.2.2. (Straight) Subsets</a></li>
 <li><a class="reference internal" href="#fish">2.2.2.3. Fish</a></li>
 <li><a class="reference internal" href="#bent-subsets">2.2.2.4. Bent Subsets</a></li>
 <li><a class="reference internal" href="#inference-chains-loops-and-nets">2.2.2.5. Inference Chains, Loops and Nets</a></li>
-<li><a class="reference internal" href="#unlocked-sets">2.2.2.6. Unlocked Sets</a></li>
-<li><a class="reference internal" href="#hybrid-chains">2.2.2.7. Hybrid Chains</a></li>
-<li><a class="reference internal" href="#uniqueness">2.2.2.8. Uniqueness</a></li>
-<li><a class="reference internal" href="#searching">2.2.2.9. Searching</a></li>
-<li><a class="reference internal" href="#super-human-patterns">2.2.2.10. Super Human Patterns</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#candidate-diagrams">2.2.3. Candidate Diagrams</a><ul>

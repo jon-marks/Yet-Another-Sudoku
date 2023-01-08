@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Subsets
 
+.. _found_subsets:
+
 *******
 Subsets
 *******
@@ -9,29 +11,58 @@ Subsets refer to 'n' cell by 'n' candidate grouping, where each cell in the grou
 of “n” > 4, a reciprocal subset relationship of 9 – 'n' candidate values exists, so it is
 unnecessary to look for subsets larger than 4.
 
-A “Straight Subset” (also simply a “Subset”) occurs when the grouping of Ccells is found in a
-single house/group.  “Straight” is a bit of misnomer as the cells may not be in a straight line if
-the house is Box.  A “Bent subset” occurs when this grouping of Ccells occur in two intersecting
-houses/groups with at least one cell in the intersection. At least three cells are required to make
-the bend. The pattern must describe at least two arms about a pivot.
+Exposed or Hidden
+=================
 
-Subsets can be exposed or hidden:
+Subsets can be Exposed or Hidden:
 
 *  An exposed subset is where 'n' candidate values are the only values occurring between 2 and
    'n' times in the 'n' cells.
 *  A hidden subset is where 'n' candidate values can are confined to 'n' cells, but are not
    necessarily the only candidates in those cells.
 
-The logic behind resolving Straight Exposed Subsets is that the 'n' candidates can only be True in
-one of the 'n' cells they collectively only occupy.  Therefore, they cannot be True outside those 'n'
-cells, and any of the 'n' candidates outside the 'n' cells can be eliminated.
+Unbent or Bent
+================
 
-As the 'n' candidates are confined to only the 'n' cells in a Straight Hidden Subset, those 'n'
-candidates form 'A Truth' in those 'n' cells. Therefore, any additional candidates in those 'n'
-cells cannot be True and can be eliminated.
+Subsets can be Unbent or Bent:
 
-The logic for :ref:`Exposed <exp-str-ssets1>` and :ref:`Hidden <hid-str-ssets1>` Straight subsets
-can be proven with a bit more algebraic rigour using :ref:`Base and Cover Sets <bsets-and-csets1>`
+*  An Unbent Subsets, simply called a "Subset", refers to a collection of 'n' Candidates in 'n'
+   Cells in a single :term:`Group`.
+*  A “Bent subset” is a collection of 'n' Candidates in n Cells spanning the union of two
+   :term:`Group`\s with at least one cell in the intersection.
 
-Bent Subset patterns are somewhat more varied and complex to identify and resolve, and are
-considered in depth :ref:`here <bent-subsets-ch1>`.
+Unbent Subsets
+==============
+
+In :ref:`Unbent Exposed Subsets <hsp_subsets>`, the 'n' candidates can each only be True in one of
+the 'n' cells in a Group they collectively only occupy.  That is the n Candidates are
+:term:`A Truth` for those n cells. Therefore, they cannot be True outside those 'n' cells.  Any
+occurrence of those 'n' candidates outside the 'n' cells can be eliminated.
+
+In :ref:`Unbent Hidden Subsets <hsp_subsets>`, the 'n' candidates are confined to only 'n' cells in
+a Group, forming :term:`A Truth`.  Because of this 'Truth', any other candidates in those four cells
+can be eliminated.
+
+:ref:`Base Sets and Cover Sets <found_bsets_and_csets>` develops an algebra to verify the logic of
+these Subset patterns.
+
+:ref:`Bent Exposed Subsets <hsp_bent_exposed_subsets>` are a special case of
+:ref:`Unlocked Sets <found_unlocked_sets>`, where two :term:`ULS`\s are linked in a chain with a
+single :term:`Unrestricted Candidate`.
+
+Grouped Bent Subsets
+====================
+
+:ref:`Grouped Bent Subsets <hsp_grouped_bent_subsets>` are also known as Almost Locked Candidates.
+If a set of candidates are found in a line box intersection such that they can form an Exposed
+Subset in the one Group and a Hidden Subset in the other Group, same value candidates can be
+eliminated from other cells in the Exposed Group and from those cells forming the Hidden Subset in
+the Hidden Group.
+
+Bent Hidden Subsets
+===================
+
+TODO:
+Put most of the verbiage from Bent hidden subsets in HSP (odt) here. Only how to solve the Bent
+Hidden Triple in web HSP
+

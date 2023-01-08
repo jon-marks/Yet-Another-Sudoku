@@ -174,7 +174,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
@@ -238,9 +238,9 @@
           <section id="glossary-and-abbreviations">
 <h1><span class="section-number">7. </span>Glossary and Abbreviations<a class="headerlink" href="#glossary-and-abbreviations" title="Permalink to this heading">#</a></h1>
 <p><a class="reference external" href="https://www.sudocue.net/glossary.php">https://www.sudocue.net/glossary.php</a> and <a class="reference external" href="http://sudopedia.enjoysudoku.com/Terminology.html">http://sudopedia.enjoysudoku.com/Terminology.html</a></p>
-<dl class="simple glossary">
-<dt id="term-A-Truth"><strong>A Truth</strong><a class="headerlink" href="#term-A-Truth" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s where at least one of the (yet to be
-determined) elements is True.</p>
+<dl class="glossary">
+<dt id="term-A-Truth"><strong>A Truth</strong><a class="headerlink" href="#term-A-Truth" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s that could possibly be <a class="reference internal" href="#term-The-Truth"><span class="xref std std-term">The Truth</span></a>.
+That is one of the elements in the set is the actual solved value for that <a class="reference internal" href="#term-Cell"><span class="xref std std-term">Cell</span></a></p>
 </dd>
 <dt id="term-AI"><strong>AI</strong><a class="headerlink" href="#term-AI" title="Permalink to this term">#</a></dt><dd><p>Alternating Inference - A patterns where adjacent links between nodes alternate strong and
 weak.</p>
@@ -267,6 +267,9 @@ Also known as a Block.</p>
 </dd>
 <dt id="term-Buddy"><strong>Buddy</strong><a class="headerlink" href="#term-Buddy" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Peer"><span class="xref std std-term">Peer</span></a>.</p>
 </dd>
+<dt id="term-Candidate"><strong>Candidate</strong><a class="headerlink" href="#term-Candidate" title="Permalink to this term">#</a></dt><dd><p>A possible solved value for an unsolved cell.  This definition has a finer distinction in that
+it is only a reference to the candidate value, not to any cell location on the <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
+</dd>
 <dt id="term-Ccell"><strong>Ccell</strong><a class="headerlink" href="#term-Ccell" title="Permalink to this term">#</a></dt><dd><p>A three dimensional tuple uniquely identifying a candidate element by value, row,
 and column in a Sudoku Grid.</p>
 </dd>
@@ -285,11 +288,11 @@ Also known as a Band.</p>
 <dt id="term-Column"><strong>Column</strong><a class="headerlink" href="#term-Column" title="Permalink to this term">#</a></dt><dd><p>A vertical line of 9 cells in a Sudoku <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
 </dd>
 <dt id="term-Conjugate-Pair"><strong>Conjugate Pair</strong><a class="headerlink" href="#term-Conjugate-Pair" title="Permalink to this term">#</a></dt><dd><p>The only two same value candidates in a house forming a <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a>.  This is a
-reference to the candidates not the links – a subtle distinction.</p>
+reference to the candidates not the links between them – a subtle distinction.</p>
 </dd>
 <dt id="term-Eliminations"><strong>Eliminations</strong><a class="headerlink" href="#term-Eliminations" title="Permalink to this term">#</a></dt><dd><p>Removing Ccells in puzzles that have been determined impossible to be True.</p>
 </dd>
-<dt id="term-Element"><strong>Element</strong><a class="headerlink" href="#term-Element" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is a member of a Set in a pattern.</p>
+<dt id="term-Element"><strong>Element</strong><a class="headerlink" href="#term-Element" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is a member of a <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a>.</p>
 </dd>
 <dt id="term-End-Node"><strong>End Node</strong><a class="headerlink" href="#term-End-Node" title="Permalink to this term">#</a></dt><dd><p>In an AI-Chain of Nodes, the End Nodes mark the start and end of Chain.</p>
 </dd>
@@ -311,11 +314,28 @@ Also known as a Group, Sector, or Unit.</p>
 </dd>
 <dt id="term-Link"><strong>Link</strong><a class="headerlink" href="#term-Link" title="Permalink to this term">#</a></dt><dd><p>A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
 a <a class="reference internal" href="#term-Weak-Link"><span class="xref std std-term">Weak Link</span></a>, a <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a> or a <a class="reference internal" href="#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>.
-See <a class="reference internal" href="02-foundation/01-core-concepts.html#premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a></p>
+See <a class="reference internal" href="02-foundation/01-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a></p>
 </dd>
 <dt id="term-Loop"><strong>Loop</strong><a class="headerlink" href="#term-Loop" title="Permalink to this term">#</a></dt><dd><p>An (<a class="reference internal" href="#term-AI"><span class="xref std std-term">AI</span></a>) <a class="reference internal" href="#term-Chain"><span class="xref std std-term">Chain</span></a> that loops back on itself closing the chain.</p>
 </dd>
 <dt id="term-Node"><strong>Node</strong><a class="headerlink" href="#term-Node" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is linked to other nodes in a pattern.</p>
+</dd>
+<dt id="term-Parity"><strong>Parity</strong><a class="headerlink" href="#term-Parity" title="Permalink to this term">#</a></dt><dd><p>The collective pronoun for the terms Odd and Even, which are the parity of the sequence
+numbers assigned to a <a class="reference internal" href="#term-SLN"><span class="xref std std-term">SLN</span></a> or <a class="reference internal" href="#term-SLC"><span class="xref std std-term">SLC</span></a>.</p>
+<p>In an SLC, applying the premise that one end is True, consecutive nodes will alternate
+True / False until the chain end is reached.  Similarly, applying the premise that that end is
+False, consecutive nodes will alternate False / True until the chain end is reached.</p>
+<p>In an SLN, applying the premise that the root is True, nodes at consecutive node
+levels will alternate True / False through to all the leaves.  Similarly, applying the premise
+that the root is False, nodes at consecutive node levels will alternate False / True through
+to all the leaves.</p>
+<p>Therefore, in either an SLC or SLN, adjacent Nodes alternate in <a class="reference internal" href="#term-State"><span class="xref std std-term">State</span></a>. Although the
+State of a Node may not be known, its neighbours will always have opposing State.
+Consecutively numbering the Nodes in an SLC or Node levels in an SLN, the numbers, and hence
+the Nodes will either have Odd or Even parity.</p>
+<p>Parity (Odd or Even) is used to represent State where the actual State value (True or False)
+is not known.  All Nodes in an SLN with the same Parity will have the same State, even though
+the actual value of that State is yet to be determined.</p>
 </dd>
 <dt id="term-Pattern"><strong>Pattern</strong><a class="headerlink" href="#term-Pattern" title="Permalink to this term">#</a></dt><dd><p>An arrangement of Ccells that have the potential of yielding eliminations or placements</p>
 </dd>
@@ -326,6 +346,9 @@ each other.</p>
 </dd>
 <dt id="term-Puzzle"><strong>Puzzle</strong><a class="headerlink" href="#term-Puzzle" title="Permalink to this term">#</a></dt><dd><p>A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
 givens and some solved values.</p>
+</dd>
+<dt id="term-Restricted-Candidate-Set"><strong>Restricted Candidate Set</strong><a class="headerlink" href="#term-Restricted-Candidate-Set" title="Permalink to this term">#</a></dt><dd><p>In <a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>, a Restricted Candidate Set is that set of Candidates that
+can <a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a> all instances of its value in the Unlocked Sets pattern.</p>
 </dd>
 <dt id="term-Robust-Link"><strong>Robust Link</strong><a class="headerlink" href="#term-Robust-Link" title="Permalink to this term">#</a></dt><dd><p>An inference between two Ccells at the ends of a Strongly Ended Alternating Inference Chain.
 Neither end can be simultaneously False, and at least one end is always True</p>
@@ -339,21 +362,41 @@ end links are both Strong.  The ends of a SE-AIC form a <a class="reference inte
 </dd>
 <dt id="term-See"><strong>See</strong><a class="headerlink" href="#term-See" title="Permalink to this term">#</a></dt><dd><p><a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a>s that have an <a class="reference internal" href="#term-Link"><span class="xref std std-term">Link</span></a> between them are said to see each other.</p>
 </dd>
-<dt id="term-Set"><strong>Set</strong><a class="headerlink" href="#term-Set" title="Permalink to this term">#</a></dt><dd><p>A grouping of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s in a <a class="reference internal" href="#term-Pattern"><span class="xref std std-term">pattern</span></a>. Often the grouping of
-elements that form <a class="reference internal" href="#term-A-Truth"><span class="xref std std-term">A Truth</span></a>.</p>
+<dt id="term-Set"><strong>Set</strong><a class="headerlink" href="#term-Set" title="Permalink to this term">#</a></dt><dd><p>A grouping of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s in a <a class="reference internal" href="#term-Pattern"><span class="xref std std-term">pattern</span></a> that form <a class="reference internal" href="#term-A-Truth"><span class="xref std std-term">A Truth</span></a>.
+That is one of the Elements in that Set is <a class="reference internal" href="#term-The-Truth"><span class="xref std std-term">The Truth</span></a>.</p>
 </dd>
-<dt id="term-SLC"><strong>SLC</strong><a class="headerlink" href="#term-SLC" title="Permalink to this term">#</a></dt><dd><p>Strong Link Chain.  A Chain where all the links between Nodes are strong. A SLC is a special
+<dt id="term-SLC"><strong>SLC</strong><a class="headerlink" href="#term-SLC" title="Permalink to this term">#</a></dt><dd><p>Strongly Link Chain.  A Chain where all the links between Nodes are strong. A SLC is a special
 case of an AIC where every alternate link is masquerading as a Weak Link.</p>
 </dd>
-<dt id="term-SLN"><strong>SLN</strong><a class="headerlink" href="#term-SLN" title="Permalink to this term">#</a></dt><dd><p>Strong Link Net.  A Net where all the links between Nodes are strong.</p>
+<dt id="term-SLN"><strong>SLN</strong><a class="headerlink" href="#term-SLN" title="Permalink to this term">#</a></dt><dd><p>Strongly Link Net.  A Net where all the links between Nodes are strong.</p>
+</dd>
+<dt id="term-State"><strong>State</strong><a class="headerlink" href="#term-State" title="Permalink to this term">#</a></dt><dd><p>Collective pronoun for the terms True and False, which are the conditions of a Ccell in a
+Cell.  A Ccell can either be True or False in a Cell.</p>
 </dd>
 <dt id="term-Strong-Link"><strong>Strong Link</strong><a class="headerlink" href="#term-Strong-Link" title="Permalink to this term">#</a></dt><dd><p>An inference between two Ccells where neither can be simultaneously False, nor simultaneously
 True.  If one Ccell is True, the other is False and vice-versa.</p>
 </dd>
-<dt id="term-Super-Node"><strong>Super-Node</strong><a class="headerlink" href="#term-Super-Node" title="Permalink to this term">#</a></dt><dd><p>The set of <a class="reference internal" href="02-foundation/05-chains-loops-nets.html#super-node"><span class="std std-ref">‘same parity/state nodes’ in a Strong Linked Chain</span></a>, Net or Loop, that is strongly linked to
-the opposing Super-Nodes.</p>
+<dt id="term-Super-Node"><strong>Super-Node</strong><a class="headerlink" href="#term-Super-Node" title="Permalink to this term">#</a></dt><dd><p>The set of <a class="reference internal" href="02-foundation/05-chains-loops-nets.html#super-node"><span class="std std-ref">‘same parity/state nodes’ in a Strong Linked Chain</span></a>, Net or
+Loop, that is strongly linked to the opposing Super-Nodes.</p>
+</dd>
+<dt id="term-The-Truth"><strong>The Truth</strong><a class="headerlink" href="#term-The-Truth" title="Permalink to this term">#</a></dt><dd><p>That <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a> of a <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a> that ultimately ends up being True, and is the Ccell
+that is placed in that Cell.</p>
 </dd>
 <dt id="term-Tower"><strong>Tower</strong><a class="headerlink" href="#term-Tower" title="Permalink to this term">#</a></dt><dd><p>A Column oriented <a class="reference internal" href="#term-Chute"><span class="xref std std-term">Chute</span></a>.</p>
+</dd>
+<dt id="term-Truth-Set"><strong>Truth Set</strong><a class="headerlink" href="#term-Truth-Set" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a>.</p>
+</dd>
+<dt id="term-ULS"><strong>ULS</strong><a class="headerlink" href="#term-ULS" title="Permalink to this term">#</a></dt><dd><p>Ulocked Set, see <a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a></p>
+</dd>
+<dt id="term-Unit"><strong>Unit</strong><a class="headerlink" href="#term-Unit" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-House"><span class="xref std std-term">House</span></a>.</p>
+</dd>
+<dt id="term-Unrestricted-Candidate"><strong>Unrestricted Candidate</strong><a class="headerlink" href="#term-Unrestricted-Candidate" title="Permalink to this term">#</a></dt><dd><p>In a Bent Exposed Subset, an Unrestricted Candidate is a Candidate that that cannot
+<a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a> all instances of its value in the Bent Subset grouping.  This is a special
+case of an <a class="reference internal" href="#term-Unrestricted-Candidate-Set"><span class="xref std std-term">Unrestricted Candidate Set</span></a> (<a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>) with a single
+member.</p>
+</dd>
+<dt id="term-Unrestricted-Candidate-Set"><strong>Unrestricted Candidate Set</strong><a class="headerlink" href="#term-Unrestricted-Candidate-Set" title="Permalink to this term">#</a></dt><dd><p>In <a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>, an Unrestricted Candidate Set is that set of Candidates that
+cannot <a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a> all instances of its value in the Unlocked Sets pattern.</p>
 </dd>
 <dt id="term-WE-AIC"><strong>WE-AIC</strong><a class="headerlink" href="#term-WE-AIC" title="Permalink to this term">#</a></dt><dd><p>Weak Link Ended Alternating Inference Chain.  A chain pattern of even Node count where the
 end links are both Strong.</p>
@@ -362,14 +405,10 @@ end links are both Strong.</p>
 is always False.  A Weak Link is formed by 3 or more same valued candidates in a
 house or three or more candidates in a cell.</p>
 </dd>
-<dt id="term-Unit"><strong>Unit</strong><a class="headerlink" href="#term-Unit" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-House"><span class="xref std std-term">House</span></a>.</p>
-</dd>
 </dl>
-<p>Peers/Buddies:  The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other.
-Intersection/Overlap:   Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block.
+<p>Intersection/Overlap:   Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block.
 Conflict/Contradiction/Error:   Two or more cells with the same value in a Group/House.
 Minimal Puzzle: A minimal puzzle is that where no more holes can be dug without the puzzle becoming invalid, that is having multiple solutions.
-Candidate:      A possible solved value for an unsolved cell.  This definition has a finer distinction in that is only a reference to the candidate value, irrespective of the Cell it is found in.  A Ccell defines a potential solved value for a cell by its value and Cell coordinates. In solving puzzles candidates are whittled away (eliminated) using logic techniques until only one candidate remains, which is the Solved value.
 Slink:  Strong link in a chain or a loop
 Wink    Weak link in a chain or a loop
 Ccell   Refers to a candidate value in a cell as a unique identifier comprising the candidate, row and column coordinates as a tuple.  For example 3r2c8 candidate 3 in row 2, column 8..  This reference is useful when referring to specific candidates in specific cells, and is used extensively in the explanation of many logic techniques and their algorithms.   In solving puzzles Ccells are whittled away (eliminated) using logic techniques until only one Ccell remains as the solution for that cell.
@@ -413,7 +452,7 @@ Colbox  The intersection of a column and box comprising only three cells.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

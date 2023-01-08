@@ -174,7 +174,7 @@
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">3. Human Solvable Patterns</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01-singles.html">3.1. Singles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
@@ -236,18 +236,20 @@
         </div>
         <article role="main">
           <section id="fish-patterns">
-<h1><span class="section-number">3.4. </span>Fish Patterns<a class="headerlink" href="#fish-patterns" title="Permalink to this heading">#</a></h1>
-<p>Row-Column Subset patterns rely on Base-Set / Cover Set Logic.  These patterns isolate the intersections of single candidates over a subset of houses/groups.  Fish patterns have House Cover Sets, where-as subset patterns have Cell Cover Sets, as discussed in Base-Set/Cover Set Basics.  It is also possible to have a box as a group in the base set and or cover set patterns.</p>
-<dl class="simple">
-<dt>Fish are named according to their order, order defines the number of base sets and cover sets for that fish.</dt><dd><ul class="simple">
-<li><p>2 ==&gt; X-Wing, 2 base sets of order two with 2 cover-sets.</p></li>
-<li><p>3 ==&gt; Swordfish, 3 base sets of order three with 3 cover-sets.</p></li>
-<li><p>4 ==&gt; Jellyfish, 4 base sets of order four with 4 cover sets.</p></li>
-</ul>
-</dd>
-</dl>
-<p>The order of a base-set refers to the number of times the candidate appears in each base line(set).</p>
-<p>Practically it is not necessary to look higher than 4 for, because for orders higher than four there is a reciprocal/complementary pattern of (9 – order) order pattern that can be found.</p>
+<span id="hsp-fish"></span><h1><span class="section-number">3.4. </span>Fish Patterns<a class="headerlink" href="#fish-patterns" title="Permalink to this heading">#</a></h1>
+<p>Row-Column Subset patterns rely on Base-Set / Cover Set Logic.  These patterns isolate the
+intersections of single candidates over a subset of <a class="reference internal" href="../07-glossary.html#term-Group"><span class="xref std std-term">Group</span></a>s.  As discussed in <a class="reference internal" href="../02-foundation/04-base-cover-sets.html#found-bsets-and-csets"><span class="std std-ref">Base
+Sets and Cover Sets</span></a> Fish patterns have Group Cover Sets, whereas Subset patterns
+have Cell Cover Sets.  It is also possible to have a box as a group in the base set and or cover set
+patterns.</p>
+<p>Fish are named according to their order, order defines the base set and cover set size for that
+fish.
+•   2 ==&gt; X-Wing, 2 base sets of order two with 2 cover-sets.
+•   3 ==&gt; Swordfish, 3 base sets of order three with 3 cover-sets.
+•   4 ==&gt; Jellyfish, 4 base sets of order four with 4 cover sets.</p>
+<p>The order of a base-set refers to the times the candidate appears in each base-line (set).</p>
+<p>Practically it is unnecessary to look higher than 4 for, because for orders higher than four there is a reciprocal
+(9 – order) pattern that can be found.</p>
 <p>In principle,  base-sets refer to the existence of a candidate occurring “n” times in “n” non- overlapping houses/groups.  Each base-set is synonymous a house.  Franken Fish refer to fish where one or more of the base-sets are blocks/boxes.  All other fish have base-sets that are either rows or columns.  Because the rows or columns are parallel it is impossible for them to overlap.</p>
 <p>In a fish pattern of order “n”, there exist “n” cover-sets (houses) that intersect the n base-sets. Fraken Fish refer to fish where only one or more base-sets are boxes.  Mutant Fish refer to fish where cover-sets  as well as base-sets can be boxes.  Franken and Mutant Fish patterns are difficult to recognise, and very often there are easier patterns to recognise that the Franken/Mutant fish for that step.</p>
 <p>Fish where both the base sets and cover sets are lines are much easier to recognise and can be quite productive.</p>
@@ -521,7 +523,7 @@ In B0, either Xr2c2 or Xr2c6 can be True.  Therefore if Xr2c2 is True, then Xr6c
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

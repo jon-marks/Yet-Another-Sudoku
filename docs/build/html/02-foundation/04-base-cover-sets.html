@@ -174,7 +174,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
@@ -236,7 +236,7 @@
         </div>
         <article role="main">
           <section id="base-sets-and-cover-sets">
-<span id="bsets-and-csets1"></span><h1><span class="section-number">2.4. </span>Base Sets and Cover Sets<a class="headerlink" href="#base-sets-and-cover-sets" title="Permalink to this heading">#</a></h1>
+<span id="found-bsets-and-csets"></span><h1><span class="section-number">2.4. </span>Base Sets and Cover Sets<a class="headerlink" href="#base-sets-and-cover-sets" title="Permalink to this heading">#</a></h1>
 <dl>
 <dt>This section owes much credit to:</dt><dd><div class="line-block">
 <div class="line"><a class="reference external" href="https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm">https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm</a>, and</div>
@@ -412,7 +412,7 @@ in the Union of Base Sets.  The IF statement conditional expression ensures that
 Element are covered / Linked.  If all bases are not covered, then ‘A Truth’ will not be locked into
 the Cover Set intersections and the pattern is not viable.</p>
 <section id="cell-base-sets-and-house-cover-sets-exposed-subsets">
-<span id="exp-str-ssets1"></span><h3><span class="section-number">2.4.3.1. </span>Cell Base Sets and House Cover Sets – Exposed Subsets<a class="headerlink" href="#cell-base-sets-and-house-cover-sets-exposed-subsets" title="Permalink to this heading">#</a></h3>
+<span id="exp-ssets"></span><h3><span class="section-number">2.4.3.1. </span>Cell Base Sets and House Cover Sets – Exposed Subsets<a class="headerlink" href="#cell-base-sets-and-house-cover-sets-exposed-subsets" title="Permalink to this heading">#</a></h3>
 <p>Consider between 2 to ‘n’ different valued Ccells occurring in ‘n’ Cells.  The Cells are the Base
 Sets.  If a Ccell in a Base Set can see two or more instances of its peers in the other Base Sets,
 then those Ccells are Linked in a House Cover Set.  The Ccells lie in the intersection of the
@@ -425,7 +425,7 @@ intersection are also not part of “The Truth” and can be eliminated. This is
 Subsets.</p>
 </section>
 <section id="house-base-sets-and-cell-cover-sets-hidden-subsets">
-<span id="hid-str-ssets1"></span><h3><span class="section-number">2.4.3.2. </span>House Base Sets and Cell Cover Sets – Hidden Subsets<a class="headerlink" href="#house-base-sets-and-cell-cover-sets-hidden-subsets" title="Permalink to this heading">#</a></h3>
+<span id="hid-ssets1"></span><h3><span class="section-number">2.4.3.2. </span>House Base Sets and Cell Cover Sets – Hidden Subsets<a class="headerlink" href="#house-base-sets-and-cell-cover-sets-hidden-subsets" title="Permalink to this heading">#</a></h3>
 <p>Consider between 2 and ‘n’ different valued Ccells occurring between 2 and ‘n’ times in a House
 (Line or Box).  The Houses are the Base Sets.  If 2 or more of these Ccells are in the same cell,
 they are Linked, with the Cell forming the Cover Set.  If ‘n’ such Cover Set Cells can be found for
@@ -446,12 +446,13 @@ candidate.  The Cover Sets are also houses that see two or more candidates acros
 such that each occurrence of the Candidate in the Base Sets are covered.  According to Sudoku Rules,
 the Ccells in the intersections are the Truth.  Therefore, any other Candidates in the Cover Sets
 that are not part of the intersection (Truth) can be eliminated.
-This is the basis for all “Fish” and Fish Like patterns.</p>
+This is the basis for all <a class="reference internal" href="../03-human-solvable-patterns/04-fish.html#hsp-fish"><span class="std std-ref">“Fish”</span></a> and Fish Like patterns.</p>
+</section>
 </section>
 <section id="some-examples">
-<h3><span class="section-number">2.4.3.4. </span>Some Examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h3>
+<h2><span class="section-number">2.4.4. </span>Some Examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h2>
 <p>The above is a bit of a mind-bend to unpack on first blush.  However, with a few examples, practice
-and time, it will all make sense.</p>
+and time, it begins to all make sense.</p>
 <figure class="align-right" id="fig-hidden-pair-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/base-cover-eg2.png"><img alt="Sudoku Hidden Pair Example" src="../_images/base-cover-eg2.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
@@ -549,15 +550,14 @@ Elims = {5r2c6, 5r2c8, 5r8c8, 5r8c9}</pre>
 unnecessary to look beyond order of ‘n’ == 4 because for every pattern where ‘n’ &gt; 4, a similar
 reciprocal pattern can be found of order for order 9 – ‘n’.</p>
 </section>
-</section>
 <section id="the-concept-of-rank">
-<h2><span class="section-number">2.4.4. </span>The concept of Rank<a class="headerlink" href="#the-concept-of-rank" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.4.5. </span>The concept of Rank<a class="headerlink" href="#the-concept-of-rank" title="Permalink to this heading">#</a></h2>
 <div class="admonition-definition admonition">
 <p class="admonition-title">Definition</p>
 <p>Rank = The Number of Cover Sets – The Number of Base Sets.</p>
 </div>
 <section id="rank-0-patterns">
-<h3><span class="section-number">2.4.4.1. </span>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.4.5.1. </span>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Permalink to this heading">#</a></h3>
 <p>So far, only Rank 0 patterns have been examined where ‘n’ Cover Sets can cover all the Base Set
 Element in ‘n’ Base Sets.  Recapping:  A Truth can only occur once in each Base Set and once in each
 Cover Set, and the Truth lies in the intersection of the Base Sets with Cover Sets.  Because one of
@@ -577,7 +577,7 @@ as developed <a class="reference internal" href="#n-base-n-cover-sud-rule"><span
 </div>
 </section>
 <section id="rank-1-patterns">
-<h3><span class="section-number">2.4.4.2. </span>Rank 1 Patterns<a class="headerlink" href="#rank-1-patterns" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.4.5.2. </span>Rank 1 Patterns<a class="headerlink" href="#rank-1-patterns" title="Permalink to this heading">#</a></h3>
 <p>Rank 1 patterns require ‘n + 1’ Cover Set Links to cover/intersect all Base Set Elements in ‘n’ Base
 Sets to complete a potentially productive pattern.</p>
 <p>If more than ‘n’ Cover Sets are required to cover all Base Set Elements in ‘n’ Base Sets, then at
@@ -602,7 +602,7 @@ Sets can be eliminated.</p>
 <p><span></span></p>
 </section>
 <section id="rank-r-patterns">
-<h3><span class="section-number">2.4.4.3. </span>Rank R Patterns<a class="headerlink" href="#rank-r-patterns" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.4.5.3. </span>Rank R Patterns<a class="headerlink" href="#rank-r-patterns" title="Permalink to this heading">#</a></h3>
 <p>The concept of Rank can be extended beyond 1.</p>
 <p>A Rank 2 pattern requires ‘n + 2’ Cover Set Links to connect all Base Set Elements in ‘n’ Base
 Sets to complete a potentially productive pattern.</p>
@@ -648,8 +648,9 @@ Cover Sets can be eliminated.</p>
 the focus is on Rank 0 and Rank 1 patterns, a deeper understanding of Sudoku logic comes from
 appreciating the overall concept of Rank R patterns.</p>
 </section>
+</section>
 <section id="some-more-examples">
-<h3><span class="section-number">2.4.4.4. </span>Some More Examples<a class="headerlink" href="#some-more-examples" title="Permalink to this heading">#</a></h3>
+<h2><span class="section-number">2.4.6. </span>Some More Examples<a class="headerlink" href="#some-more-examples" title="Permalink to this heading">#</a></h2>
 <figure class="align-right" id="fig-finned-x-wing-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/finned-x-wing-eg1.png"><img alt="Sudoku Finned-X-Wing Example" src="../_images/finned-x-wing-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
@@ -757,7 +758,7 @@ Elims = {9r7c6}</pre>
 <p><span></span></p>
 <p>As a Two String Kite, if <span class="raw-html"><mong>9r6c6</mong> is False, <mong>9r6c2</mong> is True, <mong>9r4c2</mong> is
 False, and <mong>9r2c7</mong> is True.  Similarly walking the links in the opposite direction, if <mong>9r2c7</mong> is
-False, then <mong>9r6c6</mong></span> is True.  This pattern identifies a <a class="reference internal" href="01-core-concepts.html#robust-links"><span class="std std-ref">Robust link</span></a>
+False, then <mong>9r6c6</mong></span> is True.  This pattern identifies a <a class="reference internal" href="01-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust link</span></a>
 <span class="raw-html"><mong>9r6c6|~|9r7c2</mong></span>. Recall that at least one end of a Robust Link must be True, therefore any Ccell
 that can see both ends cannot be True and can be eliminated.  <span class="raw-html"><mong>9r7c6</mong>`</span> is such a Ccell which can
 be eliminated.</p>
@@ -813,9 +814,8 @@ into “A Truth”.  Therefore, any same valued (Z) Ccell that can see all the e
 <p>So as either an XY-Chain or a ULS-Chain, Zr1c8 and Zr6c4 can be eliminated, and Base/Cover Set
 logic can be used to verify the pattern resolution.</p>
 </section>
-</section>
 <section id="parting-comment">
-<h2><span class="section-number">2.4.5. </span>Parting Comment<a class="headerlink" href="#parting-comment" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.4.7. </span>Parting Comment<a class="headerlink" href="#parting-comment" title="Permalink to this heading">#</a></h2>
 <p>Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to contribute to the
 finding of productive patterns in a Puzzle.  Its true strength is in proving or verifying the
 resolution of any patterns.  I think this may be why Allan Barker calls this <a class="reference external" href="http://sudoku.allanbarker.com/sweb/general.htm">‘the General Logic of
@@ -852,7 +852,7 @@ Sudoku’</a></p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -885,17 +885,17 @@ Sudoku’</a></p>
 <li><a class="reference internal" href="#cell-base-sets-and-house-cover-sets-exposed-subsets">2.4.3.1. Cell Base Sets and House Cover Sets – Exposed Subsets</a></li>
 <li><a class="reference internal" href="#house-base-sets-and-cell-cover-sets-hidden-subsets">2.4.3.2. House Base Sets and Cell Cover Sets – Hidden Subsets</a></li>
 <li><a class="reference internal" href="#house-base-sets-and-house-cover-sets-fish-patterns">2.4.3.3. House Base Sets and House Cover Sets – Fish Patterns</a></li>
-<li><a class="reference internal" href="#some-examples">2.4.3.4. Some Examples</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-concept-of-rank">2.4.4. The concept of Rank</a><ul>
-<li><a class="reference internal" href="#rank-0-patterns">2.4.4.1. Rank 0 Patterns</a></li>
-<li><a class="reference internal" href="#rank-1-patterns">2.4.4.2. Rank 1 Patterns</a></li>
-<li><a class="reference internal" href="#rank-r-patterns">2.4.4.3. Rank R Patterns</a></li>
-<li><a class="reference internal" href="#some-more-examples">2.4.4.4. Some More Examples</a></li>
+<li><a class="reference internal" href="#some-examples">2.4.4. Some Examples</a></li>
+<li><a class="reference internal" href="#the-concept-of-rank">2.4.5. The concept of Rank</a><ul>
+<li><a class="reference internal" href="#rank-0-patterns">2.4.5.1. Rank 0 Patterns</a></li>
+<li><a class="reference internal" href="#rank-1-patterns">2.4.5.2. Rank 1 Patterns</a></li>
+<li><a class="reference internal" href="#rank-r-patterns">2.4.5.3. Rank R Patterns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#parting-comment">2.4.5. Parting Comment</a></li>
+<li><a class="reference internal" href="#some-more-examples">2.4.6. Some More Examples</a></li>
+<li><a class="reference internal" href="#parting-comment">2.4.7. Parting Comment</a></li>
 </ul>
 </li>
 </ul>

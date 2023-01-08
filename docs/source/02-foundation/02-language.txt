@@ -445,80 +445,76 @@ Inference Chains, Loops and Nets
       start.
 
 **Group Linked Chains and Loops**
-   :raw-html:`<mong>8r3c23=8r2c3-8r8c3=8r8c9,8r1c6-8r9c6-8r9c7,8r3c23-8r3c9-8r8c9</mong>`
-      An group linked Turbot fish where the :term:`End Nodes` 8r3c23 and 8r8c9 form a :term:`Robust
+   :raw-html:`<mong>8r3c23=8r2c3-8r8c3=8r8c9,8r3c23-8r3c9-8r8c9</mong>`
+      An group linked Turbot fish where the :term:`End Node`\s 8r3c23 and 8r8c9 form a :term:`Robust
       Link`.  8r3c9 can see both ends resulting in its elimination.
 
-
-
 **Strong Linked Net**
-   :raw-html:`<mong style="overflow: visible;">1r4c5=1r6c5-1r6c8=3r6c8-3r4c7=3r4c5-,1r4c5-5r4c5-3r4c5,1r4c5-8r4c5-3r4c5,3r4c7-3r5c7-3r6c8,3r4c7-3r5c8-3r6c8,1r6c8-1r6c3-1r6c5</mong>`
-      A 6 node AI-Loop, strengthening the existing weak links.  All Nodes that can see both an odd
-      and even parity link can be eliminated, such as 58r4c5, 3r5c78, and 1r6c3.
+   :raw-html:`<mong style="overflow: visible;">5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e=6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},9r1c9-9r5c9e,6r1c9-6r1c6e</mong>`
+      Note the braces grouping multiple subnet links to a parent.  Also note the net level parity appended to each
+      Ccell.  All the candidates in a cell outside the net see even nodes (9r1c9-9r5c9e, 6r1c9-6r1c6e).  If Even nodes
+      are True, then none of the candidates in that outside cell can be True.  This is a contradiction, the Truth set
+      for that cell must contain at least one candidate.  Therefore, all the Even Parity Nodes are False and can be
+      eliminated.  And, by implication, all the Odd Parity Nodes are True and can be placed.
 
-**Strong Linked Net Type 2**
 
 
-5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e=6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},9r1c9-9r5c9e,6r1c9-6r1c6e
-**Strong Linked Net Type 3**
 
-**Chained Strong Linked Nets**
-
-Unlocked Sets
--------------
-
-**Unlocked Set Chains**
-
-**Unlocked Set Loops**
-
-**Sue de Coq**
-
-Hybrid Chains
--------------
-
-**Hidden Subset Loops**
-
-**Mixed Pattern Chains**
-
-Uniqueness
-----------
-
-**BUG+1**
-
-**Unique Rectangles**
-
-**Hidden Rectangles**
-
-**Avoidable Rectangles**
-
-**Extended Rectangles**
-
-Searching
----------
-
-**Digit Forcing Chains**
-
-**Nisho Forcing Chains**
-
-**Cell Forcing Chains**
-
-**House Forcing Chains**
-
-**Bowman's Bingo**
-
-**Unaligned Subset Exclusions**
-
-**Pattern Overlays**
-
-Super Human Patterns
---------------------
-
-**Multi-Fish**
-
-**Exocets**
-
-**Multi Sector Locked Sets**
-
+..   Unlocked Sets
+..   -------------
+..
+..   **Unlocked Set Chains**
+..
+..   **Unlocked Set Loops**
+..
+..   **Sue de Coq**
+..
+..   Hybrid Chains
+..   -------------
+..
+..   **Hidden Subset Loops**
+..
+..   **Mixed Pattern Chains**
+..
+..   Uniqueness
+..   ----------
+..
+..   **BUG+1**
+..
+..   **Unique Rectangles**
+..
+..   **Hidden Rectangles**
+..
+..   **Avoidable Rectangles**
+..
+..   **Extended Rectangles**
+..
+..   Searching
+..   ---------
+..
+..   **Digit Forcing Chains**
+..
+..   **Nisho Forcing Chains**
+..
+..   **Cell Forcing Chains**
+..
+..   **House Forcing Chains**
+..
+..   **Bowman's Bingo**
+..
+..   **Unaligned Subset Exclusions**
+..
+..   **Pattern Overlays**
+..
+..   Super Human Patterns
+..   --------------------
+..
+..   **Multi-Fish**
+..
+..   **Exocets**
+..
+..   **Multi Sector Locked Sets**
+..
 
 Candidate Diagrams
 ==================

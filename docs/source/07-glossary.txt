@@ -9,8 +9,8 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 .. glossary::
 
    **A Truth**
-      A :term:`Set` of :term:`Ccell` :term:`Element`\s where at least one of the (yet to be
-      determined) elements is True.
+      A :term:`Set` of :term:`Ccell` :term:`Element`\s that could possibly be :term:`The Truth`.
+      That is one of the elements in the set is the actual solved value for that :term:`Cell`
 
    **AI**
       Alternating Inference - A patterns where adjacent links between nodes alternate strong and
@@ -46,6 +46,10 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Buddy**
       See :term:`Peer`.
+
+   **Candidate**
+      A possible solved value for an unsolved cell.  This definition has a finer distinction in that
+      it is only a reference to the candidate value, not to any cell location on the :term:`Grid`.
 
    **Ccell**
       A three dimensional tuple uniquely identifying a candidate element by value, row,
@@ -109,13 +113,35 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Link**
       A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
       a :term:`Weak Link`, a :term:`Strong Link` or a :term:`Robust Link`.
-      See :ref:`premises-and-inferences`
+      See :ref:`cc_premises_and_inferences`
 
    **Loop**
       An (:term:`AI`) :term:`Chain` that loops back on itself closing the chain.
 
    **Node**
       A :term:`Ccell` that is linked to other nodes in a pattern.
+
+   **Parity**
+      The collective pronoun for the terms Odd and Even, which are the parity of the sequence
+      numbers assigned to a :term:`SLN` or :term:`SLC`.
+
+      In an SLC, applying the premise that one end is True, consecutive nodes will alternate
+      True / False until the chain end is reached.  Similarly, applying the premise that that end is
+      False, consecutive nodes will alternate False / True until the chain end is reached.
+
+      In an SLN, applying the premise that the root is True, nodes at consecutive node
+      levels will alternate True / False through to all the leaves.  Similarly, applying the premise
+      that the root is False, nodes at consecutive node levels will alternate False / True through
+      to all the leaves.
+
+      Therefore, in either an SLC or SLN, adjacent Nodes alternate in :term:`State`. Although the
+      State of a Node may not be known, its neighbours will always have opposing State.
+      Consecutively numbering the Nodes in an SLC or Node levels in an SLN, the numbers, and hence
+      the Nodes will either have Odd or Even parity.
+
+      Parity (Odd or Even) is used to represent State where the actual State value (True or False)
+      is not known.  All Nodes in an SLN with the same Parity will have the same State, even though
+      the actual value of that State is yet to be determined.
 
    **Pattern**
       An arrangement of Ccells that have the potential of yielding eliminations or placements
@@ -130,6 +156,10 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Puzzle**
       A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
       givens and some solved values.
+
+   **Restricted Candidate Set**
+      In :ref:`found_unlocked_sets`, a Restricted Candidate Set is that set of Candidates that
+      can :term:`See` all instances of its value in the Unlocked Sets pattern.
 
    **Robust Link**
       An inference between two Ccells at the ends of a Strongly Ended Alternating Inference Chain.
@@ -150,14 +180,18 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Set**
       A grouping of :term:`Ccell` :term:`Element`\s in a :term:`pattern` that form :term:`A Truth`.
-      That is any one of the Elements in that Set can be :term:`The Truth`.
+      That is one of the Elements in that Set is :term:`The Truth`.
 
    **SLC**
-      Strong Link Chain.  A Chain where all the links between Nodes are strong. A SLC is a special
+      Strongly Link Chain.  A Chain where all the links between Nodes are strong. A SLC is a special
       case of an AIC where every alternate link is masquerading as a Weak Link.
 
    **SLN**
-      Strong Link Net.  A Net where all the links between Nodes are strong.
+      Strongly Link Net.  A Net where all the links between Nodes are strong.
+
+   **State**
+      Collective pronoun for the terms True and False, which are the conditions of a Ccell in a
+      Cell.  A Ccell can either be True or False in a Cell.
 
    **Strong Link**
       An inference between two Ccells where neither can be simultaneously False, nor simultaneously
@@ -174,6 +208,25 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Tower**
       A Column oriented :term:`Chute`.
 
+   **Truth Set**
+      See :term:`Set`.
+
+   **ULS**
+      Ulocked Set, see :ref:`found_unlocked_sets`
+
+   **Unit**
+      See :term:`House`.
+
+   **Unrestricted Candidate**
+      In a Bent Exposed Subset, an Unrestricted Candidate is a Candidate that that cannot
+      :term:`See` all instances of its value in the Bent Subset grouping.  This is a special
+      case of an :term:`Unrestricted Candidate Set` (:ref:`found_unlocked_sets`) with a single
+      member.
+
+   **Unrestricted Candidate Set**
+      In :ref:`found_unlocked_sets`, an Unrestricted Candidate Set is that set of Candidates that
+      cannot :term:`See` all instances of its value in the Unlocked Sets pattern.
+
    **WE-AIC**
       Weak Link Ended Alternating Inference Chain.  A chain pattern of even Node count where the
       end links are both Strong.
@@ -183,20 +236,16 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       is always False.  A Weak Link is formed by 3 or more same valued candidates in a
       house or three or more candidates in a cell.
 
-   **Unit**
-      See :term:`House`.
 
 
 
 
 
 
-Peers/Buddies:	The Peers/Buddies of a cell are the other cells in the combined row, column and block groups.  By Sudoku rules all Peers are have unique numbers, Peers cannot have the same values..  Peers/Buddies are said to each other.
 Intersection/Overlap:	Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block.
 Conflict/Contradiction/Error:	Two or more cells with the same value in a Group/House.
 Minimal Puzzle:	A minimal puzzle is that where no more holes can be dug without the puzzle becoming invalid, that is having multiple solutions. 
-Candidate:	A possible solved value for an unsolved cell.  This definition has a finer distinction in that is only a reference to the candidate value, irrespective of the Cell it is found in.  A Ccell defines a potential solved value for a cell by its value and Cell coordinates. In solving puzzles candidates are whittled away (eliminated) using logic techniques until only one candidate remains, which is the Solved value.
-Slink:	Strong link in a chain or a loop 
+Slink:	Strong link in a chain or a loop
 Wink	Weak link in a chain or a loop 
 Ccell	Refers to a candidate value in a cell as a unique identifier comprising the candidate, row and column coordinates as a tuple.  For example 3r2c8 candidate 3 in row 2, column 8..  This reference is useful when referring to specific candidates in specific cells, and is used extensively in the explanation of many logic techniques and their algorithms.   In solving puzzles Ccells are whittled away (eliminated) using logic techniques until only one Ccell remains as the solution for that cell. 
 Sudoku Rules	The collective term for: 

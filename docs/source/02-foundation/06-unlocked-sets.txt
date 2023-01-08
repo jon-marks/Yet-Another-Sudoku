@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Unlocked Sets
 
+.. _found_unlocked_sets:
+
 =============
 Unlocked Sets
 =============

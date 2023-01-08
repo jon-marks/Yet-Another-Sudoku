@@ -1,19 +1,27 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Fish
 
+.. _hsp_fish:
+
 *************
 Fish Patterns
 *************
 
-Row-Column Subset patterns rely on Base-Set / Cover Set Logic.  These patterns isolate the intersections of single candidates over a subset of houses/groups.  Fish patterns have House Cover Sets, where-as subset patterns have Cell Cover Sets, as discussed in Base-Set/Cover Set Basics.  It is also possible to have a box as a group in the base set and or cover set patterns.
+Row-Column Subset patterns rely on Base-Set / Cover Set Logic.  These patterns isolate the
+intersections of single candidates over a subset of :term:`Group`\s.  As discussed in :ref:`Base
+Sets and Cover Sets <found_bsets_and_csets>` Fish patterns have Group Cover Sets, whereas Subset patterns
+have Cell Cover Sets.  It is also possible to have a box as a group in the base set and or cover set
+patterns.
 
-Fish are named according to their order, order defines the number of base sets and cover sets for that fish.
-    • 2 ==> X-Wing, 2 base sets of order two with 2 cover-sets.
-    • 3 ==> Swordfish, 3 base sets of order three with 3 cover-sets.
-    • 4 ==> Jellyfish, 4 base sets of order four with 4 cover sets.
+Fish are named according to their order, order defines the base set and cover set size for that
+fish.
+•   2 ==> X-Wing, 2 base sets of order two with 2 cover-sets.
+•   3 ==> Swordfish, 3 base sets of order three with 3 cover-sets.
+•   4 ==> Jellyfish, 4 base sets of order four with 4 cover sets.
 
-The order of a base-set refers to the number of times the candidate appears in each base line(set).
+The order of a base-set refers to the times the candidate appears in each base-line (set).
 
-Practically it is not necessary to look higher than 4 for, because for orders higher than four there is a reciprocal/complementary pattern of (9 – order) order pattern that can be found.
+Practically it is unnecessary to look higher than 4 for, because for orders higher than four there is a reciprocal
+(9 – order) pattern that can be found.
 
 In principle,  base-sets refer to the existence of a candidate occurring “n” times in “n” non- overlapping houses/groups.  Each base-set is synonymous a house.  Franken Fish refer to fish where one or more of the base-sets are blocks/boxes.  All other fish have base-sets that are either rows or columns.  Because the rows or columns are parallel it is impossible for them to overlap.
 

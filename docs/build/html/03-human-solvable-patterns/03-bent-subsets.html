@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="3.4. Fish Patterns" href="04-fish.html" /><link rel="prev" title="3.2. (Straight) Subsets" href="02-subsets.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="3.4. Fish Patterns" href="04-fish.html" /><link rel="prev" title="3.2. Subsets" href="02-subsets.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
         <title>Yet another Sudoku | Human Solvable Patterns | Bent Subsets</title>
@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -174,7 +174,7 @@
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">3. Human Solvable Patterns</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01-singles.html">3.1. Singles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-subsets.html">3.2. (Straight) Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-fish.html">3.4. Fish Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
@@ -229,15 +229,75 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="bent-subsets">
-<span id="bent-subsets-ch1"></span><h1><span class="section-number">3.3. </span>Bent Subsets<a class="headerlink" href="#bent-subsets" title="Permalink to this heading">#</a></h1>
-<p>Bent Subsets stub.</p>
+<span id="hsp-bent-subsets"></span><h1><span class="section-number">3.3. </span>Bent Subsets<a class="headerlink" href="#bent-subsets" title="Permalink to this heading">#</a></h1>
+<p>Bent Subsets are a family of subsets where the grouping n candidates over n cells span the union of
+two groups with at least one candidate in the intersection.  The two groups can either be a
+<a class="reference internal" href="../07-glossary.html#term-Line"><span class="xref std std-term">Line</span></a> and a <a class="reference internal" href="../07-glossary.html#term-Box"><span class="xref std std-term">Box</span></a>, or two lines.</p>
+<section id="bent-exposed-subsets">
+<span id="hsp-bent-exposed-subsets"></span><h2><span class="section-number">3.3.1. </span>Bent Exposed Subsets<a class="headerlink" href="#bent-exposed-subsets" title="Permalink to this heading">#</a></h2>
+<p>Bent Exposed Subsets are often called Wings, but Wings is rather overloaded term in Sudoku-Speak.</p>
+<p>These patterns are formed by n Candidates over n Cells in the Union of two Groups where each Cell
+contains between 2 and n Candidates and at least one cell lies in the intersection of the two
+groups.</p>
+<section id="bent-exposed-triples">
+<h3><span class="section-number">3.3.1.1. </span>Bent Exposed_Triples<a class="headerlink" href="#bent-exposed-triples" title="Permalink to this heading">#</a></h3>
+<section id="y-wings">
+<h4><span class="section-number">3.3.1.1.1. </span>Y-Wings<a class="headerlink" href="#y-wings" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="xyz-wings">
+<h4><span class="section-number">3.3.1.1.2. </span>XYZ-Wings<a class="headerlink" href="#xyz-wings" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+<section id="bent-exposed-quads">
+<h3><span class="section-number">3.3.1.2. </span>Bent Exposed Quads<a class="headerlink" href="#bent-exposed-quads" title="Permalink to this heading">#</a></h3>
+<section id="wxyz-wings">
+<h4><span class="section-number">3.3.1.2.1. </span>WXYZ-Wings<a class="headerlink" href="#wxyz-wings" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+<section id="bent-exposed-quints-and-sexts">
+<h3><span class="section-number">3.3.1.3. </span>Bent Exposed Quints and Sexts<a class="headerlink" href="#bent-exposed-quints-and-sexts" title="Permalink to this heading">#</a></h3>
+</section>
+</section>
+<section id="grouped-bent-subsets">
+<span id="hsp-grouped-bent-subsets"></span><h2><span class="section-number">3.3.2. </span>Grouped Bent Subsets<a class="headerlink" href="#grouped-bent-subsets" title="Permalink to this heading">#</a></h2>
+<section id="grouped-bent-pairs">
+<h3><span class="section-number">3.3.2.1. </span>Grouped Bent Pairs<a class="headerlink" href="#grouped-bent-pairs" title="Permalink to this heading">#</a></h3>
+<section id="exposed-line-hidden-box-grouped-bent-pairs">
+<h4><span class="section-number">3.3.2.1.1. </span>Exposed Line, Hidden Box Grouped Bent Pairs<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-pairs" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="hidden-line-exposed-box-grouped-bent-pairs">
+<h4><span class="section-number">3.3.2.1.2. </span>Hidden Line, Exposed Box Grouped Bent Pairs<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-pairs" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+<section id="grouped-bent-triples">
+<h3><span class="section-number">3.3.2.2. </span>Grouped Bent Triples<a class="headerlink" href="#grouped-bent-triples" title="Permalink to this heading">#</a></h3>
+<section id="exposed-line-hidden-box-grouped-bent-triples">
+<h4><span class="section-number">3.3.2.2.1. </span>Exposed Line, Hidden Box Grouped Bent Triples<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="hidden-line-exposed-box-grouped-bent-triples">
+<h4><span class="section-number">3.3.2.2.2. </span>Hidden Line, Exposed Box Grouped Bent Triples<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+<section id="grouped-bent-quads">
+<h3><span class="section-number">3.3.2.3. </span>Grouped Bent Quads<a class="headerlink" href="#grouped-bent-quads" title="Permalink to this heading">#</a></h3>
+<section id="exposed-line-hidden-box-grouped-bent-quads">
+<h4><span class="section-number">3.3.2.3.1. </span>Exposed Line, Hidden Box Grouped Bent Quads<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+</section>
+<section id="hidden-line-exposed-box-grouped-bent-quads">
+<h4><span class="section-number">3.3.2.3.2. </span>Hidden Line, Exposed Box Grouped Bent Quads<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+</section>
+</section>
+</section>
+<section id="bent-hidden-triples">
+<h2><span class="section-number">3.3.3. </span>Bent Hidden Triples<a class="headerlink" href="#bent-hidden-triples" title="Permalink to this heading">#</a></h2>
+</section>
 </section>
 
         </article>
@@ -261,7 +321,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">3.2. </span>(Straight) Subsets</div>
+                <div class="title"><span class="section-number">3.2. </span>Subsets</div>
                 
               </div>
             </a>
@@ -269,7 +329,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Jonathan Marks, Commit Tag: V0.0.2:e1723b7*, Sun, 18 Sep 2022, 23:43:12
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -283,8 +343,58 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3.3. Bent Subsets</a><ul>
+<li><a class="reference internal" href="#bent-exposed-subsets">3.3.1. Bent Exposed Subsets</a><ul>
+<li><a class="reference internal" href="#bent-exposed-triples">3.3.1.1. Bent Exposed_Triples</a><ul>
+<li><a class="reference internal" href="#y-wings">3.3.1.1.1. Y-Wings</a></li>
+<li><a class="reference internal" href="#xyz-wings">3.3.1.1.2. XYZ-Wings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bent-exposed-quads">3.3.1.2. Bent Exposed Quads</a><ul>
+<li><a class="reference internal" href="#wxyz-wings">3.3.1.2.1. WXYZ-Wings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bent-exposed-quints-and-sexts">3.3.1.3. Bent Exposed Quints and Sexts</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grouped-bent-subsets">3.3.2. Grouped Bent Subsets</a><ul>
+<li><a class="reference internal" href="#grouped-bent-pairs">3.3.2.1. Grouped Bent Pairs</a><ul>
+<li><a class="reference internal" href="#exposed-line-hidden-box-grouped-bent-pairs">3.3.2.1.1. Exposed Line, Hidden Box Grouped Bent Pairs</a></li>
+<li><a class="reference internal" href="#hidden-line-exposed-box-grouped-bent-pairs">3.3.2.1.2. Hidden Line, Exposed Box Grouped Bent Pairs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grouped-bent-triples">3.3.2.2. Grouped Bent Triples</a><ul>
+<li><a class="reference internal" href="#exposed-line-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Line, Hidden Box Grouped Bent Triples</a></li>
+<li><a class="reference internal" href="#hidden-line-exposed-box-grouped-bent-triples">3.3.2.2.2. Hidden Line, Exposed Box Grouped Bent Triples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#grouped-bent-quads">3.3.2.3. Grouped Bent Quads</a><ul>
+<li><a class="reference internal" href="#exposed-line-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Line, Hidden Box Grouped Bent Quads</a></li>
+<li><a class="reference internal" href="#hidden-line-exposed-box-grouped-bent-quads">3.3.2.3.2. Hidden Line, Exposed Box Grouped Bent Quads</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bent-hidden-triples">3.3.3. Bent Hidden Triples</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
