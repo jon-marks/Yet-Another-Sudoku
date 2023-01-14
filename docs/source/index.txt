@@ -63,6 +63,16 @@ List of Figures
 |  :numref:`fig-gl-cd3` :ref:`fig-gl-cd3`
 |  :numref:`fig-gl-cd4` :ref:`fig-gl-cd4`
 |  :numref:`fig-empty-rect-cd1` :ref:`fig-empty-rect-cd1`
+|  :numref:`fig-y-wing-cd2` :ref:`fig-y-wing-cd2`
+|  :numref:`fig-y-wing-eg1` :ref:`fig-y-wing-eg1`
+|  :numref:`fig-y-wing-eg2` :ref:`fig-y-wing-eg2`
+|  :numref:`fig-xyz-wing-cd2` :ref:`fig-xyz-wing-cd2`
+|  :numref:`fig-xyz-wing-eg1` :ref:`fig-xyz-wing-eg1`
+|  :numref:`fig-beq-eg1` :ref:`fig-beq-eg1`
+|  :numref:`fig-beq-eg2` :ref:`fig-beq-eg2`
+|  :numref:`fig-beq-eg3` :ref:`fig-beq-eg3`
+|  :numref:`fig-bequint-eg1` :ref:`fig-bequint-eg1`
+|  :numref:`fig-besext-eg1` :ref:`fig-besext-eg1`
 
 ==============
 List of Tables

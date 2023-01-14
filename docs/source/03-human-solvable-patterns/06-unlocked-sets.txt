@@ -1,6 +1,6 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Unlocked Sets
 
-.. _hsp_unlocked-sets:
+.. _hsp_unlocked_sets:
 
 =============
 Unlocked Sets

@@ -331,7 +331,7 @@ A Skyscraper
    :raw-html:`<mong>+6+9+7.....+2..19+72.6+3..+3..679.9+12...6.+737+4+2+6.95.+8+65+7.+9.+2414+8+6+93+2+757.9.24..+6..+68.+7..+9||Skyscraper||1r1c6=1r5c6~1r5c9=1r3c9,1r1c6-1r1c7-1r3c9,1r1c6-1r1c8-1r3c9,1r1c6-1r3c4-1r3c9,1r1c6-1r3c5-1r3c9|r1c7-=1;r1c8-=1;r3c4-=1;r3c5-=1|+6+9+7+3+1+5+8+4+2+4+819+72+56+3+5+2+3+4+8679+19+12+5+4+86+3+737+4+2+6+195+8+8+65+7+3+9+1+2414+8+6+93+2+757+59+124+3+8+6+2+3+68+5+7+4+1+9</mong>`
 
 The chain in this example is :raw-html:`<mong>1r1c6=1r5c6~1r5c9=1r3c9</mong>`, source: `Hodoku
-<http://hodoku.sourceforge.net/en/tech_sdp.php#sk>`__.  This is another AI chain of four nodes with
+<http://hodoku.sourceforge.net/en/tech_sdp.php#sk>`_.  This is another AI chain of four nodes with
 strong end links.  Note that the centre link is a Strong Link masquerading as a Weak Link.
 
 Walking the chain exactly like the previous example, the indirect Robust link

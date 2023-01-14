@@ -30,6 +30,13 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Band**
       See :term:`Chute`.
 
+   **BEQ**
+      Abbreviation of :term:`Bent Exposed Quad`
+
+   **Bent Exposed Quad**
+      A pattern comprising four Candidates in four Cells spanning two Intersecting :term:`Group`\s,
+      where only one :term:`Unrestricted Candidate` exists.
+
    **Bi-value Cell**
       A cell on a Sudoku board containing only 2 candidate values.  A :term:`Strong Link` exists
       between these two candidates in that cell.
@@ -107,6 +114,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Interior Node**
       In an AI-Chain of Nodes, the Interior Nodes lie between the :term:`End Node`\s.
 
+   **Intersection**
+     The cells common to two Groups that intersect.
+
    **Line**
       Either a :term:`Row` or a :term:`Column`.
 
@@ -146,6 +156,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Pattern**
       An arrangement of Ccells that have the potential of yielding eliminations or placements
 
+   **Pattern Cell**
+      Reference to a Cell containing Candidates belonging to a pattern
+
    **Placement**
       Placing of a single solved value in a Cell.
 
@@ -156,6 +169,12 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Puzzle**
       A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
       givens and some solved values.
+
+   **Restricted Candidate**
+      In a Bent Exposed Subset, a Restricted Candidate is a Candidate that :term:`See`\s all
+      instances of its value in the Bent Subset grouping.  This is a special case of a
+      :term:`Restricted Candidate Set` (:ref:`found_unlocked_sets`) with a single
+      member.
 
    **Restricted Candidate Set**
       In :ref:`found_unlocked_sets`, a Restricted Candidate Set is that set of Candidates that
@@ -214,6 +233,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **ULS**
       Ulocked Set, see :ref:`found_unlocked_sets`
 
+   **Union**
+      All the Cells of two intersecting groups.
+
    **Unit**
       See :term:`House`.
 
@@ -236,7 +258,8 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       is always False.  A Weak Link is formed by 3 or more same valued candidates in a
       house or three or more candidates in a cell.
 
-
+   **YMMV**
+      "Your milage may vary". Your opinion or experience may be different to mine.
 
 
 

@@ -303,7 +303,7 @@ T_REMOTE_PAIR_T3            = 21 + T_SEE_OPPOSING_POLARITY_NODES
 T_Y_WING                    = 22
 T_W_WING                    = 23
 T_XYZ_WING                  = 24
-T_WXYZ_WING                 = 25
+# Spare T_WXYZ_WING                 = 25
 T_BENT_EXPOSED_QUAD         = 26
 T_BENT_EXPOSED_QUINT        = 27
 T_BENT_EXPOSED_SEXT         = 28
@@ -410,7 +410,9 @@ OP_LT   = 21  # "<"  Opening pointy bracket
 OP_GT   = 22  # ">"  Closing pointy bracket
 OP_SQBO = 23  # "["  Opening square bracket
 OP_SQBC = 24  # "]"  Closing square bracket
-OP_NR_OPS = 25
+OP_RES  = 25  # "/"  Restricted Candidate Dressing Prefix
+OP_URES = 26  # "\"  Unrestricted Candidate Dressing Prefix
+OP_NR_OPS = 27
 
 OP = ["",     # OP_NONE
       "!",    # OP_NEG   Negation or exclusion
@@ -436,8 +438,9 @@ OP = ["",     # OP_NONE
       "<",    # OP_LT    Opening pointing bracket
       ">",    # OP_GT    Closing pointing bracked
       "[",    # OP_SQBO  Opening square bracket
-      "]"]    # OP_SQBC  Closing square bracket
-
+      "]",    # OP_SQBC  Closing square bracket
+      "/",    # OP_RES   Restricted Candidate Dressing Prefix
+      "\\"]   # OP_URES  unrestricted Candidate Dressing Prefix
 
 PAR_O  = "o"  # Positive polarity
 PAR_E  = "e"  # Negative polarity
@@ -559,7 +562,7 @@ Tech = {
         T_Y_WING:                      TECH_T(True, "Y-Wing",                    EXP_INTERMEDIATE,       50),
         T_W_WING:                      TECH_T(True, "W-Wing",                    EXP_PROFICIENT,         80),
         T_XYZ_WING:                    TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
-        T_WXYZ_WING:                   TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
+#        T_WXYZ_WING:                   TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
         T_BENT_EXPOSED_QUAD:           TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
         T_BENT_EXPOSED_QUINT:          TECH_T(True, "Bent Exposed Quint",        EXP_ACCOMPLISHED,      110),
         T_BENT_EXPOSED_SEXT:           TECH_T(True, "Bent Exposed Sext",         EXP_ACCOMPLISHED,      110),

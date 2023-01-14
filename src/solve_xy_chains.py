@@ -306,7 +306,7 @@ def find_next_xy_child_nodes(Child, Cands, Lvl, Tree, Methods, Status):
                             return
                     if cells_in_same_house(r1, c1, Child.Chain[0].r, Child.Chain[0].c):
                         if T_XY_CHAIN_T3 in Methods and Child.Chain[0].Cand == Candsl1:
-                            r0 = Child.Chain[0].r; c0 = Child.Chain[0].c; Cand0 = Child.Chain[0].Cand[0]; Cand1 = Candsl[1]
+                            r0 = Child.Chain[0].r; c0 = Child.Chain[0].c; Cand0 = Child.Chain[0].Cand[0]; Cand1 = Candsl1[1]
                             Status.Pattern1.append((r0, c0, Cand1)); Status.Plcmts.append((r0, c0, Cand0))
                             Status.Pattern1.append((r1, c1, Cand0)); Status.Plcmts.append((r1, c1, Cand1))
                             Status.Elims = {}

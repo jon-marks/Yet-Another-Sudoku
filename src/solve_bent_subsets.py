@@ -25,7 +25,7 @@ def tech_bent_exposed_triples(Grid, Step, Cands, Methods):
                         if bent_subset_elims(BT+[(r0, c1, Cands[r0][c1])], U | Cands[r0][c1], Cands, Step, Methods): return 0
                 #  Then scan boxes looking for potential third cell.
                 rb = (r//3)*3; cb0 = (c0//3)*3; cb1 = (c1//3)*3
-                if cb0 == cb1: continue  # pattern only wants one cell outside of the intersection.
+                if cb0 == cb1: continue  # pattern only wants one cell outside the intersection.
                 for b in range(9):
                     r2 = rb + b//3; c2 = cb0 + b%3; c3 = cb1 + b%3
                     if r2 != r and c2 != c0 and len(Cands[r2][c2]) == 2 and len(U | Cands[r2][c2]) == 3:
@@ -143,7 +143,7 @@ def tech_bent_exposed_quads(Grid, Step, Cands, Methods):
                                 if bent_subset_elims(BQ1+[(r3, c3, Cands[r3][c3])], U1 | Cands[r3][c3], Cands, Step, Methods): return 0
                 # Cells 1 and 2 in the col, look for cells 3 and 4 in boxes
                 rb0 = (r0//3)*3; rb1 = (r1//3)*3; cb = (c//3)*3
-                if rb0 == rb1: continue  # pattern wants at least one cell outside of the intersect
+                if rb0 == rb1: continue  # pattern wants at least one cell outside the intersection
                 for b2 in range(8):
                     r2 = rb0 + b2//3; c2 = cb + b2%3
                     if c2 != c and 2 <= len(Cands[r2][c2]) <= 4 and len(U | Cands[r2][c2]) == 4:
@@ -613,12 +613,7 @@ def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
         elif T_XYZ_WING in Methods: Step.Method = T_XYZ_WING
         else: return False
     elif NrCells == 4:
-        TwoCands = FourCands = 0
-        for NrCand in NrCands:
-            if NrCand == 2: TwoCands += 1
-            elif NrCand == 4: FourCands += 1
-        if T_WXYZ_WING in Methods and TwoCands == 3 and FourCands == 1: Step.Method = T_WXYZ_WING
-        elif T_BENT_EXPOSED_QUAD in Methods: Step.Method = T_BENT_EXPOSED_QUAD
+        if T_BENT_EXPOSED_QUAD in Methods: Step.Method = T_BENT_EXPOSED_QUAD
         else: return False
     elif NrCells == 5:
         if T_BENT_EXPOSED_QUINT in Methods: Step.Method = T_BENT_EXPOSED_QUINT
@@ -627,18 +622,36 @@ def bent_subset_elims(Cells, UCands, Cands, Step, Methods):
         if T_BENT_EXPOSED_SEXT in Methods: Step.Method = T_BENT_EXPOSED_SEXT
         else: return False
 
+    Elims = []
     for r0, c0 in cells_that_see_all_of(URCCells):
         if URC in Cands[r0][c0]:
             Cands[r0][c0].discard(URC)
-            if Step.Outcome: Step.Outcome.append([P_SEP, ])
+            if Step.Outcome: Step.Outcome.append([P_SEP])
             Step.Outcome.extend([[P_ROW, r0], [P_COL, c0], [P_OP, OP_ELIM], [P_VAL, URC]])
+            Elims.append((r0, c0))
     if Step.Outcome:
-        Step.Outcome.append([P_END, ])
+        Step.Outcome.append([P_END])
         Step.Pattern = []
         for r0, c0, Cands0 in Cells:
-            if Step.Pattern: Step.Pattern.append([P_CON, ])
+            if Step.Pattern: Step.Pattern.append([P_CON])
             Step.Pattern.extend([[P_VAL, sorted(Cands0)], [P_OP, OP_EQ], [P_ROW, r0], [P_COL, c0]])
-        Step.Pattern.append([P_END, ])
+        Step.Pattern.append([P_SEP])   #  [[P_SEP], [P_OP, OP_PARO]])
+        if len(Elims) == 1:
+            r0, c0 = Elims[0]
+            Step.Pattern.extend([[P_VAL, URC], [P_ROW, r0], [P_COL, c0]])
+        else:
+            Pat = []
+            for r0, c0 in Elims:
+                if Pat: Pat.append([P_CON])
+                Pat.extend([[P_VAL, URC], [P_ROW, r0], [P_COL, c0]])
+            Step.Pattern.extend([[P_OP, OP_PARO], *Pat, [P_OP, OP_PARC]])
+        Step.Pattern.extend([[P_OP, OP_WLK], [P_OP, OP_URES], [P_VAL, URC], [P_OP, OP_PARO]])
+        Pat = []
+        for r0, c0 in URCCells:
+            if Pat: Pat.append([P_CON])
+            Pat.extend([[P_ROW, r0], [P_COL, c0]])
+        Step.Pattern.extend(Pat)
+        Step.Pattern.extend([[P_OP, OP_PARC], [P_END]])
         return True
     return False
 

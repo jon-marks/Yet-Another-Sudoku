@@ -174,11 +174,15 @@ class ListSolnWindow(wx.Dialog, lcmi.ColumnSorterMixin):
         self.SolnLC.InsertColumn(4, "Outcome", wx.LIST_FORMAT_LEFT, -1)
 
         for j, Step in enumerate(Props.Steps):  # [PR_STEPS]):
+            Pattern = tkns_to_str(Step.Pattern)
+            if len(Pattern) > 220: Pattern = Pattern[:220] + "..."
+            Outcome = tkns_to_str(Step.Outcome)
+            if len(Outcome) > 220: Outcome = Outcome[:220] + "..."
             self.SolnLC.Append([f"{(j+1):d}",
                                 Tech[Step.Method].Text,
                                 f"{Step.Difficulty:6d}",
-                                tkns_to_str(Step.Pattern),
-                                tkns_to_str(Step.Outcome),
+                                Pattern,
+                                Outcome
                                 ])
 
         self.SolnLC.SetColumnWidth(0, wx.LIST_AUTOSIZE_USEHEADER)

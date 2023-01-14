@@ -18,8 +18,8 @@ Some Definitions
 ================
 
 **Base Set**
-   A Base Set is 'A Truth' comprising a set 'Base Set Elements' (Ccells) in a house or a cell.  Only
-   one of the Base Set Elements will be found to be True.  Any Ccell that can see all 'Base Set
+   A Base Set is :term:`A Truth` comprising a set of 'Base Set Elements' (Ccells) in a house or a
+   cell of which one (yet to be determined) Element will be True.  Ccell that can see all 'Base Set
    Elements', therefore cannot be True and can be eliminated.
 
 **Base Set Element**

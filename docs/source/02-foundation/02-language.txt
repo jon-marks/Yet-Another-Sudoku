@@ -343,16 +343,21 @@ Bent Subsets
 ------------
 
 **Y-Wings**
-   :raw-html:`<mong>23==r1c6,26==r1c7,36==r2c8</mong>`
-      Y-Wing spanning row 1 and box 3, with unrestricted candidate 3 in the pincers.
+   :raw-html:`<mong>23==r1c6,26==r1c7,36==r2c8;(3r1c8,3r2c6)-\3(r1c6,r2c8)</mong>`
+      Y-Wing spanning row 1 and box 3, with :term:`Unrestricted Candidate` 3 in the pincers.  3r1c1
+      and 3r2c6 from outside the pattern see both Unrestricted Candidate 3
+      instances - 3r1c6 and 3r2c8.
 
 **XYZ-Wings**
-   :raw-html:`<mong>359==r6c7,35==r6c8,39==r7c7</mong>`
-      XYZ Wing spanning column 7 and box 7 with unrestricted candidate 3 in all three cells.
+   :raw-html:`<mong>359==r6c7,35==r6c8,39==r7c7;3r5c7-\3(r6c7,r6c8,r7c7)</mong>`
+      XYZ Wing spanning column 7 and box 7 with Unrestricted Candidate 3 in all three cells. 3r5c7
+      from outside the pattern see all Unrestricted Candidate instances - 3r6c7, 3r6c8 and
+      3r7c7.
 
 **Bent Exposed Quads**
-   :raw-html:`<mong>459==r7c1,14==r7c5,45==r7c7,19==r8c4</mong>`
-      Bent exposed quad spanning row 7 and box 7, with unrestricted candidate 9.
+   :raw-html:`<mong>459==r7c1,14==r7c5,45==r7c7,19==r8c4;(9r8c1,9r8c3)-\9(r7c1,r8c4)</mong>`
+      Bent exposed quad spanning row 7 and box 7, with Unrestricted Candidate 9.  9r8c1 and 9r8c3
+      from outside the pattern see all Unrestricted Candidate instances - 9r7c1 and 9r8c4.
 
 **Grouped Bent Pair, Exposed Line, Hidden Box**
    :raw-html:`<mong>U89r8c456,89==r8c1,89--r7c4</mong>`

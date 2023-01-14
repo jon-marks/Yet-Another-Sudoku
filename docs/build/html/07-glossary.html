@@ -255,6 +255,11 @@ levels.</p>
 </dd>
 <dt id="term-Band"><strong>Band</strong><a class="headerlink" href="#term-Band" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Chute"><span class="xref std std-term">Chute</span></a>.</p>
 </dd>
+<dt id="term-BEQ"><strong>BEQ</strong><a class="headerlink" href="#term-BEQ" title="Permalink to this term">#</a></dt><dd><p>Abbreviation of <a class="reference internal" href="#term-Bent-Exposed-Quad"><span class="xref std std-term">Bent Exposed Quad</span></a></p>
+</dd>
+<dt id="term-Bent-Exposed-Quad"><strong>Bent Exposed Quad</strong><a class="headerlink" href="#term-Bent-Exposed-Quad" title="Permalink to this term">#</a></dt><dd><p>A pattern comprising four Candidates in four Cells spanning two Intersecting <a class="reference internal" href="#term-Group"><span class="xref std std-term">Group</span></a>s,
+where only one <a class="reference internal" href="#term-Unrestricted-Candidate"><span class="xref std std-term">Unrestricted Candidate</span></a> exists.</p>
+</dd>
 <dt id="term-Bi-value-Cell"><strong>Bi-value Cell</strong><a class="headerlink" href="#term-Bi-value-Cell" title="Permalink to this term">#</a></dt><dd><p>A cell on a Sudoku board containing only 2 candidate values.  A <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a> exists
 between these two candidates in that cell.</p>
 </dd>
@@ -310,6 +315,8 @@ Also known as a Group, Sector, or Unit.</p>
 </dd>
 <dt id="term-Interior-Node"><strong>Interior Node</strong><a class="headerlink" href="#term-Interior-Node" title="Permalink to this term">#</a></dt><dd><p>In an AI-Chain of Nodes, the Interior Nodes lie between the <a class="reference internal" href="#term-End-Node"><span class="xref std std-term">End Node</span></a>s.</p>
 </dd>
+<dt id="term-Intersection"><strong>Intersection</strong><a class="headerlink" href="#term-Intersection" title="Permalink to this term">#</a></dt><dd><p>The cells common to two Groups that intersect.</p>
+</dd>
 <dt id="term-Line"><strong>Line</strong><a class="headerlink" href="#term-Line" title="Permalink to this term">#</a></dt><dd><p>Either a <a class="reference internal" href="#term-Row"><span class="xref std std-term">Row</span></a> or a <a class="reference internal" href="#term-Column"><span class="xref std std-term">Column</span></a>.</p>
 </dd>
 <dt id="term-Link"><strong>Link</strong><a class="headerlink" href="#term-Link" title="Permalink to this term">#</a></dt><dd><p>A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
@@ -339,6 +346,8 @@ the actual value of that State is yet to be determined.</p>
 </dd>
 <dt id="term-Pattern"><strong>Pattern</strong><a class="headerlink" href="#term-Pattern" title="Permalink to this term">#</a></dt><dd><p>An arrangement of Ccells that have the potential of yielding eliminations or placements</p>
 </dd>
+<dt id="term-Pattern-Cell"><strong>Pattern Cell</strong><a class="headerlink" href="#term-Pattern-Cell" title="Permalink to this term">#</a></dt><dd><p>Reference to a Cell containing Candidates belonging to a pattern</p>
+</dd>
 <dt id="term-Placement"><strong>Placement</strong><a class="headerlink" href="#term-Placement" title="Permalink to this term">#</a></dt><dd><p>Placing of a single solved value in a Cell.</p>
 </dd>
 <dt id="term-Peer"><strong>Peer</strong><a class="headerlink" href="#term-Peer" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a>s that can <a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a> other Ccells.  Peers are a set of Ccells that see
@@ -346,6 +355,11 @@ each other.</p>
 </dd>
 <dt id="term-Puzzle"><strong>Puzzle</strong><a class="headerlink" href="#term-Puzzle" title="Permalink to this term">#</a></dt><dd><p>A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
 givens and some solved values.</p>
+</dd>
+<dt id="term-Restricted-Candidate"><strong>Restricted Candidate</strong><a class="headerlink" href="#term-Restricted-Candidate" title="Permalink to this term">#</a></dt><dd><p>In a Bent Exposed Subset, a Restricted Candidate is a Candidate that <a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a>s all
+instances of its value in the Bent Subset grouping.  This is a special case of a
+<a class="reference internal" href="#term-Restricted-Candidate-Set"><span class="xref std std-term">Restricted Candidate Set</span></a> (<a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>) with a single
+member.</p>
 </dd>
 <dt id="term-Restricted-Candidate-Set"><strong>Restricted Candidate Set</strong><a class="headerlink" href="#term-Restricted-Candidate-Set" title="Permalink to this term">#</a></dt><dd><p>In <a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>, a Restricted Candidate Set is that set of Candidates that
 can <a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a> all instances of its value in the Unlocked Sets pattern.</p>
@@ -388,6 +402,8 @@ that is placed in that Cell.</p>
 </dd>
 <dt id="term-ULS"><strong>ULS</strong><a class="headerlink" href="#term-ULS" title="Permalink to this term">#</a></dt><dd><p>Ulocked Set, see <a class="reference internal" href="02-foundation/06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a></p>
 </dd>
+<dt id="term-Union"><strong>Union</strong><a class="headerlink" href="#term-Union" title="Permalink to this term">#</a></dt><dd><p>All the Cells of two intersecting groups.</p>
+</dd>
 <dt id="term-Unit"><strong>Unit</strong><a class="headerlink" href="#term-Unit" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-House"><span class="xref std std-term">House</span></a>.</p>
 </dd>
 <dt id="term-Unrestricted-Candidate"><strong>Unrestricted Candidate</strong><a class="headerlink" href="#term-Unrestricted-Candidate" title="Permalink to this term">#</a></dt><dd><p>In a Bent Exposed Subset, an Unrestricted Candidate is a Candidate that that cannot
@@ -404,6 +420,8 @@ end links are both Strong.</p>
 <dt id="term-Weak-Link"><strong>Weak Link</strong><a class="headerlink" href="#term-Weak-Link" title="Permalink to this term">#</a></dt><dd><p>An inference between two Ccells where neither can be simultaneously True, and at least one end
 is always False.  A Weak Link is formed by 3 or more same valued candidates in a
 house or three or more candidates in a cell.</p>
+</dd>
+<dt id="term-YMMV"><strong>YMMV</strong><a class="headerlink" href="#term-YMMV" title="Permalink to this term">#</a></dt><dd><p>“Your milage may vary”. Your opinion or experience may be different to mine.</p>
 </dd>
 </dl>
 <p>Intersection/Overlap:   Where 2 Groups/Houses share one or more cells.  The shared cell(s) where a row and column cross, or when a row or column crosses a block.
@@ -452,7 +470,7 @@ Colbox  The intersection of a column and box comprising only three cells.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1fe8088*, Fri, 06 Jan 2023, 22:32:02
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:0eb77f2*, Sat, 14 Jan 2023, 15:34:07
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

@@ -17,13 +17,13 @@ Many good sites that describe these techniques instead of me rehashing the infor
 Exposed Singles
 ---------------
 
-`Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#n1>`_ provides a good explanation of
+`Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#n1>`__ provides a good explanation of
 Exposed Singles.
 
 Hidden Singles
 --------------
 
-`Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#h1>`_, provides a good explanation of
+`Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#h1>`__, provides a good explanation of
 Hidden Singles
 
 Locked Singles
@@ -32,13 +32,13 @@ Locked Singles
 Pointing Locked Candidates
 ++++++++++++++++++++++++++
 
-`Hodoku <http://hodoku.sourceforge.net/en/tech_intersections.php#lc1>`_ provides a good explanation
+`Hodoku <http://hodoku.sourceforge.net/en/tech_intersections.php#lc1>`__ provides a good explanation
 of Pointing Locked Candidates.
 
 Claiming Locked Candidates
 ++++++++++++++++++++++++++
 
-`Hodoku <http://hodoku.sourceforge.net/en/tech_intersections.php#lc2>`_, provides a good explanation
+`Hodoku <http://hodoku.sourceforge.net/en/tech_intersections.php#lc2>`__, provides a good explanation
 of Claiming Locked Candidates.
 
 Empty Rectangles

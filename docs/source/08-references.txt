@@ -44,8 +44,17 @@ Sudokuwiki. Very good
 http://www.taupierbw.be/SudokuCoach/  very good but appears to be a scrape of Sudowiki with scrambled examples from Sudokuwiki..
 http://www.philsfolly.net.au/
 https://sudoku.ironmonger.com/howto/basicRules/docs.tpl?setreferrertoself=true
-Test Cases
+Test Cases / Databases
 http://forum.enjoysudoku.com/let-s-build-a-zoo-t4424.html
 http://forum.enjoysudoku.com/the-effortless-extremes-thread-t3740.html
+http://forum.enjoysudoku.com/unique-rectangles-the-essentials-t4204.html
+http://forum.enjoysudoku.com/benchmark-sudoku-list-t3834.html
+http://forum.enjoysudoku.com/the-bug-bivalue-universal-grave-principle-t2352.html
+sources: https://www.sudokuwiki.org/Aligned_Pair_Exclusion,
+
+
+
+Grading
+
 
 http://sudopedia.enjoysudoku.com/Mathematics_of_Sudoku.html
