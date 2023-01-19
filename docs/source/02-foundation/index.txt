@@ -6,10 +6,11 @@
 Foundation
 ==========
 
-This foundation is organised into a logical consistent flow explaining concepts and how the concepts
-are related.  This section focuses more developing the theory of logic involved in solving puzzles,
+This section is my attempt to organise the collective body of foundational material found on the
+Internet and other sources into a logical consistent flow explaining concepts and how they are
+related.  This section focuses more developing the theory of logic involved in solving puzzles,
 mostly leaving the practical application of this theory to the next chapter on
-:ref:`Human Solvable Patterns <human-solvable-patterns>` to on the theory that
+:ref:`Human Solvable Patterns <human-solvable-patterns>`.
 
 In the effort to be consistent and unambiguous, some terms have been refined or renamed to be:
    *  less overloaded,
@@ -17,14 +18,14 @@ In the effort to be consistent and unambiguous, some terms have been refined or 
    *  more self descriptive, and
    *  relate better within the context that they are described.
 
-To keep the reach of this text as wide as possible, verbal or algorithmic descriptions replace less
-common algebraic symbols and esoteric formulae.
+To keep the reach of this text as wide as possible, verbal or algorithmic descriptions are favoured
+over using less common algebraic symbols and esoteric formulae.
 
 .. toctree::
    :maxdepth: 5
 
-   01-core-concepts
-   02-language
+   01-language
+   02-core-concepts
    03-subsets
    04-base-cover-sets
    05-chains-loops-nets

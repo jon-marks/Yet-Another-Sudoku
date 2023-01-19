@@ -7,7 +7,7 @@ Bent Subsets
 ************
 
 Bent Subsets are a family of subsets where the grouping 'n' candidates in 'n' cells spans the union
-of two groups with at least one candidate in the intersection.  The two groups can either be a
+of two :term:`House`\s with at least one candidate in the intersection.  The two Houses can either be a
 :term:`Line` and a :term:`Box`, or two lines.
 
 
@@ -16,72 +16,21 @@ of two groups with at least one candidate in the intersection.  The two groups c
 Bent Exposed Subsets
 ====================
 
-Bent Exposed Subsets are often called Wings, but Wings is rather overloaded term in Sudoku-Speak.
-
 These patterns are formed by 'n' Candidate values in 'n' Cells across the :term:`Union` of two
 Groups where each Cell contains between 2 and 'n' Candidates values and at least one cell lies in
-the :term:`Intersection` of the two groups.
+the :term:`Intersection` of the two :term:`House`\s.
 
 Bent Exposed Subsets belong to the larger family of :ref:`Unlocked Set <found_unlocked_sets>`
 patterns.  However, it is simpler to treat these patterns as Bent Exposed Sets rather than Unlocked
 Sets.
 
-Restricted and Unrestricted Candidates
---------------------------------------
-
-A :term:`Restricted Candidate` is one where all instances of its value in a pattern can see each
-other.  An :term:`Unrestricted Candidate` is one where all its instances of its value do not see
-each other.
-
-A Bent Exposed subset must have only one Unrestricted Candidate to be viable.  The other Candidates
-are all Restricted.  The Unrestricted Candidate must have an instances in :term:`Pattern Cell`\s of
-both Groups outside the intersection and may have instances in Pattern Cells in the Intersection.
-The Restricted Candidates are only present in pattern cells in that are fully in one group or the
-other.
-
-The Unrestricted Candidate can be True in at least one or both Groups, perhaps both, but can never
-be False in both.  Therefore, any Ccell outside the pattern that can see all Unrestricted Candidate
-instances in the Cell Pattern cannot be True, resulting in their elimination.
-
 Bent Exposed_Triples
 --------------------
 
-Bent Exposed triples are known by their other popular names, Y-Wings (or XY-Wing), and XYZ-Wings.
-These two patterns are the only variants of Bent Exposed Triples.  Bent Exposed Triples comprise
-3 Candidates in 3 Cells spanning two intersecting Groups with one Pattern Cell in the intersection.
+.. _hsp_y_wings:
 
 Y-Wings
 +++++++
-
-.. figure:: images/y-wing-cd2.png
-   :name: fig-y-wing-cd2
-   :scale: 65%
-   :alt: Y-Wings Candidate Diagram
-   :align: right
-   :figwidth: 359px
-
-   Y-Wings Candidate Diagram
-
-These are minimal Bent Exposed Triples where each Pattern Cell only contains two Candidate values
-and instances of the Unrestricted Candidate only exist in the two Pattern Cells outside the
-intersection.
-
-:numref:`fig-y-wing-cd2` shows two examples of Y-Wings.  The first example:
-:raw-html:`<br><mong>XYr2c6,YZr2c2,XZr5c2<mong>` is a Y-Wing spanning Row 2 and Column 2.  X is the
-Unrestricted Candidate because the Xr2c6 cannot see Xr5c2. The other two candidates are Restricted
-because all instances see all other instances of themselves: Yr2c2-Yr2c6, and Zr2c2-Zr5c2.  As r2c2
-does not have an instance of X in it, the only possible Ccell that can see all Unrestricted
-Candidates is Xr5c6, which can be eliminated.
-
-The second example: :raw-html:`<br><mong>XYr7c8,YZr7c5,XZr9c4<mong>` is a Y-Wing spanning Row 7 and
-Box 8.  X is the Unrestricted Candidate because Xr7c8 cannot see Xr9c4.  The other two candidates
-are Restricted, because all instances see other instances of themselves, Yr7c8-Yr7c5 and
-Zr7c5-z-r9c4.  In this Box/Line intersection, the possible Ccells that can see all instances of the
-Unrestricted Candidates are Xr7c46 and Xr9c789, which can be eliminated
-
-Y Wings are also six Node :ref:`XY Chains <hsp_xy-chains>`.
-:raw-html:`<br>Example 1: &nbsp;<mong>(X=Y)r2c6-(Y=Z)r2c2-(Z=X)r5c2<mong>`, and
-:raw-html:`<br>Example 2: &nbsp;<mong>(X=Y)r7c8-(Y=Z)r7c5-(Z=X)r9c4<mong>`.
 
 .. figure:: images/y-wing-eg1.png
    :name: fig-y-wing-eg1
@@ -141,29 +90,10 @@ It is left as a challenge to the reader to solve the remaining 3 Y-Wings.
 |
 |
 
+.. _hsp_xyz_wings:
+
 XYZ-Wings
 +++++++++
-
-.. figure:: images/xyz-wing-cd2.png
-   :name: fig-xyz-wing-cd2
-   :scale: 100%
-   :alt: XYZ-Wings Candidate Diagram
-   :align: right
-   :figwidth: 359px
-
-   XYZ-Wings Candidate Diagram
-
-An XYZ Wing pattern finds the Unrestricted Candidate value in all three cells of the Pattern, and
-the remaining two Restricted Candidates confined to either one or the other group.  The only Ccells
-outside the Pattern that :term:`See` all Unrestricted Candidate instances must lie in the
-intersection of the two Groups.  Therefore, this pattern only found with Line / Box intersections.
-A line / Line intersection only has one Cell in the intersection, and it is part of the Pattern.
-
-The XYZ-Wing pattern in :numref:`fig-xyz-wing-cd2`, :raw-html:`<mong>XYr1c8,XYZr1c2,YZr3c3</mong>`
-lies in the intersection of Row 1 and Box 1.  Y is the Unrestricted Candidate present in all three
-cells, with Restricted Candidates X and Z which occur in only one group each.  Yr1c1 and Yr1c3 are
-the only Ccells that can see all three instances of the Unrestricted Candidate (which also lie in
-the Intersection), cannot be True, resulting in their elimination.
 
 .. figure:: images/xyz-wing-eg1.png
    :name: fig-xyz-wing-eg1
@@ -196,6 +126,8 @@ elimination.
 |
 |
 
+.. _hsp_bequads:
+
 Bent Exposed Quads
 ------------------
 
@@ -209,14 +141,6 @@ Bent Exposed Quads
    Bent Exposed Quad Example 1
 
    :raw-html:`<mong>+841.....+5+5+2+3.....9+7+965.8.+1+33+6+7+4+51+928+4158+9273+698+26..+5+41+6+5.3.41..2+3...+5...+1+7....35.|r7c5-=8;r7c8-=7;r8c5-=6;r8c7-=4;r8c8-=7|Bent Exposed Quad||2367==r1c5,37==r6c5,27==r7c5,67==r2c6;7r2c5-\7(r1c5,r6c5,r7c5,r2c6)|r2c5-=7|+841+2+3+9+6+7+5+5+2+3+1+6+7+4+89+7+965+48+2+1+33+6+7+4+51+928+4158+9273+698+26+7+3+5+41+6+5+83+241+9+72+3+9+7+1+5+8+6+4+1+7+4+9+8+635+2</mong>`
-
-Also known as WXYZ Wings, Bent Exposed Quad (BEQ) patterns comprise a set of 4 Candidates where 2 or
-more are present in 4 Cells spanning two Intersecting Groups, and at least one of the Cells lies in
-this intersection.  Like all Bent Exposed Subsets only one Candidate is an Unrestricted Candidate
-with the remaining Candidates, Restricted.  The Unrestricted Candidate is True in one or both
-groups, but cannot be False in both.  Therefore, any Ccell outside the Pattern that can see all
-Unrestricted Candidates cannot be True resulting in its elimination.  The Intersecting Groups can
-be either a Line and a Box or two Lines.
 
 :numref:`fig-beq-eg1` solves two consecutive BEQs. The first BEQ is.
 :raw-html:`<mong>2367==r1c5,37==r6c5,27==r7c5,67==r2c6;7r2c5-\7(r1c5,r6c5,r7c5,r2c6)</mong>`. 7 is
@@ -280,8 +204,10 @@ could be found first:
 |
 |
 
-Bent Exposed Quints and Sexts
------------------------------
+.. _hsp_bequints:
+
+Bent Exposed Quints
+-------------------
 
 .. figure:: images/bequint-eg1.png
    :name: fig-bequint-eg1
@@ -294,16 +220,25 @@ Bent Exposed Quints and Sexts
 
    :raw-html:`<mong>+34..+6.27.+286......1.+7..+2...+6...5....5+7.21+693..+21.9..567+6..3549.9...........6.+9..3|r1c4-=1;r2c4-=1;r2c9-=4;r3c4-=8;r3c7-=8;r3c9-=4;r4c3-=48;r4c4-=3;r4c6-=3;r4c8-=4;r8c3-=28;r8c6-=1;r8c8-=2;r8c9-=8;r9c5-=8;r9c8-=8|Bent Exposed Quint||1589==r1c9,159==r2c9,589==r3c9,128==r7c9,12==r9c8;1r8c9-\1(r1c9,r2c9,r7c9,r9c8)|r8c9-=1|+34+5+9+6+827+1+286+5+7+1+3+4+91+9+7+3+4+2+6+8+5+6+3+9+85+4+1+2+75+7+821+693+4+4+21+79+3+8567+6+2+13549+89+1+3+4+8+7+5+6+2+8+5+46+2+9+7+13</mong>`
 
-Bent Exposed Quints and Sexts are Bent Exposed Subsets with five and six Candidates over five and
-six cells in two Intersecting groups with at least one Cell in the Intersections respectively.
-These patterns are relatively common and easy to spot.  Bent Exposed Septs (7) and Octs also occur
-but :ref:`Unlocked Sets <hsp_unlocked_sets>` are getting easier to spot for these large patterns,
-:term:`YMMV`.
 
 The Bent Exposed Quint
 :raw-html:`<mong>1589==r1c9,159==r2c9,589==r3c9,128==r7c9,12==r9c8;1r8c9-\1(r1c9,r2c9,r7c9,r9c8)</mong>` in
 :numref:`fig-bequint-eg1` spans Column 9 and Box 9. 1 is the Unrestricted Candidate and only Ccell 1r8c9 sees all
 instances of this Unrestricted Candidate.
+
+|
+|
+|
+|
+|
+|
+|
+|
+
+.. _hsp_besexts:
+
+Bent Exposed Sexts
+------------------
 
 .. figure:: images/besext-eg1.png
    :name: fig-besext-eg1
@@ -321,6 +256,7 @@ The Bent Exposed Sext
 :numref:`fig-besext-eg1` spans Row 9 and Box 8. 4 is the Unrestricted Candidate and Ccells 4r7c8 and 4r7c9 see all
 instances of this Unrestricted Candidate.
 
+
 .. _hsp_grouped_bent_subsets:
 
 Grouped Bent Subsets
@@ -329,17 +265,144 @@ Grouped Bent Subsets
 Grouped Bent Pairs
 ------------------
 
-Exposed Line, Hidden Box Grouped Bent Pairs
+.. _hsp_gbp_el_hb:
+
+Exposed Row, Hidden Box Grouped Bent Pairs
 +++++++++++++++++++++++++++++++++++++++++++
 
-Hidden Line, Exposed Box Grouped Bent Pairs
-+++++++++++++++++++++++++++++++++++++++++++
+.. figure:: images/gbp-er-hb-eg1.png
+   :name: fig-gbp-er-hb-eg1
+   :scale: 100%
+   :alt: Group Bent Pair Exposed Row, Hidden Box Example
+   :align: right
+   :figwidth: 359px
+
+   Group Bent Pair Exposed Row, Hidden Box Example
+
+   :raw-html:`<mong>+5...+2.+4..+2...5483.3+4...826+5+1+35789+6+42.7+42+6+15.+36.+2+4+3+5...+456.1.....2.....547..+54...+6||Grouped Bent Pair ER HB||U89r8c456,89==r8c1,89--r7c4|r8c3-=89;r8c7-=9;r7c4-=3|+5+6+8+3+2+7+4+1+9+2+1+9+65483+73+4+7+1+9826+5+1+35789+6+42+87+42+6+15+9+36+9+2+4+3+5+7+8+1+456+91+2+3+7+8+92+3+8+7+6+1547+8+1+54+3+9+2+6</mong>`
+
+:numref:`fig-gbp-er-hb-eg1` has a Group Bent Pair
+:raw-html:`<mong>U89r8c456,89==r8c1,89--r7c4</mong>`.
+
+Asserting the premise 8r8c1 True, infers Candidate 8 cannot be True anywhere else along Row
+8 including the intersection with Box 8.  This further infers 8r7c4 True as r7c4 is the only other
+Cell in Box 8 outside the intersection where 8 can be True.  Inferring 8r7c4 True, infers 9 True
+in the intersection, 9r8c456.  The same is valid for Candidates 8 and 9 interchanged.  Thus,
+the Truth 89r8c1456 is established, resulting in the elimination of 8 and 9 from all Cells outside
+the intersection r8c456 and r8c1, 89-=r8c!1456. That is: r8c3-=89, r8c7-=9.
+
+Asserting 89!-r7c4 (8 and 9 not present in r7c4) infers that both 8 and 9 are True in the Intersection,
+that is, 89r8c456 is True.  But this is impossible, because r8c1 must contain either 8 or 9.
+Therefore, r7c4 cannot contain any Candidate other than 8 or 9, resulting in the elimination of all
+Candidates other than 8 and 9 from r7c4.
+
+Exposed Column, Hidden Box Grouped Bent Pairs
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbp-ec-hb-eg1.png
+   :name: fig-gbp-ec-hb-eg1
+   :scale: 100%
+   :alt: Group Bent Pair Exposed Column, Hidden Box Example
+   :align: right
+   :figwidth: 359px
+
+   Group Bent Pair Exposed Column, Hidden Box Example
+
+   :raw-html:`<mong>+6+41..8+32+98+7+3+29+164+55+92..+4+1+87.8..2.+4.+1.....9+2.3...41.+8.+6......+7+3..6.9..51...714.+96+8||Grouped Bent Pair EC HB||U23r456c1,23==r9c1,23--r6c2|r7c1-=2;r8c1-=23;r6c2-=5|+6+41+7+58+32+98+7+3+29+164+55+92+6+3+4+1+87+98+6+32+5+4+7+1+7+1+4+8+69+2+53+2+3+541+7+8+9+6+1+2+9+5+8+6+7+3+4+46+89+7+351+2+3+5714+2+96+8</mong>`
+
+:numref:`fig-gbp-ec-hb-eg1` has a Group Bent Pair
+:raw-html:`<mong>U23r456c1,23==r9c1,23--r6c2</mong>`.
+
+Asserting the premise 2r9c1 True, infers Candidate 2 cannot be True anywere else along Column 1
+including the intersection with Box 4.  This further infers 2r6c2 True as r6c2 is the only other
+Cell in Box 4 outside the intersection where 2 can be True.  Inferring 2r6c2 True, infers 3 True
+in the intersection, 3r456c1.  The same is valid for Candidates 2 and 3 interchanged.  Thus,
+the Truth 23r4569c1 is established, resulting in the elimination of 2 and 3 from all Cells outside
+the intersection r456c1 and r9c1, 23-=r!4569c1.  That is r7c1-=2,r8c1-=23.
+
+Asserting 23!-r6c2 (2 and 3 not present in r6c2) infers that both 2 and 3 are True in the Intersection,
+that is, 23r456c1 is True.  But this is impossible, because r9c1 must contain either 2 or 3.
+Therefore, r624 can only be Candidates 3 or 4, resulting in the elimination of all other Candidates
+from r6c2.
+
+.. _hsp_gbp_hl_eb:
+
+Hidden Row, Exposed Box Grouped Bent Pairs
+++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbp-hr-eb-eg1.png
+   :name: fig-gbp-hr-eb-eg1
+   :scale: 100%
+   :alt: Group Bent Pair hidden Row, Exposed Box Example
+   :align: right
+   :figwidth: 359px
+
+   Group Bent Pair hidden Row, Exposed Box Example
+
+   :raw-html:`<mong>+29+3..+7856685+2+3+94+17.1.+8+6+5+3+92...7........6..7.9...+928..4....+8....3+4+8592+6+7+15+21+37+6+94+8||Grouped Bent Pair HR EB||U35r6c789,35==r4c9,35--r6c2|r4c7-=5;r4c8-=3;r5c8-=3;r6c2-=67|+29+3+1+4+7856685+2+3+94+17+71+4+8+6+5+3+92+8+6+97+5+4+1+2+3+4+5+26+1+37+89+1+3+7+928+5+64+9+7+6+4+8+1+2+3+53+4+8592+6+7+15+21+37+6+94+8</mong>`
+
+:numref:`fig-gbp-hr-eb-eg1` has a Group Bent Pair
+:raw-html:`<mong>U35r6c789,35==r4c9,35--r6c2</mong>`.
+
+Asserting the premise 3r4c9 True, infers that 3 cannot be True anywhere else in Box 3,
+including the intersection with Row 3. This further infers 3r6c2 True as r6c2 is the only other
+Cell in Row 6 outside the intersection where 3 can be True.  Inferring 3r6c2 True, infers 5 True
+only in the intersection 5r6c789.  The same is valid for 3 and 5 interchanged.  Thus, the Truth
+35(r4c9,r6c789) is established resulting in the elimination of 3 and 5 from all cells in Box 3
+outside the Intersection r6c789 and r4c9, 35-=b3p!3789. That is r4c7-=5, r4c8-=3, and r5c8-=5.
+
+Asserting 35!-r6c2 True (3 and 5 not present in r6c2) infers that Both 3 and 5 must be True in
+the Intersection, 35r6c789.  This is impossible as Cell r4c9 outside the Intersection requires either
+3 or 5, resulting in the elimination of all other Candidates from r6c2. That is r6c2-=67.
+
+|
+
+Hidden Column, Exposed Box Grouped Bent Pairs
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbp-hc-eb-eg1.png
+   :name: fig-gbp-hc-eb-eg1
+   :scale: 100%
+   :alt: Group Bent Pair Hidden Column, Exposed Box Example
+   :align: right
+   :figwidth: 359px
+
+   Group Bent Pair Hidden Column, Exposed Box Example
+
+   :raw-html:`<mong>3....9742...5..6+8........1+5.......611.986.........3.....1.2.+53+6.4...5+1+975.....+428||Grouped Bent Pair HC EB||U16r123c6,16==r1c4,16--r9c6|r3c4-=6;r1c5-=1;r2c5-=1;r9c6-=7|3+6+5+1+89742+9+1+75+4+26+8+3+4+8+2+3+7+6+91+5+8+7+3+9+5+4+2611+2986+7+3+5+4+6+5+4+2+13+8+7+9+7+91+42+8+53+6+24+8+6+35+1+975+3+6+7+9+1+428</mong>`
+
+:numref:`fig-gbp-hc-eb-eg1` has a Group Bent Pair
+:raw-html:`<mong>U16r123c6,16==r1c4,16--r9c6</mong>`.
+
+Asserting the premise 1r1c4 True, infers Candidate 1 cannot be True anywhere else in Box 2,
+including the intersection with Column 6.  This further infers 1r9c6 True as r9c6 is the only other
+Cell in Row 6 outside the intersection where 1 can be True.  Inferring 1r9c6 True, infers 6 True
+in the intersection, 6r123c6.  The same is valid for Candidates 1 and 6 interchanged.  Thus, the
+Truth 16(r1c4,r123c6) is established, resulting in the elimination of 1 and 6 from all Cells outside
+the intersection r123c6 and r1c4, 16-=b2p!169. That is: r1c5-=1, r2c5-=1, and r3c4-=6.
+
+Asserting 16!-r9c6 (1 and 6 not present in r9c6) infers that both 1 and 6 are True in the
+Intersection, that is, 16r123c6 is True.  But this is impossible because r1c4 is the only place that
+can assume one of these values, leaving the other Candidate unassigned.  Therefore, r9c6 cannot
+contain any Candidate other than 1 or 6 resulting in the elimination of all other candidates from
+r9c6.  That is r9c6-=7.
 
 Grouped Bent Triples
 --------------------
 
-Exposed Line, Hidden Box Grouped Bent Triples
-+++++++++++++++++++++++++++++++++++++++++++++
+.. _hsp_gbt_el_hb:
+
+Exposed Row, Hidden Box Grouped Bent Triples
+++++++++++++++++++++++++++++++++++++++++++++
+
+Search for example ongoing.
+
+Exposed Column, Hidden Box Grouped Bent Triples
+++++++++++++++++++++++++++++++++++++++++++++
+
+Search for example ongoing.
+
+.. _hsp_gbt_hl_eb:
 
 Hidden Line, Exposed Box Grouped Bent Triples
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -347,11 +410,17 @@ Hidden Line, Exposed Box Grouped Bent Triples
 Grouped Bent Quads
 ------------------
 
+.. _hsp_gbq_el_hb:
+
 Exposed Line, Hidden Box Grouped Bent Quads
 +++++++++++++++++++++++++++++++++++++++++++
 
+.. _hsp_gbq_hl_eb:
+
 Hidden Line, Exposed Box Grouped Bent Quads
 +++++++++++++++++++++++++++++++++++++++++++
+
+.. _hsp_bht:
 
 Bent Hidden Triples
 ===================

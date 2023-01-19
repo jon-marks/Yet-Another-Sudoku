@@ -10,22 +10,32 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **A Truth**
       A :term:`Set` of :term:`Ccell` :term:`Element`\s that could possibly be :term:`The Truth`.
-      That is one of the elements in the set is the actual solved value for that :term:`Cell`
+      That is one of the elements in the set is the actual solved value for that :term:`Cell`.
 
    **AI**
-      Alternating Inference - A patterns where adjacent links between nodes alternate strong and
-      weak.
+      Abbreviation for :term:`Alternating Inference`.
 
    **AIC**
-      Alternating Inference Chain.  A Chain made up with alternating Strong and Weak Links.
+      Abbreviation for :term:`Alternating Inference Chain`.
 
    **AIL**
-      Alternating Inference Loop.  An AIC that loops back on itself, begining and end link are the
-      same.
+      Abbreviation for :term:`Alternating Inference Loop`.
 
    **AIN**
-      Alternating Inference Net.  A network of linked nodes where the links alternate between net
-      levels.
+      Abbreviation for :term:`Alternating Inference Net`.
+
+   **Alternating Inference**
+      A pattern where adjacent links between nodes alternate strong and weak.
+
+   **Alternating Inference Chain**
+      A :term:`Chain` linking :term:`Node`\s with alternating :term:`Strong Link`\s and
+      :term:`Weak Link`\s.
+
+   **Alternating Inference Loop**
+      An :term:`Alternating Inference Chain` that loops back on itself.
+
+   **Alternating Inference Net**
+      A network of :term:`Node`\s where the Links at consecutive net levels alternate.
 
    **Band**
       See :term:`Chute`.
@@ -55,8 +65,8 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :term:`Peer`.
 
    **Candidate**
-      A possible solved value for an unsolved cell.  This definition has a finer distinction in that
-      it is only a reference to the candidate value, not to any cell location on the :term:`Grid`.
+      A possible solved value for an unsolved cell.  This definition is only a reference to the
+      candidate value, not to any :term:`Cell` location on the :term:`Grid`.
 
    **Ccell**
       A three dimensional tuple uniquely identifying a candidate element by value, row,
@@ -67,7 +77,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Chain Patterns**
       Chain patterns refer to the collection of Chain, Net and Loop patterns, typically referring
-      to :term:`AI` Chains
+      to :term:`Alternating Inference` Chains
 
    **Chain**
       Chain is short for Inference Chain, a stream of inference links connecting Ccells to each
@@ -80,6 +90,10 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Column**
       A vertical line of 9 cells in a Sudoku :term:`Grid`.
+
+   **Conditional Logic**
+      The process of asserting a Premise and following a sequence of inferences to a
+      possible logical outcome.  See :ref:`cc_premises_and_inferences`
 
    **Conjugate Pair**
       The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
@@ -129,7 +143,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       An (:term:`AI`) :term:`Chain` that loops back on itself closing the chain.
 
    **Node**
-      A :term:`Ccell` that is linked to other nodes in a pattern.
+      A :term:`Ccell` that is linked by :term:`Conditional Logic` to other nodes in a pattern.
 
    **Parity**
       The collective pronoun for the terms Odd and Even, which are the parity of the sequence
@@ -159,12 +173,22 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Pattern Cell**
       Reference to a Cell containing Candidates belonging to a pattern
 
-   **Placement**
-      Placing of a single solved value in a Cell.
+   **PE**
+      A Abbreviation of :term:`Potential Elimination`, synonymous with :term:`Ccell`.
 
    **Peer**
       A :term:`Ccell`\s that can :term:`See` other Ccells.  Peers are a set of Ccells that see
       each other.
+
+   **Placement**
+      Placing of a single solved value in a Cell.
+
+   **Potential Elimination**
+      A reference to a Candidate that is an element of the solution set of Candidates in that Cell.
+      Through the application of :term:`Conditional Logic` Potential Eliminations are
+      removed from this set until the last value remains as the solution for that Cell.
+
+      may be eliminated from the Synonym of :term:`Ccell`
 
    **Puzzle**
       A partially completed Sudoku in a puzzle, it may only be populated with the givens or with

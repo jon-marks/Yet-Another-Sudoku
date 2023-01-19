@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. Language" href="02-language.html" /><link rel="prev" title="2. Foundation" href="index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.3. Subsets" href="03-subsets.html" /><link rel="prev" title="2.1. Language" href="01-language.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
         <title>Yet Another Sudoku | Foundation | Concepts</title>
@@ -162,8 +162,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.1. Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-language.html">2.2. Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01-language.html">2.1. Language</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.2. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-subsets.html">2.3. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
@@ -181,7 +181,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-barely-human.html">3.9. Barely Human Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-super-human.html">3.9. Super Human Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
 </ul>
 </li>
@@ -236,9 +236,9 @@
         </div>
         <article role="main">
           <section id="core-concepts">
-<span id="id1"></span><h1><span class="section-number">2.1. </span>Core Concepts<a class="headerlink" href="#core-concepts" title="Permalink to this heading">#</a></h1>
+<span id="id1"></span><h1><span class="section-number">2.2. </span>Core Concepts<a class="headerlink" href="#core-concepts" title="Permalink to this heading">#</a></h1>
 <section id="ccells">
-<h2><span class="section-number">2.1.1. </span>Ccells<a class="headerlink" href="#ccells" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.2.1. </span>Ccells<a class="headerlink" href="#ccells" title="Permalink to this heading">#</a></h2>
 <p>A <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> refers to any candidate in any cell as specified by its candidate value, row and column.
 That is, a Ccell is the unique reference to a specific candidate in a cell.</p>
 <p>Ccells are three-dimensional tuples of value, row and column, each dimension ranging
@@ -248,18 +248,19 @@ in the 9 row by 9 column has only one value, all values in all cells obeying
 <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
 <p>The term Ccell is not to be confused with a:</p>
 <ul class="simple">
-<li><p><strong>Node</strong>:  which is a further qualification of a ccell in a larger relationship such
-as a net or chain.  For example:  Ccells linked together in a chain form the Nodes between the
-links of the chain.</p></li>
-<li><p><strong>Candidate</strong>:  which is a lesser reference to only the possible values in cells that obey Sudoku
+<li><p><a class="reference internal" href="../07-glossary.html#term-Node"><span class="xref std std-term">Node</span></a>:  A further qualification of a ccell in a <a class="reference internal" href="../07-glossary.html#term-Pattern"><span class="xref std std-term">pattern</span></a> such as a net or chain.
+For example:  Ccells linked together in a chain form the Nodes between the links of the chain.</p></li>
+<li><p><a class="reference internal" href="../07-glossary.html#term-Candidate"><span class="xref std std-term">Candidate</span></a>:  A lesser reference to only the possible values in cells that obey Sudoku
 Rules.</p></li>
+<li><p><a class="reference internal" href="../07-glossary.html#term-Potential-Elimination"><span class="xref std std-term">Potential Elimination</span></a>:  A Synonym for Candidate, in the context of applying
+<a class="reference internal" href="../07-glossary.html#term-Conditional-Logic"><span class="xref std std-term">Conditional Logic</span></a> to reduce the set of Candidates in a Cell.</p></li>
 </ul>
 </section>
 <section id="a-truth-and-the-truth">
-<span id="cc-truth"></span><h2><span class="section-number">2.1.2. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Permalink to this heading">#</a></h2>
+<span id="cc-truth"></span><h2><span class="section-number">2.2.2. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Permalink to this heading">#</a></h2>
 <p>‘A Truth’ and ‘The Truth’ describe the relationships of Ccells in a House or Cell.  For each
-unsolved value in a House or Cell, ‘A Truth’ is a set of possible values within that group where
-at least one Ccell in that group will ultimately be True.</p>
+unsolved value in a House or Cell, ‘A Truth’ is a set of possible values within that <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>
+where at least one Ccell in that House will ultimately be True.</p>
 <p>A Truth is unconditionally True for a puzzle.  A Truth is that set of Ccells in which one (yet to
 be determined) element will be ‘The Truth’.  ‘The Truth’ is that last remaining Ccell in a Cell or
 that only remaining uniquely valued Ccell in a House – The Solved Value.</p>
@@ -270,7 +271,7 @@ column, box and cell in the grid.</p>
 <figure class="align-right" id="fig-truths-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/truths-eg1.png"><img alt="'A Truth' and 'The Truth' Example" src="../_images/truths-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.1:  </span><span class="caption-text">‘A Truth’ and ‘The Truth’ Example</span><a class="headerlink" href="#fig-truths-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.6:  </span><span class="caption-text">‘A Truth’ and ‘The Truth’ Example</span><a class="headerlink" href="#fig-truths-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong></span></p>
 </div>
@@ -293,7 +294,7 @@ Truth’ will be the 8 in one of those yet to be determined 3 cells.</p></li>
 </div>
 </section>
 <section id="premises-and-inferences">
-<span id="cc-premises-and-inferences"></span><h2><span class="section-number">2.1.3. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Permalink to this heading">#</a></h2>
+<span id="cc-premises-and-inferences"></span><h2><span class="section-number">2.2.3. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Permalink to this heading">#</a></h2>
 <p>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Inference.html">http://sudopedia.enjoysudoku.com/Inference.html</a></p>
 <p>Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
 inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
@@ -313,7 +314,7 @@ asserting each Ccell True and False.  The important link (inference) relationshi
 <li><p>Robust Links</p></li>
 </ul>
 <section id="weak-links">
-<span id="cc-weak-links"></span><h3><span class="section-number">2.1.3.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Permalink to this heading">#</a></h3>
+<span id="cc-weak-links"></span><h3><span class="section-number">2.2.3.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Permalink to this heading">#</a></h3>
 <p>A weak link is formed by two ccells A and B, where they are either:</p>
 <ul class="simple">
 <li><p>Two or more same valued candidates in that house, or</p></li>
@@ -322,7 +323,7 @@ asserting each Ccell True and False.  The important link (inference) relationshi
 <figure class="align-right" id="fig-links-eg1">
 <a class="reference internal image-reference" href="../_images/links-eg1.png"><img alt="Links Example" src="../_images/links-eg1.png" style="width: 378.0px; height: 76.0px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Links Example</span><a class="headerlink" href="#fig-links-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.7:  </span><span class="caption-text">Links Example</span><a class="headerlink" href="#fig-links-eg1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
@@ -338,7 +339,7 @@ Ccell in the row.</p></li>
 inferences:</p>
 <div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-weak-link-it">
 <table class="styled-table docutils align-default" id="tbl-weak-link-it" style="width: 65%">
-<caption><span class="caption-number">Table 2.1:  </span><span class="caption-text">Weak Link Inference Table</span><a class="headerlink" href="#tbl-weak-link-it" title="Permalink to this table">#</a></caption>
+<caption><span class="caption-number">Table 2.3:  </span><span class="caption-text">Weak Link Inference Table</span><a class="headerlink" href="#tbl-weak-link-it" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 70.0%" />
@@ -372,17 +373,17 @@ any two Ccells see each other, and the one Ccell is asserted True, the other Cce
 False.</p>
 </section>
 <section id="strong-links">
-<span id="cc-strong-links"></span><h3><span class="section-number">2.1.3.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Permalink to this heading">#</a></h3>
+<span id="cc-strong-links"></span><h3><span class="section-number">2.2.3.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Permalink to this heading">#</a></h3>
 <dl class="simple">
 <dt>A strong link between two Ccells A and B, exists either:</dt><dd><ul class="simple">
-<li><p>In a conjugate pair (like <span class="raw-html"><mong>3r7c23</mong></span> in <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.2: </span></a>), where
+<li><p>In a conjugate pair (like <span class="raw-html"><mong>3r7c23</mong></span> in <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.7: </span></a>), where
 two same valued Ccells are the only same valued Ccells in that house, or</p></li>
 <li><p>In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
 like <span class="raw-html"><mong>78r7c4</mong></span>.</p></li>
 </ul>
 </dd>
 </dl>
-<p>In <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.2: </span></a> above:</p>
+<p>In <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.7: </span></a> above:</p>
 <ul class="simple">
 <li><p>If <span class="raw-html"><mong>3r7c2</mong></span> is False, then <span class="raw-html"><mong>7r7c3</mong></span> must be True, as only one of the conjugate pair must be True.</p></li>
 <li><p>if <span class="raw-html"><mong>3r7c2</mong></span> is True, then <span class="raw-html"><mong>7r7c3</mong></span> must be False, as only one of the conjugate pair must be False</p></li>
@@ -390,7 +391,7 @@ like <span class="raw-html"><mong>78r7c4</mong></span>.</p></li>
 <p>Strong links are indicated by a “=” linking the two ccells and obey the following inferences:</p>
 <div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-strong-link-it">
 <table class="styled-table docutils align-default" id="tbl-strong-link-it" style="width: 65%">
-<caption><span class="caption-number">Table 2.2:  </span><span class="caption-text">Strong Link Inference Table</span><a class="headerlink" href="#tbl-strong-link-it" title="Permalink to this table">#</a></caption>
+<caption><span class="caption-number">Table 2.4:  </span><span class="caption-text">Strong Link Inference Table</span><a class="headerlink" href="#tbl-strong-link-it" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 70.0%" />
@@ -425,14 +426,14 @@ guarantees one of its ends to be True.</p></li>
 </ul>
 </section>
 <section id="robust-links">
-<span id="cc-robust-links"></span><h3><span class="section-number">2.1.3.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Permalink to this heading">#</a></h3>
+<span id="cc-robust-links"></span><h3><span class="section-number">2.2.3.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Permalink to this heading">#</a></h3>
 <p>Robust links are derived from other structures such as (but not limited to) Alternating Inference
 Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a
 “|~|” where the outer bars indicate that this link is derived/indirect resulting from another
 structure.</p>
 <div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-robust-link-it">
 <table class="styled-table docutils align-default" id="tbl-robust-link-it" style="width: 65%">
-<caption><span class="caption-number">Table 2.3:  </span><span class="caption-text">Robust Link Inference Table</span><a class="headerlink" href="#tbl-robust-link-it" title="Permalink to this table">#</a></caption>
+<caption><span class="caption-number">Table 2.5:  </span><span class="caption-text">Robust Link Inference Table</span><a class="headerlink" href="#tbl-robust-link-it" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 30.0%" />
 <col style="width: 70.0%" />
@@ -466,7 +467,7 @@ guaranteed to be True. But if one end is asserted True, it is impossible to dete
 the other end with a Robust link.</p>
 </section>
 <section id="strong-links-masquerading-as-weak">
-<h3><span class="section-number">2.1.3.4. </span>Strong Links Masquerading as Weak<a class="headerlink" href="#strong-links-masquerading-as-weak" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.2.3.4. </span>Strong Links Masquerading as Weak<a class="headerlink" href="#strong-links-masquerading-as-weak" title="Permalink to this heading">#</a></h3>
 <p>A Strong link possesses all the attributes of a Weak Link (reversible and True to False linkage),
 and then some (False to True linkage).  Therefore, it is possible to substitute a Strong link
 for a Weak Link in the identifying patterns.</p>
@@ -477,7 +478,7 @@ Weak link.  The <span class="raw-html"><mono>'~'</mono></span> symbol is used to
 </section>
 </section>
 <section id="spatial-representation">
-<h2><span class="section-number">2.1.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.2.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Permalink to this heading">#</a></h2>
 <p>This concept comes from Denis Berthier’s Hidden Logic of Sudoku.
 <a class="reference external" href="https://github.com/denis-berthier">https://github.com/denis-berthier</a>.</p>
 <p>A solved puzzle can be described as a unique selection and ordering of 81 ccells (value,
@@ -518,23 +519,23 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="02-language.html">
+          <a class="next-page" href="03-subsets.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">2.2. </span>Language</div>
+                <div class="title"><span class="section-number">2.3. </span>Subsets</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="01-language.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">2. </span>Foundation</div>
+                <div class="title"><span class="section-number">2.1. </span>Language</div>
                 
               </div>
             </a>
@@ -542,7 +543,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:20c475d*, Sat, 14 Jan 2023, 20:57:30
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -568,17 +569,17 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">2.1. Core Concepts</a><ul>
-<li><a class="reference internal" href="#ccells">2.1.1. Ccells</a></li>
-<li><a class="reference internal" href="#a-truth-and-the-truth">2.1.2. ‘A Truth’ and ‘The Truth’</a></li>
-<li><a class="reference internal" href="#premises-and-inferences">2.1.3. Premises and Inferences</a><ul>
-<li><a class="reference internal" href="#weak-links">2.1.3.1. Weak Links</a></li>
-<li><a class="reference internal" href="#strong-links">2.1.3.2. Strong Links</a></li>
-<li><a class="reference internal" href="#robust-links">2.1.3.3. Robust Links</a></li>
-<li><a class="reference internal" href="#strong-links-masquerading-as-weak">2.1.3.4. Strong Links Masquerading as Weak</a></li>
+<li><a class="reference internal" href="#">2.2. Core Concepts</a><ul>
+<li><a class="reference internal" href="#ccells">2.2.1. Ccells</a></li>
+<li><a class="reference internal" href="#a-truth-and-the-truth">2.2.2. ‘A Truth’ and ‘The Truth’</a></li>
+<li><a class="reference internal" href="#premises-and-inferences">2.2.3. Premises and Inferences</a><ul>
+<li><a class="reference internal" href="#weak-links">2.2.3.1. Weak Links</a></li>
+<li><a class="reference internal" href="#strong-links">2.2.3.2. Strong Links</a></li>
+<li><a class="reference internal" href="#robust-links">2.2.3.3. Robust Links</a></li>
+<li><a class="reference internal" href="#strong-links-masquerading-as-weak">2.2.3.4. Strong Links Masquerading as Weak</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#spatial-representation">2.1.4. Spatial Representation</a></li>
+<li><a class="reference internal" href="#spatial-representation">2.2.4. Spatial Representation</a></li>
 </ul>
 </li>
 </ul>

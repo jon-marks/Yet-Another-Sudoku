@@ -20,11 +20,12 @@ in the 9 row by 9 column has only one value, all values in all cells obeying
 
 The term Ccell is not to be confused with a:
 
-*  **Node**:  which is a further qualification of a ccell in a larger relationship such
-   as a net or chain.  For example:  Ccells linked together in a chain form the Nodes between the
-   links of the chain.
-*  **Candidate**:  which is a lesser reference to only the possible values in cells that obey Sudoku
+*  :term:`Node`:  A further qualification of a ccell in a :term:`pattern` such as a net or chain.
+   For example:  Ccells linked together in a chain form the Nodes between the links of the chain.
+*  :term:`Candidate`:  A lesser reference to only the possible values in cells that obey Sudoku
    Rules.
+*  :term:`Potential Elimination`:  A Synonym for Candidate, in the context of applying
+   :term:`Conditional Logic` to reduce the set of Candidates in a Cell.
 
 .. _cc_truth:
 
@@ -32,8 +33,8 @@ The term Ccell is not to be confused with a:
 =========================
 
 'A Truth' and 'The Truth' describe the relationships of Ccells in a House or Cell.  For each
-unsolved value in a House or Cell, 'A Truth' is a set of possible values within that group where
-at least one Ccell in that group will ultimately be True.
+unsolved value in a House or Cell, 'A Truth' is a set of possible values within that :term:`House`
+where at least one Ccell in that House will ultimately be True.
 
 A Truth is unconditionally True for a puzzle.  A Truth is that set of Ccells in which one (yet to
 be determined) element will be 'The Truth'.  'The Truth' is that last remaining Ccell in a Cell or

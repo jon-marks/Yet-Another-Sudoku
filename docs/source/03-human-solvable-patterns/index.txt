@@ -37,7 +37,7 @@ descriptions.
    06-unlocked-sets
    07-uniqueness
    08-searching
-   09-barely-human
+   09-super-human
    10-last-resort
 
 

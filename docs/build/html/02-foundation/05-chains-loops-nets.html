@@ -162,8 +162,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="01-core-concepts.html">2.1. Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-language.html">2.2. Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01-language.html">2.1. Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-core-concepts.html">2.2. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-subsets.html">2.3. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.5. Chains, Loops and Nets</a></li>
@@ -181,7 +181,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-barely-human.html">3.9. Barely Human Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-super-human.html">3.9. Super Human Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
 </ul>
 </li>
@@ -239,9 +239,9 @@
 <h1><span class="section-number">2.5. </span>Chains, Loops and Nets<a class="headerlink" href="#chains-loops-and-nets" title="Permalink to this heading">#</a></h1>
 <p>In this section, a Node refers to a Ccell that is part of a Chain, Loop or Net pattern to
 distinguish it from Ccells that are not part of that pattern.</p>
-<p>This section builds substantially on the <a class="reference internal" href="01-core-concepts.html#cc-truth"><span class="std std-ref">Truths</span></a> and
-<a class="reference internal" href="01-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a> concepts developed in
-<a class="reference internal" href="01-core-concepts.html#core-concepts"><span class="std std-ref">Core Concepts</span></a>.</p>
+<p>This section builds substantially on the <a class="reference internal" href="02-core-concepts.html#cc-truth"><span class="std std-ref">Truths</span></a> and
+<a class="reference internal" href="02-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a> concepts developed in
+<a class="reference internal" href="02-core-concepts.html#core-concepts"><span class="std std-ref">Core Concepts</span></a>.</p>
 <p>A Link is an inference describing the relationship between two Ccells.  A Direct Link describes the
 relationship between two Ccells that see each directly.  An Indirect Link describes the relationship
 between two Ccells that are connected indirectly by a pattern such as a chain, etc.</p>
@@ -249,7 +249,7 @@ between two Ccells that are connected indirectly by a pattern such as a chain, e
 <h2><span class="section-number">2.5.1. </span>Direct Links<a class="headerlink" href="#direct-links" title="Permalink to this heading">#</a></h2>
 <dl class="simple">
 <dt>Recall:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="01-core-concepts.html#cc-weak-links"><span class="std std-ref">Direct Weak Links</span></a>:  If one end is True, the other end must be False,
+<li><p><a class="reference internal" href="02-core-concepts.html#cc-weak-links"><span class="std std-ref">Direct Weak Links</span></a>:  If one end is True, the other end must be False,
 and both ends cannot be simultaneously True, but can be simultaneously False.  These Links
 characterise the following Ccell relationships:</p>
 <ul>
@@ -257,7 +257,7 @@ characterise the following Ccell relationships:</p>
 <li><p>Between two different valued Ccells in a cell that has 3 or more Ccells.</p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="01-core-concepts.html#cc-strong-links"><span class="std std-ref">Direct Strong Links</span></a>:  The ends are always the opposite state of each
+<li><p><a class="reference internal" href="02-core-concepts.html#cc-strong-links"><span class="std std-ref">Direct Strong Links</span></a>:  The ends are always the opposite state of each
 other.  The ends cannot be simultaneously True or False.  These Links characterise the
 following Ccell relationships</p>
 <ul>
@@ -363,7 +363,7 @@ Links.</p>
 <p>A WE-AIC has an Even Node count to preserve the weak end link requirement of the chain. If an End
 Node is True, the other is False, and if the other end is True, then the first is False.  The chain
 identifies a reversible opposing inference relationship (True to False) between the End Nodes.
-The ends of WE-AIC behave in the same as <a class="reference internal" href="01-core-concepts.html#cc-weak-links"><span class="std std-ref">Weak Links</span></a>.</p>
+The ends of WE-AIC behave in the same as <a class="reference internal" href="02-core-concepts.html#cc-weak-links"><span class="std std-ref">Weak Links</span></a>.</p>
 <p>With an Odd Node count chain, if the one end is True, so is the other.  But the chain is not
 reversible. The other starting link is Strong, and a True assertion from that end does not
 propagate passed the second link.  This passing forward of the True state in one direction may be
@@ -414,7 +414,7 @@ Strong Links.</p>
 <p>A SE-AIC has an Even node count to preserve the strong end link requirement of the chain.  If an End
 Node is False, the other is True, and if the other is False then the first is True.  The chain
 identifies a reversible opposing inference relationship (False to True) between the end Nodes. The
-ends of a SE-AIC behave like <a class="reference internal" href="01-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust Links</span></a>.</p>
+ends of a SE-AIC behave like <a class="reference internal" href="02-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust Links</span></a>.</p>
 <p>With an Odd Node count chain, if the one end is False so is the other.  But the chain is not
 reversible. The other starting link is Weak and a False assertion from that end does not propagate.
 This False to False one way passing forward may be useful.  But it is this reversible opposing
@@ -515,7 +515,7 @@ in <a class="reference internal" href="../03-human-solvable-patterns/05-chains-l
 <figure class="align-right" id="fig-two-string-kite-eg2" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/two-string-kite-eg2.png"><img alt="Sudoku Two String Kite Example" src="../_images/two-string-kite-eg2.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.15:  </span><span class="caption-text">Two String Kite Example</span><a class="headerlink" href="#fig-two-string-kite-eg2" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.24:  </span><span class="caption-text">Two String Kite Example</span><a class="headerlink" href="#fig-two-string-kite-eg2" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>.81.2.+6...+4+2.+6..+89.+568..+24.+6+931+4+27+5+8+4+28+357916+1+7+5+6+8+9+3+245+1..+36+89223...84+6.+8+6.+2.....||Two String Kite||5r2c7=5r9c7-5r8c9=5r8c4,5r2c7-5r2c4-5r8c4,5r2c7-5r2c4-5r8c4|r2c4-=5|+781+92+4+6+3+5+3+4+2+7+6+5+1+89+9+568+1+3+24+7+6+931+4+27+5+8+4+28+357916+1+7+5+6+8+9+3+245+1+7+4+36+89223+9+5+784+6+1+8+6+4+2+9+1+5+7+3</mong></span></p>
 </div>
@@ -543,7 +543,7 @@ True.  In this example 5 is eliminated from r2c4 (r2c4-=5).</p>
 <figure class="align-right" id="fig-skyscraper-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/skyscraper-eg1.png"><img alt="Sudoku Skyscraper Example" src="../_images/skyscraper-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.16:  </span><span class="caption-text">Skyscraper Example</span><a class="headerlink" href="#fig-skyscraper-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.25:  </span><span class="caption-text">Skyscraper Example</span><a class="headerlink" href="#fig-skyscraper-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+6+9+7.....+2..19+72.6+3..+3..679.9+12...6.+737+4+2+6.95.+8+65+7.+9.+2414+8+6+93+2+757.9.24..+6..+68.+7..+9||Skyscraper||1r1c6=1r5c6~1r5c9=1r3c9,1r1c6-1r1c7-1r3c9,1r1c6-1r1c8-1r3c9,1r1c6-1r3c4-1r3c9,1r1c6-1r3c5-1r3c9|r1c7-=1;r1c8-=1;r3c4-=1;r3c5-=1|+6+9+7+3+1+5+8+4+2+4+819+72+56+3+5+2+3+4+8679+19+12+5+4+86+3+737+4+2+6+195+8+8+65+7+3+9+1+2414+8+6+93+2+757+59+124+3+8+6+2+3+68+5+7+4+1+9</mong></span></p>
 </div>
@@ -569,7 +569,7 @@ which can be eliminated: <span class="raw-html"><mong>r1c7-=1, r1c8-=1, r3c4-=1,
 <figure class="align-right" id="fig-chained-sln-t2-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/chained-sln-t2-eg1.png"><img alt="Sudoku Chained Strong Linked Net Type 2 Example" src="../_images/chained-sln-t2-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.17:  </span><span class="caption-text">Chained Strong Linked Net Type 2 Example</span><a class="headerlink" href="#fig-chained-sln-t2-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.26:  </span><span class="caption-text">Chained Strong Linked Net Type 2 Example</span><a class="headerlink" href="#fig-chained-sln-t2-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>.7+2.+8.64..9+67..8....8+6....1...3...84681........+4.5+8.6.2+1.+8+39+4.+6+84.2...+13.+63..1..+8|r2c5-=4;r3c5-=4;r4c7-=57;r5c6-=4;r5c7-=7;r5c8-=7;r6c7-=37|Chained Strong Linked Net T2||[3r1c1e=3r1c6o=5r1c6e]<3r1c1-1r1c1>[1r1c1e=1r1c4o=1r6c4e={1r6c7o=1r4c7e=1r4c5o=1r2c5e={1r2c1o,2r2c5o},9r6c4o}]<1r2c1-4r2c1>[4r2c1e=4r2c6o=4r3c6e=4r3c1o],3r1c6-3r2c6-4r2c6|r2c6-=3|+172+98+364+5+4967+1+58+3+2+3+586+2+4+7+91+5+2+73+9+6+184681+4+7+2+3+5+9+9+34+158+26+721+58394+7684+92+6+7+513+763+5+41+9+28</mong></span></p>
 </div>
@@ -622,14 +622,14 @@ False.</p></li>
 <p>The ends of Weak Link Ended Chains behave exactly as Weak Links and can be used as such.  Ccells
 ‘See’ each other through weak links.  Two Ccells that ‘See’ each other both cannot be True.  This
 application of the Sudoku rule on its own, does not give much.  Its real power is in linking Ccells
-to all the elements of <a class="reference internal" href="01-core-concepts.html#cc-truth"><span class="std std-ref">‘A Truth’</span></a>.  If a Ccell sees all the elements of ‘A Truth’,
+to all the elements of <a class="reference internal" href="02-core-concepts.html#cc-truth"><span class="std std-ref">‘A Truth’</span></a>.  If a Ccell sees all the elements of ‘A Truth’,
 it cannot be True and can be eliminated</p>
 <p>This will be covered in detail when reviewing the application of <a class="reference internal" href="../03-human-solvable-patterns/04-fish.html#kraken-fish"><span class="std std-ref">Kraken Fish</span></a>.</p>
 </section>
 <section id="strong-link-ended-chains-se-aic">
 <h3><span class="section-number">2.5.5.2. </span>Strong Link Ended Chains (SE-AIC)<a class="headerlink" href="#strong-link-ended-chains-se-aic" title="Permalink to this heading">#</a></h3>
 <dl class="simple">
-<dt>Recall, Strong Ended AI-Chain characteristics are that of <a class="reference internal" href="01-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust Links</span></a>:</dt><dd><ul class="simple">
+<dt>Recall, Strong Ended AI-Chain characteristics are that of <a class="reference internal" href="02-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust Links</span></a>:</dt><dd><ul class="simple">
 <li><p>An even count of Nodes</p></li>
 <li><p>Link count is one less than Node Count, an odd number,</p></li>
 <li><p>Both outer links are Strong Links,</p></li>
@@ -648,7 +648,7 @@ ends relative to each other:</p>
 <figure class="align-right" id="fig-se-aic-diff-chute-cd1" style="width: 320px">
 <a class="reference internal image-reference" href="../_images/se-aic-diff-chute-cd1.png"><img alt="Sudoku Robust Link Different Chutes Candidate Diagram" src="../_images/se-aic-diff-chute-cd1.png" style="width: 318.5px; height: 318.5px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.18:  </span><span class="caption-text">Robust Link Different Chutes Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-diff-chute-cd1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.27:  </span><span class="caption-text">Robust Link Different Chutes Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-diff-chute-cd1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>With ends in different <a class="reference internal" href="../07-glossary.html#term-Chute"><span class="xref std std-term">Chute</span></a>s, the only cells that can see both ends are the two diagonally
@@ -668,7 +668,7 @@ cells cannot be True and can be eliminated.</p>
 <figure class="align-right" id="fig-se-aic-same-chute-cd1" style="width: 320px">
 <a class="reference internal image-reference" href="../_images/se-aic-same-chute-cd1.png"><img alt="Sudoku Robust Link Same Chutes Candidate Diagram" src="../_images/se-aic-same-chute-cd1.png" style="width: 322.5px; height: 322.5px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.19:  </span><span class="caption-text">Robust Link Same Chutes Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-same-chute-cd1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.28:  </span><span class="caption-text">Robust Link Same Chutes Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-same-chute-cd1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>With ends in the same <a class="reference internal" href="../07-glossary.html#term-Chute"><span class="xref std std-term">Chute</span></a>, six cells can see both ends.  In the figure on the right,
@@ -687,7 +687,7 @@ Any same valued Ccell in the highlighted green cells cannot be True and can be e
 <figure class="align-right" id="fig-se-aic-same-house-cd1" style="width: 320px">
 <a class="reference internal image-reference" href="../_images/se-aic-same-house-cd1.png"><img alt="Sudoku Robust Link Same House Candidate Diagram" src="../_images/se-aic-same-house-cd1.png" style="width: 320.5px; height: 320.5px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.20:  </span><span class="caption-text">Robust Link Same House Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-same-house-cd1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.29:  </span><span class="caption-text">Robust Link Same House Candidate Diagram</span><a class="headerlink" href="#fig-se-aic-same-house-cd1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>With ends in the Same <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>, seven cells can see both ends.  In the figure on the right,
@@ -710,7 +710,7 @@ Ccells in the Weak Links never to be True, resulting in their elimination.</p>
 <figure class="align-right" id="fig-se-aic-diff-ends-s1" style="width: 360px">
 <a class="reference internal image-reference" href="../_images/se-aic-diff-ends-s1.png"><img alt="Sudoku Robust Link Different Ends Grid Snip Example 1" src="../_images/se-aic-diff-ends-s1.png" style="width: 356.2px; height: 79.95px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.21:  </span><span class="caption-text">Robust Link Different Ends Grid Snip Example 1</span><a class="headerlink" href="#fig-se-aic-diff-ends-s1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.30:  </span><span class="caption-text">Robust Link Different Ends Grid Snip Example 1</span><a class="headerlink" href="#fig-se-aic-diff-ends-s1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>In this grid snippet say <span class="raw-html"><mong>2r3c2</mong> and <mong>7r3c8</mong> are the chain ends.
@@ -722,7 +722,7 @@ eliminated. <mong>r3c2-=7</mong></span>.</p>
 <figure class="align-right" id="fig-se-aic-diff-ends-s2" style="width: 360px">
 <a class="reference internal image-reference" href="../_images/se-aic-diff-ends-s2.png"><img alt="Sudoku Robust Link Different Ends Grid Snip Example 2" src="../_images/se-aic-diff-ends-s2.png" style="width: 358.15000000000003px; height: 74.75px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.22:  </span><span class="caption-text">Robust Link Different Ends Grid Snip Example 2</span><a class="headerlink" href="#fig-se-aic-diff-ends-s2" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.31:  </span><span class="caption-text">Robust Link Different Ends Grid Snip Example 2</span><a class="headerlink" href="#fig-se-aic-diff-ends-s2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>In this grid snippet say <span class="raw-html"><mong>6r6c3</mong> and <mong>7r6c7</mong> are the chain ends.
@@ -737,7 +737,7 @@ maximum of two eliminations.</p>
 <figure class="align-right" id="fig-se-aic-opp-exp-pair-ends-s1" style="width: 360px">
 <a class="reference internal image-reference" href="../_images/se-aic-opp-exp-pair-ends-s1.png"><img alt="Sudoku Robust Link Opposing Conjugate Pair Ends Grid Snip" src="../_images/se-aic-opp-exp-pair-ends-s1.png" style="width: 358.8px; height: 84.5px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.23:  </span><span class="caption-text">Robust Link Opposing Conjugate Pair Ends Grid Snip</span><a class="headerlink" href="#fig-se-aic-opp-exp-pair-ends-s1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.32:  </span><span class="caption-text">Robust Link Opposing Conjugate Pair Ends Grid Snip</span><a class="headerlink" href="#fig-se-aic-opp-exp-pair-ends-s1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <p>In this grid snippet, say <span class="raw-html"><mong>9r4c2</mong> and <mong>5r4c5</mong></span> of the
@@ -781,7 +781,7 @@ Super-Node set is strongly linked to all nodes in the other Super Node.</p></li>
 <figure class="align-right" id="fig-sln-t1-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/sln-t1-eg1.png"><img alt="Sudoku Strong Linked Net Type 1 Example" src="../_images/sln-t1-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.24:  </span><span class="caption-text">Strong Linked Net Type 1 Example</span><a class="headerlink" href="#fig-sln-t1-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.33:  </span><span class="caption-text">Strong Linked Net Type 1 Example</span><a class="headerlink" href="#fig-sln-t1-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>1..+4.58..4..2.+7.....2...47......6..3....7.91.29.........4...2...+2..48.5....1...8+4||Strong Linked Net T1||2r1c8e=2r1c9o=2r5c9e=2r5c6o=2r9c6e=2r9c5o=2r4c5e=2r4c8o=4r4c8e=4r4c2o=4r5c2e=4r5c6o=4r6c6e=4r6c8o=6r6c8e,2r5c6o-4r5c6o|r1c8:=2;r5c9:=2;r9c6:=2;r4c5:=2;r4c8:=4;r5c2:=4;r6c6:=4;r6c8:=6|1+3+7+4+958+2+64+5+82+6+7+3+9+1+9+62+3+8+147+5+7+8+1+9+26+5+43+6+4+5+87+391+229+3+5+1+4+7+6+8+8+14+6+5+92+3+7+3+2+6+748+15+9+5+7+91+3+2+68+4</mong></span></p>
 </div>
@@ -808,7 +808,7 @@ other odd Ccells. That means all the even Ccells are True and can be placed:
 <figure class="align-right" id="fig-sln-t2-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/sln-t2-eg1.png"><img alt="Sudoku Strong Linked Net Type 2 Example" src="../_images/sln-t2-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.25:  </span><span class="caption-text">Strong Linked Net Type 2 Example</span><a class="headerlink" href="#fig-sln-t2-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.34:  </span><span class="caption-text">Strong Linked Net Type 2 Example</span><a class="headerlink" href="#fig-sln-t2-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+2..3+5..8.5...+81..38+36.4..+1.4..83...2+6.2.+1+43..9.+3.72..1+3+2+5+46+81+977+6+81+9+3..4+19+4+7+25.+3.|r6c7-=6|Strong Linked Net T2||5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e=6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},9r1c9-9r5c9e,6r1c9-6r1c6e|r6c4:=5;r6c8:=6;r2c4:=6;r4c6:=6;r4c7:=9;r5c4:=9|+2+4+13+5+7+68+95+7+9+6+81+2+438+36+24+9+7+1+54+1+783+6+9+52+6+52+9+1+43+7+89+8+3+572+4+61+3+2+5+46+81+977+6+81+9+3+5+24+19+4+7+25+8+3+6</mong></span></p>
 </div>
@@ -837,7 +837,7 @@ the Even Nodes must be False.  This in turn makes the Odd Nodes True which can b
 <figure class="align-right" id="fig-sln-t3-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/sln-t3-eg1.png"><img alt="Sudoku Strong Linked Net Type 2 Example" src="../_images/sln-t3-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.26:  </span><span class="caption-text">Strong Linked Net Type 3 Example</span><a class="headerlink" href="#fig-sln-t3-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.35:  </span><span class="caption-text">Strong Linked Net Type 3 Example</span><a class="headerlink" href="#fig-sln-t3-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+6.159.....+5+3+2+6..9..2+9.736..+342+9+56+1789+1+6.875....+5.+2..+695+9+8+61274313+7+8+4...+6+2+6+4+7+3....||Strong Linked Net T3||1r3c8e=1r9c8o=1r9c9e=5r9c9o=5r3c9e=5r3c8o,5r3c8e-8r3c8-5r3c8o|r3c8-=8|+6+7159+8+4+3+2+4+5+3+2+6+1+89+7+82+9+4736+1+5+342+9+56+1789+1+6+3875+2+4+7+8+5+1+2+4+3+695+9+8+61274313+7+8+4+9+2+5+6+2+6+4+7+3+5+9+8+1</mong></span></p>
 </div>
@@ -876,7 +876,7 @@ changes as it is solved.</p>
 <figure class="align-right" id="fig-cannib-ai-chain-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/cannib-ai-chain-eg1.png"><img alt="Sudoku Cannibalistic AI-Chain Example" src="../_images/cannib-ai-chain-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.27:  </span><span class="caption-text">Cannibalistic AI Chain Example</span><a class="headerlink" href="#fig-cannib-ai-chain-eg1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.36:  </span><span class="caption-text">Cannibalistic AI Chain Example</span><a class="headerlink" href="#fig-cannib-ai-chain-eg1" title="Permalink to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>9.+8...+1.33..89+12.+6.61....8...+3+2.9.18.92...36.81.3......8....63..+39.24+8+577.......1|r1c2-=5;r1c4-=67;r1c5-=47;r1c6-=7;r3c1-=5;r3c4-=5;r3c5-=45;r3c6-=5;r3c7-=47;r3c9-=4;r4c5-=7;r5c4-=45;r5c5-=45;r5c6-=5;r6c5-=7;r6c6-=7;r6c8-=47;r7c5-=5;r9c5-=56;r9c6-=56;r9c8-=4|AI-Chain T1||4r5c9=4r5c1-4r3c1=2r3c1~2r7c1=2r7c9-4r7c9=4r9c7,4r5c9~4r7c9=4r9c7|r4c7-=4;r6c7-=4;r7c9-=4|9+2+8+4+6+5+1+733+7+589+12+4+6+461+7+3+2+98+5+6+4+3+2+59+718+592+1+7+836+481+73+4+6+5+9+2+28+4+5+1+763+9+1+39+624+8+577+5+6+9+8+3+4+21</mong></span></p>
 </div>
@@ -961,10 +961,10 @@ can be considered as a Node when identifying Strong Linked Nodes in patterns.</p
 <figure class="align-right" id="fig-gl-cd1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/gl-cd1.png"><img alt="Sudoku Group Link Candidate Diagram" src="../_images/gl-cd1.png" style="width: 379.50000000000006px; height: 158.95000000000002px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.28:  </span><span class="caption-text">Group Link Candidate Diagram</span><a class="headerlink" href="#fig-gl-cd1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.37:  </span><span class="caption-text">Group Link Candidate Diagram</span><a class="headerlink" href="#fig-gl-cd1" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-gl-cd1"><span class="std std-numref">Figure 2.28: </span></a> shows the strong link between the Grouped Node Xr2c79 and Xr2c2.  That is
+<p><a class="reference internal" href="#fig-gl-cd1"><span class="std std-numref">Figure 2.37: </span></a> shows the strong link between the Grouped Node Xr2c79 and Xr2c2.  That is
 <span class="raw-html"><mong>Xr2c2=Xr2c79</mong></span></p>
 <p>If Xr2c2 is True, then both of Xr2c79 are False.  If Xr2c2 is False then one of Xr2C79 is True, or
 if one of Xr2c79 is True then Xr2c2 is False.</p>
@@ -973,10 +973,10 @@ patterns like chains, may yield many more productive outcomes.</p>
 <figure class="align-right" id="fig-gl-cd2" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/gl-cd2.png"><img alt="Sudoku Group Link 2-String Kite Candidate Diagram" src="../_images/gl-cd2.png" style="width: 378.0px; height: 378.0px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.29:  </span><span class="caption-text">Group Link 2-String Kite Candidate Diagram</span><a class="headerlink" href="#fig-gl-cd2" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.38:  </span><span class="caption-text">Group Link 2-String Kite Candidate Diagram</span><a class="headerlink" href="#fig-gl-cd2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-gl-cd2"><span class="std std-numref">Figure 2.29: </span></a> shows a 2 String Kite with a group link:
+<p><a class="reference internal" href="#fig-gl-cd2"><span class="std std-numref">Figure 2.38: </span></a> shows a 2 String Kite with a group link:
 <span class="raw-html"><br><mong>Xr2c2=Xr2c79~Xr3c8=Xr7c8<mong></span></p>
 <p>Walking the <a class="reference internal" href="../07-glossary.html#term-SE-AIC"><span class="xref std std-term">SE-AIC</span></a>, starting with a False premise as the End Links are Strong.  If Xr2c2 is
 False, then one of X2r79 is True, making Xr3c8 is False and Xr7c8 True.  And, if Xr7c8 is False, then
@@ -996,15 +996,15 @@ Link</span></a>.  Therefore, Xr7c2 if it exists, sees both ends, cannot be True 
 <figure class="align-right" id="fig-gl-cd3" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/gl-cd3.png"><img alt="Group Link Line Examples" src="../_images/gl-cd3.png" style="width: 378.0px; height: 378.0px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.30:  </span><span class="caption-text">Group Link Line Examples</span><a class="headerlink" href="#fig-gl-cd3" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.39:  </span><span class="caption-text">Group Link Line Examples</span><a class="headerlink" href="#fig-gl-cd3" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a class="reference internal" href="#fig-gl-cd3"><span class="std std-numref">Figure 2.30: </span></a>: shows how to correctly identify Group links:</p>
+<p><a class="reference internal" href="#fig-gl-cd3"><span class="std std-numref">Figure 2.39: </span></a>: shows how to correctly identify Group links:</p>
 <ul class="simple">
 <li><p>In Row 2, if Xr2c1 is False, then one of Xr2c79 is True, and if both Xr2c79 are False, then Xr2c1
 is True.  In reverse, if Xr2c1 is True, then both Xr2c7 are False, and if one of Xr2c79 is True
 then Xr2c1 is False. Because the relationship meets the criteria of a
-<a class="reference internal" href="01-core-concepts.html#cc-strong-links"><span class="std std-ref">Strong Link</span></a> in both directions, Xr2Xr2c1=Xr2c79 is a valid Group link.</p></li>
+<a class="reference internal" href="02-core-concepts.html#cc-strong-links"><span class="std std-ref">Strong Link</span></a> in both directions, Xr2Xr2c1=Xr2c79 is a valid Group link.</p></li>
 <li><p>In Column 1, if Xr2c1 is False, then one of Xr56c1 is True, and if both Xr56c1 are
 False, then Xr2c1 is True.  In reverse, if Xr2c1 is True, then both xr56c1 are False, and if one
 of Xr56c1 is True, then Xr2c1 is False.  Therefore, Xr2c1=Xr56c1 is a valid Group Link.</p></li>
@@ -1032,13 +1032,13 @@ True, inhibiting the Strong Link.</p></li>
 <figure class="align-right" id="fig-gl-cd4" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/gl-cd4.png"><img alt="Group Link Line Examples" src="../_images/gl-cd4.png" style="width: 378.0px; height: 378.0px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.31:  </span><span class="caption-text">Group Link Box Examples</span><a class="headerlink" href="#fig-gl-cd4" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Figure 2.40:  </span><span class="caption-text">Group Link Box Examples</span><a class="headerlink" href="#fig-gl-cd4" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p><a class="reference internal" href="#fig-gl-cd4"><span class="std std-numref">Figure 2.31: </span></a> shows some Box Group Link patterns, out of a total of 81. Box Group Link
+<p><a class="reference internal" href="#fig-gl-cd4"><span class="std std-numref">Figure 2.40: </span></a> shows some Box Group Link patterns, out of a total of 81. Box Group Link
 patterns are only possible with no less than 3 and no more than five same value Ccells in
 a box.  The patterns in Boxes 2, 4 and 8 have a Shared Ccell.  A shared Ccell is present on both
 sides of the link equation.  For example, the Group link in box 2 Xr2c56=Xr23c5 shares Xr2c5.</p>
@@ -1123,7 +1123,7 @@ to know which ccell in the grouped node is the Truth.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:20c475d*, Sat, 14 Jan 2023, 20:57:30
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

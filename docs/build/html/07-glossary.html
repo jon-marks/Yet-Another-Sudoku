@@ -162,8 +162,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="02-foundation/index.html">2. Foundation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/01-core-concepts.html">2.1. Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/02-language.html">2.2. Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/01-language.html">2.1. Language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/02-core-concepts.html">2.2. Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/03-subsets.html">2.3. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/05-chains-loops-nets.html">2.5. Chains, Loops and Nets</a></li>
@@ -181,7 +181,7 @@
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/09-barely-human.html">3.9. Barely Human Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/09-super-human.html">3.9. Super Human Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
 </ul>
 </li>
@@ -240,18 +240,24 @@
 <p><a class="reference external" href="https://www.sudocue.net/glossary.php">https://www.sudocue.net/glossary.php</a> and <a class="reference external" href="http://sudopedia.enjoysudoku.com/Terminology.html">http://sudopedia.enjoysudoku.com/Terminology.html</a></p>
 <dl class="glossary">
 <dt id="term-A-Truth"><strong>A Truth</strong><a class="headerlink" href="#term-A-Truth" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="#term-Element"><span class="xref std std-term">Element</span></a>s that could possibly be <a class="reference internal" href="#term-The-Truth"><span class="xref std std-term">The Truth</span></a>.
-That is one of the elements in the set is the actual solved value for that <a class="reference internal" href="#term-Cell"><span class="xref std std-term">Cell</span></a></p>
+That is one of the elements in the set is the actual solved value for that <a class="reference internal" href="#term-Cell"><span class="xref std std-term">Cell</span></a>.</p>
 </dd>
-<dt id="term-AI"><strong>AI</strong><a class="headerlink" href="#term-AI" title="Permalink to this term">#</a></dt><dd><p>Alternating Inference - A patterns where adjacent links between nodes alternate strong and
-weak.</p>
+<dt id="term-AI"><strong>AI</strong><a class="headerlink" href="#term-AI" title="Permalink to this term">#</a></dt><dd><p>Abbreviation for <a class="reference internal" href="#term-Alternating-Inference"><span class="xref std std-term">Alternating Inference</span></a>.</p>
 </dd>
-<dt id="term-AIC"><strong>AIC</strong><a class="headerlink" href="#term-AIC" title="Permalink to this term">#</a></dt><dd><p>Alternating Inference Chain.  A Chain made up with alternating Strong and Weak Links.</p>
+<dt id="term-AIC"><strong>AIC</strong><a class="headerlink" href="#term-AIC" title="Permalink to this term">#</a></dt><dd><p>Abbreviation for <a class="reference internal" href="#term-Alternating-Inference-Chain"><span class="xref std std-term">Alternating Inference Chain</span></a>.</p>
 </dd>
-<dt id="term-AIL"><strong>AIL</strong><a class="headerlink" href="#term-AIL" title="Permalink to this term">#</a></dt><dd><p>Alternating Inference Loop.  An AIC that loops back on itself, begining and end link are the
-same.</p>
+<dt id="term-AIL"><strong>AIL</strong><a class="headerlink" href="#term-AIL" title="Permalink to this term">#</a></dt><dd><p>Abbreviation for <a class="reference internal" href="#term-Alternating-Inference-Loop"><span class="xref std std-term">Alternating Inference Loop</span></a>.</p>
 </dd>
-<dt id="term-AIN"><strong>AIN</strong><a class="headerlink" href="#term-AIN" title="Permalink to this term">#</a></dt><dd><p>Alternating Inference Net.  A network of linked nodes where the links alternate between net
-levels.</p>
+<dt id="term-AIN"><strong>AIN</strong><a class="headerlink" href="#term-AIN" title="Permalink to this term">#</a></dt><dd><p>Abbreviation for <a class="reference internal" href="#term-Alternating-Inference-Net"><span class="xref std std-term">Alternating Inference Net</span></a>.</p>
+</dd>
+<dt id="term-Alternating-Inference"><strong>Alternating Inference</strong><a class="headerlink" href="#term-Alternating-Inference" title="Permalink to this term">#</a></dt><dd><p>A pattern where adjacent links between nodes alternate strong and weak.</p>
+</dd>
+<dt id="term-Alternating-Inference-Chain"><strong>Alternating Inference Chain</strong><a class="headerlink" href="#term-Alternating-Inference-Chain" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Chain"><span class="xref std std-term">Chain</span></a> linking <a class="reference internal" href="#term-Node"><span class="xref std std-term">Node</span></a>s with alternating <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a>s and
+<a class="reference internal" href="#term-Weak-Link"><span class="xref std std-term">Weak Link</span></a>s.</p>
+</dd>
+<dt id="term-Alternating-Inference-Loop"><strong>Alternating Inference Loop</strong><a class="headerlink" href="#term-Alternating-Inference-Loop" title="Permalink to this term">#</a></dt><dd><p>An <a class="reference internal" href="#term-Alternating-Inference-Chain"><span class="xref std std-term">Alternating Inference Chain</span></a> that loops back on itself.</p>
+</dd>
+<dt id="term-Alternating-Inference-Net"><strong>Alternating Inference Net</strong><a class="headerlink" href="#term-Alternating-Inference-Net" title="Permalink to this term">#</a></dt><dd><p>A network of <a class="reference internal" href="#term-Node"><span class="xref std std-term">Node</span></a>s where the Links at consecutive net levels alternate.</p>
 </dd>
 <dt id="term-Band"><strong>Band</strong><a class="headerlink" href="#term-Band" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Chute"><span class="xref std std-term">Chute</span></a>.</p>
 </dd>
@@ -272,8 +278,8 @@ Also known as a Block.</p>
 </dd>
 <dt id="term-Buddy"><strong>Buddy</strong><a class="headerlink" href="#term-Buddy" title="Permalink to this term">#</a></dt><dd><p>See <a class="reference internal" href="#term-Peer"><span class="xref std std-term">Peer</span></a>.</p>
 </dd>
-<dt id="term-Candidate"><strong>Candidate</strong><a class="headerlink" href="#term-Candidate" title="Permalink to this term">#</a></dt><dd><p>A possible solved value for an unsolved cell.  This definition has a finer distinction in that
-it is only a reference to the candidate value, not to any cell location on the <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
+<dt id="term-Candidate"><strong>Candidate</strong><a class="headerlink" href="#term-Candidate" title="Permalink to this term">#</a></dt><dd><p>A possible solved value for an unsolved cell.  This definition is only a reference to the
+candidate value, not to any <a class="reference internal" href="#term-Cell"><span class="xref std std-term">Cell</span></a> location on the <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
 </dd>
 <dt id="term-Ccell"><strong>Ccell</strong><a class="headerlink" href="#term-Ccell" title="Permalink to this term">#</a></dt><dd><p>A three dimensional tuple uniquely identifying a candidate element by value, row,
 and column in a Sudoku Grid.</p>
@@ -281,7 +287,7 @@ and column in a Sudoku Grid.</p>
 <dt id="term-Cell"><strong>Cell</strong><a class="headerlink" href="#term-Cell" title="Permalink to this term">#</a></dt><dd><p>A location in a Sudoku grid into which a Given is present or a Solved value can be placed.</p>
 </dd>
 <dt id="term-Chain-Patterns"><strong>Chain Patterns</strong><a class="headerlink" href="#term-Chain-Patterns" title="Permalink to this term">#</a></dt><dd><p>Chain patterns refer to the collection of Chain, Net and Loop patterns, typically referring
-to <a class="reference internal" href="#term-AI"><span class="xref std std-term">AI</span></a> Chains</p>
+to <a class="reference internal" href="#term-Alternating-Inference"><span class="xref std std-term">Alternating Inference</span></a> Chains</p>
 </dd>
 <dt id="term-Chain"><strong>Chain</strong><a class="headerlink" href="#term-Chain" title="Permalink to this term">#</a></dt><dd><p>Chain is short for Inference Chain, a stream of inference links connecting Ccells to each
 other.</p>
@@ -291,6 +297,9 @@ Three boxes in a row is a <a class="reference internal" href="#term-Floor"><span
 Also known as a Band.</p>
 </dd>
 <dt id="term-Column"><strong>Column</strong><a class="headerlink" href="#term-Column" title="Permalink to this term">#</a></dt><dd><p>A vertical line of 9 cells in a Sudoku <a class="reference internal" href="#term-Grid"><span class="xref std std-term">Grid</span></a>.</p>
+</dd>
+<dt id="term-Conditional-Logic"><strong>Conditional Logic</strong><a class="headerlink" href="#term-Conditional-Logic" title="Permalink to this term">#</a></dt><dd><p>The process of asserting a Premise and following a sequence of inferences to a
+possible logical outcome.  See <a class="reference internal" href="02-foundation/02-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a></p>
 </dd>
 <dt id="term-Conjugate-Pair"><strong>Conjugate Pair</strong><a class="headerlink" href="#term-Conjugate-Pair" title="Permalink to this term">#</a></dt><dd><p>The only two same value candidates in a house forming a <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a>.  This is a
 reference to the candidates not the links between them – a subtle distinction.</p>
@@ -321,11 +330,11 @@ Also known as a Group, Sector, or Unit.</p>
 </dd>
 <dt id="term-Link"><strong>Link</strong><a class="headerlink" href="#term-Link" title="Permalink to this term">#</a></dt><dd><p>A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
 a <a class="reference internal" href="#term-Weak-Link"><span class="xref std std-term">Weak Link</span></a>, a <a class="reference internal" href="#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a> or a <a class="reference internal" href="#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>.
-See <a class="reference internal" href="02-foundation/01-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a></p>
+See <a class="reference internal" href="02-foundation/02-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a></p>
 </dd>
 <dt id="term-Loop"><strong>Loop</strong><a class="headerlink" href="#term-Loop" title="Permalink to this term">#</a></dt><dd><p>An (<a class="reference internal" href="#term-AI"><span class="xref std std-term">AI</span></a>) <a class="reference internal" href="#term-Chain"><span class="xref std std-term">Chain</span></a> that loops back on itself closing the chain.</p>
 </dd>
-<dt id="term-Node"><strong>Node</strong><a class="headerlink" href="#term-Node" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is linked to other nodes in a pattern.</p>
+<dt id="term-Node"><strong>Node</strong><a class="headerlink" href="#term-Node" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a> that is linked by <a class="reference internal" href="#term-Conditional-Logic"><span class="xref std std-term">Conditional Logic</span></a> to other nodes in a pattern.</p>
 </dd>
 <dt id="term-Parity"><strong>Parity</strong><a class="headerlink" href="#term-Parity" title="Permalink to this term">#</a></dt><dd><p>The collective pronoun for the terms Odd and Even, which are the parity of the sequence
 numbers assigned to a <a class="reference internal" href="#term-SLN"><span class="xref std std-term">SLN</span></a> or <a class="reference internal" href="#term-SLC"><span class="xref std std-term">SLC</span></a>.</p>
@@ -348,10 +357,17 @@ the actual value of that State is yet to be determined.</p>
 </dd>
 <dt id="term-Pattern-Cell"><strong>Pattern Cell</strong><a class="headerlink" href="#term-Pattern-Cell" title="Permalink to this term">#</a></dt><dd><p>Reference to a Cell containing Candidates belonging to a pattern</p>
 </dd>
-<dt id="term-Placement"><strong>Placement</strong><a class="headerlink" href="#term-Placement" title="Permalink to this term">#</a></dt><dd><p>Placing of a single solved value in a Cell.</p>
+<dt id="term-PE"><strong>PE</strong><a class="headerlink" href="#term-PE" title="Permalink to this term">#</a></dt><dd><p>A Abbreviation of <a class="reference internal" href="#term-Potential-Elimination"><span class="xref std std-term">Potential Elimination</span></a>, synonymous with <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a>.</p>
 </dd>
 <dt id="term-Peer"><strong>Peer</strong><a class="headerlink" href="#term-Peer" title="Permalink to this term">#</a></dt><dd><p>A <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a>s that can <a class="reference internal" href="#term-See"><span class="xref std std-term">See</span></a> other Ccells.  Peers are a set of Ccells that see
 each other.</p>
+</dd>
+<dt id="term-Placement"><strong>Placement</strong><a class="headerlink" href="#term-Placement" title="Permalink to this term">#</a></dt><dd><p>Placing of a single solved value in a Cell.</p>
+</dd>
+<dt id="term-Potential-Elimination"><strong>Potential Elimination</strong><a class="headerlink" href="#term-Potential-Elimination" title="Permalink to this term">#</a></dt><dd><p>A reference to a Candidate that is an element of the solution set of Candidates in that Cell.
+Through the application of <a class="reference internal" href="#term-Conditional-Logic"><span class="xref std std-term">Conditional Logic</span></a> Potential Eliminations are
+removed from this set until the last value remains as the solution for that Cell.</p>
+<p>may be eliminated from the Synonym of <a class="reference internal" href="#term-Ccell"><span class="xref std std-term">Ccell</span></a></p>
 </dd>
 <dt id="term-Puzzle"><strong>Puzzle</strong><a class="headerlink" href="#term-Puzzle" title="Permalink to this term">#</a></dt><dd><p>A partially completed Sudoku in a puzzle, it may only be populated with the givens or with
 givens and some solved values.</p>
@@ -470,7 +486,7 @@ Colbox  The intersection of a column and box comprising only three cells.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:20c475d*, Sat, 14 Jan 2023, 20:57:30
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

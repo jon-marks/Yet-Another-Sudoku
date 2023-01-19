@@ -84,7 +84,7 @@ yet to be found.
 All puzzles with 40 or more givens have one unique solution. Most unique minimal puzzles have
 between 23 and 26 givens.
 
-In a valid puzzle at least 8 of the 9 digits must occur one or more times as givens.  However,
+In a valid puzzle, at least 8 of the 9 digits must occur one or more times as givens.  However,
 meeting this criterion does not presume a puzzle is valid.
 
 What's Ahead?
@@ -100,7 +100,7 @@ Intended Audience
 
 The intended audience are people who have at least mastered the basics of Sudoku, and are seeking
 to improve their skills.  `Many excellent sources on the internet
-<https://www.google.com/search?client=firefox-b-d&q=Sudoku+basics>`_ do a better job than I in
+<https://www.google.com/search?q=Sudoku+basics>`_ do a better job than I in
 covering the basics.  I defer to them.
 
 Static pages do not have a comment mechanism like blogs.  Please feel free to comment `here
