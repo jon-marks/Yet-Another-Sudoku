@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.4. Base Sets and Cover Sets" href="04-base-cover-sets.html" /><link rel="prev" title="2.2. Core Concepts" href="02-core-concepts.html" />
 
-    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Yet Another Sudoku | Foundation | Subsets</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -388,6 +388,20 @@ but <a class="reference internal" href="../03-human-solvable-patterns/06-unlocke
 Subset in the one Group and a Hidden Subset in the other Group, same value candidates can be
 eliminated from other cells in the Exposed Group and from those cells forming the Hidden Subset in
 the Hidden Group.</p>
+<dl class="simple" id="found-gbp-criteria">
+<dt>Viable patterns have:</dt><dd><ul class="simple">
+<li><p>A minimum of 2 to ‘n’ of the ‘n’ candidates as the only candidates present in
+<span class="raw-html">'n'&nbsp;-&nbsp;1</span> cells in the Exposed House outside the intersection.</p></li>
+<li><p>All ‘n’ candidates present at least once in the intersection.</p></li>
+<li><p>A minimum of 1 to ‘n’ of the ‘n’ candidates present in <span class="raw-html">'n'&nbsp;-&nbsp;1</span> cells with
+or without other candidates such that all ‘n’ Candidates are covered in those Cells outside
+the intersection.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Only one of the ‘n’ candidates can be True in the Intersection, forming a ‘n’ - 1 Exposed set in
+the one house, and a ‘n’ - 1 Hidden Set in the other house.  This characteristic is used to find
+the eliminations in this pattern without knowing this <a class="reference internal" href="../07-glossary.html#term-Unrestricted-Candidate"><span class="xref std std-term">Unrestricted Candidate</span></a> value.</p>
 <p>These patterns are another special case of <a class="reference internal" href="06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>.  A Hidden
 (incomplete) ‘n’ subset always has a reciprocal Exposed (incomplete) 9 - ‘n’ subset, and the ULS
 Nodes include all the candidates in the intersection.  These patterns especially Grouped Bent Pairs
@@ -398,7 +412,7 @@ Set.</p>
 <section id="exposed-line-hidden-box-grouped-bent-pairs">
 <h4><span class="section-number">2.3.5.1.1. </span>Exposed Line, Hidden Box Grouped Bent Pairs<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-pairs" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-gbp-el-hb-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/gbp-el-hb-cd1.png"><img alt="Grouped Bent Pair: Exposed Line, Hidden Box Candidate Diagram" src="../_images/gbp-el-hb-cd1.png" style="width: 472.0px; height: 99.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gbp-el-hb-cd1.png"><img alt="Grouped Bent Pair: Exposed Line, Hidden Box Candidate Diagram" src="../_images/gbp-el-hb-cd1.png" style="width: 472.0px; height: 105.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.10:  </span><span class="caption-text">Grouped Bent Pair: Exposed Line, Hidden Box Candidate Diagram</span><a class="headerlink" href="#fig-gbp-el-hb-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -415,13 +429,15 @@ the intersection r3c789 and r3c2, XY-=r3c!2789.</p>
 <p>Asserting XY!-r1c9, that is *r1c9 is True, infers that both X and Y must be True in the
 Intersection XYr3c789. This is impossible as Cell r3c2 outside the Intersection requires either X or
 Y.  Therefore, *r1c9 cannot be True, resulting in its elimination, !(XY)-=r1c9.</p>
+<p>Asserting Both X and Y True in the intersection, breaks the pattern by leaving nothing to place in
+the Intersecting Houses outside the intersection.</p>
 <p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-gbp-el-hb"><span class="std std-ref">Human Solvable Patterns / Grouped Bent Pairs - Exposed Line, Hidden Box</span></a>
 for worked examples.</p>
 </section>
 <section id="hidden-line-exposed-box-grouped-bent-pairs">
 <h4><span class="section-number">2.3.5.1.2. </span>Hidden Line, Exposed Box Grouped Bent Pairs<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-pairs" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-gbp-hl-eb-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/gbp-hl-eb-cd1.png"><img alt="Grouped Bent Pair: Hidden Line, Exposed Box Candidate Diagram" src="../_images/gbp-hl-eb-cd1.png" style="width: 472.0px; height: 99.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gbp-hl-eb-cd1.png"><img alt="Grouped Bent Pair: Hidden Line, Exposed Box Candidate Diagram" src="../_images/gbp-hl-eb-cd1.png" style="width: 472.0px; height: 105.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.11:  </span><span class="caption-text">Grouped Bent Pair: Hidden Line, Exposed Box Candidate Diagram</span><a class="headerlink" href="#fig-gbp-hl-eb-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -434,10 +450,12 @@ including the intersection with Row 3. This further infers Xr3c5 True as r3c5 is
 Cell in Row 3 outside the intersection where X can be True.  Inferring Xr3c5 True, infers Y True
 only in the intersection Yr3c789.  The same is valid for X and Y interchanged.  Thus, the Truth
 XY(r1c8,r3c789) is established resulting in the elimination of X and Y from all cells in Box 3
-outside the Intersection r3c789 and r1c8, XY-=b3p!2789.</p>
+outside the Intersection r3c789 and r1c8, b3p!2789-=XY.</p>
 <p>Asserting XY!-r3c2 True, that is *r3c5 is True, infers that Both X and Y must be True in the
 Intersection, XYr3c789.  This is impossible as Cell r1c8 outside the Intersection requires either X
-or Y.  Therefore, *r3c5 cannot be True, resulting in its elimination !(XY)-=r3c5.</p>
+or Y.  Therefore, *r3c5 cannot be True, resulting in its elimination r3c5-=!(XY).</p>
+<p>Asserting Both X and Y True in the intersection breaks the pattern by leaving nothing to place in
+the Intersecting Houses outside the intersection.</p>
 <p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-gbp-hl-eb"><span class="std std-ref">Human Solvable Patterns / Grouped Bent Pairs - Hidden Line, Exposed Box</span></a>
 for worked examples.</p>
 </section>
@@ -447,7 +465,7 @@ for worked examples.</p>
 <section id="exposed-line-hidden-box-grouped-bent-triples">
 <h4><span class="section-number">2.3.5.2.1. </span>Exposed Line, Hidden Box Grouped Bent Triples<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-gbt-el-hb-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/gbt-el-hb-cd1.png"><img alt="Grouped Bent Triple: Exposed Line, Hidden Box Candidate Diagram" src="../_images/gbt-el-hb-cd1.png" style="width: 472.0px; height: 99.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gbt-el-hb-cd1.png"><img alt="Grouped Bent Triple: Exposed Line, Hidden Box Candidate Diagram" src="../_images/gbt-el-hb-cd1.png" style="width: 472.0px; height: 103.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.12:  </span><span class="caption-text">Grouped Bent Triple: Exposed Line, Hidden Box Candidate Diagram</span><a class="headerlink" href="#fig-gbt-el-hb-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -455,27 +473,28 @@ for worked examples.</p>
 </div>
 </figcaption>
 </figure>
-<p>Asserting the premise that Xr3c2 and Yr3c6 are True, infers that X and Y cannot be True anywhere
+<p>Asserting the premises Xr3c2 and Yr3c6 True, infers that X and Y cannot be True anywhere
 else in Row 3 including the intersection with Box 3. In Box 3, X and Y can only then be True in
 either r1c9 or r2c8.  With X and Y placed in one or the other of r1c9 and r2c8, no place exists for
-Z outside the Intersection, inferring Z is only True in the Intersection.  The confirmed existence
-of Z in the intersection creates an Exposed pair XYr3c26 in Row 3 outside the Intersection, and a
-Hidden Pair XY#2(r1c9,r2c8) in Box 3.  The same applies with X, Y, and Z interchanged.</p>
-<dl class="simple">
-<dt>Asserting the premise Xr3c2 and Xr3c6 infers the Truth: Zr3c789.  Therefore:</dt><dd><ul class="simple">
-<li><p>X, Y, and Z cannot be True in any other cells in Row 3, resulting in their elimination.</p></li>
-<li><p>All values other than X, Y, and Z in r1c9 and r2c8 cannot be True, resulting in their
-elimination.</p></li>
-</ul>
-</dd>
-</dl>
+Z outside the Intersection, inferring Z is only True in the Intersection.  Thus confirming the Truth
+XYZr3c26789.  Therefore, X, Y, and Z can be eliminated from r3c1345.  That is r3c1345-=XYZ, or
+r3c!(26789)-=XYZ.</p>
+<p>Interchanging X, Y, and Z does not alter the outcome.  Thus, only one of X, Y, or Z can be placed in
+the Intersection.  The remaining two Candidates can then be assigned to the two pattern Cells in Box
+3 outside the intersection.  Here again, interchanging X, Y, and Z does not alter the outcome.
+Therefore, any Candidate that is not X, Y, or Z in the two Hidden Box Pattern Cells cannot be True,
+resulting in their elimination.</p>
+<p>With Zr3c789 True, X or Y can be placed in r1c8 and Y or X placed in r2c7 respectively.  This locks
+any other candidates out of r1c8, and r2c7.  That is, (r1c8,r2c7)-=!(XYZ), or more conveniently
+b3p24-=!(XYZ); any Candidate other than X, Y, or Z in b3p24 cannot be True, resulting in their
+elimination.</p>
 <p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-gbt-el-hb"><span class="std std-ref">Human Solvable Patterns / Grouped Bent Triples - Exposed Line, Hidden Box</span></a>
 for worked examples.</p>
 </section>
 <section id="hidden-line-exposed-box-grouped-bent-triples">
 <h4><span class="section-number">2.3.5.2.2. </span>Hidden Line, Exposed Box Grouped Bent Triples<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-gbt-hl-eb-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/gbt-hl-eb-cd1.png"><img alt="Grouped Bent Triple: Hidden Line, Exposed Box Candidate Diagram" src="../_images/gbt-hl-eb-cd1.png" style="width: 472.0px; height: 99.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gbt-hl-eb-cd1.png"><img alt="Grouped Bent Triple: Hidden Line, Exposed Box Candidate Diagram" src="../_images/gbt-hl-eb-cd1.png" style="width: 472.0px; height: 105.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.13:  </span><span class="caption-text">Grouped Bent Triple: Hidden Line, Exposed Box Candidate Diagram</span><a class="headerlink" href="#fig-gbt-hl-eb-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -483,19 +502,20 @@ for worked examples.</p>
 </div>
 </figcaption>
 </figure>
-<p>Asserting the premise that Xr2c7 and Yr1c8 are True, infers that X and Y cannot be True anywhere
-else in Box 3 including the intersection with Row 3.  In Row 3, X and Y can only then be True in
-either r3c2 and r3c5.  With X and Y placed in one or the other of r3c2 and r3c5, no place exists for
-Z outside the Intersection, inferring Z is only True in the Intersection.  The confirmed existence
-of Z in the Intersection creates an Exposed Pair XY(r1c8,r2c7) in Box 3 outside the Intersection and
-a Hidden Pair XY#2r3c25 in Row 3.  The same applies with X, Y, and Z interchanged.</p>
-<dl class="simple">
-<dt>Asserting the premise Xr2c7 and Yr1c8 infers the Truth Zr3c789.  Therefore:</dt><dd><ul class="simple">
-<li><p>X, Y, and Z cannot be True in any other cell in Box 3, resulting in their elimination.</p></li>
-<li><p>All values other than X, Y, and Z in r3c25 cannot be True, resulting in their elimination.</p></li>
-</ul>
-</dd>
-</dl>
+<p>Asserting Xr2c7 and Yr1c8 True, infers that X and Y cannot be True anywhere else in Box 3 including
+the intersection with Row 3.  In Row 3, X and Y can only then be True in either r3c2 and r3c5.  With
+X and Y placed in one or the other of r3c2 and r3c5, no place exists for Z outside the Intersection,
+inferring Z is only True in the Intersection.  Thus confirming the Truth XYZ(r1c8,r2c7,r3c789), or
+more conveniently XYZb3p24789.  Therefore, X, Y, and Z can be eliminated from the other cells in the
+hidden box outside the intersection.  That is, b3p1356-=XYZ, or b3p!(24789)-=XYZ.</p>
+<p>Interchanging X, Y, and Z does not alter the outcome.  Thus, only one of X, Y, or Z can be placed in
+the Intersection.  The remaining two Candidates can then be assigned to the two pattern Cells in Row
+3 outside the Intersection.  Here again, interchanging X, Y, and Z does not alter the outcome.
+Therefore, any Candidate that is not X, Y, or Z in the two Hidden Row Pattern Cells cannot be True,
+resulting in their elimination.</p>
+<p>With Zr3c789 True, X or Y can be placed in r3c2 and Y or X placed in r3c5 respectively.  This locks
+any other candidate out of r3c25.  That is, r3c25-=!(XYZ);  any Candidate other than X, Y, or Z in
+r3c25 cannot be True, resulting in their elimination.</p>
 <p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-gbt-hl-eb"><span class="std std-ref">Human Solvable Patterns / Grouped Bent Triples - Hidden Line, Exposed Box</span></a>
 for worked examples.</p>
 </section>
@@ -505,7 +525,7 @@ for worked examples.</p>
 <section id="exposed-line-hidden-box-grouped-bent-quads">
 <h4><span class="section-number">2.3.5.3.1. </span>Exposed Line, Hidden Box Grouped Bent Quads<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-gbq-el-hb-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/gbq-el-hb-cd1.png"><img alt="Grouped Bent Quad: Exposed Line, Hidden Box Candidate Diagram" src="../_images/gbq-el-hb-cd1.png" style="width: 472.0px; height: 99.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gbq-el-hb-cd1.png"><img alt="Grouped Bent Quad: Exposed Line, Hidden Box Candidate Diagram" src="../_images/gbq-el-hb-cd1.png" style="width: 472.0px; height: 105.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.14:  </span><span class="caption-text">Grouped Bent Quad: Exposed Line, Hidden Box Candidate Diagram</span><a class="headerlink" href="#fig-gbq-el-hb-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -513,28 +533,25 @@ for worked examples.</p>
 </div>
 </figcaption>
 </figure>
-<p>Asserting the premise that Wr3c2, Xr3c4 and Yr3c6 are True, infers that W, X, and Y cannot be True
+<p>Asserting the premises Wr3c2, Xr3c4 and Yr3c6 True, infers that W, X, and Y cannot be True
 anywhere else in Row 3 including the intersection with Box 3. In Box 3, W, X, and Y can only then be
 True in one of r1c7, r1c9, and r2c8 each.  With W, X, and Y placed in any of r1c7, r1c9, and r2c8
 each, no place exists for Z outside the Intersection, inferring Z is only True in the Intersection.
-The confirmed existence of Z in the intersection creates an Exposed Triple  WXYr3c246 in Row 3
-outside the Intersection, and a Hidden Triple XY#3(r1c79,r2c8) in Box 3.  The same applies with W,
-X, Y, and Z interchanged.</p>
-<dl class="simple">
-<dt>Asserting the premise Wr3c2, Xr3c4 and Xr3c6 infers the Truth: Zr3c789.  Therefore:</dt><dd><ul class="simple">
-<li><p>W, X, Y, and Z cannot be True in any other cells in Row 3, resulting in their elimination.</p></li>
-<li><p>All values other than W, X, Y, and Z in r1c79 and r2c8 cannot be True, resulting in their
-elimination.</p></li>
-</ul>
-</dd>
-</dl>
-<p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-gbq-el-hb"><span class="std std-ref">Human Solvable Patterns / Grouped Bent Quads - Exposed Line, Hidden Box</span></a>
-for worked examples.</p>
+Thus confirming the Truth WXYZr3c235789.  Therefore, W, X, Y and Z can be eliminated from r3c135.
+That is, r3c135-=WXYZ.</p>
+<p>Interchanging W, X, Y, and Z does not alter the outcome.  Thus, only one of W, X, Y, Z can be placed
+in the Intersection.  The remaining three Candidates can then be assigned to the three pattern
+Cells in Box 3 outside the Intersection.  Here again, interchanging W, X, Y and Z does not alter the
+outcome.  Therefore, any Candidate that is not W, X, Y or Z in the three Hidden Box pattern Cells
+cannot be True, resulting in their elimination.</p>
+<p>With Zr3c789 True, W, X, or Y can be placed in any of r1c79, r2c8 (b3p135) respectively.  This locks
+any other candidate out of b3p135.  That is b3p135-=!(WXYZ); any Candidate other than W, X, Y, Z in
+b3p135 cannot be True resulting in their elimination from b3135.</p>
 </section>
 <section id="hidden-line-exposed-box-grouped-bent-quads">
 <h4><span class="section-number">2.3.5.3.2. </span>Hidden Line, Exposed Box Grouped Bent Quads<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-gbq-hl-eb-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/gbq-hl-eb-cd1.png"><img alt="Grouped Bent Quad: Hidden Line, Exposed Box Candidate Diagram" src="../_images/gbq-hl-eb-cd1.png" style="width: 472.0px; height: 99.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/gbq-hl-eb-cd1.png"><img alt="Grouped Bent Quad: Hidden Line, Exposed Box Candidate Diagram" src="../_images/gbq-hl-eb-cd1.png" style="width: 472.0px; height: 105.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.15:  </span><span class="caption-text">Grouped Bent Quad: Hidden Line, Exposed Box Candidate Diagram</span><a class="headerlink" href="#fig-gbq-hl-eb-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -542,20 +559,20 @@ for worked examples.</p>
 </div>
 </figcaption>
 </figure>
-<p>Asserting the premise that Wr2c7, Xr1c8 and Yr2c9 are True, infers that W, X, and Y cannot be True
-anywhere else in Box 3 including the intersection with Row 3.  In Row 3, W, X, and Y can only then
-be True in one of r3c2, r3c3, and r3c5 each.  With W, X, and Y placed in any of r3c235 each, no
-place exists for Z outside the Intersection, inferring Z is only True in the Intersection.  The
-confirmed existence of Z in the Intersection creates an Exposed Triple WXY(r1c8,r2c79) in Box 3
-outside the Intersection and a Hidden triple Pair WXY#3r3c235 in Row 3.  The same applies with W, X,
-Y, and Z interchanged.</p>
-<dl class="simple">
-<dt>Asserting the premise that Wr2c7, Xr1c8 and Yr2c9 are True, infers the Truth Zr3c789.  Therefore:</dt><dd><ul class="simple">
-<li><p>W, X, Y, and Z cannot be True in any other cell in Box 3, resulting in their elimination.</p></li>
-<li><p>All values other than W, X, Y, and Z in r3c235 cannot be True, resulting in their elimination.</p></li>
-</ul>
-</dd>
-</dl>
+<p>Asserting Wr2c7, Xr1c8 and Yr2c9 are True, infers that W, X, and Y cannot be True anywhere else in
+Box 3 including the intersection with Row 3.  In Row 3, W, X, and Y can only then be True in one of
+r3c2, r3c3, and r3c5 each.  With W, X, and Y placed in any of r3c235 each, no place exists for Z
+outside the Intersection, inferring Z is only True in the Intersection.  Thus confirming the Truth
+WXYZb3p246789.  Therefore, W, X, Y, and Z can be eliminated from any other cells in Box 3 outside
+the Intersection.  That is b3p135-=WXYZ.</p>
+<p>Interchanging W, X, Y and Z does not alter the outcome.  Thus, only one of W, X, Y  and Z can be
+placed in teh intersection.  The remaining three Candidates can then be assigned to the 3 pattern
+Cells outside the Intersection.  Here again, interchanging W, X, Y and Z does not alter outcome.
+Therefore, any Candidate that is not W, X, Y, or Z in the three Hidden Row Pattern Cells cannot be
+True, resulting in their elimination.</p>
+<p>With Zr3c789 True, W, X, Y can be placed in any of r3c235 respectively.  This locks any other
+candidate out of r3c235.  That is r3c235-=!(WXYZ); any Candidate other than W, X, Y, Z cannot be
+True, resulting in their elimination from r3c235.</p>
 <p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-gbq-hl-eb"><span class="std std-ref">Human Solvable Patterns / Grouped Bent Quads - Hidden Line, Exposed Box</span></a>
 for worked examples.</p>
 </section>
@@ -571,11 +588,11 @@ for worked examples.</p>
 </dd>
 </dl>
 <p>The only viable pattern from this family is the Bent Hidden Triple.  Bent Hidden Singles and Pairs
-do not produce any eliminations, but maybe useful as building blocks for the more comprehensive
-<a class="reference internal" href="06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>.  See the above sources for that discussion, our concern
+do not produce any eliminations, but may be useful as building blocks for the more comprehensive
+<a class="reference internal" href="06-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>.  See the above sources for that discussion, our interest
 is the productive Bent Hidden Triple pattern.</p>
 <figure class="align-right" id="fig-bht-cd1" style="width: 400px">
-<a class="reference internal image-reference" href="../_images/bht-cd1.png"><img alt="Bent Hidden Triple Candidate Diagram" src="../_images/bht-cd1.png" style="width: 472.0px; height: 229.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/bht-cd1.png"><img alt="Bent Hidden Triple Candidate Diagram" src="../_images/bht-cd1.png" style="width: 472.0px; height: 244.0px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.16:  </span><span class="caption-text">Bent Hidden Triple Candidate Diagram</span><a class="headerlink" href="#fig-bht-cd1" title="Permalink to this image">#</a></p>
 <div class="legend">
@@ -583,9 +600,10 @@ is the productive Bent Hidden Triple pattern.</p>
 </div>
 </figcaption>
 </figure>
-<p>Bent Hidden Triples are a three Candidate, three Cell patterns in an Intersecting Row and Column and
-also involving the Box of the intersection.  <a class="reference internal" href="#fig-bht-cd1"><span class="std std-numref">Figure 2.16: </span></a> shows a XYZ(r1c1,r1c9,r9c1)
-pattern.</p>
+<p>Bent Hidden Triples are a three Candidate, three Cell patterns in an Intersecting Row and Column
+that involve the Box of the intersection.  <a class="reference internal" href="#fig-bht-cd1"><span class="std std-numref">Figure 2.16: </span></a> shows a XYZ(r1c1,r1c9,r9c1)
+pattern.  The intersecting Cell is a <a class="reference internal" href="../07-glossary.html#term-Pivot"><span class="xref std std-term">pivot</span></a>, and the other two cells along each
+<a class="reference internal" href="../07-glossary.html#term-Line"><span class="xref std std-term">Line</span></a> outside the box are <a class="reference internal" href="../07-glossary.html#term-Pincer"><span class="xref std std-term">pincer</span></a>s.</p>
 <p>X, Y, or Z can either be True in one cell outside the box bounding the Intersecting Row and Column
 or once inside the Box.</p>
 <ul class="simple">
@@ -601,7 +619,8 @@ the Box along the Row.</p></li>
 </ul>
 <p>Therefore, any other candidates in those Three cells can be eliminated, as well as any occurrence of
 X, Y, and Z along the Row or Column in the intersecting Box.</p>
-<p>Bent Hidden Triples where two of the three candidates exist in the Pattern Cells outside the Box
+<p>Viable Bent Hidden Triples have all three candidates in the interesecting cells, and two or three
+Candidates in the where two of the three candidates exist in the Pattern Cells outside the Box
 housing the Intersections, so long as a Candidate is different. For example:
 <span class="raw-html"><mong>XYr1c9-XYZr1c1-YZr9c1</mong></span></p>
 <p>See <a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html#hsp-bht"><span class="std std-ref">Human Solvable Patterns / Bent Hidden Triple</span></a> for worked examples.</p>
@@ -637,7 +656,7 @@ housing the Intersections, so long as a Candidate is different. For example:
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:b5e39e0*, Thu, 19 Jan 2023, 14:28:38
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

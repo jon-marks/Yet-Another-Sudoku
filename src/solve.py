@@ -18,17 +18,15 @@ from solve_ai_chains import *
 
 # Note that the order in which techniques are attempted influences the outcomes:
 # * the holy grail is to solve the puzzle with the simplest techniques possible.
-#     which is often not achieved because a more complex technique could
+#     Often not achieved because a more complex technique could
 #     eliminate a candidate that makes the balance of the puzzle easier to solve
-#     than a candidate to eliminate found by the the possible complex technique
+#     than a candidate to eliminate found by the possible complex technique
 # * from (perceived) simpler to more complex
-# * order / size of of condition ascends
+# * order / size of condition ascends
 # * some, but not all techniques depend on a prior logic condition not being
 #   satisfied.
 # * exposed subsets of a particular order before the hidden subset of same order
 # * With fish, order (2, 3, 4) before finned (2, 3, 4) before Kraken (2, 3, 4).
-# * The reason there are less techniques than there are patterns (T_... enums)
-#   is that some techniques are able to resolve more than one pattern.
 # * _kraken_ refers to the technique using an AIC chain as a strong or weak link.
 # * ..._gl refers to the technique using group links in its chains.
 
@@ -37,8 +35,8 @@ GRP_LK_DIFF = 20  # per group link difficulty premium.
 
 SLVR = namedtuple('SLVR', ['pFn', 'Mthds'])
 
-# the order of the methods in the Solver structures is significant to the underlying code, change with caution.
-# the order of the Slvr items can be changed with varying result in solution path and difficulty rating.
+# The order of the methods in the Solver structures is significant to the underlying code, change with caution.
+# The order of the Slvr items can be changed with varying result in solution path and difficulty rating.
 #   But do not do stupid things like:
 #   *  putting the equivalent group linked pattern ahead of its scalar pattern:
 #   *  changing the order of fish from X_WING before SWORDFISH before JELLYFISH
@@ -193,7 +191,7 @@ def solve_next_step(Grid, Elims = None, Meth = T_UNDEF, Soln = None, MethodEnabl
             return Step, ""
     else: return Step, "Can't solve step"
 
-def pattern_search(oPzl, Meths, Meth, Overrides):
+def pattern_search(oPzl, Meths, PSMeths, Overrides):
 
     NrEmpties = oPzl.NrEmpties
     Cands = [[copy(oPzl.Cands[r][c]) for c in range(9)] for r in range(9)]
@@ -202,34 +200,31 @@ def pattern_search(oPzl, Meths, Meth, Overrides):
     while NrEmpties > 0:
         for m in Meths:  # pFn, Meths in EnSlvrs:
             Step.Pattern = []; Step.Outcome = []
-            NrSlvd = SlvrLU[m](Grid1, Step, Cands, Meths)
+            NrSlvd = SlvrLU[m](Grid1, Step, Cands, [m])  # Meths)
             if NrSlvd >= 0:
                 NrEmpties -= NrSlvd
                 Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
-                if Err: return UNDEF, Steps, Err
+                if Err: return Steps, Err
                 break
         else:
             if NrEmpties > 0:
-                Step.Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)]
-                Step.Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)]
-                Step.Overrides = Overrides
-                Step.Pattern = []; Step.Outcome = []
-                NrSlvd = SlvrLU[Meth](Grid1, Step, Cands, [Meth])
-                if NrSlvd >= 0:
-                    Steps.append(Step)
-                    Step = STEP(Soln = oPzl.Soln)
-                    NrEmpties -= NrSlvd
-                    Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
-                    if Err: return UNDEF, Steps, Err
+                for m in PSMeths:
+                    Step.Grid = [[Grid1[r][c] for c in range(9)] for r in range(9)]
+                    Step.Cands = [[copy(Cands[r][c]) for c in range(9)] for r in range(9)]
+                    Step.Overrides = Overrides
+                    Step.Pattern = []; Step.Outcome = []
+                    NrSlvd = SlvrLU[m](Grid1, Step, Cands, [m])
+                    if NrSlvd >= 0:
+                        Steps.append(Step); Step = STEP(Soln = oPzl.Soln)
+                        NrEmpties -= NrSlvd
+                        Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)
+                        if Err: return Steps, Err
                 else:
                     Step.Overrides = {}
                     for pFn, Meths1 in Solvers:
-                        Meths2 = []
-                        for Meth1 in Meths1:
-                            if Meth1 not in Meths: Meths2.append(Meth1)
-                        if not Meths2: continue
-                        Step.Pattern = []; Step.Outcome = []
-                        NrSlvd = pFn(Grid1, Step, Cands, Meths2)
+                        Meths2 =sorted({*Meths1} - {*Meths, *PSMeths})
+                        if Meths2:  NrSlvd = pFn(Grid1, Step, Cands, Meths2)
+                        else: continue
                         if NrSlvd >= 0:
                             NrEmpties -= NrSlvd
                             Err = check_puzzle_step(Grid1, Cands, oPzl.Soln)

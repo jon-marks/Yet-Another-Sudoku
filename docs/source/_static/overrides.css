@@ -53,30 +53,10 @@ mong, .mong {
    overflow-x: scroll;
 }
 
-/*
-mongp, .mongp {
-   font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
-   background-color: #eee;
-   overflow-x: scroll;
-   white-space: pre;
-   font-size: 17.6px;
-   line-height: 23px;
-}
-*/
-
 li.toctree-l1, li.toctree-l2, li.toctree-l3, li.toctree-l4, li.toctree-l5 {
    list-style-type: none;
 }
 
-  /*  margin-bottom: 10px;
-  overflow: auto;
-  width: auto;
-  padding: 5px;
-  background-color: #eee;
-  width: 650px!ie7;
-  padding-bottom: 20px!ie7;
-  max-height: 600px;
-}*/
 
 a[href ^= "http"]:after {
      content: " " url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=);

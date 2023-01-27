@@ -157,12 +157,9 @@ def minimalise_puzzle(G, T_H = None):
     for r, c in H:
         v = G1[r][c]
         G1[r][c] = 0
-        if nGivens > 41:
-            G[r][c] = 0; nGivens -= 1 # All puzzles with 40 or more givens are unique
-        else:
-            NrFound, Soln = check_puzzle(G1)
-            if NrFound == 1: G[r][c] = 0; nGivens -= 1
-            else: G1[r][c] = v
+        NrFound, Soln = check_puzzle(G1)
+        if NrFound == 1: G[r][c] = 0; nGivens -= 1
+        else: G1[r][c] = v
     return G
 
 def create_puzzle(Pzl, T_H = None, T_G = None):

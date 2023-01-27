@@ -111,8 +111,8 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Floor**
       A row oriented :term:`Chute`.
 
-   **Givens**
-      The initial filled values in cells of a Sudoku puzzle.
+   **Given**
+      An initially placed value on a Sudoku.  It is the Given placements that make the puzzle.
 
    **Grid**
       9x9 grid, subdivided into 9  – 3x3 :Term:`Box`\es  (Blocks) on to which Sudoku puzzles are
@@ -177,18 +177,24 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       A Abbreviation of :term:`Potential Elimination`, synonymous with :term:`Ccell`.
 
    **Peer**
-      A :term:`Ccell`\s that can :term:`See` other Ccells.  Peers are a set of Ccells that see
+      A :term:`Ccell` that can :term:`See` other Ccells.  Peers are a set of Ccells that see
       each other.
 
    **Placement**
       Placing of a single solved value in a Cell.
 
+   **Pincer**
+      A :term:`Cell` containing :term:`Candidate`\s outside the :term:`Intersection` of two
+      :term:`Line`\s, a :term:`Row`, and a :term:`Column`.  Referred to with :term:`Pivot`.
+
+   **Pivot**
+      A :term:`Cell` containing :term:`Candidate`\s in the :term:`Intersection` of two
+      :term:`Line`\s, a :term:`Row`, and a :term:`Column`.  Reffered to with :term:`Pincer`.
+
    **Potential Elimination**
       A reference to a Candidate that is an element of the solution set of Candidates in that Cell.
-      Through the application of :term:`Conditional Logic` Potential Eliminations are
-      removed from this set until the last value remains as the solution for that Cell.
-
-      may be eliminated from the Synonym of :term:`Ccell`
+      Through the application of :term:`Conditional Logic` Potential Eliminations are removed from
+      this set until the last value remains as the solution for that Cell.
 
    **Puzzle**
       A partially completed Sudoku in a puzzle, it may only be populated with the givens or with

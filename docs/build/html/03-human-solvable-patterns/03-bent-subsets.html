@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="3.4. Fish Patterns" href="04-fish.html" /><link rel="prev" title="3.2. Subsets" href="02-subsets.html" />
 
-    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Yet another Sudoku | Human Solvable Patterns | Bent Subsets</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -354,6 +354,20 @@ elimination.</p>
 <span class="raw-html"><mong>2367==r1c5,37==r6c5,27==r7c5,67==r2c6;7r2c5-\7(r1c5,r6c5,r7c5,r2c6)</mong></span>. 7 is
 the only Unrestricted Candidate in this Column 5 / Box 2 Intersecting pattern, 7r2c5 is the only
 Ccell that sees all instances of the Unrestricted Candidate resulting in its elimination.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
 <figure class="align-right" id="fig-beq-eg2" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/beq-eg2.png"><img alt="Bent Exposed Quad Example 2" src="../_images/beq-eg2.png" style="width: 378.0px; height: 428.0px;" /></a>
 <figcaption>
@@ -388,14 +402,14 @@ puzzle can also be resolved as an XY-Chain:
 </div>
 </figcaption>
 </figure>
-<p>The BEQ: <span class="raw-html"><mong>79==r5c2,15==r5c4,19==r5c9,57==r1c4;7r1c2-\7(r5c2,r1c4)</mong></span>
+<p>The BEQ: <span class="raw-html"><mong>79==r5c2,15==r5c4,19==r5c9, 57==r1c4;7r1c2-\7(r5c2,r1c4)</mong></span>
 in <a class="reference internal" href="#fig-beq-eg3"><span class="std std-numref">Figure 3.7: </span></a> has Row 5 and column 4 intersect with only one Cell with r5c4 in the
 intersection.  Coincidently, 7 is the Unrestricted Candidate, in this Minimal BEQ. 7r1c2 is the
 only Ccell outside the pattern that can see all Unrestricted Candidates in the intersection
 resulting in its elimination.</p>
 <p>Because this BEQ is Minimal it is also resolved as an XY-Chain:
-<span class="raw-html"><mong>(7=5)r1c4-(5=1)r5c4~(1=9)r5c9-(9=7)r5c2,7r1c4-7r1c2-7r5c2</mong></span>  Another XY-Chain exists that
-could be found first:
+<span class="raw-html"><mong>(7=5)r1c4-(5=1)r5c4~(1=9)r5c9-(9=7)r5c2,7r1c4-7r1c2-7r5c2</mong></span></p>
+<p>Another XY-Chain exists
 <span class="raw-html"><mong>(9=7)r1c2-(7=5)r1c4-(5=1)r5c4-(1=9)r5c9,9r5c9-9r5c2~9r5c9</mong></span></p>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -417,10 +431,16 @@ could be found first:
 </figcaption>
 </figure>
 <p>The Bent Exposed Quint
-<span class="raw-html"><mong>1589==r1c9,159==r2c9,589==r3c9,128==r7c9,12==r9c8;1r8c9-\1(r1c9,r2c9,r7c9,r9c8)</mong></span> in
+<span class="raw-html"><mong>1589==r1c9, 159==r2c9, 589==r3c9, 128==r7c9, 12==r9c8;1r8c9-\1(r1c9,r2c9,r7c9,r9c8)</mong></span> in
 <a class="reference internal" href="#fig-bequint-eg1"><span class="std std-numref">Figure 3.8: </span></a> spans Column 9 and Box 9. 1 is the Unrestricted Candidate and only Ccell 1r8c9 sees all
 instances of this Unrestricted Candidate.</p>
 <div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 <div class="line"><br /></div>
 <div class="line"><br /></div>
 <div class="line"><br /></div>
@@ -443,9 +463,9 @@ instances of this Unrestricted Candidate.</p>
 </figcaption>
 </figure>
 <p>The Bent Exposed Sext
-<span class="raw-html"><mong>289==r9c5,2689==r9c6,29==r9c7,1249==r9c8,149==r9c9,46==r7c4;(4r7c8,4r7c9)-\4(r9c8,r9c9,r7c4)</mong></span> in
-<a class="reference internal" href="#fig-besext-eg1"><span class="std std-numref">Figure 3.9: </span></a> spans Row 9 and Box 8. 4 is the Unrestricted Candidate and Ccells 4r7c8 and 4r7c9 see all
-instances of this Unrestricted Candidate.</p>
+<span class="raw-html"><mong>289==r9c5, 2689==r9c6, 29==r9c7, 1249==r9c8, 149==r9c9,46==r7c4;(4r7c8,4r7c9)-\4(r9c8,r9c9,r7c4)</mong></span>
+in <a class="reference internal" href="#fig-besext-eg1"><span class="std std-numref">Figure 3.9: </span></a> spans Row 9 and Box 8. 4 is the Unrestricted Candidate and Ccells 4r7c8
+and 4r7c9 see all instances of this Unrestricted Candidate.</p>
 </section>
 </section>
 <section id="grouped-bent-subsets">
@@ -471,10 +491,15 @@ Cell in Box 8 outside the intersection where 8 can be True.  Inferring 8r7c4 Tru
 in the intersection, 9r8c456.  The same is valid for Candidates 8 and 9 interchanged.  Thus,
 the Truth 89r8c1456 is established, resulting in the elimination of 8 and 9 from all Cells outside
 the intersection r8c456 and r8c1, 89-=r8c!1456. That is: r8c3-=89, r8c7-=9.</p>
-<p>Asserting 89!-r7c4 (8 and 9 not present in r7c4) infers that both 8 and 9 are True in the Intersection,
-that is, 89r8c456 is True.  But this is impossible, because r8c1 must contain either 8 or 9.
-Therefore, r7c4 cannot contain any Candidate other than 8 or 9, resulting in the elimination of all
-Candidates other than 8 and 9 from r7c4.</p>
+<p>Asserting 89!-r7c4 (8 and 9 not present in r7c4) infers that both 8 and 9 are True in the
+Intersection, that is, 89r8c456 is True.  But this is impossible, because r8c1 must contain either 8
+or 9.  Therefore, r7c4 cannot contain any Candidate other than 8 or 9, resulting in the elimination
+of all Candidates other than 8 and 9 from r7c4.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
 </section>
 <section id="exposed-column-hidden-box-grouped-bent-pairs">
 <h4><span class="section-number">3.3.2.1.2. </span>Exposed Column, Hidden Box Grouped Bent Pairs<a class="headerlink" href="#exposed-column-hidden-box-grouped-bent-pairs" title="Permalink to this heading">#</a></h4>
@@ -520,8 +545,8 @@ only in the intersection 5r6c789.  The same is valid for 3 and 5 interchanged.  
 35(r4c9,r6c789) is established resulting in the elimination of 3 and 5 from all cells in Box 3
 outside the Intersection r6c789 and r4c9, 35-=b3p!3789. That is r4c7-=5, r4c8-=3, and r5c8-=5.</p>
 <p>Asserting 35!-r6c2 True (3 and 5 not present in r6c2) infers that Both 3 and 5 must be True in
-the Intersection, 35r6c789.  This is impossible as Cell r4c9 outside the Intersection requires either
-3 or 5, resulting in the elimination of all other Candidates from r6c2. That is r6c2-=67.</p>
+the Intersection, 35r6c789.  This is impossible as Cell r4c9 outside the Intersection requires
+either 3 or 5, resulting in the elimination of all other Candidates from r6c2. That is r6c2-=67.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -554,25 +579,214 @@ r9c6.  That is r9c6-=7.</p>
 </section>
 <section id="grouped-bent-triples">
 <h3><span class="section-number">3.3.2.2. </span>Grouped Bent Triples<a class="headerlink" href="#grouped-bent-triples" title="Permalink to this heading">#</a></h3>
-<section id="exposed-line-hidden-box-grouped-bent-triples">
-<span id="hsp-gbt-el-hb"></span><h4><span class="section-number">3.3.2.2.1. </span>Exposed Line, Hidden Box Grouped Bent Triples<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+<section id="exposed-row-hidden-box-grouped-bent-triples">
+<span id="hsp-gbt-el-hb"></span><h4><span class="section-number">3.3.2.2.1. </span>Exposed Row, Hidden Box Grouped Bent Triples<a class="headerlink" href="#exposed-row-hidden-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbt-er-hb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/gbt-er-hb-eg1.png"><img alt="Group Bent Triple Exposed Row, Hidden Box Example" src="../_images/gbt-er-hb-eg1.png" style="width: 378.0px; height: 428.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.14:  </span><span class="caption-text">Group Bent Triple Exposed Row, Hidden Box Example</span><a class="headerlink" href="#fig-gbt-er-hb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>+1+483+27..926+7+5+9+43+8+1.+3.+8+6+1+74+23+9+6+4521+787+14+6+38+9+25+85+2..+9....8.+2.6..7.+7..+852...+21..+3+8..||Grouped Bent Triple ER HB||U139r8c789,39==r8c3,19==r8c4,139--r7c8,9--r9c8|r8c1-=9;r7c8-=5;r9c8-=56|+1+483+27+6+5926+7+5+9+43+8+1+9+3+5+8+6+1+74+23+9+6+4521+787+14+6+38+9+25+85+2+1+7+9+4+6+3+48+9+2+16+5+37+6+7+3+9+852+1+4+5+21+7+4+3+8+9+6</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-gbt-er-hb-eg1"><span class="std std-numref">Figure 3.14: </span></a>,
+<span class="raw-html"><mong>U139r8c789,39==r8c3, 19==r8c4,139--r7c8,9--r9c8</mong></span> finds Row 8 and Box 9 as
+intersecting Houses and 1, 3, and 9 as Candidates.</p>
+<p>Asserting 3r8c3 and 1r8c4 True, infers 3 and 1 cannot be True in the intersection, and
+therefore, must be True in Hidden Box 9 outside the intersection.  But this is impossible because
+only one or the other of Candidates 1 and 3 can be placed outside the intersection in the Hidden
+Box.  R7c8 can take either 1 or 3, but r9c8 cannot accept either 1 or 3, only 9.</p>
+<p>However, with 3r8c3 and 9r8c4 asserted True, 3 can be placed in r7c8, and 9 can be placed r9c8,
+confining 1 to r8c8 in the intersection.  Similarly, with 9r8c3 and 1r8c4 asserted True, 1 can be
+placed in r7c8, and 9 can be placed in r9c8, confining 3 to r8c8 in the intersection.  This confirms
+that 9r8c34 is A Truth.  This Truth is further validated by observing that if either 9r8c1 or 9r8c8
+is asserted, 1 and 3 become True along Row 8 outside the intersection.  This in turn requires the
+impossibility of placing 1 and 3 in the Hidden box outside the intersection. Therefore, r8c28-=9.</p>
+<p>If Candidates 1, 3, and 9 are not True in the Hidden Box outside the intersection, the only place
+they can be True is inside the intersection.  It is impossible to place 3 Values and 2 Cells.  This
+can be further confirmed by asserting 5r7c8, or 5r9c8, or 6r9c8, and in each case, walking the
+inferences until a contradiction is encountered. Therefore r7c8-=5 and r9c8-=56.</p>
 </section>
-<section id="hidden-line-exposed-box-grouped-bent-triples">
-<span id="hsp-gbt-hl-eb"></span><h4><span class="section-number">3.3.2.2.2. </span>Hidden Line, Exposed Box Grouped Bent Triples<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+<section id="exposed-column-hidden-box-grouped-bent-triples">
+<h4><span class="section-number">3.3.2.2.2. </span>Exposed Column, Hidden Box Grouped Bent Triples<a class="headerlink" href="#exposed-column-hidden-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbt-ec-hb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/gbt-ec-hb-eg1.png"><img alt="Group Bent Triple Exposed Column, Hidden Box Example" src="../_images/gbt-ec-hb-eg1.png" style="width: 378.0px; height: 428.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.15:  </span><span class="caption-text">Group Bent Triple Exposed Column, Hidden Box Example</span><a class="headerlink" href="#fig-gbt-ec-hb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>+3+418596+725+7+8+6+32..4+9+6+27+1+4.3..+569.+82.3.89..+3.+6..+3+4..+6..+9+6+1.+2+9+5...+8+2.+467..149.3+81.+2+6||Grouped Bent Triple EC HB||U578r456c7,58==r3c7,57==r9c7,58--r6c8,57--r5c9|r7c7-=78;r8c7-=5;r6c8-=1|+3+418596+725+7+8+6+32+1+94+9+6+27+1+4+83+5+7+569+4+82+13+189+5+2+3+4+6+7+2+3+4+1+7+6+5+8+9+6+1+7+2+9+5+3+4+8+8+2+3+467+9+5149+53+81+7+2+6</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-gbt-ec-hb-eg1"><span class="std std-numref">Figure 3.15: </span></a>,
+<span class="raw-html"><mong>U578r456c7, 58==r3c7, 57==r9c7, 58--r6c8, 57--r5c9</mong></span> finds Column 7 and Box 6
+as intersecting Houses with 5, 7, and 8 as candidates.</p>
+<p>Asserting 5r3c7 infers 7r9c7 eliminates Candidates 5 and 7 from the rest of Column 7 and requires
+Candidate 8 to be placed in Column 7.  If 8r6c7 is False, the only other place it can be placed in
+Box 6 is r6c8.  This is a contradiction because it is impossible to place both 7 and 5 in r5c9, the
+only other place they both can go.  This forces Candidate 8 into the intersection, which further
+drives 7 into r5c9 and 5 into r6c8.</p>
+<p>Asserting 8r3c7, means that either 5 or 7 can be selected for r9c7.  This infers either 7 or 5 is
+True in the intersection, and driving the placement of 5 or 7 into r5c9.  Either way, 8 is driven
+into r6c7.  Thus, 1 cannot be True in r6c8 resulting in its elimination, r6c8-=1.</p>
+<p>Because 578r3569c7 is a Truth in Row 7, Candidates 5, 7 and 8 can be eliminated from all other cells
+in Row 7.  That is r7c7-=78, r7c8-=5.</p>
+</section>
+<section id="hidden-row-exposed-box-grouped-bent-triples">
+<span id="hsp-gbt-hl-eb"></span><h4><span class="section-number">3.3.2.2.3. </span>Hidden Row, Exposed Box Grouped Bent Triples<a class="headerlink" href="#hidden-row-exposed-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbt-hr-eb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/gbt-hr-eb-eg1.png"><img alt="Group Bent Pair Hidden Row, Exposed Box Example" src="../_images/gbt-hr-eb-eg1.png" style="width: 378.0px; height: 428.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.16:  </span><span class="caption-text">Group Bent Triple Hidden Row, Exposed Box Example</span><a class="headerlink" href="#fig-gbt-hr-eb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>5..9..3...3......4....6..8.1..4.2.....2.3.......5.67..6....98....8.....1.4.....3.||Grouped Bent Triple HR EB||U569r5c789,569==r4c7,569==r4c8,9--r5c1,569--r5c2|r4c9-=569;r6c8-=9;r6c9-=9;r5c1-=478;r5c2-=78|5+1+69+4+83+2+7+83+9+2+7+5+1+64+7+2+4+16+3+58+91+5+74+82+6+9+3+9+62+73+1+4+5+8+4+8+35+967+1+26+7+1+3+298+4+5+3+98+6+5+4+2+71+24+5+8+1+7+93+6</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-gbt-hr-eb-eg1"><span class="std std-numref">Figure 3.16: </span></a>,
+<span class="raw-html"><mong>U569r5c789, 569==r4c7, 569==r4c8, 9--r5c1, 569--r5c2</mong></span> finds Row, 5 and Box 6
+as Intersecting Houses with 5, 6, and 9 as Candidates.</p>
+<p>Asserting 56r4c78 leaves 9 to be placed in any of the other Cells in Box 6.  Attempting to
+preserve the Grouped Bent Triple Pattern, assert 9r5c789 True. This creates a contradiction, where
+only one both Candidates 5 and 6 can only be placed in r5c2, with no location to place the other.</p>
+<p>Asserting 59r4c78, infers 6r5c789, because if not, it is impossible to place the three
+values 5, 6, and 9, in the only two Hidden Row Cells outside the Intersection that can accept
+them r5c12.  Similarly, asserting 69r4c78, infers 5r5c789.</p>
+<p>Thus, in the Exposed Box 6, 569b6p12456 is A Truth resulting in the elimination of all Candidates 5,
+6, and 9 from Cells outside the Cell pattern.  That b6p!(12456)-=569, or more specifically
+r4c9-=569, and r6c89-=9.  And in the Hidden Row, 569r5c12789 is A Truth
+resulting in the elimination of other values from Pattern Cells outside the Intersection.  That is,
+r5c12-=!(569), which is r5c1-=478 and r5c2-=78.</p>
+</section>
+<section id="hidden-column-exposed-box-grouped-bent-triples">
+<h4><span class="section-number">3.3.2.2.4. </span>Hidden Column, Exposed Box Grouped Bent Triples<a class="headerlink" href="#hidden-column-exposed-box-grouped-bent-triples" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbt-hc-eb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/gbt-hc-eb-eg1.png"><img alt="Group Bent Triple Hidden Column, Exposed Box Example" src="../_images/gbt-hc-eb-eg1.png" style="width: 378.0px; height: 428.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.17:  </span><span class="caption-text">Group Bent Triple Hidden Column, Exposed Box Example</span><a class="headerlink" href="#fig-gbt-hc-eb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>.7..+25.91.+58.4+3+27+6..+2...5..+81+5+3726+4+9+2+34..+6+7.8+697.8+4......+239...52..+6.......4+51...|r1c7-=3;r3c1-=34;r3c4-=19;r6c9-=3;r7c1-=1;r7c7-=4;r7c9-=4;r8c7-=8;r8c8-=8;r8c9-=7;r9c1-=9;r9c9-=3|Grouped Bent Triple HC EB||U134r789c7,13==r8c8,34==r8c9,4--r1c7,13--r6c7|r7c8-=1;r9c8-=3;r1c7-=8|+37+6+8+25+491+1+58+94+3+27+6+9+4+2+6+1+75+8+3+81+5+3726+4+9+2+34+5+9+6+7+18+697+18+4+3+2+5+4+6+1+239+8+5+752+9+7+6+8+1+3+4+7+8+34+51+9+6+2</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-gbt-hc-eb-eg1"><span class="std std-numref">Figure 3.17: </span></a>,
+<span class="raw-html"><mong>U134r789c7, 13==r8c8, 34==r8c9, 4--r1c7, 13--r6c7</mong></span> finds Column 7 and Box 9 as
+Intersecting Houses with 1, 3, and 4 as Candidates.</p>
+<p>When asserting 1r8c8 and 3r8c9, the pattern requires 4 to be placed in the Intersection.  But this
+creates a contradiction because then only one cell outside the Intersection in Column 7 can accept
+either 1 or 3, leaving the other Candidate unplaced.</p>
+<p>However, asserting 1r8c8 and 4r8c9 drives 3 into the Intersection, 1r6c7 and 4r1c7.  And asserting
+3r8c8 and 4r8c9 drives 1 into the Intersection, 3r6c7, 3r6c7 and 4r1c7.  Either of these is
+enough to validate this pattern.  Therefore, the Candidates 1, 3, 4 can be eliminated from all cells
+in the Exposed Box 9 outside the pattern.  That is b9p!(456)-=134, or more specifically r7c8-=1 and
+r9c8-=3; and from all Pattern Cells outside the intersection in the Hidden Column 7.  That is
+r16c7-=!(134), or more specifically r1c7-=8.</p>
 </section>
 </section>
 <section id="grouped-bent-quads">
 <h3><span class="section-number">3.3.2.3. </span>Grouped Bent Quads<a class="headerlink" href="#grouped-bent-quads" title="Permalink to this heading">#</a></h3>
-<section id="exposed-line-hidden-box-grouped-bent-quads">
-<span id="hsp-gbq-el-hb"></span><h4><span class="section-number">3.3.2.3.1. </span>Exposed Line, Hidden Box Grouped Bent Quads<a class="headerlink" href="#exposed-line-hidden-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+<section id="exposed-row-hidden-box-grouped-bent-quads">
+<span id="hsp-gbq-el-hb"></span><h4><span class="section-number">3.3.2.3.1. </span>Exposed Row, Hidden Box Grouped Bent Quads<a class="headerlink" href="#exposed-row-hidden-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbq-er-hb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="03-human-solvable-patterns/images/gbq-er-hb-eg1.png"><img alt="Group Bent Quad Exposed Row, Hidden Box Example" src="03-human-solvable-patterns/images/gbq-er-hb-eg1.png" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.18:  </span><span class="caption-text">Group Bent Quad Exposed Row, Hidden Box Example</span><a class="headerlink" href="#fig-gbq-er-hb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>Missing</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>Search for Example ongoing.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
 </section>
-<section id="hidden-line-exposed-box-grouped-bent-quads">
-<span id="hsp-gbq-hl-eb"></span><h4><span class="section-number">3.3.2.3.2. </span>Hidden Line, Exposed Box Grouped Bent Quads<a class="headerlink" href="#hidden-line-exposed-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+<section id="exposed-column-hidden-box-grouped-bent-quads">
+<h4><span class="section-number">3.3.2.3.2. </span>Exposed Column, Hidden Box Grouped Bent Quads<a class="headerlink" href="#exposed-column-hidden-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbq-ec-hb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="03-human-solvable-patterns/images/gbq-ec-hb-eg1.png"><img alt="Group Bent Quad Exposed Column, Hidden Box Example" src="03-human-solvable-patterns/images/gbq-ec-hb-eg1.png" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.19:  </span><span class="caption-text">Group Bent Quad Exposed Column, Hidden Box Example</span><a class="headerlink" href="#fig-gbq-ec-hb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>Missing</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>Search for example ongoing.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="hidden-row-exposed-box-grouped-bent-quads">
+<span id="hsp-gbq-hl-eb"></span><h4><span class="section-number">3.3.2.3.3. </span>Hidden Row, Exposed Box Grouped Bent Quads<a class="headerlink" href="#hidden-row-exposed-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbq-hr-eb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="03-human-solvable-patterns/images/gbq-hr-eb-eg1.png"><img alt="Group Bent Quad Hidden Row, Exposed Box Example" src="03-human-solvable-patterns/images/gbq-hr-eb-eg1.png" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.20:  </span><span class="caption-text">Group Bent Quad Hidden Row, Exposed Box Example</span><a class="headerlink" href="#fig-gbq-hr-eb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>Missing</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>Search for example ongoing.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="hidden-column-exposed-box-grouped-bent-quads">
+<h4><span class="section-number">3.3.2.3.4. </span>Hidden Column, Exposed Box Grouped Bent Quads<a class="headerlink" href="#hidden-column-exposed-box-grouped-bent-quads" title="Permalink to this heading">#</a></h4>
+<figure class="align-right" id="fig-gbq-hc-eb-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/gbq-hc-eb-eg1.png"><img alt="Group Bent Quad Hidden Column, Exposed Box Example" src="../_images/gbq-hc-eb-eg1.png" style="width: 378.0px; height: 428.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.21:  </span><span class="caption-text">Group Bent Quad Hidden Column, Exposed Box Example</span><a class="headerlink" href="#fig-gbq-hc-eb-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>4+1.7...895+3+9.681...7..........8.23...63....5..................4.91..7.2..2+49..81.|r3c4-=3;r3c5-=3;r3c6-=3;r6c7-=6;r6c8-=6;r6c9-=6;r7c4-=5;r7c5-=5;r7c6-=5;r7c7-=5|Grouped Bent Quad HC EB||U1356r789c4,136==r7c6,35==r9c5,356==r9c6,15--r3c4,1--r5c4,1356--r6c4|r7c5-=13;r8c5-=35;r3c4-=24;r5c4-=4;r6c4-=4|4+1+67+2+3+5895+3+9+4681+7+2+27+8+5+1+9+4+6+3+1+4+58+723+9+6+763+1+9+4+25+8+9+8+2+6+3+5+7+4+1+6+5+7+2+8+1+9+34+891+3+47+62+5+32+49+5+681+7</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-gbq-hc-eb-eg1"><span class="std std-numref">Figure 3.21: </span></a>,
+<span class="raw-html"><mong>U1356r789c4, 136==r7c6, 35==r9c5, 356==r9c6, 15--r3c4,1--r5c4, 1356--r6c4</mong></span>
+finds Column 4 and Box 8 as Intersecting Houses with Candidates 1, 3, 5, and 6.</p>
+<p>When asserting 1r7c6, 3r9c5 and 5r9c6 drives 6 into the Intersection.  In the Hidden Column, 1r5c4,
+5r3c4, and 3r6c4 are assigned.  Thus, validating the pattern.</p>
+<p>Therefore, inside the Exposed Box 8, all the Candidates values outside the pattern can be
+eliminated.  That is:  b8c!(134489)-=1356, or more specifically r7c5-=13 and r8c5-=53.</p>
+<p>And, inside the Hidden Row 4, all other Candidates values inside the Pattern Cells outside the
+Intersection can be eliminated.  That is r356c4-=!(1356), or more specifically r3c4-=24, r5c4-=4,
+and r6c4-=4.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 </section>
 </section>
 </section>
 <section id="bent-hidden-triples">
 <span id="hsp-bht"></span><h2><span class="section-number">3.3.3. </span>Bent Hidden Triples<a class="headerlink" href="#bent-hidden-triples" title="Permalink to this heading">#</a></h2>
+<figure class="align-right" id="fig-bht-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="03-human-solvable-patterns/images/bht-eg1.png"><img alt="Bent Hidden Triple Example" src="03-human-solvable-patterns/images/bht-eg1.png" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 3.22:  </span><span class="caption-text">Group Bent Hidden Triple Example</span><a class="headerlink" href="#fig-bht-eg1" title="Permalink to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>Missing</mong></span></p>
+</div>
+</figcaption>
+</figure>
 </section>
 </section>
 
@@ -605,7 +819,7 @@ r9c6.  That is r9c6-=7.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:b5e39e0*, Thu, 19 Jan 2023, 14:28:38
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -652,13 +866,17 @@ r9c6.  That is r9c6-=7.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#grouped-bent-triples">3.3.2.2. Grouped Bent Triples</a><ul>
-<li><a class="reference internal" href="#exposed-line-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Line, Hidden Box Grouped Bent Triples</a></li>
-<li><a class="reference internal" href="#hidden-line-exposed-box-grouped-bent-triples">3.3.2.2.2. Hidden Line, Exposed Box Grouped Bent Triples</a></li>
+<li><a class="reference internal" href="#exposed-row-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Row, Hidden Box Grouped Bent Triples</a></li>
+<li><a class="reference internal" href="#exposed-column-hidden-box-grouped-bent-triples">3.3.2.2.2. Exposed Column, Hidden Box Grouped Bent Triples</a></li>
+<li><a class="reference internal" href="#hidden-row-exposed-box-grouped-bent-triples">3.3.2.2.3. Hidden Row, Exposed Box Grouped Bent Triples</a></li>
+<li><a class="reference internal" href="#hidden-column-exposed-box-grouped-bent-triples">3.3.2.2.4. Hidden Column, Exposed Box Grouped Bent Triples</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#grouped-bent-quads">3.3.2.3. Grouped Bent Quads</a><ul>
-<li><a class="reference internal" href="#exposed-line-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Line, Hidden Box Grouped Bent Quads</a></li>
-<li><a class="reference internal" href="#hidden-line-exposed-box-grouped-bent-quads">3.3.2.3.2. Hidden Line, Exposed Box Grouped Bent Quads</a></li>
+<li><a class="reference internal" href="#exposed-row-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Row, Hidden Box Grouped Bent Quads</a></li>
+<li><a class="reference internal" href="#exposed-column-hidden-box-grouped-bent-quads">3.3.2.3.2. Exposed Column, Hidden Box Grouped Bent Quads</a></li>
+<li><a class="reference internal" href="#hidden-row-exposed-box-grouped-bent-quads">3.3.2.3.3. Hidden Row, Exposed Box Grouped Bent Quads</a></li>
+<li><a class="reference internal" href="#hidden-column-exposed-box-grouped-bent-quads">3.3.2.3.4. Hidden Column, Exposed Box Grouped Bent Quads</a></li>
 </ul>
 </li>
 </ul>

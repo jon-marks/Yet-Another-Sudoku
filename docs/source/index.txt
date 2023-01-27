@@ -82,6 +82,17 @@ List of Figures
 |  :numref:`fig-besext-eg1` :ref:`fig-besext-eg1`
 |  :numref:`fig-gbp-er-hb-eg1` :ref:`fig-gbp-er-hb-eg1`
 |  :numref:`fig-gbp-ec-hb-eg1` :ref:`fig-gbp-ec-hb-eg1`
+|  :numref:`fig-gbp-hr-eb-eg1` :ref:`fig-gbp-hr-eb-eg1`
+|  :numref:`fig-gbp-hc-eb-eg1` :ref:`fig-gbp-hc-eb-eg1`
+|  :numref:`fig-gbt-er-hb-eg1` :ref:`fig-gbt-er-hb-eg1`
+|  :numref:`fig-gbt-ec-hb-eg1` :ref:`fig-gbt-ec-hb-eg1`
+|  :numref:`fig-gbt-hr-eb-eg1` :ref:`fig-gbt-hr-eb-eg1`
+|  :numref:`fig-gbt-hc-eb-eg1` :ref:`fig-gbt-hc-eb-eg1`
+|  :numref:`fig-gbq-er-hb-eg1` :ref:`fig-gbq-er-hb-eg1`
+|  :numref:`fig-gbq-ec-hb-eg1` :ref:`fig-gbq-ec-hb-eg1`
+|  :numref:`fig-gbq-hr-eb-eg1` :ref:`fig-gbq-hr-eb-eg1`
+|  :numref:`fig-gbq-hc-eb-eg1` :ref:`fig-gbq-hc-eb-eg1`
+|  :numref:`fig-bht-eg1` :ref:`fig-bht-eg1`
 
 ==============
 List of Tables

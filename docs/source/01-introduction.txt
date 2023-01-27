@@ -81,8 +81,8 @@ To date no unique puzzles have been found with less than 17 givens, and only 491
 been found with 17 givens. A method to prove the theoretical minimum givens for any unique puzzle is
 yet to be found.
 
-All puzzles with 40 or more givens have one unique solution. Most unique minimal puzzles have
-between 23 and 26 givens.
+`Wikipedia <https://en.wikipedia.org/wiki/Mathematics_of_Sudoku>`_ claims that the largest minimal
+puzzle found so far has 40 clues.
 
 In a valid puzzle, at least 8 of the 9 digits must occur one or more times as givens.  However,
 meeting this criterion does not presume a puzzle is valid.

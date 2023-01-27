@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from os.path import dirname, join
-from os import chdir
+from os import chdir, name
 from sys import argv, exit, path
 from time import perf_counter, localtime, strftime, time
 
@@ -10,7 +10,14 @@ TestDDir = "test-data"
 SrcFile  = "pattern-reg-test-1.0"
 DstSuff  = "-out"
 FileExt  = ".txt"
-Root = dirname(dirname(argv[0]))
+
+CWP = ""
+if name == 'nt': CWP = argv[0].replace("/", "\\")
+elif name == 'posix': CWP = argv[0].replace("\\", "/")
+
+Root = dirname(dirname(CWP))
+if not Root: Root = "."
+
 chdir(Root)
 path.insert(0, f"{join(Root, SrcDir)}")
 
@@ -73,13 +80,15 @@ def yas_prt():
                 nLine += 1
                 if not Begin <= nLine <= End: continue
                 if Line[:3] == "## ": print(f"\n{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| {Line[0:-1]}", flush = True)
-                if Line == "\n" or Line[0] == "#":
+                if Line == "\n" or Line[0] == "#" or Line[:2] == "//":
                     f1.write(Line); f1.flush()
                     continue
+                Line, SlashSlash, Comment = Line.partition("//")
                 oPzl = PZL()
                 NrFlds, sErr = pzl_str_to_pzl(Line, oPzl)
                 if not NrFlds:
-                    f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
+                    if Comment: f1.write(f"# Error: {sErr}: {Line} //{Comment}"); f1.flush()
+                    else: f1.write(f"# Error: {sErr}: {Line}//{Comment}"); f1.flush()
                     print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                     Errs += 1
                     continue
@@ -96,6 +105,7 @@ def yas_prt():
                     if Found == 1: sSoln = grid_to_grid_str(oPzl.Soln, oPzl.Givens)
                     else:
                         St = f"Invalid Puzzle:  {Found} solutions found: {Line}"
+                        if Comment: St += f"//{Comment}"
                         f1.write(St); f1.flush()
                         print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {St}", flush = True)
                         Errs += 1
@@ -115,7 +125,8 @@ def yas_prt():
                 else:
                     Step, Err = solve_next_step(oPzl.Grid, oPzl.Elims, oPzl.Method, oPzl.Soln, True, oPzl.Overrides)
                 if Err:
-                    f1.write(f"# Warning: Error encountered: {Err}, Actual: {Tech[Step.Method].Text}, Solving:  {Line}")
+                    if Comment: f1.write(f"# Warning: Error encountered: {Err}, Actual: {Tech[Step.Method].Text}, Solving:  {Line}//{Comment}")
+                    else: f1.write(f"# Warning: Error encountered: {Err}, Actual: {Tech[Step.Method].Text}, Solving:  {Line}")
                     print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Expected: {sExpMeth}| Actual: {Tech[Step.Method].Text}, Error: {Err}", flush = True)
                     Errs += 1
                     continue
@@ -137,10 +148,12 @@ def yas_prt():
                     if sExpMeth != sActMeth:  sWarn = "Different Method"
                     elif sExpOutc != sOutc:   sWarn = "Different Outcome"
                     elif sExpCond != sCond:   sWarn = "Different Pattern"
-                    f1.write(f"# Warning: {sWarn} found for: {Line}")
+                    if Comment: f1.write(f"# Warning: {sWarn} found for: {Line}//{Comment}")
+                    else: f1.write(f"# Warning: {sWarn} found for: {Line}")
                     print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Warning: {sWarn}|{sExpMeth}|{sExpCond}|{sExpOutc}| Actual: {sActMeth}|{sCond}|{sOutc}", flush = True)
                     Diffs += 1
-                f1.write(f"{sGr}|{sElims}|{sActMeth}|{sOverrides}|{sCond}|{sOutc}|{sSoln}\n")
+                if Comment: f1.write(f"{sGr}|{sElims}|{sActMeth}|{sOverrides}|{sCond}|{sOutc}|{sSoln} //{Comment}")
+                else: f1.write(f"{sGr}|{sElims}|{sActMeth}|{sOverrides}|{sCond}|{sOutc}|{sSoln}\n")
                 f1.flush()
     print(f"{time_str(BTime, StTime)}| End Run| Lines: {nLine}| Puzzles: {nPzl},  Differences: {Diffs}, Errors: {Errs}.")
 

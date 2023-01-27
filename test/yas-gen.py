@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from os.path import dirname, join
-from os import chdir
+from os import chdir, name
 from sys import argv, exit, path
 from time import perf_counter, time, strftime, localtime
 from random import shuffle, randrange, seed
@@ -9,10 +9,17 @@ SrcDir   = "src"
 TestDir  = "test"
 TestDDir = "test-data"
 SrcFile  = "pattern-reg-test-1.0"
-DstFile  = "patterns"
+DstFile  = "puzzles"
 FileExt  = ".txt"
 DbExt    = ".sql"
-Root = dirname(dirname(argv[0]))
+
+CWP = ""
+if name == 'nt': CWP = argv[0].replace("/", "\\")
+elif name == 'posix': CWP = argv[0].replace("\\", "/")
+
+Root = dirname(dirname(CWP))
+if not Root: Root = "."
+
 chdir(Root)
 path.insert(0, f"{join(Root, SrcDir)}")
 
@@ -86,13 +93,13 @@ def yas_gen():
                   f"                 Only the grid is considered in the puzzle spec string, Givens are\n"
                   f"                 not preserved.\n"
                   f"                 Up to 'n' puzzles will be generated per spec if 'n=' is specified.\n"
-                  f"                 if <Pzl Spec> is empty, then specs are taken from <input file path>"
+                  f"                 if <Pzl Spec> is empty, then specs are taken from <input file path>\n"
                   f"  m=<Pzl Spec>:  Synonym for s= switch.\n"
                   f"  p=<Pzl Spec>:  Puzzles created by shuffling the puzzle string. The 'j' switch is used to control\n"
                   f"                 the shuffling.  If j is not specified then all shuffing steps are applied randomly.\n"
                   f"                 Up to 'n' puzzles will be generated per spec if 'n=' is specified.\n"
                   f"                 Givens will be preserved as shuffled.\n"
-                  f"                 If <Pzl Spec> is empty, then specs are taken from <input file path>"
+                  f"                 If <Pzl Spec> is empty, then specs are taken from <input file path>\n"
                   f"             if p= and s= are both specified with a <Pzl Spec> then the latter spec is used\n"
                   f"  n=<n>:     (optional) up to number of puzzles to generate from each input puzzle spec.\n"
                   f"             default: {nPzls}\n"
@@ -122,7 +129,7 @@ def yas_gen():
                   f"                 5:   G[c][8-r]\n"
                   f"                 6:   G[8-c][r]\n"
                   f"                 7:   G[8-c][8-r]\n"
-                  f"                 8:   Randomly choose transposition"
+                  f"                 8:   Randomly choose transposition\n"
                   f"             for s, the post-fixed digit 0..5 specifies: To be implemented\n"
                   f"                 0:   No transformation\n"
                   f"                 1:   G[r][c] = v  --> G[v][c] = r\n"
@@ -136,7 +143,7 @@ def yas_gen():
                   f"            default: {Db}\n"
                   f"  a=<[e|d]>: (optional) additional fields - e: expertise level, d: difficulty\n"
                   f"Note:  The s= switch does not produce repeatable results as there can be multiple minimal puzzles\n"
-                  f"from any non minimal puzzle, and the remaining holes to dig are selected randomly.")
+                  f"       from any non minimal puzzle, and the remaining holes to dig are selected randomly.\n")
             exit()
 
     BTime = perf_counter()
@@ -151,7 +158,7 @@ def yas_gen():
         print(f"{time_str(BTime)}| End Run.")
         exit()
 
-    if Mode & M_FILE: # I/O to and from files.
+    if Mode & M_FILE:  # I/O to and from files.
         print("File I/O Mode")
         with open(Src, "rt") as f:
             with open(Dst, "wt") as f1:
@@ -165,24 +172,28 @@ def yas_gen():
                     if not Begin <= nLine <= End: continue
                     if Line == "\n" or Line[0] == "#":
                         continue
+                    Line, SlashSlash, Comment = Line.partition("//")
                     TD = Line.rstrip(" \n").split("|")
                     lenTD = len(TD)
                     oPzl = PZL()
                     if lenTD == 1: NrFlds, sErr = pzl_str_to_pzl(TD[0], oPzl)
                     else: NrFlds, sErr = pzl_str_to_pzl(TD[0] + "|" + TD[1], oPzl)
                     if not NrFlds:
-                        f1.write(f"# Error: {sErr}: {Line}"); f1.flush()
+                        if Comment: f1.write(f"# Error: {sErr}: {Line}//{Comment}")
+                        else: f1.write(f"# Error: {sErr}: {Line}")
+                        f1.flush()
                         print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}| Error: {sErr}", flush = True)
                         Errs += 1
                         continue
                     if Mode & M_DIG:
                         nFound, oPzl.Soln = check_puzzle(oPzl.Givens)
-                        if nFound == 1: # only one solution
+                        if nFound == 1:  # only one solution
                             for nn in range(nPzls):
                                 mPzl = grid_to_grid_str(minimalise_puzzle(oPzl.Givens))
                                 if mPzl and mPzl in lPzls: nDups += 1; continue
                                 lPzls.append(mPzl)
                                 nPzl += 1
+                                mPzl += f" // {81 - mPzl.count('.')}"
                                 f1.write(mPzl+"\n"); f1.flush()
                                 print(f"{time_str(BTime, StTime)}| Line: {nLine}| Puzzle: {nPzl}|{mPzl}", flush = True)
                         else:
@@ -213,10 +224,10 @@ def yas_gen():
                         if RX: r0, r1 = RX; Rows[i][r0%3] = r1; Rows[i][r1%3] = r0
                         elif not Val or Val[0] == RAND: shuffle(Rows[i])
                 elif Key == FLR:
-                        if len(Val) >= 2:
-                            f0, f1 = Val[1]
-                            Fx = Rows[f0]; Rows[f0] = Rows[f1]; Rows[f1] = Fx
-                        elif not Val or Val[0] == RAND: shuffle(Rows)
+                    if len(Val) >= 2:
+                        f0, f1 = Val[1]
+                        Fx = Rows[f0]; Rows[f0] = Rows[f1]; Rows[f1] = Fx
+                    elif not Val or Val[0] == RAND: shuffle(Rows)
                 elif Key == COL:
                     C1 = [(), (), ()]
                     for c0, c1 in Val[1:]:
@@ -261,7 +272,7 @@ def yas_gen():
                 Grid.append(oPzl.Grid[Rows[rf][rb]]); Givens.append(oPzl.Givens[Rows[rf][rb]])
 
             # shuffle cols by Transposing grid and shuffling transposed rows
-            Grid1 =  [[Grid[c][r] for c in range(9)] for r in range(9)]
+            Grid1 = [[Grid[c][r] for c in range(9)] for r in range(9)]
             Givens1 = [[Givens[c][r] for c in range(9)] for r in range(9)]
             Grid = []; Givens = []
             for c0 in range(9):
@@ -315,7 +326,7 @@ def parse_shuffle_spec(sShuffleSpec):
             Key, Val = parse_sub_spec(SSpec)
             if Key == -1: print(f"Shuffle Spec fragment '{SSpec} not recognised"); exit()
             oShuffleSpec[Key] = Val
-        elif SSpec [0] == 'x':
+        elif SSpec[0] == 'x':
             if len(SSpec) > 1 and SSpec[1] in {'0', '1', '2', '3', '4', '5', '6', '7', '8'}:
                 oShuffleSpec[XPS] = int(SSpec[1])
         else:

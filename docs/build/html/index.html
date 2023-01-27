@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="1. Introduction" href="01-introduction.html" />
 
-    <link rel="shortcut icon" href="_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="_static/AIM.ico"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Yet Another Sudoku</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -262,7 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#candidate-dressing">2.1.1.6. Candidate Dressing</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#syntax-examples">2.1.2. Syntax Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#pattern-syntax-examples">2.1.2. Pattern Syntax Examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#singles">2.1.2.1. Singles</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#straight-subsets">2.1.2.2. (Straight) Subsets</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#fish">2.1.2.3. Fish</a></li>
@@ -270,14 +270,19 @@
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#inference-chains-loops-and-nets">2.1.2.5. Inference Chains, Loops and Nets</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#candidate-diagrams">2.1.3. Candidate Diagrams</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#candidate-representation">2.1.3.1. Candidate Representation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#some-examples">2.1.3.2. Some Examples</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-exposed-pair">2.1.3.2.1. A Locked Exposed Pair</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-y-wing">2.1.3.2.2. A Y-Wing</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-pointing-single">2.1.3.2.3. A Locked Pointing Single</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-xyz-wing">2.1.3.2.4. A XYZ-Wing</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-exposed-triple">2.1.3.2.5. A Locked Exposed Triple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#outcome-syntax-examples">2.1.3. Outcome Syntax Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#placements">2.1.3.1. Placements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#eliminations">2.1.3.2. Eliminations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#candidate-diagrams">2.1.4. Candidate Diagrams</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#candidate-representation">2.1.4.1. Candidate Representation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#some-examples">2.1.4.2. Some Examples</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-exposed-pair">2.1.4.2.1. A Locked Exposed Pair</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-y-wing">2.1.4.2.2. A Y-Wing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-pointing-single">2.1.4.2.3. A Locked Pointing Single</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-xyz-wing">2.1.4.2.4. A XYZ-Wing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-exposed-triple">2.1.4.2.5. A Locked Exposed Triple</a></li>
 </ul>
 </li>
 </ul>
@@ -455,13 +460,17 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#grouped-bent-triples">3.3.2.2. Grouped Bent Triples</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#exposed-line-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Line, Hidden Box Grouped Bent Triples</a></li>
-<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#hidden-line-exposed-box-grouped-bent-triples">3.3.2.2.2. Hidden Line, Exposed Box Grouped Bent Triples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#exposed-row-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Row, Hidden Box Grouped Bent Triples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#exposed-column-hidden-box-grouped-bent-triples">3.3.2.2.2. Exposed Column, Hidden Box Grouped Bent Triples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#hidden-row-exposed-box-grouped-bent-triples">3.3.2.2.3. Hidden Row, Exposed Box Grouped Bent Triples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#hidden-column-exposed-box-grouped-bent-triples">3.3.2.2.4. Hidden Column, Exposed Box Grouped Bent Triples</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#grouped-bent-quads">3.3.2.3. Grouped Bent Quads</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#exposed-line-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Line, Hidden Box Grouped Bent Quads</a></li>
-<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#hidden-line-exposed-box-grouped-bent-quads">3.3.2.3.2. Hidden Line, Exposed Box Grouped Bent Quads</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#exposed-row-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Row, Hidden Box Grouped Bent Quads</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#exposed-column-hidden-box-grouped-bent-quads">3.3.2.3.2. Exposed Column, Hidden Box Grouped Bent Quads</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#hidden-row-exposed-box-grouped-bent-quads">3.3.2.3.3. Hidden Row, Exposed Box Grouped Bent Quads</a></li>
+<li class="toctree-l5"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#hidden-column-exposed-box-grouped-bent-quads">3.3.2.3.4. Hidden Column, Exposed Box Grouped Bent Quads</a></li>
 </ul>
 </li>
 </ul>
@@ -590,6 +599,17 @@
 <div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-besext-eg1"><span class="std std-numref">Figure 3.9: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-besext-eg1"><span class="std std-ref">Bent Exposed Sext Example</span></a></div>
 <div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-er-hb-eg1"><span class="std std-numref">Figure 3.10: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-er-hb-eg1"><span class="std std-ref">Group Bent Pair Exposed Row, Hidden Box Example</span></a></div>
 <div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-ec-hb-eg1"><span class="std std-numref">Figure 3.11: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-ec-hb-eg1"><span class="std std-ref">Group Bent Pair Exposed Column, Hidden Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-hr-eb-eg1"><span class="std std-numref">Figure 3.12: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-hr-eb-eg1"><span class="std std-ref">Group Bent Pair hidden Row, Exposed Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-hc-eb-eg1"><span class="std std-numref">Figure 3.13: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbp-hc-eb-eg1"><span class="std std-ref">Group Bent Pair Hidden Column, Exposed Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-er-hb-eg1"><span class="std std-numref">Figure 3.14: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-er-hb-eg1"><span class="std std-ref">Group Bent Triple Exposed Row, Hidden Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-ec-hb-eg1"><span class="std std-numref">Figure 3.15: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-ec-hb-eg1"><span class="std std-ref">Group Bent Triple Exposed Column, Hidden Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-hr-eb-eg1"><span class="std std-numref">Figure 3.16: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-hr-eb-eg1"><span class="std std-ref">Group Bent Triple Hidden Row, Exposed Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-hc-eb-eg1"><span class="std std-numref">Figure 3.17: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbt-hc-eb-eg1"><span class="std std-ref">Group Bent Triple Hidden Column, Exposed Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-er-hb-eg1"><span class="std std-numref">Figure 3.18: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-er-hb-eg1"><span class="std std-ref">Group Bent Quad Exposed Row, Hidden Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-ec-hb-eg1"><span class="std std-numref">Figure 3.19: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-ec-hb-eg1"><span class="std std-ref">Group Bent Quad Exposed Column, Hidden Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-hr-eb-eg1"><span class="std std-numref">Figure 3.20: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-hr-eb-eg1"><span class="std std-ref">Group Bent Quad Hidden Row, Exposed Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-hc-eb-eg1"><span class="std std-numref">Figure 3.21: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-gbq-hc-eb-eg1"><span class="std std-ref">Group Bent Quad Hidden Column, Exposed Box Example</span></a></div>
+<div class="line"><a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-bht-eg1"><span class="std std-numref">Figure 3.22: </span></a> <a class="reference internal" href="03-human-solvable-patterns/03-bent-subsets.html#fig-bht-eg1"><span class="std std-ref">Group Bent Hidden Triple Example</span></a></div>
 </div>
 </section>
 <section id="list-of-tables">
@@ -627,7 +647,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:b5e39e0*, Thu, 19 Jan 2023, 14:28:38
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

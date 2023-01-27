@@ -1148,7 +1148,7 @@ def tech_grouped_bent_quad(Grid, Step, Cands, Methods):
                                                     if Step.Outcome: Step.Outcome.append([P_SEP])
                                                     Step.Outcome.extend([[P_ROW, r], [P_COL, HR[2]], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                                 if Step.Outcome:
-                                                    Step.Method = T_GROUPED_BENT_QUAD_HR_EC
+                                                    Step.Method = T_GROUPED_BENT_QUAD_HR_EB
                                                     Step.Outcome.append([P_END])
                                                     Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Quad)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
                                                                     [P_VAL, sorted(Cands[rb0][cb0])], [P_OP, OP_EQ], [P_ROW, rb0], [P_COL, cb0], [P_CON],

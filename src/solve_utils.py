@@ -569,8 +569,8 @@ def ccells_see_each_other(r0, c0, Cand0, r1, c1, Cand1, GrpLks = False):
                 else: return True
         # different cells, grouped or ungrouped
         if Cand0 != Cand1: return False
-        if lenr0 == lenr1 == 1 and r00 == r10: return True # house is a row
-        if lenc0 == lenc1 == 1 and c00 == c10: return True # house is a column
+        if lenr0 == lenr1 == 1 and r00 == r10: return True  # house is a row
+        if lenc0 == lenc1 == 1 and c00 == c10: return True  # house is a column
         F = set(); T = set()
         for r in r0 | r1: F.add(r//3)
         for c in c0 | c1: T.add(c//3)
@@ -584,7 +584,7 @@ def ccells_see_each_other(r0, c0, Cand0, r1, c1, Cand1, GrpLks = False):
         if r0 == r1: return True  # house is a row
         if c0 == c1: return True  # house is a column
         rb0 = r0//3; cb0 = c0//3; rb1 = r1//3; cb1 = c1//3
-        if rb0 == rb1 and cb0 == cb1: return True # house is a box
+        if rb0 == rb1 and cb0 == cb1: return True  # house is a box
     return False
 
 def list_all_cand_strong_links(Cand, Cands, GrpLks = False, InclCell = True):

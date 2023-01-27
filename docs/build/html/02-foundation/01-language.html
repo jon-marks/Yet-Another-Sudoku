@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. Core Concepts" href="02-core-concepts.html" /><link rel="prev" title="2. Foundation" href="index.html" />
 
-    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.0.0 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
         <title>Yet another Sudoku | Foundation | Language</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
@@ -481,8 +481,8 @@ unrestricted candidate in the union of column 7 and box 4</p></td>
 </div>
 </section>
 </section>
-<section id="syntax-examples">
-<h2><span class="section-number">2.1.2. </span>Syntax Examples<a class="headerlink" href="#syntax-examples" title="Permalink to this heading">#</a></h2>
+<section id="pattern-syntax-examples">
+<h2><span class="section-number">2.1.2. </span>Pattern Syntax Examples<a class="headerlink" href="#pattern-syntax-examples" title="Permalink to this heading">#</a></h2>
 <p>How to read and interpret this Sudoku language syntax is explained by examples.  An appreciation of
 the meaning (semantics) of this syntax evolves through the balance of this section and the next.
 Albeit a comprehensive list, it is not an exhaustive list of all patterns, but hopefully enough to
@@ -806,10 +806,49 @@ eliminated.  And, by implication, all the Odd Parity Nodes are True and can be p
 </dl>
 </section>
 </section>
+<section id="outcome-syntax-examples">
+<h2><span class="section-number">2.1.3. </span>Outcome Syntax Examples<a class="headerlink" href="#outcome-syntax-examples" title="Permalink to this heading">#</a></h2>
+<section id="placements">
+<h3><span class="section-number">2.1.3.1. </span>Placements<a class="headerlink" href="#placements" title="Permalink to this heading">#</a></h3>
+<blockquote>
+<div><dl>
+<dt><span class="raw-html"><mong>r3c5:=7</mong></span></dt><dd><p>7 is placed in Cell r3c5.</p>
+<p>Only a single value can be placed in a Cell</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="eliminations">
+<h3><span class="section-number">2.1.3.2. </span>Eliminations<a class="headerlink" href="#eliminations" title="Permalink to this heading">#</a></h3>
+<blockquote>
+<div><dl class="simple">
+<dt><span class="raw-html"><mong>r3c5-=7</mong></span></dt><dd><p>Candidate 7 can be removed from Cell r3c5 if present.</p>
+</dd>
+<dt><span class="raw-html"><mong>r3c5-=237</mong></span></dt><dd><p>Candidates 2, 3, and 7 can be removed from Cell r3c5 if present.</p>
+</dd>
+<dt><span class="raw-html"><mong>r3c789-=237</mong></span></dt><dd><p>Candidates 2, 3, and 7 can be removed from Cells r3c7, r3c8 and r3c9 if present.</p>
+</dd>
+<dt><span class="raw-html"><mong>r3c!(789)-=237</mong></span></dt><dd><p>Candidates 2, 3, and 7 in row 3 outside Cells r3789 can be removed if present.</p>
+</dd>
+<dt><span class="raw-html"><mong>r8c456-=!(237)</mong></span></dt><dd><p>Any Candidate other than 2, 3, and 7 can be removed from Cell r3c5 if present.</p>
+</dd>
+<dt><span class="raw-html"><mong>r8c!(456)-=!(237)</mong></span></dt><dd><p>Any Candidate other than 2, 3, and 7 can be removed from Row 8 Cells       outside r8c456.</p>
+</dd>
+<dt><span class="raw-html"><mong>b8p!(456)-=!(237)</mong></span></dt><dd><p>Often it is convenient to address a cell position with box / position coordinates instead of
+row / column coordinates.  Boxes are sequenced left to right, then top to bottom.
+Similarly, Positions in a box are sequenced left to right then top to bottom.  Any Candidate
+other than 2, 3, and 7 can be removed from Box 8, and positions in box outside of positions
+4, 5, and 6.  Note this is not the same as the above example.  This example is within the
+box, whereas the previous is along a row.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
 <section id="candidate-diagrams">
-<h2><span class="section-number">2.1.3. </span>Candidate Diagrams<a class="headerlink" href="#candidate-diagrams" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">2.1.4. </span>Candidate Diagrams<a class="headerlink" href="#candidate-diagrams" title="Permalink to this heading">#</a></h2>
 <section id="candidate-representation">
-<h3><span class="section-number">2.1.3.1. </span>Candidate Representation<a class="headerlink" href="#candidate-representation" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.1.4.1. </span>Candidate Representation<a class="headerlink" href="#candidate-representation" title="Permalink to this heading">#</a></h3>
 <p>Candidate Diagrams here vary from those described in
 <a class="reference external" href="http://sudopedia.enjoysudoku.com/Diagrams_and_Notations.html">Sudopedia</a> and the
 <a class="reference external" href="https://forum.enjoysudoku.com/">Sudoku Forum</a>.</p>
@@ -898,11 +937,11 @@ candidates too</p></td>
 <td class="left-align single-left-divider no-right-divider"><p>X, Y and Z are present, optionally other candidates too</p></td>
 </tr>
 <tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>WXYZ</p></th>
-<td class="left-align single-left-divider no-right-divider"><p>At least two of W, X, Y, and Z are the only candidates present in
-that cell</p></td>
+<td class="left-align single-left-divider no-right-divider"><p>At least two of W, X, Y, and Z are the only candidates present
+in that cell</p></td>
 </tr>
 <tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>WXYZ+</p></th>
-<td class="left-align single-left-divider no-right-divider"><p>At least two of W, X, Y abd Z are present, optionally other
+<td class="left-align single-left-divider no-right-divider"><p>At least two of W, X, Y and Z are present, optionally other
 candidates too.</p></td>
 </tr>
 <tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>WX</uline>YZ</span></p></th>
@@ -921,7 +960,11 @@ candidates too</p></td>
 <tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>X*</p></th>
 <td class="left-align single-left-divider no-right-divider"><p>Any candidate other than X can be eliminated</p></td>
 </tr>
-<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XY</uline>Z*</span></p></th>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>XYZ*</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>At least one of X, Y, and Z is present and any other candidate
+can be eliminated</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XY</uline>Z*</span></p></th>
 <td class="left-align single-left-divider no-right-divider"><p>X and Y must be present, optionally Z, and any other candidate
 can be eliminated</p></td>
 </tr>
@@ -933,9 +976,9 @@ a box.  For these patterns, Candidate Diagrams merge the three cells in the inte
 larger cell containing the union of the Candidates in the intersecting cells.</p>
 </section>
 <section id="some-examples">
-<h3><span class="section-number">2.1.3.2. </span>Some Examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">2.1.4.2. </span>Some Examples<a class="headerlink" href="#some-examples" title="Permalink to this heading">#</a></h3>
 <section id="a-locked-exposed-pair">
-<h4><span class="section-number">2.1.3.2.1. </span>A Locked Exposed Pair<a class="headerlink" href="#a-locked-exposed-pair" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">2.1.4.2.1. </span>A Locked Exposed Pair<a class="headerlink" href="#a-locked-exposed-pair" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-locked-exposed-pair-cd1">
 <a class="reference internal image-reference" href="../_images/locked-exposed-pair-cd1.png"><img alt="Locked Exposed Pair" src="../_images/locked-exposed-pair-cd1.png" style="width: 378.0px; height: 115.0px;" /></a>
 <figcaption>
@@ -949,7 +992,7 @@ can see the cells of the exposed pair.  If X or Y exists in the cells with a *, 
 </div>
 </section>
 <section id="a-y-wing">
-<h4><span class="section-number">2.1.3.2.2. </span>A Y-Wing<a class="headerlink" href="#a-y-wing" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">2.1.4.2.2. </span>A Y-Wing<a class="headerlink" href="#a-y-wing" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-y-wing-cd1">
 <a class="reference internal image-reference" href="../_images/y-wing-cd1.png"><img alt="Y-Wing" src="../_images/y-wing-cd1.png" style="width: 378.0px; height: 230.0px;" /></a>
 <figcaption>
@@ -968,7 +1011,7 @@ candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated
 </div>
 </section>
 <section id="a-locked-pointing-single">
-<h4><span class="section-number">2.1.3.2.3. </span>A Locked Pointing Single<a class="headerlink" href="#a-locked-pointing-single" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">2.1.4.2.3. </span>A Locked Pointing Single<a class="headerlink" href="#a-locked-pointing-single" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-locked-pointing-single-cd1">
 <a class="reference internal image-reference" href="../_images/locked-pointing-single-cd1.png"><img alt="Locked Pointing Single" src="../_images/locked-pointing-single-cd1.png" style="width: 378.0px; height: 130.0px;" /></a>
 <figcaption>
@@ -984,7 +1027,7 @@ along row 3 outside the intersection cannot be True and can be eliminated.</p>
 </div>
 </section>
 <section id="a-xyz-wing">
-<h4><span class="section-number">2.1.3.2.4. </span>A XYZ-Wing<a class="headerlink" href="#a-xyz-wing" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">2.1.4.2.4. </span>A XYZ-Wing<a class="headerlink" href="#a-xyz-wing" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-xyz-wing-cd1">
 <a class="reference internal image-reference" href="../_images/xyz-wing-cd1.png"><img alt="XYZ-Wing" src="../_images/xyz-wing-cd1.png" style="width: 378.0px; height: 115.0px;" /></a>
 <figcaption>
@@ -997,7 +1040,7 @@ can see all occurrences of Y in the pattern can be eliminated.  The only locatio
 can see all the pincers and pivot lies in the intersection of row 1 and box 1.</p>
 </section>
 <section id="a-locked-exposed-triple">
-<h4><span class="section-number">2.1.3.2.5. </span>A Locked Exposed Triple<a class="headerlink" href="#a-locked-exposed-triple" title="Permalink to this heading">#</a></h4>
+<h4><span class="section-number">2.1.4.2.5. </span>A Locked Exposed Triple<a class="headerlink" href="#a-locked-exposed-triple" title="Permalink to this heading">#</a></h4>
 <figure class="align-right" id="fig-locked-exposed-triple-cd1">
 <a class="reference internal image-reference" href="../_images/locked-exposed-triple-cd1.png"><img alt="Locked Exposed Triple" src="../_images/locked-exposed-triple-cd1.png" style="width: 378.0px; height: 130.0px;" /></a>
 <figcaption>
@@ -1042,7 +1085,7 @@ Triple cannot be True and can be eliminated.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:1b45340*, Sat, 14 Jan 2023, 21:02:03
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:b5e39e0*, Thu, 19 Jan 2023, 14:28:38
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1078,7 +1121,7 @@ Triple cannot be True and can be eliminated.</p>
 <li><a class="reference internal" href="#candidate-dressing">2.1.1.6. Candidate Dressing</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#syntax-examples">2.1.2. Syntax Examples</a><ul>
+<li><a class="reference internal" href="#pattern-syntax-examples">2.1.2. Pattern Syntax Examples</a><ul>
 <li><a class="reference internal" href="#singles">2.1.2.1. Singles</a></li>
 <li><a class="reference internal" href="#straight-subsets">2.1.2.2. (Straight) Subsets</a></li>
 <li><a class="reference internal" href="#fish">2.1.2.3. Fish</a></li>
@@ -1086,14 +1129,19 @@ Triple cannot be True and can be eliminated.</p>
 <li><a class="reference internal" href="#inference-chains-loops-and-nets">2.1.2.5. Inference Chains, Loops and Nets</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#candidate-diagrams">2.1.3. Candidate Diagrams</a><ul>
-<li><a class="reference internal" href="#candidate-representation">2.1.3.1. Candidate Representation</a></li>
-<li><a class="reference internal" href="#some-examples">2.1.3.2. Some Examples</a><ul>
-<li><a class="reference internal" href="#a-locked-exposed-pair">2.1.3.2.1. A Locked Exposed Pair</a></li>
-<li><a class="reference internal" href="#a-y-wing">2.1.3.2.2. A Y-Wing</a></li>
-<li><a class="reference internal" href="#a-locked-pointing-single">2.1.3.2.3. A Locked Pointing Single</a></li>
-<li><a class="reference internal" href="#a-xyz-wing">2.1.3.2.4. A XYZ-Wing</a></li>
-<li><a class="reference internal" href="#a-locked-exposed-triple">2.1.3.2.5. A Locked Exposed Triple</a></li>
+<li><a class="reference internal" href="#outcome-syntax-examples">2.1.3. Outcome Syntax Examples</a><ul>
+<li><a class="reference internal" href="#placements">2.1.3.1. Placements</a></li>
+<li><a class="reference internal" href="#eliminations">2.1.3.2. Eliminations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#candidate-diagrams">2.1.4. Candidate Diagrams</a><ul>
+<li><a class="reference internal" href="#candidate-representation">2.1.4.1. Candidate Representation</a></li>
+<li><a class="reference internal" href="#some-examples">2.1.4.2. Some Examples</a><ul>
+<li><a class="reference internal" href="#a-locked-exposed-pair">2.1.4.2.1. A Locked Exposed Pair</a></li>
+<li><a class="reference internal" href="#a-y-wing">2.1.4.2.2. A Y-Wing</a></li>
+<li><a class="reference internal" href="#a-locked-pointing-single">2.1.4.2.3. A Locked Pointing Single</a></li>
+<li><a class="reference internal" href="#a-xyz-wing">2.1.4.2.4. A XYZ-Wing</a></li>
+<li><a class="reference internal" href="#a-locked-exposed-triple">2.1.4.2.5. A Locked Exposed Triple</a></li>
 </ul>
 </li>
 </ul>

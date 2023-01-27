@@ -190,8 +190,8 @@ Candidate Dressing
                                  unrestricted candidate in the union of column 7 and box 4
    ============================= ====================================================================
 
-Syntax Examples
-===============
+Pattern Syntax Examples
+=======================
 
 How to read and interpret this Sudoku language syntax is explained by examples.  An appreciation of
 the meaning (semantics) of this syntax evolves through the balance of this section and the next.
@@ -519,7 +519,46 @@ Inference Chains, Loops and Nets
 ..   **Exocets**
 ..
 ..   **Multi Sector Locked Sets**
-..
+
+Outcome Syntax Examples
+=======================
+
+Placements
+----------
+
+   :raw-html:`<mong>r3c5:=7</mong>`
+      7 is placed in Cell r3c5.
+
+      Only a single value can be placed in a Cell
+
+Eliminations
+------------
+
+   :raw-html:`<mong>r3c5-=7</mong>`
+      Candidate 7 can be removed from Cell r3c5 if present.
+
+   :raw-html:`<mong>r3c5-=237</mong>`
+      Candidates 2, 3, and 7 can be removed from Cell r3c5 if present.
+
+   :raw-html:`<mong>r3c789-=237</mong>`
+      Candidates 2, 3, and 7 can be removed from Cells r3c7, r3c8 and r3c9 if present.
+
+   :raw-html:`<mong>r3c!(789)-=237</mong>`
+      Candidates 2, 3, and 7 in row 3 outside Cells r3789 can be removed if present.
+
+   :raw-html:`<mong>r8c456-=!(237)</mong>`
+      Any Candidate other than 2, 3, and 7 can be removed from Cell r3c5 if present.
+
+   :raw-html:`<mong>r8c!(456)-=!(237)</mong>`
+      Any Candidate other than 2, 3, and 7 can be removed from Row 8 Cells       outside r8c456.
+
+   :raw-html:`<mong>b8p!(456)-=!(237)</mong>`
+      Often it is convenient to address a cell position with box / position coordinates instead of
+      row / column coordinates.  Boxes are sequenced left to right, then top to bottom.
+      Similarly, Positions in a box are sequenced left to right then top to bottom.  Any Candidate
+      other than 2, 3, and 7 can be removed from Box 8, and positions in box outside of positions
+      4, 5, and 6.  Note this is not the same as the above example.  This example is within the
+      box, whereas the previous is along a row.
 
 Candidate Diagrams
 ==================
@@ -583,9 +622,9 @@ The contents of a Candidate Diagram Cell is made up of the following components
    :raw-html:`<uline>XY</uline>Z`   X and Y must be present, optionally Z only
    :raw-html:`<uline>XYZ</uline>`   X, Y and Z are the only candidates present in that cell
    :raw-html:`<uline>XYZ</uline>+`  X, Y and Z are present, optionally other candidates too
-   WXYZ                             At least two of W, X, Y, and Z are the only candidates present in
-                                    that cell
-   WXYZ+                            At least two of W, X, Y abd Z are present, optionally other
+   WXYZ                             At least two of W, X, Y, and Z are the only candidates present
+                                    in that cell
+   WXYZ+                            At least two of W, X, Y and Z are present, optionally other
                                     candidates too.
    :raw-html:`<uline>WX</uline>YZ`  W and X must be present, optionally Y and Z only
    :raw-html:`<uline>WXY</uline>+`  W, X and Y must be present, optionally other candidates too
@@ -593,6 +632,8 @@ The contents of a Candidate Diagram Cell is made up of the following components
    :raw-html:`<uline>WXYZ</uline>+` W, X, Y and Z must be present in that cell, optionally other
                                     candidates too
    X*                               Any candidate other than X can be eliminated
+   XYZ*                             At least one of X, Y, and Z is present and any other candidate
+                                    can be eliminated
    :raw-html:`<uline>XY</uline>Z*`  X and Y must be present, optionally Z, and any other candidate
                                     can be eliminated
    ================================ ================================================================

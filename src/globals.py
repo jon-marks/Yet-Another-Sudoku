@@ -37,8 +37,9 @@ TITLE = f"Yet Another Sudoku - V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexs
 # Generic enumerations
 UNDEF   = -1
 AIC_RECURSE_LIM = 5     # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
-                        # equivalent to (n+1)*2 chain nodes.
-KRAKEN_RECURSE_LIM = 4  # the limit of recursion for kraken fish
+                        # equivalent to (n+1)*2 chain node length.
+XYC_RECURSE_LIM = 8     # Chain length = recurse lim.
+KRAKEN_RECURSE_LIM = 1  # the limit of recursion for kraken fish
                         # equivalent to (n+2)*2 chain nodes
 
 FILE_WILDCARDS    = "All files (*.*)|*.*|" \
@@ -562,7 +563,7 @@ Tech = {
         T_Y_WING:                      TECH_T(True, "Y-Wing",                    EXP_INTERMEDIATE,       50),
         T_W_WING:                      TECH_T(True, "W-Wing",                    EXP_PROFICIENT,         80),
         T_XYZ_WING:                    TECH_T(True, "XYZ-Wing",                  EXP_PROFICIENT,         60),
-#        T_WXYZ_WING:                   TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
+        # T_WXYZ_WING:                   TECH_T(True, "WXYZ-Wing",                 EXP_ACCOMPLISHED,      100),
         T_BENT_EXPOSED_QUAD:           TECH_T(True, "Bent Exposed Quad",         EXP_ACCOMPLISHED,      110),
         T_BENT_EXPOSED_QUINT:          TECH_T(True, "Bent Exposed Quint",        EXP_ACCOMPLISHED,      110),
         T_BENT_EXPOSED_SEXT:           TECH_T(True, "Bent Exposed Sext",         EXP_ACCOMPLISHED,      110),

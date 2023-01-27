@@ -1,4 +1,4 @@
-from copy import copy
+from copy import copy, deepcopy
 
 from globals import *
 from solve_utils import *
@@ -154,7 +154,7 @@ def sln_chain_next_level(SLNNode, Chain, Cands, Lvl, Methods, State):
                 for r0, c0, Cand0 in SLNNode.SLNet.Pol1:
                     for r1, c1, Cand1 in SLNN1.SLNet.Pol0:
                         if ccells_see_each_other(r0, c0, Cand0, r1, c1, Cand1):  # They will only be weak links.
-                            SLNN1 = copy(SLNN1)
+                            SLNN1 = deepcopy(SLNN1)
                             SLNN1.Ccell0 = (r0, c0, Cand0, PAR_O); SLNN1.Ccell1 = (r1, c1, Cand1, PAR_E)
                             #  a SLN that can be linked, what resolutions do the ends yield.
                             if resolve_sln_chain_patterns([*Chain, SLNN1], Cands, Methods, State): return
