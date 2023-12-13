@@ -1,5 +1,7 @@
 ﻿.. title:: Yet Another Sudoku | Glossary
 
+.. include:: globals.inc
+
 **************************
 Glossary and Abbreviations
 **************************
@@ -310,5 +312,3 @@ AIC	Alternating Inference Chain.  A chain comprising alternating Weak and Strong
 Linebox	The intersection of a line (row or column) and a box comprising only three cells. 
 Rowbox	The intersection of row and box comprising only three cells 
 Colbox	The intersection of a column and box comprising only three cells.
-
-

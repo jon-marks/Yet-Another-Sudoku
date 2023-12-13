@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation
 
+.. include:: ..\globals.inc
+
 .. _foundation:
 
 ==========
@@ -28,7 +30,8 @@ over using less common algebraic symbols and esoteric formulae.
    02-core-concepts
    03-subsets
    04-base-cover-sets
-   05-chains-loops-nets
-   06-unlocked-sets
-   07-uniqueness
-   08-searching
+   05-fish
+   06-chains-loops-nets
+   07-unlocked-sets
+   08-uniqueness
+   09-searching

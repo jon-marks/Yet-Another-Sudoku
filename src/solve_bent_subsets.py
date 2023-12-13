@@ -1030,7 +1030,7 @@ def tech_grouped_bent_quad(Grid, Step, Cands, Methods):
                                                 if Step.Outcome: Step.Outcome.append([P_SEP])
                                                 Step.Outcome.extend([[P_ROW, rb5], [P_COL, cb5], [P_OP, OP_ELIM], [P_VAL, Elims]])
                                             if Step.Outcome:
-                                                Step.Method = T_GROUPED_BENT_QUAD_ER_EB
+                                                Step.Method = T_GROUPED_BENT_QUAD_ER_HB
                                                 Step.Outcome.append([P_END])
                                                 Step.Pattern = [[P_OP, OP_U], [P_VAL, sorted(Quad)], [P_ROW, r], [P_COL, t, t+1, t+2], [P_CON],
                                                                 [P_VAL, sorted(Cands[r][c0])], [P_OP, OP_EQ], [P_ROW, r], [P_COL, c0], [P_CON],
@@ -1251,8 +1251,8 @@ def tech_bent_hidden_triple(Grid, Step, Cands, Methods):
                                                 if Step.Outcome:
                                                     Step.Method = T_BENT_HIDDEN_TRIPLE
                                                     Step.Outcome.append([P_END])
-                                                    Step.Pattern = [[P_VAL, sorted(Cands[r0][c2])], [P_ROW, r0], [P_COL, c2], [P_OP, OP_WLK],
-                                                                    [P_VAL, sorted(Cands[r0][c0])], [P_ROW, r0], [P_COL, c0], [P_OP, OP_WLK],
+                                                    Step.Pattern = [[P_VAL, sorted(Cands[r0][c0])], [P_ROW, r0], [P_COL, c0], [P_CON],
+                                                                    [P_VAL, sorted(Cands[r0][c2])], [P_ROW, r0], [P_COL, c2], [P_CON],
                                                                     [P_VAL, sorted(Cands[r2][c0])], [P_ROW, r2], [P_COL, c0], [P_END]]
                                                     return 0
     return -1

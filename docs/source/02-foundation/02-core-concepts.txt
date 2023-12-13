@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Concepts
 
+.. include:: ..\globals.inc
+
 .. _core-concepts:
 
 *************
@@ -292,4 +294,3 @@ effort.
 Viewing puzzles from different perspectives, come into their own with more complex patterns
 such as chains, loops, nets, bent hidden subsets, etc. Transforming to another domain may make it
 easier to spot exposed patterns that are hidden in the former domain.
-

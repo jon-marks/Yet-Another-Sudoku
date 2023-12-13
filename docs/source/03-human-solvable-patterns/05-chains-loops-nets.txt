@@ -1,5 +1,7 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Chains, Loops and Nets
 
+.. include:: ..\globals.inc
+
 
 .. _human-solvable-chain-patterns:
 

@@ -1,5 +1,7 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Subsets
 
+.. include:: ..\globals.inc
+
 .. _hsp_subsets:
 
 *******
@@ -56,5 +58,3 @@ Hidden Quads
 
 `Hodoku <https://hodoku.sourceforge.net/en/tech_hidden.php#h4>`__ provides a good explanation
 of Hidden Quads.
-
-

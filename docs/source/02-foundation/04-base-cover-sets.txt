@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Base Sets (Truths) and Cover Sets (Links)
 
+.. include:: ..\globals.inc
+
 ..  _found_bsets_and_csets:
 
 ************************
@@ -182,7 +184,7 @@ This Sudoku Rule is extended for multiple Base Sets and Cover Sets:
 
 Base Sets need to be distinct, that is they do not intersect – share a common ccell.  Cover Sets can
 overlap/intersect and as will be shown later, are required to intersect in certain cases.  Crossing
-over of Base Sets is permitted (like a row and column) where no common ccell in the intersection
+over of Base Sets is permitted (like a row and column) where no common ccell lie in the intersection
 exists.
 
 .. _n-base-n-cover-sud-rule:
@@ -198,7 +200,7 @@ in the Union of Base Sets.  The IF statement conditional expression ensures that
 Element are covered / Linked.  If all bases are not covered, then ‘A Truth’ will not be locked into
 the Cover Set intersections and the pattern is not viable.
 
-.. _exp_ssets:
+.. _found_bscs_exp_ssets:
 
 Cell Base Sets and House Cover Sets – Exposed Subsets
 -----------------------------------------------------
@@ -215,7 +217,7 @@ Cover Set are the Truth, any other Candidates in the Cover Sets that are not par
 intersection are also not part of “The Truth” and can be eliminated. This is the basis for Exposed
 Subsets.
 
-.. _hid_ssets1:
+.. _found_bscs_hid_ssets1:
 
 House Base Sets and Cell Cover Sets – Hidden Subsets
 ----------------------------------------------------
@@ -229,8 +231,10 @@ Base Sets are the Ccells in the Houses, Cover Sets are the Candidates in the Cel
 Sudoku Rules, the other CCells in the Cover Set Cells that are not part of the intersection (Truth)
 cannot be True and can be eliminated.  This is the basis for Hidden Subsets.
 
-House Base Sets and House Cover Sets – Fish Patterns
-----------------------------------------------------
+.. _found_bscs_fish:
+
+House Base Sets and House Cover Sets – Fish
+-------------------------------------------
 
 Consider between 2 to 'n' same valued Ccells that can see each other in a House (Line or Box) and
 'n' such non-intersecting Houses exist.  If a Ccell in a Base Set can see two or more of its peers
@@ -273,6 +277,7 @@ The intersecting Cell Cover sets are:
 *  :raw-html:`<mong>CSr1c1 = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</mong>`,  and
 *  :raw-html:`<mong>CSr1c5 = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</mong>`
 
+|
 |
 |
 |
@@ -342,7 +347,7 @@ Applying the Sudoku Rule::
    IF (BS5c5 | BS5c8) & (CS5r2 | CS5r8) == (BS5c5 | BS5c8)
       THEN E = (CS5r2, CS5r8) – (BS5c5 | BS5c8)
 
-The IF condition evaluates True using the same approach as the :ref`above<fig-hidden-pair-eg1>`
+The IF condition evaluates True using the same approach as the :ref:`above<fig-hidden-pair-eg1>`
 example.  Therefore, the eliminations evaluate to:
 
 :raw-html:`</span></p>
@@ -362,7 +367,7 @@ The concept of Rank
 
 .. admonition:: Definition
 
-   Rank = The Number of Cover Sets – The Number of Base Sets.
+   Rank = Cover Sets amount – Base Sets amount.
 
 
 Rank 0 Patterns

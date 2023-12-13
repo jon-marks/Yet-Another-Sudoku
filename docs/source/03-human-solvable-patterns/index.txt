@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Human Solvable Patterns
 
+.. include:: ..\globals.inc
+
 .. _human-solvable-patterns:
 
 =======================
@@ -39,6 +41,3 @@ descriptions.
    08-searching
    09-super-human
    10-last-resort
-
-
-

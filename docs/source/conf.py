@@ -38,10 +38,10 @@ source_suffix = {
     '.md': 'markdown',
 }
 
-rst_epilog = """
-.. role:: raw-html(raw)
-   :format: html
-"""
+# rst_epilog = """
+# .. role:: raw-html(raw)
+#    :format: html
+# """
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -60,5 +60,3 @@ html_theme = 'furo'
 # Furo is not supporting sourcelinks https://github.com/pradyunsg/furo/issues/478
 html_copy_source = False
 html_show_sourcelink = False
-
-

@@ -1,5 +1,7 @@
 .. title:: Yet another Sudoku | Foundation | Language
 
+.. include:: ..\globals.inc
+
 ********
 Language
 ********
@@ -589,7 +591,9 @@ The contents of a Candidate Diagram Cell is made up of the following components
                                     present in that cell
    :raw-html:`<uline>X</uline>`     (Underline) A unique but unspecified candidate value that
                                     that must be present in that cell
-   \+                               An appended "+" indicates the presence of other candidates
+   \+                               An appended "+" indicates the presence of other candidates.
+                                    A "+" on its own indicates any candidates including those in the
+                                    pattern may or may not be present in that cell.
    :raw-html:`<oline>X</oline>`     (Overline) Not X.  X must be absent from that cell
    \*                               (Wildcard) Any candidate indicated in the pattern can be
                                     eliminated from that cell.
@@ -610,6 +614,8 @@ The contents of a Candidate Diagram Cell is made up of the following components
    ================================ ================================================================
    Expression                       Description
    ================================ ================================================================
+   \+                               Any candidate including those in the pattern being considered,
+                                    may or may not be present.
    X+                               X may be present, optionally other candidates too
    :raw-html:`<uline>XY</uline>`    X and Y are the only two candidates in that cell
    :raw-html:`<uline>XY</uline>+`   X and Y must be in that cell, optionally other candidates too
@@ -736,4 +742,3 @@ X, Y, Z are the only candidates confined (locked) to the intersection of row 3 a
 with no other candidates, they identify an Exposed Triple.  X, Y, Z are True in the cells of the
 Exposed Triple, therefore any Ccells that can see all the same value Ccells in the Exposed
 Triple cannot be True and can be eliminated.
-

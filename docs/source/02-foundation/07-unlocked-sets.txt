@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Unlocked Sets
 
+.. include:: ..\globals.inc
+
 .. _found_unlocked_sets:
 
 =============

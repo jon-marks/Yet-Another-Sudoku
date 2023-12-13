@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | References
 
+.. include:: globals.inc
+
 .. _references:
 
 **********

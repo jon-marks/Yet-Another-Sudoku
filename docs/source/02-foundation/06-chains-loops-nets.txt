@@ -1,5 +1,7 @@
 .. title:: Yet Another Sudoku | Foundation | Chains, Loops and Nets
 
+.. include:: ..\globals.inc
+
 **********************
 Chains, Loops and Nets
 **********************

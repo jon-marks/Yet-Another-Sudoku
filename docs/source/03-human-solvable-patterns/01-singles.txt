@@ -1,5 +1,7 @@
 .. title:: Yet another Sudoku | Human Solvable Patterns | Singles
 
+.. include:: ..\globals.inc
+
 =======
 Singles
 =======
@@ -96,4 +98,3 @@ X can only be True once in Box 1, **therefore**:
 
 A box with two same value candidates can be resolved as an Empty Rectangle, however these patterns overlap
 with Turbot Fish and Grouped X Chains.  Of these three patterns, a Turbot Fish is the easiest to resolve.
-
