@@ -98,14 +98,6 @@ from globals import *  # globals imports os and wx.
 from menus import *
 from sudoku import Sudoku, GE, ST_DEFAULT, SB
 
-# if DEBUG:
-#     import logging as log
-#
-#     log.basicConfig(filename = '../sudoku.log',
-#                     filemode = 'w',
-#                     level = log.DEBUG,
-#                     format = '%(asctime)s: %(message)s')
-
 class MainStatusBar(wx.StatusBar):
     def __init__(self, Parent):
         wx.StatusBar.__init__(self, Parent, id = wx.ID_ANY,

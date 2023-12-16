@@ -9,7 +9,8 @@ Fish
 ****
 
 Fish are single Candidate :ref:`Base Set / Cover Set <found_bsets_and_csets>` patterns where both
-:ref:`Base Sets and Cover Sets <found_bscs_fish>` are Houses.
+Base Sets and Cover Sets are :term:`House`\s.
+
 
 Fish are named according to their Base Set count:
    *  2: X-Wing
@@ -19,84 +20,57 @@ Fish are named according to their Base Set count:
 For every Fish with a Base Set count 'n', a reciprocal Fish pattern exists of count 9 - 'n', making
 it unnecessary to look for Base Set counts greater than 4.
 
-Consider a single candidate X, such that X can be any Candidate value 1 through 9.  A Fish pattern
-is made up of 'n' non-intersecting Base Sets containing between 2 and 'n' instances of X where all
-Base Sets are intersected by 'n' Cover Sets, such that all instances of X in the Base sets lie in
-the Base Set / Cover Set intersections.
+Consider a single candidate value X, where X is a number between 1 and 9.  A Fish pattern is made up of:
+    * 'n' non-intersecting Houses containing between 2 and 'n' instances of X as the Bases,
+    * where all instances of X in each Base link to another instance of X in another Base.
+    * The houses containing these links form the Cover Sets.
+    * From :ref:`Base Sets and Cover Sets <found_bsets_and_csets>` above, we have shown that any
+      instance of X in the Cover Sets that is not part of the intersection is not part of
+      :term:`The Truth`, and can be eliminated.
+
+The simpler Fish patterns have either row Base Sets and column Cover Sets or vise-versa. Fish may be
+degenerate.  In many cases it is possible to eliminate of candidates from these degenerate fish.
+Finned Fish have an extra Ccell or two in one of the Base Sets.  Sashimi fish are missing a Ccell in
+one of the Base Sets.
+
+Fraken and Mutant Fish are more complex Fish patterns. Fraken Fish have one or more Boxes as either
+Base or Cover Sets. Mutant fish have a combination of non-intersecting row, column and box Base
+Sets. In both Franken and Mutant Fish, Cover sets can be any type of house.  Fraken and Mutant fish
+can be degenerate too.  These patterns border on what is consdered human solvable.
 
 Basic Fish
 ==========
-
-The above paragraph is teased out with the following explanation.
 
 .. figure:: images/basic-fish-cd1.png
    :name: fig-basic-fish-cd1
    :scale: 100%
    :alt: Basic Fish Candidate Diagrams
-   :align: right
+   :align: center
    :figwidth: 100%
 
-   Basic Fish Candidate Diagram
+   Basic Fish Candidate Diagrams
 
-The left image in :numref:`fig-basic-fish-cd1` illustrates an X-Wing.  This pattern is made up of
-two Base Sets, each with two candidates, B0 = Xr3c37, and B1 = Xr7c37.  These two Base Sets are
-intersected by two Cover Sets, C0=c3 and C1=c7, and Candidates X exist in each intersection.
+X-Wing
+------
 
-If Xr3c3 is False, then Xr3c7 must be True, Xr7c7 must be False and Xr7c3 True. Therefore, either
-the Blue X's are True or the Orange X's are True.  As each Cover Set contains both a Blue X and an
-Orange X, no other X can be True in the Cover Sets resulting in their elimination.
-   candidates where all 'n' Base Sets
+The left image in :numref:`fig-basic-fish-cd1` of an X-Wing is made up of two Base Sets, each with
+two candidates, ``B0 = Xr3c37``, and ``B1 = Xr7c37``.  These two Base Sets are intersected by links
+in the two Cover Sets, ``C0=c3`` and ``C1=c7``, where X is found in each intersection.
+
+If ``Xr3c3`` is False, then ``Xr3c7`` must be True, ``Xr7c7`` must be False and ``Xr7c3`` True.
+Therefore, either the two blue X's are True or the two Orange X's are True.  As each Cover Set
+contains both a Blue X and an Orange X, no other X can be True in the Cover Sets resulting in their
+elimination.
+
+Swordfish
+---------
+
+The centre image in :numref:`fig-basic-fish-cd1` of a Swordfish is made up of three Base Sets, each
+with three candidates, ``B0 = Xr2c357``, ``B1 = Xr4c357, and ``B2 = Xr8c357``.  These three Base
+Sets are intersected by links in the three Cover Sets, ``C0 = c3``, ``C1 = c5``, and ``C2 = c7``,
+where X is found at least twice where each CoverSet crosses over the three Base Sets.
 
 
-The left image in :numref:`fig-basic-fish-cd11`
-
-are intersected by 'n' Cover Sets such that all candidates
-Base Sets Identify a
-In principle,  base-sets refer to the existence of a candidate occurring “n” times in “n”
-non- overlapping houses/groups.  Each base-set is synonymous a house.  Franken Fish refer to fish
-where one or more of the base-sets are blocks/boxes.  All other fish have base-sets that are either
-rows or columns.  Because the rows or columns are parallel it is impossible for them to overlap.
-
-In a fish pattern of order “n”, there exist “n” cover-sets (houses) that intersect the n base-sets.
-Fraken Fish refer to fish where only one or more base-sets are boxes.  Mutant Fish refer to fish
-where cover-sets  as well as base-sets can be boxes.  Franken and Mutant Fish patterns are
-difficult to recognise, and very often there are easier patterns to recognise that the
-Franken/Mutant fish for that step.
-
-Fish where both the base sets and cover sets are lines are much easier to recognise and can be
-quite productive.
-
-Basic Fish
-==========
-
-Fish patterns rely on the fact that a candidate can only be True once in a house, be the house
-a base-set or cover-set.  In recognising Fish patterns, base-sets are not allowed to overlap and
-must have between 2 and n occurrences of the candidate.  Cover-sets also cannot overlap, and each
-cover set needs to intersect with the same value candidate in at least 2 of the base-sets.  Any
-same-value candidates in the cover-set that is not intersecting the base-set can be eliminated.
-
-X-Wings
--------
-
-Consider the X-Wing example on the left.  The first base-set B0 is row 2 with candidate X only
-occurring in r2c2 and r2c6.  The second base-set B1 is row 6 with candidate X only occurring in
-r6c2 and r6c6.  Cover-set C0 col2 intersects r2c2 and r6c2 and cover-C1 intersects r2c6 and r6c6.
-In B0, either Xr2c2 or Xr2c6 can be True.  Therefore if Xr2c2 is True, then Xr6c6 is True, and if
-Xr2c6 is True then Xr6c2 is True.
-
-This logic condition describes the X from which the name X-Wing originates.  That is either the two
-yellow X’s are True or the two blue X’s are True.  A blue and a yellow X cannot be simultaneously
-True because they both exist in the same base-set and X can only be true once in a base set.
-Looking at the cover-sets (green lines), each which contain a yellow X and a blue X.  We know that
-either the blue X or the yellow X will be True.  Therefore any other candidate X along the
-cover-set (green lines) that does not belong to a base-set, cannot be True, and therefore can be
-eliminated.
-
-The X-Wing Truth is that only either the blue X’s or the yellow X’s are True.  Therefore, any other
-X candidate ccell that can see (i.e. in this case, in the same house/group as) both a blue and a
-yellow X cannot be True and can be eliminated.  As there are no other X’s along the base-sets (by
-definition of the pattern), the only possible eliminations occur along the cover sets. (The cover
-sets are the only other houses that contain an X of each colour)
 
 Consider the Swordfish pattern with candidate X in the centre puzzle in the above figure.  The base
 sets (lines) have been identified as Rows 1, 3 and 7.  Each row can have between two and three

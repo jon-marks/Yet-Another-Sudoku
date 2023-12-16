@@ -1,7 +1,4 @@
 .idea/*
-lib/*
-libd/*
-puzzles/*
 tmp/*
 venv/*
 .pytest_cache/*
