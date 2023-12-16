@@ -29,7 +29,7 @@ Some Definitions
 
 **Link**
    A Link is a connection between two or more Base Set Elements each from different Base Sets that
-   can see each other.
+   can :term:`See` each other.
 
 **Cover Set**
    A Cover Set is a House or Cell containing at least two Linked Base Set Elements from different
@@ -182,10 +182,11 @@ This Sudoku Rule is extended for multiple Base Sets and Cover Sets:
    each Cover Set all Peer Ccells that are not part of the intersection, cannot be True and can be
    eliminated.
 
-Base Sets need to be distinct, that is they do not intersect – share a common ccell.  Cover Sets can
-overlap/intersect and as will be shown later, are required to intersect in certain cases.  Crossing
-over of Base Sets is permitted (like a row and column) where no common ccell lie in the intersection
-exists.
+Base Sets need to be distinct, that is, they do not share a common Ccell.  If Base Sets are
+indiviual Cells, or all rows or all columns, they are distict, as it is impossible for these sets
+to cross over each other.  However, if Base Sets are a combination of rows, columns and Boxes, then
+so long as they do not share a common Ccell where they cross over, they remain distinct.  Houses
+intersect each other only when there is a common Ccell where they cross over.
 
 .. _n-base-n-cover-sud-rule:
 
@@ -247,7 +248,7 @@ candidate.  The Cover Sets are also houses that see two or more candidates acros
 such that each occurrence of the Candidate in the Base Sets are covered.  According to Sudoku Rules,
 the Ccells in the intersections are the Truth.  Therefore, any other Candidates in the Cover Sets
 that are not part of the intersection (Truth) can be eliminated.
-This is the basis for all :ref:`“Fish” <hsp_fish>` and Fish Like patterns.
+This is the basis for all :ref:`“Fish” <found_fish>` and Fish Like patterns.
 
 Some Examples
 =============

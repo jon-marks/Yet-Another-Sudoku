@@ -11,7 +11,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 .. glossary::
 
    **A Truth**
-      A :term:`Set` of :term:`Ccell` :term:`Element`\s that could possibly be :term:`The Truth`.
+      A :term:`Set` of :term:`Ccell` :term:`Element`\s of which one element is the :term:`The Truth`.
       That is one of the elements in the set is the actual solved value for that :term:`Cell`.
 
    **AI**
@@ -71,7 +71,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       candidate value, not to any :term:`Cell` location on the :term:`Grid`.
 
    **Ccell**
-      A three dimensional tuple uniquely identifying a candidate element by value, row,
+      A three-dimensional tuple uniquely identifying a candidate element by value, row,
       and column in a Sudoku Grid.
 
    **Cell**
@@ -234,15 +234,16 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       That is one of the Elements in that Set is :term:`The Truth`.
 
    **SLC**
-      Strongly Link Chain.  A Chain where all the links between Nodes are strong. A SLC is a special
+      Strongly Link Chain.  A Chain where all the links between Nodes are strong. An SLC is a special
       case of an AIC where every alternate link is masquerading as a Weak Link.
 
    **SLN**
       Strongly Link Net.  A Net where all the links between Nodes are strong.
 
    **State**
-      Collective pronoun for the terms True and False, which are the conditions of a Ccell in a
-      Cell.  A Ccell can either be True or False in a Cell.
+      Collective pronoun for the terms True and False, which are the conditions of a :term: `Ccell`
+      in a :term: `Cell`.  A :term:`Ccell` can either be True or False in a Cell.  Only one Ccell
+      can be True in a cell becoming the placed value.
 
    **Strong Link**
       An inference between two Ccells where neither can be simultaneously False, nor simultaneously
@@ -253,8 +254,8 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       Loop, that is strongly linked to the opposing Super-Nodes.
 
    **The Truth**
-      That :term:`Element` of a :term:`Set` that ultimately ends up being True, and is the Ccell
-      that is placed in that Cell.
+      That :term:`Element` of a :term:`Set` that is ultimately found to be the correct value for
+      that :term: `Cell`.
 
    **Tower**
       A Column oriented :term:`Chute`.
@@ -302,7 +303,8 @@ Conflict/Contradiction/Error:	Two or more cells with the same value in a Group/H
 Minimal Puzzle:	A minimal puzzle is that where no more holes can be dug without the puzzle becoming invalid, that is having multiple solutions. 
 Slink:	Strong link in a chain or a loop
 Wink	Weak link in a chain or a loop 
-Ccell	Refers to a candidate value in a cell as a unique identifier comprising the candidate, row and column coordinates as a tuple.  For example 3r2c8 candidate 3 in row 2, column 8..  This reference is useful when referring to specific candidates in specific cells, and is used extensively in the explanation of many logic techniques and their algorithms.   In solving puzzles Ccells are whittled away (eliminated) using logic techniques until only one Ccell remains as the solution for that cell. 
+Ccell	Refers to a candidate value in a cell as a unique identifier comprising the candidate, row and column coordinates as a tuple.  For example 3r2c8 candidate 3 in row 2, column 8.
+This reference is useful when referring to specific candidates in specific cells, and is used extensively in the explanation of many logic techniques and their algorithms.   In solving puzzles Ccells are whittled away (eliminated) using logic techniques until only one Ccell remains as the solution for that cell.
 Sudoku Rules	The collective term for: 
 * The numbers 1 through 9 only occur once in each row, column and block. 
 * Only one unique solution. 
