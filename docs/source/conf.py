@@ -1,5 +1,5 @@
-from git import Repo
-from time import strftime, localtime
+# from git import Repo
+# from time import strftime, localtime
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -8,12 +8,16 @@ from time import strftime, localtime
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-oRepo = Repo("..\\..")
+# oRepo = Repo("..\\..")
 project = 'Yet Another Sudoku'
 author = 'Jonathan Marks'
-version = "HEAD"  # "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
-release = ""  # f'{version}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
-copyright = '2023, Jonathan Marks, Commit Tag: 'f'{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
+version = 'HEAD'  # "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
+release = 'HEAD'  # f'{version}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
+f = open('build\\copyright', 'rt')
+f.readline(copyright)
+f.close()
+
+# copyright = '2023, Jonathan Marks, Commit Tag: 'f'{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
 
 
 # -- General configuration ---------------------------------------------------
