@@ -2,7 +2,7 @@
 tmp/*
 venv/*
 .pytest_cache/*
-__pycache__/*
+*/__pycache__/*
 *.log
 .~*\#
 docs/build/doctrees/*
