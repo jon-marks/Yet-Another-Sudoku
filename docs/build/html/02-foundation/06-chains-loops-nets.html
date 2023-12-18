@@ -240,9 +240,9 @@
 <h1><span class="section-number">2.6. </span>Chains, Loops and Nets<a class="headerlink" href="#chains-loops-and-nets" title="Link to this heading">#</a></h1>
 <p>In this section, a Node refers to a Ccell that is part of a Chain, Loop or Net pattern to
 distinguish it from Ccells that are not part of that pattern.</p>
-<p>This section builds substantially on the <a class="reference internal" href="02-core-concepts.html#cc-truth"><span class="std std-ref">Truths</span></a> and
-<a class="reference internal" href="02-core-concepts.html#cc-premises-and-inferences"><span class="std std-ref">Premises and Inferences</span></a> concepts developed in
-<a class="reference internal" href="02-core-concepts.html#core-concepts"><span class="std std-ref">Core Concepts</span></a>.</p>
+<p>This section builds substantially on the <span class="xref std std-ref">Truths</span> and
+<span class="xref std std-ref">Premises and Inferences</span> concepts developed in
+<span class="xref std std-ref">Core Concepts</span>.</p>
 <p>A Link is an inference describing the relationship between two Ccells.  A Direct Link describes the
 relationship between two Ccells that see each directly.  An Indirect Link describes the relationship
 between two Ccells that are connected indirectly by a pattern such as a chain, etc.</p>
@@ -250,7 +250,7 @@ between two Ccells that are connected indirectly by a pattern such as a chain, e
 <h2><span class="section-number">2.6.1. </span>Direct Links<a class="headerlink" href="#direct-links" title="Link to this heading">#</a></h2>
 <dl class="simple">
 <dt>Recall:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="02-core-concepts.html#cc-weak-links"><span class="std std-ref">Direct Weak Links</span></a>:  If one end is True, the other end must be False,
+<li><p><span class="xref std std-ref">Direct Weak Links</span>:  If one end is True, the other end must be False,
 and both ends cannot be simultaneously True, but can be simultaneously False.  These Links
 characterise the following Ccell relationships:</p>
 <ul>
@@ -258,7 +258,7 @@ characterise the following Ccell relationships:</p>
 <li><p>Between two different valued Ccells in a cell that has 3 or more Ccells.</p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="02-core-concepts.html#cc-strong-links"><span class="std std-ref">Direct Strong Links</span></a>:  The ends are always the opposite state of each
+<li><p><span class="xref std std-ref">Direct Strong Links</span>:  The ends are always the opposite state of each
 other.  The ends cannot be simultaneously True or False.  These Links characterise the
 following Ccell relationships</p>
 <ul>
@@ -364,7 +364,7 @@ Links.</p>
 <p>A WE-AIC has an Even Node count to preserve the weak end link requirement of the chain. If an End
 Node is True, the other is False, and if the other end is True, then the first is False.  The chain
 identifies a reversible opposing inference relationship (True to False) between the End Nodes.
-The ends of WE-AIC behave in the same as <a class="reference internal" href="02-core-concepts.html#cc-weak-links"><span class="std std-ref">Weak Links</span></a>.</p>
+The ends of WE-AIC behave in the same as <span class="xref std std-ref">Weak Links</span>.</p>
 <p>With an Odd Node count chain, if the one end is True, so is the other.  But the chain is not
 reversible. The other starting link is Strong, and a True assertion from that end does not
 propagate passed the second link.  This passing forward of the True state in one direction may be
@@ -415,7 +415,7 @@ Strong Links.</p>
 <p>A SE-AIC has an Even node count to preserve the strong end link requirement of the chain.  If an End
 Node is False, the other is True, and if the other is False then the first is True.  The chain
 identifies a reversible opposing inference relationship (False to True) between the end Nodes. The
-ends of a SE-AIC behave like <a class="reference internal" href="02-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust Links</span></a>.</p>
+ends of a SE-AIC behave like <span class="xref std std-ref">Robust Links</span>.</p>
 <p>With an Odd Node count chain, if the one end is False so is the other.  But the chain is not
 reversible. The other starting link is Weak and a False assertion from that end does not propagate.
 This False to False one way passing forward may be useful.  But it is this reversible opposing
@@ -606,9 +606,9 @@ house, and because of the Chain, at least one of them will be True, any Ccell (s
 </section>
 </section>
 <section id="chain-eliminations-and-placements">
-<h2><span class="section-number">2.6.5. </span>Chain Eliminations and Placements<a class="headerlink" href="#chain-eliminations-and-placements" title="Link to this heading">#</a></h2>
+<span id="cc-chain-elims-and-plcmts"></span><h2><span class="section-number">2.6.5. </span>Chain Eliminations and Placements<a class="headerlink" href="#chain-eliminations-and-placements" title="Link to this heading">#</a></h2>
 <section id="weak-link-ended-chains-we-aic">
-<h3><span class="section-number">2.6.5.1. </span>Weak Link Ended Chains (WE-AIC)<a class="headerlink" href="#weak-link-ended-chains-we-aic" title="Link to this heading">#</a></h3>
+<span id="we-aic"></span><h3><span class="section-number">2.6.5.1. </span>Weak Link Ended Chains (WE-AIC)<a class="headerlink" href="#weak-link-ended-chains-we-aic" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>Recall, Weak Link Ended AI-Chain characteristics are:</dt><dd><ul class="simple">
 <li><p>An even count of Nodes,</p></li>
@@ -621,16 +621,16 @@ False.</p></li>
 </dd>
 </dl>
 <p>The ends of Weak Link Ended Chains behave exactly as Weak Links and can be used as such.  Ccells
-‘See’ each other through weak links.  Two Ccells that ‘See’ each other both cannot be True.  This
-application of the Sudoku rule on its own, does not give much.  Its real power is in linking Ccells
-to all the elements of <a class="reference internal" href="02-core-concepts.html#cc-truth"><span class="std std-ref">‘A Truth’</span></a>.  If a Ccell sees all the elements of ‘A Truth’,
-it cannot be True and can be eliminated</p>
+‘See’ each other through weak links.  Two Ccells that ‘See’ each other both cannot be True.</p>
+<p>This application of the Sudoku rule on its own, does not give much.  Its real power is in linking
+Ccells to all the elements of <span class="xref std std-ref">‘A Truth’</span>.  If a Ccell <a class="reference internal" href="../07-glossary.html#term-See"><span class="xref std std-term">See</span></a>s all the elements of
+‘A Truth’, it cannot be True and can be eliminated as in Kraken Fish.</p>
 <p>This will be covered in detail when reviewing the application of <a class="reference internal" href="05-fish.html#kraken-fish"><span class="std std-ref">Kraken Fish</span></a>.</p>
 </section>
 <section id="strong-link-ended-chains-se-aic">
 <h3><span class="section-number">2.6.5.2. </span>Strong Link Ended Chains (SE-AIC)<a class="headerlink" href="#strong-link-ended-chains-se-aic" title="Link to this heading">#</a></h3>
 <dl class="simple">
-<dt>Recall, Strong Ended AI-Chain characteristics are that of <a class="reference internal" href="02-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust Links</span></a>:</dt><dd><ul class="simple">
+<dt>Recall, Strong Ended AI-Chain characteristics are that of <span class="xref std std-ref">Robust Links</span>:</dt><dd><ul class="simple">
 <li><p>An even count of Nodes</p></li>
 <li><p>Link count is one less than Node Count, an odd number,</p></li>
 <li><p>Both outer links are Strong Links,</p></li>
@@ -642,6 +642,7 @@ True.</p></li>
 </dl>
 <p>Because at least one end of a SE-AIC is always True, any Ccell (including interior nodes, see
 <a class="reference internal" href="#cannibalism"><span class="std std-ref">Cannibalism</span></a>) seeing both ends cannot be True and can be eliminated.</p>
+<p>Just as a Robust Link or a Strong Link can be substituted for a Weak Link</p>
 <section id="type-1-same-end-values">
 <h4><span class="section-number">2.6.5.2.1. </span>Type 1:  Same end Values<a class="headerlink" href="#type-1-same-end-values" title="Link to this heading">#</a></h4>
 <p>Considering SE-AIC’s with the same candidate values, eliminations depend on the locations of the
@@ -1005,7 +1006,7 @@ Link</span></a>.  Therefore, Xr7c2 if it exists, sees both ends, cannot be True 
 <li><p>In Row 2, if Xr2c1 is False, then one of Xr2c79 is True, and if both Xr2c79 are False, then Xr2c1
 is True.  In reverse, if Xr2c1 is True, then both Xr2c7 are False, and if one of Xr2c79 is True
 then Xr2c1 is False. Because the relationship meets the criteria of a
-<a class="reference internal" href="02-core-concepts.html#cc-strong-links"><span class="std std-ref">Strong Link</span></a> in both directions, Xr2Xr2c1=Xr2c79 is a valid Group link.</p></li>
+<span class="xref std std-ref">Strong Link</span> in both directions, Xr2Xr2c1=Xr2c79 is a valid Group link.</p></li>
 <li><p>In Column 1, if Xr2c1 is False, then one of Xr56c1 is True, and if both Xr56c1 are
 False, then Xr2c1 is True.  In reverse, if Xr2c1 is True, then both xr56c1 are False, and if one
 of Xr56c1 is True, then Xr2c1 is False.  Therefore, Xr2c1=Xr56c1 is a valid Group Link.</p></li>
@@ -1124,7 +1125,7 @@ to know which ccell in the grouped node is the Truth.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:ff4b0fc*, Sat, 16 Dec 2023, 10:53:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:cd0c755*, Sat, 16 Dec 2023, 11:00:29
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

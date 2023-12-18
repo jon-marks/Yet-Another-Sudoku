@@ -29,14 +29,14 @@ oRepo = Repo(".")
 sDirty = "*" if oRepo.is_dirty() else ""
 sTimeStamp = strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))
 sVers = f"V{oRepo.tags[-1].tag.tag}:{str(oRepo.head.commit.hexsha[:7])}{sDirty}, {sTimeStamp}."
-VERSION = f"    {sVers}\n" \
+RELEASE = f"    {sVers}\n" \
           f"    Python {version}"
 DEBUG = " - DEBUG" if gettrace() else ""
 TITLE = f"Yet Another Sudoku - V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}{DEBUG}"
 
 # Generic enumerations
 UNDEF   = -1
-AIC_RECURSE_LIM = 5     # the limit of recursion when searching for chains correlates to max number of linkis in a chain.
+AIC_RECURSE_LIM = 5     # the limit of recursion when searching for chains correlates to max links in a chain.
                         # equivalent to (n+1)*2 chain node length.
 XYC_RECURSE_LIM = 8     # Chain length = recurse lim.
 KRAKEN_RECURSE_LIM = 1  # the limit of recursion for kraken fish

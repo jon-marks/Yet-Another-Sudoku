@@ -29,7 +29,7 @@ from solve_utils import *
 
 def yas_prt():
     print(f"YAS Pattern Regression Tester.")
-    print(VERSION)
+    print(RELEASE)
     print(f"Run start: {strftime('%a, %d %b %Y, %H:%M:%S', localtime(time()))}")
     TestDataDir = join(join(Root, TestDir), TestDDir)
     Src = join(TestDataDir, SrcFile+FileExt)

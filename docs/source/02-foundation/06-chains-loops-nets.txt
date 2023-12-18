@@ -391,8 +391,12 @@ Because :raw-html:`<mong>3r1c6</mong> in SLN1o and <mong>4r2c6</mong> in SLN3o a
 house, and because of the Chain, at least one of them will be True, any Ccell (such as
 <mong>3r2c6</mong>) that sees both, cannot be True and can be eliminated <mong>r2c6-=3</mong>`.
 
+.. _cc_chain_elims_and_plcmts:
+
 Chain Eliminations and Placements
 =================================
+
+.. _we_aic:
 
 Weak Link Ended Chains (WE-AIC)
 -------------------------------
@@ -406,10 +410,11 @@ Recall, Weak Link Ended AI-Chain characteristics are:
    *  Although both ends cannot be simultaneously True, they can be simultaneously False.
 
 The ends of Weak Link Ended Chains behave exactly as Weak Links and can be used as such.  Ccells
-'See' each other through weak links.  Two Ccells that 'See' each other both cannot be True.  This
-application of the Sudoku rule on its own, does not give much.  Its real power is in linking Ccells
-to all the elements of :ref:`'A Truth' <cc_truth>`.  If a Ccell sees all the elements of 'A Truth',
-it cannot be True and can be eliminated
+'See' each other through weak links.  Two Ccells that 'See' each other both cannot be True.
+
+This application of the Sudoku rule on its own, does not give much.  Its real power is in linking
+Ccells to all the elements of :ref:`'A Truth' <cc_truth>`.  If a Ccell :term:`See`\s all the elements of
+'A Truth', it cannot be True and can be eliminated as in Kraken Fish.
 
 This will be covered in detail when reviewing the application of :ref:`Kraken Fish <kraken-fish>`.
 
@@ -426,6 +431,8 @@ Recall, Strong Ended AI-Chain characteristics are that of :ref:`Robust Links <cc
 
 Because at least one end of a SE-AIC is always True, any Ccell (including interior nodes, see
 :ref:`Cannibalism <cannibalism>`) seeing both ends cannot be True and can be eliminated.
+
+Just as a Robust Link or a Strong Link can be substituted for a Weak Link
 
 Type 1:  Same end Values
 ++++++++++++++++++++++++

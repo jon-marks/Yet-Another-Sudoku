@@ -617,7 +617,7 @@ class MainMenubar(wx.MenuBar):
 
     @staticmethod
     def on_help_about(e):
-        wx.MessageBox(TITLE+"\n\n"+ BLURB + "\n\n" + VERSION, " Help About", wx.OK)
+        wx.MessageBox(TITLE+"\n\n"+BLURB+ "\n\n"+RELEASE, " Help About", wx.OK)
 
     def on_help_guide(self, e):
         dlgUserGuide = UserGuide(self.parent.Title)

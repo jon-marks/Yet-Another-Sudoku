@@ -54,6 +54,7 @@ List of Figures
 |  :numref:`fig-finned-x-wing-eg1` :ref:`fig-finned-x-wing-eg1`
 |  :numref:`fig-two-string-kite-eg1` :ref:`fig-two-string-kite-eg1`
 |  :numref:`fig-uls-chain-cd1` :ref:`fig-uls-chain-cd1`
+|  :numref:`fig-basic-fish-cd1` :ref:`fig-basic-fish-cd1`
 |  :numref:`fig-two-string-kite-eg2` :ref:`fig-two-string-kite-eg2`
 |  :numref:`fig-skyscraper-eg1` :ref:`fig-skyscraper-eg1`
 |  :numref:`fig-chained-sln-t2-eg1` :ref:`fig-chained-sln-t2-eg1`

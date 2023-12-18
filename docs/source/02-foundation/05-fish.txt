@@ -11,32 +11,39 @@ Fish
 Fish are single Candidate :ref:`Base Set / Cover Set <found_bsets_and_csets>` patterns where both
 Base Sets and Cover Sets are :term:`House`\s.
 
-
 Fish are named according to their Base Set count:
    *  2: X-Wing
    *  3: Swordfish
    *  4: Jellyfish.
 
-For every Fish with a Base Set count 'n', a reciprocal Fish pattern exists of count 9 - 'n', making
-it unnecessary to look for Base Set counts greater than 4.
+Every Fish with a Base Set count 'n' has a reciprocal Fish pattern exists of count 9 - 'n', thus,
+making it unnecessary to look for Base Set counts greater than 4.
 
-Consider a single candidate value X, where X is a number between 1 and 9.  A Fish pattern is made up of:
+Consider a single candidate value X, where X is a number between 1 and 9. Fish pattern is made up of:
     * 'n' non-intersecting Houses containing between 2 and 'n' instances of X as the Bases,
-    * where all instances of X in each Base link to another instance of X in another Base.
+    * where all instances of X in each Base Set :term:`Link`\s to another instance of X in another Base Set.
     * The houses containing these links form the Cover Sets.
     * From :ref:`Base Sets and Cover Sets <found_bsets_and_csets>` above, we have shown that any
       instance of X in the Cover Sets that is not part of the intersection is not part of
       :term:`The Truth`, and can be eliminated.
 
-The simpler Fish patterns have either row Base Sets and column Cover Sets or vise-versa. Fish may be
-degenerate.  In many cases it is possible to eliminate of candidates from these degenerate fish.
-Finned Fish have an extra Ccell or two in one of the Base Sets.  Sashimi fish are missing a Ccell in
-one of the Base Sets.
+Basic Fish patterns have either row Base Sets and column Cover Sets or vise-versa.
 
-Fraken and Mutant Fish are more complex Fish patterns. Fraken Fish have one or more Boxes as either
-Base or Cover Sets. Mutant fish have a combination of non-intersecting row, column and box Base
-Sets. In both Franken and Mutant Fish, Cover sets can be any type of house.  Fraken and Mutant fish
-can be degenerate too.  These patterns border on what is consdered human solvable.
+Fish may be degenerate. Often it is possible to eliminate of candidates from these
+degenerate fish.  Finned Fish have an extra Ccell or two in one of the Base Sets.  Sashimi fish are
+missing a Ccell in one of the Base Sets.  Finned Sashimi fish have an extra Ccell in
+one Base Set and are missing Ccell in another Base Set.
+
+Fraken and Mutant Fish are more complex Fish patterns. Fraken Fish have one or more Box Base Sets.
+Mutant fish have a combination of non-intersecting row, column and box Base
+Sets. In both Franken and Mutant Fish, Cover Sets can be in any House type.  Fraken and Mutant fish
+can be degenerate too (Finned and or Sashimi).
+
+Kraken Fish, are degenerate fish where eliminatable candidates in the Cover Sets see all
+the fins with :term:`AIC` chains if it cannot see them directly.
+
+
+Franken, Mutant and Kraken Fish border on what is considered human solvable.
 
 Basic Fish
 ==========
@@ -66,9 +73,15 @@ Swordfish
 ---------
 
 The centre image in :numref:`fig-basic-fish-cd1` of a Swordfish is made up of three Base Sets, each
-with three candidates, ``B0 = Xr2c357``, ``B1 = Xr4c357, and ``B2 = Xr8c357``.  These three Base
-Sets are intersected by links in the three Cover Sets, ``C0 = c3``, ``C1 = c5``, and ``C2 = c7``,
-where X is found at least twice where each CoverSet crosses over the three Base Sets.
+with two or three candidates, ``B0 = Xr2c357``, ``B1 = Xr4c357``, and ``B2 = Xr8c357``.  These three
+Base Sets are intersected by links in the three Cover Sets, ``C0 = c3``, ``C1 = c5``, and
+``C2 = c7``, where X is found at least twice where each CoverSet crosses over the three Base Sets.
+
+This pattern remains valid with any or all the lighter X's in the orange shaded cells absent.  If
+they are all absent the pattern is a "minimal" Swordfish where each Base Set only has two
+candidates.  The validating criteria of this pattern is that there are three Cover Set houses
+containing all the links between Base Sets.
+contains some int
 
 
 
@@ -92,7 +105,7 @@ of a base-set can be eliminated.
 
 The Swordfish Truth is that either the yellow, blue or Orange X’s are True.  Therefore, any other X
 candidate ccell that can see (same house as) one of each colour X cannot be True and can be
-eliminated.  By definition of this this Pattern, there is no possibility of this happening along
+eliminated.  By definition of this Pattern, there is no possibility of this happening along
 the base sets.  The only other so the only possible eliminations can only occur along the
 cover-sets.
 
@@ -121,7 +134,7 @@ cover-sets.
 
 Algorithmic rules for Basic Fish:
     1. Fish order (n): 2 – X-Wing, 3 – Swordfish, 4 – Jellyfish.
-    2. (n) base-sets and (n) cover- set
+    2. (n) base-sets and (n) cover - set
     3. 2 to (n) candidates per base-set
     4. 2 to (n) candidates per cover-set
     5. (n) items in Union of all bases.
@@ -274,7 +287,7 @@ Skyscraper.  As the Red X’s are their only cover, like Fins, they are treated 
 they are not confined to a single base-set).
 
 If Fin Xr3c8 is True, Xr3c3 is False, Xr7c3 is True making Xr7c7. False.  Similarly, if Xr7c7 is
-True, Xr3c8 is False.  One one Fin can be True, never both or none.  If either fin is True, the
+True, Xr3c8 is False.  Only one Fin can be True, never both or none.  If either fin is True, the
 candidate ccells that see both Fins can be eliminated. If X is present can be eliminated from the
 green cells.  The two fins need to be at least confined to a single chute for eliminations to be
 made, the third Tower in this case.  If the bases were in the same floor chute, then eliminations
@@ -382,7 +395,7 @@ eliminated.
 
 If the two or three fins are confined to a base chute (floors in this case), as shown on the right,
 all the ccells that are not part of a base-set that see all the fins can be eliminated.  As the Fins
- are confined to a box in two of the bases, any ccell in the other non base line can be eliminated,
+are confined to a box in two of the bases, any ccell in the other non base line can be eliminated,
 as shown by the green cells.
 
 
@@ -453,8 +466,7 @@ Algorithmic rules for Kraken Finned Fish
    #  Fins do not have cover-sets
    #  Up to 9 items in Union of all bases, (n) for cover-sets, up to  (9-(n)) for or fins.
    #  No restrictions to the location of Fins in base-sets.
-   #  Any cover-set candidate that is not part of the base-set that can see all the fins can be
-      eliminated.
+   #  Any cover-set candidate that is not part of the base-set that can see all the fins can be eliminated.
 
 Algorithmic rules for Kraken Sashimi Fish
 -----------------------------------------
@@ -472,19 +484,17 @@ Algorithmic rules for Kraken Sashimi Fish
 Kraken Fish Practical issues
 ----------------------------
 
-   #  Relaxing the number of fins in base-sets and in the number of base-sets greatly increasing the
-      number of possible
+   #  Relaxing the number of fins in base-sets and in the number of base-sets greatly increasing the number of possible
    #  base patterns that can be found for scanning for cover to fin connections.
-   #  The number of chains to scan for each possible base pattern is the product of fins x covers
-      for each pattern. greatly increases the probability of patterns
+   #  The number of chains to scan for each possible base pattern is the product of fins x covers for each pattern. greatly increases the probability of patterns
    #  Chain Length Processing Time below estimates an average of 10^(n/2) iteration steps to build a
-      chain of length n.  A practical chain length to search before bottoming out is 10 – 14 nodes.
-      Shorter than that it appears many opportunities to find and resolve patterns are missed, and
-      there is a diminishing return for longer chain lengths. YMMV.  An iteration step is in the
-      order of a few micro seconds on my PC, say 4uSecs in Python.
+   chain of length n.  A practical chain length to search before bottoming out is 10 – 14 nodes.
+   Shorter than that it appears many opportunities to find and resolve patterns are missed, and
+   there is a diminishing return for longer chain lengths. YMMV.  An iteration step is in the
+   order of a few micro seconds on my PC, say 4uSecs in Python.
 
 Searching for kraken fish patterns is hugely expensive, and is done twice, first time in the search
-for  regular scalar chains, and again for chains with group links.  As Kraken Fish are considered
+for regular scalar chains, and again for chains with group links.  As Kraken Fish are considered
 rather exotic and because of the time taken to resolve, Kraken Fish are at the end of the list for
 patterns to search.
 
@@ -496,9 +506,9 @@ Kraken Fish Examples
 
 The following example from Systematic Sudoku (taken from KrazyDad SuperTough 555) is interesting in
 that the X-Wing fin “sees” a candidate in the column cover-set by way of the Weakly linked AIC on 6:
- 6(r5c5~r2c5=r3c4~r3c3). [remember, “~” is the symbol for a strong link masquerading as a weak
- link].   In this example, it is the only way the fin 6r5c5 sees the cover ccell 6r3c3.  The other
- cover ccell 6r6c3 is not visible from the fin.  Other probably simpler solutions:
+6(r5c5~r2c5=r3c4~r3c3). [remember, “~” is the symbol for a strong link masquerading as a weak
+link].   In this example, it is the only way the fin 6r5c5 sees the cover ccell 6r3c3.  The other
+cover ccell 6r6c3 is not visible from the fin.  Other probably simpler solutions:
 
    *  Notice that the ERs in box 4 on both 6 and 1 candidates, coupled with the 61 conjugate pair
       (61r36c4) results in the elimination of both the 1 and 6 from r3c3 (r3c3-=61) solving r3c3:=2,

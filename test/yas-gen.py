@@ -52,7 +52,7 @@ seed()
 
 def yas_gen():
     print(f"YAS - Puzzle Generator / Modifier.")
-    print(VERSION)
+    print(RELEASE)
     print(f"Run start: {strftime('%a, %d %b %Y, %H:%M:%S', localtime(time()))}")
     TestDataDir = join(join(Root, TestDir), TestDDir)
     Src  = join(TestDataDir, SrcFile+FileExt)

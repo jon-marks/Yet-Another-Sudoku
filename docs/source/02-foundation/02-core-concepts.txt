@@ -2,11 +2,13 @@
 
 .. include:: ..\globals.inc
 
-.. _core-concepts:
+.. _found_core-concepts:
 
 *************
 Core Concepts
 *************
+
+.. _found_cc_ccells:
 
 Ccells
 ======
@@ -29,7 +31,7 @@ The term Ccell is not to be confused with a:
 *  :term:`Potential Elimination`:  A Synonym for Candidate, in the context of applying
    :term:`Conditional Logic` to reduce the set of Candidates in a Cell.
 
-.. _cc_truth:
+.. _found_cc_truth:
 
 'A Truth' and 'The Truth'
 =========================
@@ -61,46 +63,46 @@ column, box and cell in the grid.
 
 For example:
 
-*  In Row 4, an 'A Truths' is :raw-html:`<mong>3r4c3468</mong>`. That is all the cells in row 4 containing candidate 3.
+*  In Row 4, an 'A Truths' is ``3r4c3468``. That is all the cells in row 4 containing candidate 3.
    'The Truth'  will be a 3 in one of those yet to be determined 4 cells.
-*  In Column 4, an 'A Truths' is :raw-html:`<mong>5r1679c4</mong>`.  That is all the cells in column 4 containing 5.  'The
+*  In Column 4, an 'A Truths' is ``5r1679c4``.  That is all the cells in column 4 containing 5.  'The
    Truth' will be a 5 in one of those yet to be determined 4 cells.
-*  In Box 9, an 'A Truth' is :raw-html:`<mong>8r8c7,r9c79</mong>`.  That is all the cells in box 9 containing 8.  'The
+*  In Box 9, an 'A Truth' is ``<mong>8r8c7,r9c79``.  That is all the cells in box 9 containing 8.  'The
    Truth' will be the 8 in one of those yet to be determined 3 cells.
-*  In Cell :raw-html:`<mong>r6c1</mong>, <mong>1347r6c1</mong>` is 'A Truth'.  'The Truth' will be one of those Ccells in that cell.
+*  In Cell ``r6c1``, ``1347r6c1`` is 'A Truth'.  'The Truth' will be one of those Ccells in that cell.
 
 |
 |
 |
 
-.. _cc_premises_and_inferences:
+.. _found_cc_premises_and_inferences:
 
 Premises and Inferences
 =======================
 
 Source: http://sudopedia.enjoysudoku.com/Inference.html
 
-Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
+Solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
 inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
 conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
 cell value and testing it.
 
 The most basic assertion of a premise is on the state of a Ccell. For example, asserting
-Ccell 3r7c2 True.
+Ccell ``3r7c2`` True.
 
 An inference implies a relationship (link) between two Ccells, characterised by the other Ccell's
 response to the assertion of a premise on the first Ccell.  For example, If
-:raw-html:`<mong>3r7c2</mong>` is True, then according to :ref:`Sudoku Rules <sudoku-rules>`,
-:raw-html:`<mong>3r7c5</mong>` is False.
+``3r7c2`` is True, then according to :ref:`Sudoku Rules <sudoku-rules>`,
+``3r7c5`` is False.
 
-The full nature of the inference (link) between two ccells is characterised by the outcome of
-asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:
+The inference (link) between two Ccells is characterised by the outcome of asserting each Ccell
+True and False.  The important link (inference) relationships in Sudoku are:
 
 *  Weak Links
 *  Strong Links
 *  Robust Links
 
-.. _cc_weak_links:
+.. _found_cc_weak_links:
 
 Weak Links
 ----------
@@ -122,9 +124,9 @@ A weak link is formed by two ccells A and B, where they are either:
 Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
 Notice that:
 
-*  if :raw-html:`<mong>7r7c2</mong>` is True, then none of the same valued Ccells in row 7 can be
+*  if ``7r7c2`` is True, then none of the same valued Ccells in row 7 can be
    True.
-*  if :raw-html:`<mong>7r7c2</mong>` is False, it does not infer state of any other same valued
+*  if ``<mong>7r7c2`` is False, it does not infer state of any other same valued
    Ccell in the row.
 
 This is the characteristic defining a Weak Link.
@@ -155,25 +157,25 @@ The conclusion drawn from weak link inferences is that if one end is True, the o
 end is False, and if the one end is False, the other end can be either True or False.  That is,
 both ends can never be simultaneously True, and at least one end is always False.
 
-Ccells see each other through weak links (directly or indirectly - e.g. Weakly Ended Chain).  When
+Ccells see each other through weak links (directly or indirectly — e.g. Weakly Ended Chain).  When
 any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
 False.
 
-.. _cc_strong_links:
+.. _found_cc_strong_links:
 
 Strong Links
 ------------
 
 A strong link between two Ccells A and B, exists either:
-   *  In a conjugate pair (like :raw-html:`<mong>3r7c23</mong>` in :numref:`fig-links-eg1`), where
+   *  In a conjugate pair (like ``3r7c23`` in :numref:`fig-links-eg1`), where
       two same valued Ccells are the only same valued Ccells in that house, or
    *  In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
-      like :raw-html:`<mong>78r7c4</mong>`.
+      like ``78r7c4``.
 
 In :numref:`fig-links-eg1` above:
 
-*  If :raw-html:`<mong>3r7c2</mong>` is False, then :raw-html:`<mong>7r7c3</mong>` must be True, as only one of the conjugate pair must be True.
-*  if :raw-html:`<mong>3r7c2</mong>` is True, then :raw-html:`<mong>7r7c3</mong>` must be False, as only one of the conjugate pair must be False
+*  If ``3r7c2`` is False, then :raw-html:`<mong>7r7c3</mong>` must be True, as only one of the conjugate pair must be True.
+*  if ``3r7c2`` is True, then :raw-html:`<mong>7r7c3</mong>` must be False, as only one of the conjugate pair must be False
 
 Strong links are indicated by a “=” linking the two ccells and obey the following inferences:
 
@@ -198,13 +200,13 @@ Strong links are indicated by a “=” linking the two ccells and obey the foll
 
 The conclusion drawn from a Strong Links is that ends always have opposite state.
 
-Any two Strongly Linked Ccells must be of alternate state, therefore
+Any two Strongly Linked Ccells must be of alternate state, therefore:
 
 * if the one end is True the other end is False
 * Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
   guarantees one of its ends to be True.
 
-.. _cc_robust_links:
+.. _found_cc_robust_links:
 
 Robust Links
 ------------
@@ -235,38 +237,42 @@ structure.
 
 The conclusion drawn from Robust Link Inferences is that if the one end is False, the other end is
 True, and if the one end is True, the other end can be either True or False.  That is, both ends can
-never be simultaneously False, at least one end is always True.
+never be simultaneously False, at least one end is always True.  But if one end is asserted True, it
+is impossible to determine the state of the other end with a Robust link.
 
 Any third Ccell that can see both ends of a Robust Link cannot be True, because at least one end is
-guaranteed to be True. But if one end is asserted True, it is impossible to determine the state of
-the other end with a Robust link.
+True.
 
-Strong Links Masquerading as Weak
----------------------------------
+.. _found_cc_sl_and_rl_masq_as_wl:
 
-A Strong link possesses all the attributes of a Weak Link (reversible and True to False linkage),
-and then some (False to True linkage).  Therefore, it is possible to substitute a Strong link
-for a Weak Link in the identifying patterns.
+Strong and Robust Links Masquerading as Weak
+--------------------------------------------
 
-The same cannot be said in the reverse direction because a Weak Link is lacking the False to True
-linkage.
+Strong and Robust links possesses all the link attributes of a Weak Link.  That is if one end is
+True, the other is False.  Therefore, it is possible to substitute a Strong or Robust Link for a
+Weak Link to identify patterns.
 
-When a strong link is substituted for a weak link, the Strong Link is said to be masquerading as a
-Weak link.  The :raw-html:`<mono>'~'</mono>` symbol is used to indicate a masqueraded weak link.
+Weak links do not possess the link attributes of Strong or Robust Links.  That is if one end is
+False, it is impossible to determine the state of the other end. Therefore, it is not possible to
+substitue a Weak Link for a Strong or Robust Link.
+
+When a Strong or Robust link is substituted for a weak link, it is masquerading as a Weak link.
+The ``~`` symbol is used to indicate a masqueraded weak link.
+
+.. _found_cc_spatial_reps:
 
 Spatial Representation
 ======================
 
-This concept comes from Denis Berthier’s Hidden Logic of Sudoku.
-https://github.com/denis-berthier.
+See Denis Berthier’s Hidden Logic of Sudoku. https://github.com/denis-berthier.
 
-A solved puzzle can be described as a unique selection and ordering of 81 ccells (value,
+A Sudoku solution is a unique selection and ordering of 81 ccells (value,
 row, column tuples) out of an exhaustive set of 729 ccells – where values, rows and columns can
-assume any value between 1 and 9, and Sudoku rules apply Sudoku is a Finite Constraint Satisfaction
+assume any value between 1 and 9, and Sudoku rules apply.  Sudoku is a Finite Constraint Satisfaction
 problem, and the recognition of patterns and their resolutions in solving the puzzle are the
 constraint propagation techniques.
 
-Conventionally, Sudoku puzzles are spatially represented as values on a 9 row by 9 column grid of
+Sudoku puzzles are spatially represented as values on a 9 row by 9 column grid of
 cells.  However, this is not the only possible spacial representation for Sudoku.  The same
 puzzle can be represented as row numbers on a value x column number or any of the other 6 spatial
 domains:
@@ -278,19 +284,13 @@ domains:
 *  box numbers on a value x cell grid
 *  cell numbers on a value x box grid
 
-These are simply different representations of the exactly same puzzle board.  Nothing is
-mathematically or logically different about a puzzle in any of these spatial representations.
-The spatial representations simply view the puzzle from different perspectives.
+The underlying puzzle logic is the same, it is only the perspective, that differs in each spatial
+representation.
 
-Each perspective, exposes patterns that are hidden in other perspectives.  For example, a hidden
-single or subset patten that is hidden in a row will be exposed when viewed as rows on a value by
-column grid.
+However, each perspective, exposes patterns that are hidden in other perspectives.  For example, a
+hidden single or hidden subset patten will be transformed into an exposed pattern in one of the
+five perspectives.
 
-The true power of this concept is not in revealing hidden singles and subsets as exposed ones as
-the effort of transforming the perspectives exceeds that of resolving those hidden patterns.
-However, more complex patterns that were hidden become exposed, justifying the transformation
-effort.
-
-Viewing puzzles from different perspectives, come into their own with more complex patterns
+Viewing puzzles from different perspectives, come into its own with more complex patterns
 such as chains, loops, nets, bent hidden subsets, etc. Transforming to another domain may make it
 easier to spot exposed patterns that are hidden in the former domain.

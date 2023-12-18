@@ -467,13 +467,13 @@ and time, it begins to all make sense.</p>
 <p>This puzzle is the same as the <a class="reference internal" href="#fig-base-cover-eg2"><span class="std std-ref">Single Base Set and Single Cover Set</span></a> example above, this time focusing on a hidden pair.
 Consider the two house Base Sets in row 1:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>BS2r1 = {2r1c1, 2r1c5}</mong></span>, and</p></li>
-<li><p><span class="raw-html"><mong>BS9r1 = {9r1c1, 9r1c5}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BS2r1</span> <span class="pre">=</span> <span class="pre">{2r1c1,</span> <span class="pre">2r1c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BS9r1</span> <span class="pre">=</span> <span class="pre">{9r1c1,</span> <span class="pre">9r1c5}</span></code>.</p></li>
 </ul>
 <p>The intersecting Cell Cover sets are:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>CSr1c1 = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</mong></span>,  and</p></li>
-<li><p><span class="raw-html"><mong>CSr1c5 = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSr1c1</span> <span class="pre">=</span> <span class="pre">{2r1c1,</span> <span class="pre">3r1c1,</span> <span class="pre">7r1c1,</span> <span class="pre">9r1c1}&lt;/mong&gt;</span></code>,  and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSr1c5</span> <span class="pre">=</span> <span class="pre">{2r1c5,</span> <span class="pre">5r1c5,</span> <span class="pre">7r1c5,</span> <span class="pre">8r1c5,</span> <span class="pre">9r1c5}</span></code>.</p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -519,13 +519,13 @@ r1c1.  If they are the only possible Truths, then all other candidates can be el
 </figure>
 <p>The Puzzle on the left illustrates an X-Wing example.  The two Base Sets for Candidate 5 are found in Column 5 and 8:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>BS5c5 = {5r2c5, 5r8c5}</mong></span>, and</p></li>
-<li><p><span class="raw-html"><mong>BS5c8 = {5r2c7, 5r8c7}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BS5c5</span> <span class="pre">=</span> <span class="pre">{5r2c5,</span> <span class="pre">5r8c5}&lt;/mong&gt;</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BS5c8</span> <span class="pre">=</span> <span class="pre">{5r2c7,</span> <span class="pre">5r8c7}</span></code>.</p></li>
 </ul>
 <p>The intersecting Cell Cover sets are:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>CS5r2 = {5r2c5, 5r2c6, 5r2c7, 5r2c8}</mong></span>,  and</p></li>
-<li><p><span class="raw-html"><mong>CS5r8 = {5r8c5, 5r8c7, 5r8c8, 5r8c9}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CS5r2</span> <span class="pre">=</span> <span class="pre">{5r2c5,</span> <span class="pre">5r2c6,</span> <span class="pre">5r2c7,</span> <span class="pre">5r2c8}</span></code>,  and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CS5r8</span> <span class="pre">=</span> <span class="pre">{5r8c5,</span> <span class="pre">5r8c7,</span> <span class="pre">5r8c8,</span> <span class="pre">5r8c9}</span></code>.</p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -555,10 +555,6 @@ reciprocal pattern can be found of order for order 9 – ‘n’.</p>
 </section>
 <section id="the-concept-of-rank">
 <h2><span class="section-number">2.4.5. </span>The concept of Rank<a class="headerlink" href="#the-concept-of-rank" title="Link to this heading">#</a></h2>
-<div class="admonition-definition admonition">
-<p class="admonition-title">Definition</p>
-<p>Rank = Cover Sets amount – Base Sets amount.</p>
-</div>
 <section id="rank-0-patterns">
 <h3><span class="section-number">2.4.5.1. </span>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Link to this heading">#</a></h3>
 <p>So far, only Rank 0 patterns have been examined where ‘n’ Cover Sets can cover all the Base Set
@@ -568,10 +564,10 @@ the (yet to be determined) Base Set Elements is ‘The Truth’ in each Base Set
 found in one of the intersections of each Cover Set with all the Base Sets.  Therefore, any same
 valued Cover Set Element that is not in an intersection, cannot be True and can be eliminated.</p>
 <p>Rank 0 patterns include Singles, Straight Subsets, Fish Patterns. Even Loops.</p>
-<div class="admonition-rank-0-rule admonition">
-<p class="admonition-title">Rank 0 Rule</p>
+<aside class="topic">
+<p class="topic-title">Rank 0 Rule</p>
 <p>Any Cover Set Element that is not part of a Base Set can be eliminated.</p>
-</div>
+</aside>
 <p>The algebraic expression of the Sudoku Rule developed for ‘n’ Base Set, ‘n’ Cover Set patterns
 as developed <a class="reference internal" href="#n-base-n-cover-sud-rule"><span class="std std-ref">above</span></a> can be applied.  Repeated here for convenience:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS1 | ... | BSn) &amp; (CS1 | ... | CSn) == (BS1 | ... | BSn)
@@ -591,11 +587,11 @@ least one Cover Sets does not intersect all Base Sets exist.  Therefore, it is i
 two Cover Sets will see ‘A Truth’, and hence itself cannot be True and can be eliminated.</p>
 <p>Many “Human Solvable” patterns are Rank 1 patterns.  These include Bent Subsets,  Finned Fish in all
 their forms, AI Chains in all their forms, and Unlocked Sets.</p>
-<div class="admonition-rank-1-rule admonition">
-<p class="admonition-title">Rank 1 Rule</p>
+<aside class="topic">
+<p class="topic-title">Rank 1 Rule</p>
 <p>Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 2 Cover
 Sets can be eliminated.</p>
-</div>
+</aside>
 <p>Rank 1 Rule is expressed algebraically as:</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
@@ -615,11 +611,11 @@ Cover Sets, or pairs of Cover Sets will cover all Base Sets, however all combina
 Sets will always cover all Base Sets in Rank 2 patterns.  Therefore, any Cover Set Element that is
 not part of a Base Set that lies in the intersection of 3 Cover Sets, sees a Truth and itself cannot
 be True and can be eliminated.</p>
-<div class="admonition-rank-2-rule admonition">
-<p class="admonition-title">Rank 2 Rule</p>
+<aside class="topic">
+<p class="topic-title">Rank 2 Rule</p>
 <p>Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 3 Cover
 Sets can be eliminated.</p>
-</div>
+</aside>
 <p>Rank 2 Rule is expressed algebraically as:</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
@@ -635,11 +631,11 @@ Cover Sets, or combinations of R or less Cover Sets will cover all Base Sets.  H
 combinations of  R + 1 Cover Sets will always cover all Base Sets in Rank R patterns.  Therefore,
 any Cover Set Element that is not part of a Base Set that lies in the intersection of  R + 1 Cover
 Sets, sees a Truth and itself cannot be True and can be eliminated.</p>
-<div class="admonition-rank-r-rule admonition">
-<p class="admonition-title">Rank R Rule</p>
+<aside class="topic">
+<p class="topic-title">Rank R Rule</p>
 <p>Any Cover Set Element that is not part of a Base Set that lies in the intersection of any R + 1
 Cover Sets can be eliminated.</p>
-</div>
+</aside>
 <p>Rank R Rule is expressed algebraically as:</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
@@ -663,17 +659,17 @@ appreciating the overall concept of Rank R patterns.</p>
 </div>
 </figcaption>
 </figure>
-<p>The Rank 1 puzzle pattern on the right is a Finned X-Wing <span class="raw-html"><mong>3c35r38,r9c3</mong></span>.
+<p>The Rank 1 puzzle pattern on the right is a Finned X-Wing <code class="docutils literal notranslate"><span class="pre">3c35r38,r9c3</span></code>.
 Two base sets for Candidate 3 are</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>BS3c3 = {3r3c3, 3r8c3, 3r9c3}</mong></span>, and</p></li>
-<li><p><span class="raw-html"><mong>BS3c5 = {3r3c5, 3r8c5}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;mong&gt;BS3c3</span> <span class="pre">=</span> <span class="pre">{3r3c3,</span> <span class="pre">3r8c3,</span> <span class="pre">3r9c3}&lt;/mong&gt;</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;mong&gt;BS3c5</span> <span class="pre">=</span> <span class="pre">{3r3c5,</span> <span class="pre">3r8c5}&lt;/mong&gt;</span></code>.</p></li>
 </ul>
 <p>The intersecting Cover Sets are:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>CS3r3 = {3r3c3, 3r3c4, 3r3c5, 3r3c6}</mong></span>,</p></li>
-<li><p><span class="raw-html"><mong>CS3r8 = {3r8c1, 3r8c3, 3r8c5, 3r8c6}</mong></span>, and</p></li>
-<li><p><span class="raw-html"><mong>CS3b7 = {3r8c1, 3r8c3, 3r9c3}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CS3r3</span> <span class="pre">=</span> <span class="pre">{3r3c3,</span> <span class="pre">3r3c4,</span> <span class="pre">3r3c5,</span> <span class="pre">3r3c6}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CS3r8</span> <span class="pre">=</span> <span class="pre">{3r8c1,</span> <span class="pre">3r8c3,</span> <span class="pre">3r8c5,</span> <span class="pre">3r8c6}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CS3b7</span> <span class="pre">=</span> <span class="pre">{3r8c1,</span> <span class="pre">3r8c3,</span> <span class="pre">3r9c3}&lt;/mong&gt;</span></code>.</p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -720,11 +716,11 @@ intersections that can also see the Fin cannot be True and can be eliminated.</p
 </figcaption>
 </figure>
 <p>The Rank 1 puzzle pattern on the right is a Two String Kite
-<span class="raw-html"><mong>9(r6c6=r6c1-r4c2=r7c2)</mong></span>.  This pattern is also an example of two base sets
+<code class="docutils literal notranslate"><span class="pre">9(r6c6=r6c1-r4c2=r7c2)</span></code>.  This pattern is also an example of two base sets
 crossing over each other without intersecting.  The two Base Sets for Candidate 9 are:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>BS9r7 = {9r6c1, 9r6c6}<mong></span>, and</p></li>
-<li><p><span class="raw-html"><mong>BS9c2 = {9r4c2, 9r7c2}<mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BS9r7</span> <span class="pre">=</span> <span class="pre">{9r6c1,</span> <span class="pre">9r6c6}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BS9c2</span> <span class="pre">=</span> <span class="pre">{9r4c2,</span> <span class="pre">9r7c2}</span></code>.</p></li>
 </ul>
 <p>The intersecting Cover Sets are:</p>
 <ul class="simple">
@@ -759,11 +755,11 @@ Elims = ({}) | ({}) | ({9r7c6}) - {9r6c1, 9r6c6, 9r4c2, 9r7c2}
 Elims = {9r7c6}</pre>
 </div></div>
 <p><span></span></p>
-<p>As a Two String Kite, if <span class="raw-html"><mong>9r6c6</mong> is False, <mong>9r6c2</mong> is True, <mong>9r4c2</mong> is
-False, and <mong>9r2c7</mong> is True.  Similarly walking the links in the opposite direction, if <mong>9r2c7</mong> is
-False, then <mong>9r6c6</mong></span> is True.  This pattern identifies a <a class="reference internal" href="02-core-concepts.html#cc-robust-links"><span class="std std-ref">Robust link</span></a>
-<span class="raw-html"><mong>9r6c6|~|9r7c2</mong></span>. Recall that at least one end of a Robust Link must be True, therefore any Ccell
-that can see both ends cannot be True and can be eliminated.  <span class="raw-html"><mong>9r7c6</mong>`</span> is such a Ccell which can
+<p>As a Two String Kite, if <code class="docutils literal notranslate"><span class="pre">9r6c6</span></code> is False, <code class="docutils literal notranslate"><span class="pre">9r6c2</span></code> is True, <code class="docutils literal notranslate"><span class="pre">9r4c2</span></code> is False, and <code class="docutils literal notranslate"><span class="pre">9r2c7</span></code>
+is True.  Similarly walking the links in the opposite direction, if <code class="docutils literal notranslate"><span class="pre">9r2c7</span></code> is False, then
+<code class="docutils literal notranslate"><span class="pre">9r6c6</span></code> is True.  This pattern identifies a <a class="reference internal" href="02-core-concepts.html#found-cc-robust-links"><span class="std std-ref">Robust link</span></a>
+<code class="docutils literal notranslate"><span class="pre">9r6c6|~|9r7c2</span></code>. Recall that at least one end of a Robust Link must be True, therefore any Ccell
+that can see both ends cannot be True and can be eliminated.  <code class="docutils literal notranslate"><span class="pre">9r7c6</span></code> is such a Ccell which can
 be eliminated.</p>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -775,54 +771,54 @@ be eliminated.</p>
 </figcaption>
 </figure>
 <p>The Rank 1 Puzzle pattern on the right, is both an XY-Chain:
-<span class="raw-html"><mong>(Z=Y)r1c4~(Y=X)r5c4~(X=W)r5c7~(W=Z)r6c8</mong>, and a 2 Node Unlocked Set Chain:
-<mong>Z(YZr1c4,XYr5c4)X(WXr5c7,WZr6c8)Z</mong></span>.</p>
+<code class="docutils literal notranslate"><span class="pre">(Z=Y)r1c4~(Y=X)r5c4~(X=W)r5c7~(W=Z)r6c8</span></code>, and a 2 Node Unlocked Set Chain:
+<code class="docutils literal notranslate"><span class="pre">Z(YZr1c4,XYr5c4)X(WXr5c7,WZr6c8)Z</span></code>.</p>
 <p>As a Rank 1 Base Set / Cover Set Pattern, the 4 Base Sets are the Cells:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>BSr1c4 = {Yr1c4, Zr1c4}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>BSr5c4 = {Xr5c4, Yr5c4}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>BSr5c7 = {Wr5c7, Xr5c7}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>BSr6c8 = {Wr6c8, Zr6c8}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BSr1c4</span> <span class="pre">=</span> <span class="pre">{Yr1c4,</span> <span class="pre">Zr1c4}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BSr5c4</span> <span class="pre">=</span> <span class="pre">{Xr5c4,</span> <span class="pre">Yr5c4}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BSr5c7</span> <span class="pre">=</span> <span class="pre">{Wr5c7,</span> <span class="pre">Xr5c7}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BSr6c8</span> <span class="pre">=</span> <span class="pre">{Wr6c8,</span> <span class="pre">Zr6c8}</span></code></p></li>
 </ul>
 <p>3 of the 5 Cover Set connecting the 4 Base Sets are:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>CSc4 = {Yr1c4, Yr5c4}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>CSr5 = {Xr5c4, Xr5c7}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>CSb6 = {Wr5c7, Wr6c8}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSc4</span> <span class="pre">=</span> <span class="pre">{Yr1c4,</span> <span class="pre">Yr5c4}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSr5</span> <span class="pre">=</span> <span class="pre">{Xr5c4,</span> <span class="pre">Xr5c7}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSb6</span> <span class="pre">=</span> <span class="pre">{Wr5c7,</span> <span class="pre">Wr6c8}</span></code></p></li>
 </ul>
 <p>Two equally valid possibilities for the remaining two cover sets exist, the one pair being:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>CSc4a = {Zr1c4, Zr6c4}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>CSr6 = {Zr6c4, Zr6c8}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSc4</span> <span class="pre">=</span> <span class="pre">{Zr1c4,</span> <span class="pre">Zr6c4}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSr6</span> <span class="pre">=</span> <span class="pre">{Zr6c4,</span> <span class="pre">Zr6c8}</span></code></p></li>
 </ul>
 <p>Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the
 elimination of Zr6c4.</p>
 <p>The other pair of equally valid Cover Sets are:</p>
 <ul class="simple">
-<li><p><span class="raw-html"><mong>CSc8 = {Zr1c8, Zr6c8}</mong></span></p></li>
-<li><p><span class="raw-html"><mong>CSr1 = {Zr1c4, Zr1c8}</mong></span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSc8</span> <span class="pre">=</span> <span class="pre">{Zr1c8,</span> <span class="pre">Zr6c8}</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSr1</span> <span class="pre">=</span> <span class="pre">{Zr1c4,</span> <span class="pre">Zr1c8}</span></code></p></li>
 </ul>
 <p>Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the
 elimination of Zr1c8.</p>
 <p>As an XY Chain the Ccells in the Bi Value cells are the Strong links of the AI Chain.  They are
-weakly linked by a common value Ccell connecting two Bi Value Ccells.  The Chain ends are Zr1c4
-and Zr6c8 and the Chain ensures that neither end is simultaneously False, at least one end is True,
+weakly linked by a common value Ccell connecting two Bi Value Ccells.  The Chain ends are <code class="docutils literal notranslate"><span class="pre">Zr1c4</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Zr6c8</span></code> and the Chain ensures that neither end is simultaneously False, at least one end is True,
 which it is yet to be determined.  Therefore, any Ccell that can see both ends of the chain
 cannot be True, and can be eliminated.</p>
 <p>As the 2 Node Unlocked Set Chain, X is the only member in the RCS connecting the two ULS’s.  The
 other common candidate is “Z”.  If X is True in the first ULS, then Z is True in ULS2, and if X is
-True in the second ULS, then Z is True in the first ULS.  This locks  Zr1c4 and Zr6c8 are locked
+True in the second ULS, then Z is True in the first ULS.  This locks  <code class="docutils literal notranslate"><span class="pre">Zr1c4</span></code> and <code class="docutils literal notranslate"><span class="pre">Zr6c8</span></code> are locked
 into “A Truth”.  Therefore, any same valued (Z) Ccell that can see all the elements of this
 ‘A Truth’ cannot be True and can be eliminated.</p>
-<p>So as either an XY-Chain or a ULS-Chain, Zr1c8 and Zr6c4 can be eliminated, and Base/Cover Set
+<p>So as either an XY-Chain or a ULS-Chain, <code class="docutils literal notranslate"><span class="pre">Zr1c8</span></code> and <code class="docutils literal notranslate"><span class="pre">Zr6c4</span></code> can be eliminated, and Base/Cover Set
 logic can be used to verify the pattern resolution.</p>
 </section>
 <section id="parting-comment">
 <h2><span class="section-number">2.4.7. </span>Parting Comment<a class="headerlink" href="#parting-comment" title="Link to this heading">#</a></h2>
 <p>Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to contribute to the
-finding of productive patterns in a Puzzle.  Its true strength is in proving or verifying the
-resolution of any patterns.  I think this may be why Allan Barker calls this <a class="reference external" href="http://sudoku.allanbarker.com/sweb/general.htm">‘the General Logic of
-Sudoku’</a></p>
+finding of human solvable productive patterns in a Puzzle.  Its true strength is in proving or
+verifying the resolution of any patterns.  I think this may be why Allan Barker calls this
+<a class="reference external" href="http://sudoku.allanbarker.com/sweb/general.htm">‘the General Logic of Sudoku’</a></p>
 </section>
 </section>
 
@@ -855,7 +851,7 @@ Sudoku’</a></p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:ff4b0fc*, Sat, 16 Dec 2023, 10:53:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:cd0c755*, Sat, 16 Dec 2023, 11:00:29
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

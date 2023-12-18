@@ -237,9 +237,9 @@
         </div>
         <article role="main">
           <section id="core-concepts">
-<span id="id1"></span><h1><span class="section-number">2.2. </span>Core Concepts<a class="headerlink" href="#core-concepts" title="Link to this heading">#</a></h1>
+<span id="found-core-concepts"></span><h1><span class="section-number">2.2. </span>Core Concepts<a class="headerlink" href="#core-concepts" title="Link to this heading">#</a></h1>
 <section id="ccells">
-<h2><span class="section-number">2.2.1. </span>Ccells<a class="headerlink" href="#ccells" title="Link to this heading">#</a></h2>
+<span id="found-cc-ccells"></span><h2><span class="section-number">2.2.1. </span>Ccells<a class="headerlink" href="#ccells" title="Link to this heading">#</a></h2>
 <p>A <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> refers to any candidate in any cell as specified by its candidate value, row and column.
 That is, a Ccell is the unique reference to a specific candidate in a cell.</p>
 <p>Ccells are three-dimensional tuples of value, row and column, each dimension ranging
@@ -258,7 +258,7 @@ Rules.</p></li>
 </ul>
 </section>
 <section id="a-truth-and-the-truth">
-<span id="cc-truth"></span><h2><span class="section-number">2.2.2. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Link to this heading">#</a></h2>
+<span id="found-cc-truth"></span><h2><span class="section-number">2.2.2. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Link to this heading">#</a></h2>
 <p>‘A Truth’ and ‘The Truth’ describe the relationships of Ccells in a House or Cell.  For each
 unsolved value in a House or Cell, ‘A Truth’ is a set of possible values within that <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>
 where at least one Ccell in that House will ultimately be True.</p>
@@ -280,13 +280,13 @@ column, box and cell in the grid.</p>
 </figure>
 <p>For example:</p>
 <ul class="simple">
-<li><p>In Row 4, an ‘A Truths’ is <span class="raw-html"><mong>3r4c3468</mong></span>. That is all the cells in row 4 containing candidate 3.
+<li><p>In Row 4, an ‘A Truths’ is <code class="docutils literal notranslate"><span class="pre">3r4c3468</span></code>. That is all the cells in row 4 containing candidate 3.
 ‘The Truth’  will be a 3 in one of those yet to be determined 4 cells.</p></li>
-<li><p>In Column 4, an ‘A Truths’ is <span class="raw-html"><mong>5r1679c4</mong></span>.  That is all the cells in column 4 containing 5.  ‘The
+<li><p>In Column 4, an ‘A Truths’ is <code class="docutils literal notranslate"><span class="pre">5r1679c4</span></code>.  That is all the cells in column 4 containing 5.  ‘The
 Truth’ will be a 5 in one of those yet to be determined 4 cells.</p></li>
-<li><p>In Box 9, an ‘A Truth’ is <span class="raw-html"><mong>8r8c7,r9c79</mong></span>.  That is all the cells in box 9 containing 8.  ‘The
+<li><p>In Box 9, an ‘A Truth’ is <code class="docutils literal notranslate"><span class="pre">&lt;mong&gt;8r8c7,r9c79</span></code>.  That is all the cells in box 9 containing 8.  ‘The
 Truth’ will be the 8 in one of those yet to be determined 3 cells.</p></li>
-<li><p>In Cell <span class="raw-html"><mong>r6c1</mong>, <mong>1347r6c1</mong></span> is ‘A Truth’.  ‘The Truth’ will be one of those Ccells in that cell.</p></li>
+<li><p>In Cell <code class="docutils literal notranslate"><span class="pre">r6c1</span></code>, <code class="docutils literal notranslate"><span class="pre">1347r6c1</span></code> is ‘A Truth’.  ‘The Truth’ will be one of those Ccells in that cell.</p></li>
 </ul>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -295,27 +295,27 @@ Truth’ will be the 8 in one of those yet to be determined 3 cells.</p></li>
 </div>
 </section>
 <section id="premises-and-inferences">
-<span id="cc-premises-and-inferences"></span><h2><span class="section-number">2.2.3. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Link to this heading">#</a></h2>
+<span id="found-cc-premises-and-inferences"></span><h2><span class="section-number">2.2.3. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Link to this heading">#</a></h2>
 <p>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Inference.html">http://sudopedia.enjoysudoku.com/Inference.html</a></p>
-<p>Much of solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
+<p>Solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
 inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
 conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
 cell value and testing it.</p>
 <p>The most basic assertion of a premise is on the state of a Ccell. For example, asserting
-Ccell 3r7c2 True.</p>
+Ccell <code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> True.</p>
 <p>An inference implies a relationship (link) between two Ccells, characterised by the other Ccell’s
 response to the assertion of a premise on the first Ccell.  For example, If
-<span class="raw-html"><mong>3r7c2</mong></span> is True, then according to <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>,
-<span class="raw-html"><mong>3r7c5</mong></span> is False.</p>
-<p>The full nature of the inference (link) between two ccells is characterised by the outcome of
-asserting each Ccell True and False.  The important link (inference) relationships in Sudoku are:</p>
+<code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> is True, then according to <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>,
+<code class="docutils literal notranslate"><span class="pre">3r7c5</span></code> is False.</p>
+<p>The inference (link) between two Ccells is characterised by the outcome of asserting each Ccell
+True and False.  The important link (inference) relationships in Sudoku are:</p>
 <ul class="simple">
 <li><p>Weak Links</p></li>
 <li><p>Strong Links</p></li>
 <li><p>Robust Links</p></li>
 </ul>
 <section id="weak-links">
-<span id="cc-weak-links"></span><h3><span class="section-number">2.2.3.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Link to this heading">#</a></h3>
+<span id="found-cc-weak-links"></span><h3><span class="section-number">2.2.3.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Link to this heading">#</a></h3>
 <p>A weak link is formed by two ccells A and B, where they are either:</p>
 <ul class="simple">
 <li><p>Two or more same valued candidates in that house, or</p></li>
@@ -330,9 +330,9 @@ asserting each Ccell True and False.  The important link (inference) relationshi
 <p>Observe that candidate 7 occurs more than twice in this example row 7 of a puzzle.
 Notice that:</p>
 <ul class="simple">
-<li><p>if <span class="raw-html"><mong>7r7c2</mong></span> is True, then none of the same valued Ccells in row 7 can be
+<li><p>if <code class="docutils literal notranslate"><span class="pre">7r7c2</span></code> is True, then none of the same valued Ccells in row 7 can be
 True.</p></li>
-<li><p>if <span class="raw-html"><mong>7r7c2</mong></span> is False, it does not infer state of any other same valued
+<li><p>if <code class="docutils literal notranslate"><span class="pre">&lt;mong&gt;7r7c2</span></code> is False, it does not infer state of any other same valued
 Ccell in the row.</p></li>
 </ul>
 <p>This is the characteristic defining a Weak Link.</p>
@@ -369,25 +369,25 @@ inferences:</p>
 <p>The conclusion drawn from weak link inferences is that if one end is True, the other
 end is False, and if the one end is False, the other end can be either True or False.  That is,
 both ends can never be simultaneously True, and at least one end is always False.</p>
-<p>Ccells see each other through weak links (directly or indirectly - e.g. Weakly Ended Chain).  When
+<p>Ccells see each other through weak links (directly or indirectly — e.g. Weakly Ended Chain).  When
 any two Ccells see each other, and the one Ccell is asserted True, the other Ccell must be asserted
 False.</p>
 </section>
 <section id="strong-links">
-<span id="cc-strong-links"></span><h3><span class="section-number">2.2.3.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Link to this heading">#</a></h3>
+<span id="found-cc-strong-links"></span><h3><span class="section-number">2.2.3.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>A strong link between two Ccells A and B, exists either:</dt><dd><ul class="simple">
-<li><p>In a conjugate pair (like <span class="raw-html"><mong>3r7c23</mong></span> in <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.7: </span></a>), where
+<li><p>In a conjugate pair (like <code class="docutils literal notranslate"><span class="pre">3r7c23</span></code> in <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.7: </span></a>), where
 two same valued Ccells are the only same valued Ccells in that house, or</p></li>
 <li><p>In a Bi-value cell where the two different valued ccells are the only ccells in that cell,
-like <span class="raw-html"><mong>78r7c4</mong></span>.</p></li>
+like <code class="docutils literal notranslate"><span class="pre">78r7c4</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
 <p>In <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.7: </span></a> above:</p>
 <ul class="simple">
-<li><p>If <span class="raw-html"><mong>3r7c2</mong></span> is False, then <span class="raw-html"><mong>7r7c3</mong></span> must be True, as only one of the conjugate pair must be True.</p></li>
-<li><p>if <span class="raw-html"><mong>3r7c2</mong></span> is True, then <span class="raw-html"><mong>7r7c3</mong></span> must be False, as only one of the conjugate pair must be False</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> is False, then <span class="raw-html"><mong>7r7c3</mong></span> must be True, as only one of the conjugate pair must be True.</p></li>
+<li><p>if <code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> is True, then <span class="raw-html"><mong>7r7c3</mong></span> must be False, as only one of the conjugate pair must be False</p></li>
 </ul>
 <p>Strong links are indicated by a “=” linking the two ccells and obey the following inferences:</p>
 <div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-strong-link-it">
@@ -419,7 +419,7 @@ like <span class="raw-html"><mong>78r7c4</mong></span>.</p></li>
 </table>
 </div>
 <p>The conclusion drawn from a Strong Links is that ends always have opposite state.</p>
-<p>Any two Strongly Linked Ccells must be of alternate state, therefore</p>
+<p>Any two Strongly Linked Ccells must be of alternate state, therefore:</p>
 <ul class="simple">
 <li><p>if the one end is True the other end is False</p></li>
 <li><p>Any third Ccell that can see both Strongly Linked Ccells cannot be True because the Strong link
@@ -427,7 +427,7 @@ guarantees one of its ends to be True.</p></li>
 </ul>
 </section>
 <section id="robust-links">
-<span id="cc-robust-links"></span><h3><span class="section-number">2.2.3.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Link to this heading">#</a></h3>
+<span id="found-cc-robust-links"></span><h3><span class="section-number">2.2.3.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Link to this heading">#</a></h3>
 <p>Robust links are derived from other structures such as (but not limited to) Alternating Inference
 Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a
 “|~|” where the outer bars indicate that this link is derived/indirect resulting from another
@@ -462,32 +462,32 @@ structure.</p>
 </div>
 <p>The conclusion drawn from Robust Link Inferences is that if the one end is False, the other end is
 True, and if the one end is True, the other end can be either True or False.  That is, both ends can
-never be simultaneously False, at least one end is always True.</p>
+never be simultaneously False, at least one end is always True.  But if one end is asserted True, it
+is impossible to determine the state of the other end with a Robust link.</p>
 <p>Any third Ccell that can see both ends of a Robust Link cannot be True, because at least one end is
-guaranteed to be True. But if one end is asserted True, it is impossible to determine the state of
-the other end with a Robust link.</p>
+True.</p>
 </section>
-<section id="strong-links-masquerading-as-weak">
-<h3><span class="section-number">2.2.3.4. </span>Strong Links Masquerading as Weak<a class="headerlink" href="#strong-links-masquerading-as-weak" title="Link to this heading">#</a></h3>
-<p>A Strong link possesses all the attributes of a Weak Link (reversible and True to False linkage),
-and then some (False to True linkage).  Therefore, it is possible to substitute a Strong link
-for a Weak Link in the identifying patterns.</p>
-<p>The same cannot be said in the reverse direction because a Weak Link is lacking the False to True
-linkage.</p>
-<p>When a strong link is substituted for a weak link, the Strong Link is said to be masquerading as a
-Weak link.  The <span class="raw-html"><mono>'~'</mono></span> symbol is used to indicate a masqueraded weak link.</p>
+<section id="strong-and-robust-links-masquerading-as-weak">
+<span id="found-cc-sl-and-rl-masq-as-wl"></span><h3><span class="section-number">2.2.3.4. </span>Strong and Robust Links Masquerading as Weak<a class="headerlink" href="#strong-and-robust-links-masquerading-as-weak" title="Link to this heading">#</a></h3>
+<p>Strong and Robust links possesses all the link attributes of a Weak Link.  That is if one end is
+True, the other is False.  Therefore, it is possible to substitute a Strong or Robust Link for a
+Weak Link to identify patterns.</p>
+<p>Weak links do not possess the link attributes of Strong or Robust Links.  That is if one end is
+False, it is impossible to determine the state of the other end. Therefore, it is not possible to
+substitue a Weak Link for a Strong or Robust Link.</p>
+<p>When a Strong or Robust link is substituted for a weak link, it is masquerading as a Weak link.
+The <code class="docutils literal notranslate"><span class="pre">~</span></code> symbol is used to indicate a masqueraded weak link.</p>
 </section>
 </section>
 <section id="spatial-representation">
-<h2><span class="section-number">2.2.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Link to this heading">#</a></h2>
-<p>This concept comes from Denis Berthier’s Hidden Logic of Sudoku.
-<a class="reference external" href="https://github.com/denis-berthier">https://github.com/denis-berthier</a>.</p>
-<p>A solved puzzle can be described as a unique selection and ordering of 81 ccells (value,
+<span id="found-cc-spatial-reps"></span><h2><span class="section-number">2.2.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Link to this heading">#</a></h2>
+<p>See Denis Berthier’s Hidden Logic of Sudoku. <a class="reference external" href="https://github.com/denis-berthier">https://github.com/denis-berthier</a>.</p>
+<p>A Sudoku solution is a unique selection and ordering of 81 ccells (value,
 row, column tuples) out of an exhaustive set of 729 ccells – where values, rows and columns can
-assume any value between 1 and 9, and Sudoku rules apply Sudoku is a Finite Constraint Satisfaction
+assume any value between 1 and 9, and Sudoku rules apply.  Sudoku is a Finite Constraint Satisfaction
 problem, and the recognition of patterns and their resolutions in solving the puzzle are the
 constraint propagation techniques.</p>
-<p>Conventionally, Sudoku puzzles are spatially represented as values on a 9 row by 9 column grid of
+<p>Sudoku puzzles are spatially represented as values on a 9 row by 9 column grid of
 cells.  However, this is not the only possible spacial representation for Sudoku.  The same
 puzzle can be represented as row numbers on a value x column number or any of the other 6 spatial
 domains:</p>
@@ -499,17 +499,12 @@ domains:</p>
 <li><p>box numbers on a value x cell grid</p></li>
 <li><p>cell numbers on a value x box grid</p></li>
 </ul>
-<p>These are simply different representations of the exactly same puzzle board.  Nothing is
-mathematically or logically different about a puzzle in any of these spatial representations.
-The spatial representations simply view the puzzle from different perspectives.</p>
-<p>Each perspective, exposes patterns that are hidden in other perspectives.  For example, a hidden
-single or subset patten that is hidden in a row will be exposed when viewed as rows on a value by
-column grid.</p>
-<p>The true power of this concept is not in revealing hidden singles and subsets as exposed ones as
-the effort of transforming the perspectives exceeds that of resolving those hidden patterns.
-However, more complex patterns that were hidden become exposed, justifying the transformation
-effort.</p>
-<p>Viewing puzzles from different perspectives, come into their own with more complex patterns
+<p>The underlying puzzle logic is the same, it is only the perspective, that differs in each spatial
+representation.</p>
+<p>However, each perspective, exposes patterns that are hidden in other perspectives.  For example, a
+hidden single or hidden subset patten will be transformed into an exposed pattern in one of the
+five perspectives.</p>
+<p>Viewing puzzles from different perspectives, come into its own with more complex patterns
 such as chains, loops, nets, bent hidden subsets, etc. Transforming to another domain may make it
 easier to spot exposed patterns that are hidden in the former domain.</p>
 </section>
@@ -544,7 +539,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:ff4b0fc*, Sat, 16 Dec 2023, 10:53:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:cd0c755*, Sat, 16 Dec 2023, 11:00:29
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -577,7 +572,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
 <li><a class="reference internal" href="#weak-links">2.2.3.1. Weak Links</a></li>
 <li><a class="reference internal" href="#strong-links">2.2.3.2. Strong Links</a></li>
 <li><a class="reference internal" href="#robust-links">2.2.3.3. Robust Links</a></li>
-<li><a class="reference internal" href="#strong-links-masquerading-as-weak">2.2.3.4. Strong Links Masquerading as Weak</a></li>
+<li><a class="reference internal" href="#strong-and-robust-links-masquerading-as-weak">2.2.3.4. Strong and Robust Links Masquerading as Weak</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#spatial-representation">2.2.4. Spatial Representation</a></li>

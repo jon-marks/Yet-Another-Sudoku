@@ -248,12 +248,12 @@ Base Sets and Cover Sets are <a class="reference internal" href="../07-glossary.
 </ul>
 </dd>
 </dl>
-<p>For every Fish with a Base Set count ‘n’, a reciprocal Fish pattern exists of count 9 - ‘n’, making
-it unnecessary to look for Base Set counts greater than 4.</p>
+<p>Every Fish with a Base Set count ‘n’ has a reciprocal Fish pattern exists of count 9 - ‘n’, thus,
+making it unnecessary to look for Base Set counts greater than 4.</p>
 <dl class="simple">
-<dt>Consider a single candidate value X, where X is a number between 1 and 9.  A Fish pattern is made up of:</dt><dd><ul class="simple">
+<dt>Consider a single candidate value X, where X is a number between 1 and 9. Fish pattern is made up of:</dt><dd><ul class="simple">
 <li><p>‘n’ non-intersecting Houses containing between 2 and ‘n’ instances of X as the Bases,</p></li>
-<li><p>where all instances of X in each Base link to another instance of X in another Base.</p></li>
+<li><p>where all instances of X in each Base Set <a class="reference internal" href="../07-glossary.html#term-Link"><span class="xref std std-term">Link</span></a>s to another instance of X in another Base Set.</p></li>
 <li><p>The houses containing these links form the Cover Sets.</p></li>
 <li><p>From <a class="reference internal" href="04-base-cover-sets.html#found-bsets-and-csets"><span class="std std-ref">Base Sets and Cover Sets</span></a> above, we have shown that any
 instance of X in the Cover Sets that is not part of the intersection is not part of
@@ -261,14 +261,18 @@ instance of X in the Cover Sets that is not part of the intersection is not part
 </ul>
 </dd>
 </dl>
-<p>The simpler Fish patterns have either row Base Sets and column Cover Sets or vise-versa. Fish may be
-degenerate.  In many cases it is possible to eliminate of candidates from these degenerate fish.
-Finned Fish have an extra Ccell or two in one of the Base Sets.  Sashimi fish are missing a Ccell in
-one of the Base Sets.</p>
-<p>Fraken and Mutant Fish are more complex Fish patterns. Fraken Fish have one or more Boxes as either
-Base or Cover Sets. Mutant fish have a combination of non-intersecting row, column and box Base
-Sets. In both Franken and Mutant Fish, Cover sets can be any type of house.  Fraken and Mutant fish
-can be degenerate too.  These patterns border on what is consdered human solvable.</p>
+<p>Basic Fish patterns have either row Base Sets and column Cover Sets or vise-versa.</p>
+<p>Fish may be degenerate. Often it is possible to eliminate of candidates from these
+degenerate fish.  Finned Fish have an extra Ccell or two in one of the Base Sets.  Sashimi fish are
+missing a Ccell in one of the Base Sets.  Finned Sashimi fish have an extra Ccell in
+one Base Set and are missing Ccell in another Base Set.</p>
+<p>Fraken and Mutant Fish are more complex Fish patterns. Fraken Fish have one or more Box Base Sets.
+Mutant fish have a combination of non-intersecting row, column and box Base
+Sets. In both Franken and Mutant Fish, Cover Sets can be in any House type.  Fraken and Mutant fish
+can be degenerate too (Finned and or Sashimi).</p>
+<p>Kraken Fish, are degenerate fish where eliminatable candidates in the Cover Sets see all
+the fins with <a class="reference internal" href="../07-glossary.html#term-AIC"><span class="xref std std-term">AIC</span></a> chains if it cannot see it directly.</p>
+<p>Franken, Mutant and Kraken Fish border on what is considered human solvable.</p>
 <section id="basic-fish">
 <h2><span class="section-number">2.5.1. </span>Basic Fish<a class="headerlink" href="#basic-fish" title="Link to this heading">#</a></h2>
 <figure class="align-center" id="fig-basic-fish-cd1" style="width: 100%">
@@ -290,9 +294,14 @@ elimination.</p>
 <section id="swordfish">
 <h3><span class="section-number">2.5.1.2. </span>Swordfish<a class="headerlink" href="#swordfish" title="Link to this heading">#</a></h3>
 <p>The centre image in <a class="reference internal" href="#fig-basic-fish-cd1"><span class="std std-numref">Figure 2.24: </span></a> of a Swordfish is made up of three Base Sets, each
-with three candidates, <code class="docutils literal notranslate"><span class="pre">B0</span> <span class="pre">=</span> <span class="pre">Xr2c357</span></code>, <code class="docutils literal notranslate"><span class="pre">B1</span> <span class="pre">=</span> <span class="pre">Xr4c357,</span> <span class="pre">and</span> <span class="pre">``B2</span> <span class="pre">=</span> <span class="pre">Xr8c357</span></code>.  These three Base
-Sets are intersected by links in the three Cover Sets, <code class="docutils literal notranslate"><span class="pre">C0</span> <span class="pre">=</span> <span class="pre">c3</span></code>, <code class="docutils literal notranslate"><span class="pre">C1</span> <span class="pre">=</span> <span class="pre">c5</span></code>, and <code class="docutils literal notranslate"><span class="pre">C2</span> <span class="pre">=</span> <span class="pre">c7</span></code>,
-where X is found at least twice where each CoverSet crosses over the three Base Sets.</p>
+with two or three candidates, <code class="docutils literal notranslate"><span class="pre">B0</span> <span class="pre">=</span> <span class="pre">Xr2c357</span></code>, <code class="docutils literal notranslate"><span class="pre">B1</span> <span class="pre">=</span> <span class="pre">Xr4c357</span></code>, and <code class="docutils literal notranslate"><span class="pre">B2</span> <span class="pre">=</span> <span class="pre">Xr8c357</span></code>.  These three
+Base Sets are intersected by links in the three Cover Sets, <code class="docutils literal notranslate"><span class="pre">C0</span> <span class="pre">=</span> <span class="pre">c3</span></code>, <code class="docutils literal notranslate"><span class="pre">C1</span> <span class="pre">=</span> <span class="pre">c5</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">C2</span> <span class="pre">=</span> <span class="pre">c7</span></code>, where X is found at least twice where each CoverSet crosses over the three Base Sets.</p>
+<p>This pattern remains valid with any or all the lighter X’s in the orange shaded cells absent.  If
+they are all absent the pattern is a “minimal” Swordfish where each Base Set only has two
+candidates.  The validating criteria of this pattern is that there are three Cover Set houses
+containing all the links between Base Sets.
+contains some int</p>
 <p>Consider the Swordfish pattern with candidate X in the centre puzzle in the above figure.  The base
 sets (lines) have been identified as Rows 1, 3 and 7.  Each row can have between two and three
 occurrences of candidate X,  The Swordfish pattern is recognised by the corresponding 3 column
@@ -311,7 +320,7 @@ in a blue, yellow or white cell, all other occurrences of X along the green line
 of a base-set can be eliminated.</p>
 <p>The Swordfish Truth is that either the yellow, blue or Orange X’s are True.  Therefore, any other X
 candidate ccell that can see (same house as) one of each colour X cannot be True and can be
-eliminated.  By definition of this this Pattern, there is no possibility of this happening along
+eliminated.  By definition of this Pattern, there is no possibility of this happening along
 the base sets.  The only other so the only possible eliminations can only occur along the
 cover-sets.</p>
 </section>
@@ -338,7 +347,7 @@ cover-sets.</p>
 <dt>Algorithmic rules for Basic Fish:</dt><dd><ol class="arabic simple">
 <li><p>Fish order (n): 2 – X-Wing, 3 – Swordfish, 4 – Jellyfish.</p></li>
 <li><ol class="loweralpha simple" start="14">
-<li><p>base-sets and (n) cover- set</p></li>
+<li><p>base-sets and (n) cover - set</p></li>
 </ol>
 </li>
 <li><p>2 to (n) candidates per base-set</p></li>
@@ -441,7 +450,7 @@ and B1, but only 1 cover-set of two candidates C0.  As an aside this pattern is 
 Skyscraper.  As the Red X’s are their only cover, like Fins, they are treated as fins, even though
 they are not confined to a single base-set).</p>
 <p>If Fin Xr3c8 is True, Xr3c3 is False, Xr7c3 is True making Xr7c7. False.  Similarly, if Xr7c7 is
-True, Xr3c8 is False.  One one Fin can be True, never both or none.  If either fin is True, the
+True, Xr3c8 is False.  Only one Fin can be True, never both or none.  If either fin is True, the
 candidate ccells that see both Fins can be eliminated. If X is present can be eliminated from the
 green cells.  The two fins need to be at least confined to a single chute for eliminations to be
 made, the third Tower in this case.  If the bases were in the same floor chute, then eliminations
@@ -499,11 +508,9 @@ B1, Xr4c2.  Here the Fins are confined to only two boxes in the cover chute.  Th
 can see all Fins are highlighted green.  If X is present in any of the green cells, the X can be
 eliminated.</p>
 <p>If the two or three fins are confined to a base chute (floors in this case), as shown on the right,
-all the ccells that are not part of a base-set that see all the fins can be eliminated.  As the Fins</p>
-<blockquote>
-<div><p>are confined to a box in two of the bases, any ccell in the other non base line can be eliminated,</p>
-</div></blockquote>
-<p>as shown by the green cells.</p>
+all the ccells that are not part of a base-set that see all the fins can be eliminated.  As the Fins
+are confined to a box in two of the bases, any ccell in the other non base line can be eliminated,
+as shown by the green cells.</p>
 </section>
 <section id="algorithmic-rules-for-sashimi-fish">
 <h3><span class="section-number">2.5.3.4. </span>Algorithmic rules for Sashimi Fish<a class="headerlink" href="#algorithmic-rules-for-sashimi-fish" title="Link to this heading">#</a></h3>
@@ -574,10 +581,7 @@ pattern</p>
 #  Fins do not have cover-sets
 #  Up to 9 items in Union of all bases, (n) for cover-sets, up to  (9-(n)) for or fins.
 #  No restrictions to the location of Fins in base-sets.
-#  Any cover-set candidate that is not part of the base-set that can see all the fins can be</p>
-<blockquote>
-<div><p>eliminated.</p>
-</div></blockquote>
+#  Any cover-set candidate that is not part of the base-set that can see all the fins can be eliminated.</p>
 </div></blockquote>
 </section>
 <section id="algorithmic-rules-for-kraken-sashimi-fish">
@@ -597,25 +601,17 @@ pattern</p>
 <section id="kraken-fish-practical-issues">
 <h3><span class="section-number">2.5.4.3. </span>Kraken Fish Practical issues<a class="headerlink" href="#kraken-fish-practical-issues" title="Link to this heading">#</a></h3>
 <blockquote>
-<div><dl class="simple">
-<dt>#  Relaxing the number of fins in base-sets and in the number of base-sets greatly increasing the</dt><dd><p>number of possible</p>
-</dd>
-</dl>
-<p>#  base patterns that can be found for scanning for cover to fin connections.
-#  The number of chains to scan for each possible base pattern is the product of fins x covers</p>
-<blockquote>
-<div><p>for each pattern. greatly increases the probability of patterns</p>
-</div></blockquote>
-<dl class="simple">
-<dt>#  Chain Length Processing Time below estimates an average of 10^(n/2) iteration steps to build a</dt><dd><p>chain of length n.  A practical chain length to search before bottoming out is 10 – 14 nodes.
+<div><p>#  Relaxing the number of fins in base-sets and in the number of base-sets greatly increasing the number of possible
+#  base patterns that can be found for scanning for cover to fin connections.
+#  The number of chains to scan for each possible base pattern is the product of fins x covers for each pattern. greatly increases the probability of patterns
+#  Chain Length Processing Time below estimates an average of 10^(n/2) iteration steps to build a
+chain of length n.  A practical chain length to search before bottoming out is 10 – 14 nodes.
 Shorter than that it appears many opportunities to find and resolve patterns are missed, and
 there is a diminishing return for longer chain lengths. YMMV.  An iteration step is in the
 order of a few micro seconds on my PC, say 4uSecs in Python.</p>
-</dd>
-</dl>
 </div></blockquote>
 <p>Searching for kraken fish patterns is hugely expensive, and is done twice, first time in the search
-for  regular scalar chains, and again for chains with group links.  As Kraken Fish are considered
+for regular scalar chains, and again for chains with group links.  As Kraken Fish are considered
 rather exotic and because of the time taken to resolve, Kraken Fish are at the end of the list for
 patterns to search.</p>
 <p>Therefore, with Kraken fish, we search for the first found cover that can see all fins, rather than
@@ -624,9 +620,8 @@ exhaustively searching for all covers that can see all fins.</p>
 <section id="kraken-fish-examples">
 <h3><span class="section-number">2.5.4.4. </span>Kraken Fish Examples<a class="headerlink" href="#kraken-fish-examples" title="Link to this heading">#</a></h3>
 <p>The following example from Systematic Sudoku (taken from KrazyDad SuperTough 555) is interesting in
-that the X-Wing fin “sees” a candidate in the column cover-set by way of the Weakly linked AIC on 6:</p>
-<blockquote>
-<div><p>6(r5c5~r2c5=r3c4~r3c3). [remember, “~” is the symbol for a strong link masquerading as a weak
+that the X-Wing fin “sees” a candidate in the column cover-set by way of the Weakly linked AIC on 6:
+6(r5c5~r2c5=r3c4~r3c3). [remember, “~” is the symbol for a strong link masquerading as a weak
 link].   In this example, it is the only way the fin 6r5c5 sees the cover ccell 6r3c3.  The other
 cover ccell 6r6c3 is not visible from the fin.  Other probably simpler solutions:</p>
 <blockquote>
@@ -640,7 +635,6 @@ the Turbot Fish in 1(r2c1=r2c5-r8c5=r7c6) causing the elimination of r6c1-=1.</p
 <li><p>A Skyscraper 1(r2c5=r2c1-r7c1=r7c6) or (Sashimi) Finned X-Wing (r27c1, r2c5, r7c6) both
 resulting in the elimination r8c5-= 1.</p></li>
 </ul>
-</div></blockquote>
 </div></blockquote>
 <p>In this example, the would-be 6-wing is spoiled by the extra fin 6r5c5. If the fin could be wished away, the perfected
 6-wing would eliminate 6r3c3 and 6r6c3. But 6r3c3 sees that fin, via 6-chain. If 6r3c3 is true, it will erase the fin,
@@ -692,7 +686,7 @@ before column bases.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:ff4b0fc*, Sat, 16 Dec 2023, 10:53:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: V0.0.2:cd0c755*, Sat, 16 Dec 2023, 11:00:29
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

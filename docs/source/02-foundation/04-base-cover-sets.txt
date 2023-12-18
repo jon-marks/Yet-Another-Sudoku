@@ -39,7 +39,6 @@ Some Definitions
    Cover Set Elements include those Ccells in a House/Cell that are Base Set Elements as well as
    House/Cell Member Peers of those Base Set Elements
 
-
 .. figure:: images/base-cover-eg1.png
    :name: fig-base-cover-eg1
    :scale: 65%
@@ -270,13 +269,13 @@ and time, it begins to all make sense.
 This puzzle is the same as the :ref:`fig-base-cover-eg2` example above, this time focusing on a hidden pair.
 Consider the two house Base Sets in row 1:
 
-*  :raw-html:`<mong>BS2r1 = {2r1c1, 2r1c5}</mong>`, and
-*  :raw-html:`<mong>BS9r1 = {9r1c1, 9r1c5}</mong>`
+*  ``BS2r1 = {2r1c1, 2r1c5}``, and
+*  ``BS9r1 = {9r1c1, 9r1c5}``.
 
 The intersecting Cell Cover sets are:
 
-*  :raw-html:`<mong>CSr1c1 = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</mong>`,  and
-*  :raw-html:`<mong>CSr1c5 = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</mong>`
+*  ``CSr1c1 = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</mong>``,  and
+*  ``CSr1c5 = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}``.
 
 |
 |
@@ -328,13 +327,13 @@ r1c1.  If they are the only possible Truths, then all other candidates can be el
 
 The Puzzle on the left illustrates an X-Wing example.  The two Base Sets for Candidate 5 are found in Column 5 and 8:
 
-*  :raw-html:`<mong>BS5c5 = {5r2c5, 5r8c5}</mong>`, and
-*  :raw-html:`<mong>BS5c8 = {5r2c7, 5r8c7}</mong>`
+*  ``BS5c5 = {5r2c5, 5r8c5}</mong>``, and
+*  ``BS5c8 = {5r2c7, 5r8c7}``.
 
 The intersecting Cell Cover sets are:
 
-*  :raw-html:`<mong>CS5r2 = {5r2c5, 5r2c6, 5r2c7, 5r2c8}</mong>`,  and
-*  :raw-html:`<mong>CS5r8 = {5r8c5, 5r8c7, 5r8c8, 5r8c9}</mong>`
+*  ``CS5r2 = {5r2c5, 5r2c6, 5r2c7, 5r2c8}``,  and
+*  ``CS5r8 = {5r8c5, 5r8c7, 5r8c8, 5r8c9}``.
 
 |
 |
@@ -366,7 +365,7 @@ reciprocal pattern can be found of order for order 9 – 'n'.
 The concept of Rank
 ===================
 
-.. admonition:: Definition
+.. topic: Definition
 
    Rank = Cover Sets amount – Base Sets amount.
 
@@ -383,7 +382,7 @@ valued Cover Set Element that is not in an intersection, cannot be True and can 
 
 Rank 0 patterns include Singles, Straight Subsets, Fish Patterns. Even Loops.
 
-.. admonition:: Rank 0 Rule
+.. topic:: Rank 0 Rule
 
    Any Cover Set Element that is not part of a Base Set can be eliminated.
 
@@ -410,7 +409,7 @@ two Cover Sets will see 'A Truth', and hence itself cannot be True and can be el
 Many “Human Solvable” patterns are Rank 1 patterns.  These include Bent Subsets,  Finned Fish in all
 their forms, AI Chains in all their forms, and Unlocked Sets.
 
-.. admonition:: Rank 1 Rule
+.. topic:: Rank 1 Rule
 
    Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 2 Cover
    Sets can be eliminated.
@@ -439,7 +438,7 @@ Sets will always cover all Base Sets in Rank 2 patterns.  Therefore, any Cover S
 not part of a Base Set that lies in the intersection of 3 Cover Sets, sees a Truth and itself cannot
 be True and can be eliminated.
 
-.. admonition:: Rank 2 Rule
+.. topic:: Rank 2 Rule
 
    Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 3 Cover
    Sets can be eliminated.
@@ -463,7 +462,7 @@ combinations of  R + 1 Cover Sets will always cover all Base Sets in Rank R patt
 any Cover Set Element that is not part of a Base Set that lies in the intersection of  R + 1 Cover
 Sets, sees a Truth and itself cannot be True and can be eliminated.
 
-.. admonition:: Rank R Rule
+.. topic:: Rank R Rule
 
    Any Cover Set Element that is not part of a Base Set that lies in the intersection of any R + 1
    Cover Sets can be eliminated.
@@ -495,17 +494,17 @@ Some More Examples
 
    :raw-html:`<mong>+156+87+49+3+2.4+762.+18+528....+4+7+6....8.+5+9.73....618+8.5...+32.........+3.7.5...49....487.1||Finned X-Wing||3c35r38,r9c3;3r8c1-3r9c3|r8c1-=3|+156+87+49+3+2+34+762+9+18+528+9+1+5+3+4+7+6+4+6+1+38+2+5+9+773+2+4+9+5618+8+95+7+1+6+32+4+9+1+4+2+6+7+8+5+3+67+85+3+1+249+5+2+3+9487+61</mong>`
 
-The Rank 1 puzzle pattern on the right is a Finned X-Wing :raw-html:`<mong>3c35r38,r9c3</mong>`.
+The Rank 1 puzzle pattern on the right is a Finned X-Wing ``3c35r38,r9c3``.
 Two base sets for Candidate 3 are
 
-*  :raw-html:`<mong>BS3c3 = {3r3c3, 3r8c3, 3r9c3}</mong>`, and
-*  :raw-html:`<mong>BS3c5 = {3r3c5, 3r8c5}</mong>`
+*  ``<mong>BS3c3 = {3r3c3, 3r8c3, 3r9c3}</mong>``, and
+*  ``<mong>BS3c5 = {3r3c5, 3r8c5}</mong>``.
 
 The intersecting Cover Sets are:
 
-*  :raw-html:`<mong>CS3r3 = {3r3c3, 3r3c4, 3r3c5, 3r3c6}</mong>`,
-*  :raw-html:`<mong>CS3r8 = {3r8c1, 3r8c3, 3r8c5, 3r8c6}</mong>`, and
-*  :raw-html:`<mong>CS3b7 = {3r8c1, 3r8c3, 3r9c3}</mong>`
+*  ``CS3r3 = {3r3c3, 3r3c4, 3r3c5, 3r3c6}``,
+*  ``CS3r8 = {3r8c1, 3r8c3, 3r8c5, 3r8c6}``, and
+*  ``CS3b7 = {3r8c1, 3r8c3, 3r9c3}</mong>``.
 
 |
 |
@@ -557,11 +556,11 @@ intersections that can also see the Fin cannot be True and can be eliminated.
    :raw-html:`<mong>+3617..+2+95842+395+6+7+1.5.+26+14+8+3+1.+8+5+2+6.3+4+625....+1+8.+341..+526+4..+6+1.+8+5+2+58...+2+1672+1+6+8+5+7349||Two String Kite||9r6c6=9r6c1~9r4c2=9r7c2,9r6c6-9r7c6-9r7c2|r7c6-=9|+3617+8+4+2+95842+395+6+7+1+75+9+26+14+8+3+1+7+8+5+2+6+93+4+625+4+3+9+7+1+8+9+341+7+8+526+4+9+7+6+1+3+8+5+2+58+3+9+4+2+1672+1+6+8+5+7349</mong>`
 
 The Rank 1 puzzle pattern on the right is a Two String Kite
-:raw-html:`<mong>9(r6c6=r6c1-r4c2=r7c2)</mong>`.  This pattern is also an example of two base sets
+``9(r6c6=r6c1-r4c2=r7c2)``.  This pattern is also an example of two base sets
 crossing over each other without intersecting.  The two Base Sets for Candidate 9 are:
 
-*  :raw-html:`<mong>BS9r7 = {9r6c1, 9r6c6}<mong>`, and
-*  :raw-html:`<mong>BS9c2 = {9r4c2, 9r7c2}<mong>`
+*  ``BS9r7 = {9r6c1, 9r6c6}``, and
+*  ``BS9c2 = {9r4c2, 9r7c2}``.
 
 The intersecting Cover Sets are:
 
@@ -599,11 +598,11 @@ Elims = {9r7c6}</pre>
 </div></div>
 <p><span>`
 
-As a Two String Kite, if :raw-html:`<mong>9r6c6</mong> is False, <mong>9r6c2</mong> is True, <mong>9r4c2</mong> is
-False, and <mong>9r2c7</mong> is True.  Similarly walking the links in the opposite direction, if <mong>9r2c7</mong> is
-False, then <mong>9r6c6</mong>` is True.  This pattern identifies a :ref:`Robust link <cc_robust_links>`
-:raw-html:`<mong>9r6c6|~|9r7c2</mong>`. Recall that at least one end of a Robust Link must be True, therefore any Ccell
-that can see both ends cannot be True and can be eliminated.  :Raw-html:`<mong>9r7c6</mong>`` is such a Ccell which can
+As a Two String Kite, if ``9r6c6`` is False, ``9r6c2`` is True, ``9r4c2`` is False, and ``9r2c7``
+is True.  Similarly walking the links in the opposite direction, if ``9r2c7`` is False, then
+``9r6c6`` is True.  This pattern identifies a :ref:`Robust link <found_cc_robust_links>`
+``9r6c6|~|9r7c2``. Recall that at least one end of a Robust Link must be True, therefore any Ccell
+that can see both ends cannot be True and can be eliminated.  ``9r7c6`` is such a Ccell which can
 be eliminated.
 
 |
@@ -618,57 +617,57 @@ be eliminated.
    Unlocked Set Chain Candidate Diagram
 
 The Rank 1 Puzzle pattern on the right, is both an XY-Chain:
-:raw-html:`<mong>(Z=Y)r1c4~(Y=X)r5c4~(X=W)r5c7~(W=Z)r6c8</mong>, and a 2 Node Unlocked Set Chain:
-<mong>Z(YZr1c4,XYr5c4)X(WXr5c7,WZr6c8)Z</mong>`.
+``(Z=Y)r1c4~(Y=X)r5c4~(X=W)r5c7~(W=Z)r6c8``, and a 2 Node Unlocked Set Chain:
+``Z(YZr1c4,XYr5c4)X(WXr5c7,WZr6c8)Z``.
 
 As a Rank 1 Base Set / Cover Set Pattern, the 4 Base Sets are the Cells:
 
-*  :raw-html:`<mong>BSr1c4 = {Yr1c4, Zr1c4}</mong>`
-*  :raw-html:`<mong>BSr5c4 = {Xr5c4, Yr5c4}</mong>`
-*  :raw-html:`<mong>BSr5c7 = {Wr5c7, Xr5c7}</mong>`
-*  :raw-html:`<mong>BSr6c8 = {Wr6c8, Zr6c8}</mong>`
+*  ``BSr1c4 = {Yr1c4, Zr1c4}``
+*  ``BSr5c4 = {Xr5c4, Yr5c4}``
+*  ``BSr5c7 = {Wr5c7, Xr5c7}``
+*  ``BSr6c8 = {Wr6c8, Zr6c8}``
 
 3 of the 5 Cover Set connecting the 4 Base Sets are:
 
-*  :raw-html:`<mong>CSc4 = {Yr1c4, Yr5c4}</mong>`
-*  :raw-html:`<mong>CSr5 = {Xr5c4, Xr5c7}</mong>`
-*  :raw-html:`<mong>CSb6 = {Wr5c7, Wr6c8}</mong>`
+*  ``CSc4 = {Yr1c4, Yr5c4}``
+*  ``CSr5 = {Xr5c4, Xr5c7}``
+*  ``CSb6 = {Wr5c7, Wr6c8}``
 
 Two equally valid possibilities for the remaining two cover sets exist, the one pair being:
 
-*  :raw-html:`<mong>CSc4a = {Zr1c4, Zr6c4}</mong>`
-*  :raw-html:`<mong>CSr6 = {Zr6c4, Zr6c8}</mong>`
+*  ``CSc4 = {Zr1c4, Zr6c4}``
+*  ``CSr6 = {Zr6c4, Zr6c8}``
 
 Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the
 elimination of Zr6c4.
 
 The other pair of equally valid Cover Sets are:
 
-*  :raw-html:`<mong>CSc8 = {Zr1c8, Zr6c8}</mong>`
-*  :raw-html:`<mong>CSr1 = {Zr1c4, Zr1c8}</mong>`
+*  ``CSc8 = {Zr1c8, Zr6c8}``
+*  ``CSr1 = {Zr1c4, Zr1c8}``
 
 Evaluating the Sudoku Rules Algebraic expression for these Base Sets and Cover Sets yields the
 elimination of Zr1c8.
 
 As an XY Chain the Ccells in the Bi Value cells are the Strong links of the AI Chain.  They are
-weakly linked by a common value Ccell connecting two Bi Value Ccells.  The Chain ends are Zr1c4
-and Zr6c8 and the Chain ensures that neither end is simultaneously False, at least one end is True,
+weakly linked by a common value Ccell connecting two Bi Value Ccells.  The Chain ends are ``Zr1c4``
+and ``Zr6c8`` and the Chain ensures that neither end is simultaneously False, at least one end is True,
 which it is yet to be determined.  Therefore, any Ccell that can see both ends of the chain
 cannot be True, and can be eliminated.
 
 As the 2 Node Unlocked Set Chain, X is the only member in the RCS connecting the two ULS’s.  The
 other common candidate is “Z”.  If X is True in the first ULS, then Z is True in ULS2, and if X is
-True in the second ULS, then Z is True in the first ULS.  This locks  Zr1c4 and Zr6c8 are locked
+True in the second ULS, then Z is True in the first ULS.  This locks  ``Zr1c4`` and ``Zr6c8`` are locked
 into “A Truth”.  Therefore, any same valued (Z) Ccell that can see all the elements of this
 'A Truth' cannot be True and can be eliminated.
 
-So as either an XY-Chain or a ULS-Chain, Zr1c8 and Zr6c4 can be eliminated, and Base/Cover Set
+So as either an XY-Chain or a ULS-Chain, ``Zr1c8`` and ``Zr6c4`` can be eliminated, and Base/Cover Set
 logic can be used to verify the pattern resolution.
 
 Parting Comment
 ===============
 
 Other than for Fish Patterns, Base Set / Cover Set Logic does not appear to contribute to the
-finding of productive patterns in a Puzzle.  Its true strength is in proving or verifying the
-resolution of any patterns.  I think this may be why Allan Barker calls this `'the General Logic of
-Sudoku' <http://sudoku.allanbarker.com/sweb/general.htm>`_
+finding of human solvable productive patterns in a Puzzle.  Its true strength is in proving or
+verifying the resolution of any patterns.  I think this may be why Allan Barker calls this
+`'the General Logic of Sudoku' <http://sudoku.allanbarker.com/sweb/general.htm>`_

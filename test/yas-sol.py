@@ -34,7 +34,7 @@ M_SRCH = 1
 
 def yas_sol():
     print(f"YAS - Pattern Batch Puzzle Solver.")
-    print(VERSION)
+    print(RELEASE)
     print(f"Run start: {strftime('%a, %d %b %Y, %H:%M:%S', localtime(time()))}")
     TestDataDir = join(join(Root, TestDir), TestDDir)
     Src  = join(TestDataDir, SrcFile+FileExt)
