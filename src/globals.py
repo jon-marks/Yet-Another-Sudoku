@@ -32,7 +32,8 @@ sVers = f"V{oRepo.tags[-1].tag.tag}:{str(oRepo.head.commit.hexsha[:7])}{sDirty},
 RELEASE = f"    {sVers}\n" \
           f"    Python {version}"
 DEBUG = " - DEBUG" if gettrace() else ""
-TITLE = f"Yet Another Sudoku - V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}{DEBUG}"
+# TITLE = f"Yet Another Sudoku - V{oRepo.tags[-1].tag.tag}-{oRepo.head.commit.hexsha[:8]}{sDirty}{DEBUG}"
+TITLE = f"Yet Another Sudoku - {oRepo.head.commit.hexsha[:8]}{sDirty}{DEBUG}"
 
 # Generic enumerations
 UNDEF   = -1
