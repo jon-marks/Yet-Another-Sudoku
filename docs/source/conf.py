@@ -13,8 +13,8 @@ project = 'Yet Another Sudoku'
 author = 'Jonathan Marks'
 version = 'HEAD'  # "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
 release = 'HEAD'  # f'{version}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
-f = open('build\\copyright', 'rt')
-f.readline(copyright)
+f = open('..\\build\\copyright', 'rt')
+copyright = f.readline()
 f.close()
 
 # copyright = '2023, Jonathan Marks, Commit Tag: 'f'{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
