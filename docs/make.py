@@ -4,7 +4,7 @@ from time import strftime, localtime
 
 oRepo = Repo("..\\")
 gComTag = oRepo.head.commit.hexsha[:7]
-gDirty = "*" if oRepo.is_dirty else ""
+gDirty = "*" if oRepo.is_dirty() else ""
 gComTime = strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))
 os.system(".\\make.bat clean")
 f = open('build\\copyright', 'wt')
