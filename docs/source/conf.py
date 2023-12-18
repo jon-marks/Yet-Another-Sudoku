@@ -11,9 +11,9 @@ from time import strftime, localtime
 oRepo = Repo("..\\..")
 project = 'Yet Another Sudoku'
 author = 'Jonathan Marks'
-version = "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
+version = "HEAD"  # "0.0.2"  # f'V{oRepo.tags[-1].tag.tag}'
 release = ""  # f'{version}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
-copyright = '2023, Jonathan Marks, Commit Tag: 'f'V{oRepo.tags[-1].tag.tag}:{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
+copyright = '2023, Jonathan Marks, Commit Tag: 'f'{oRepo.head.commit.hexsha[:7]}{"*" if oRepo.is_dirty() else ""}, {strftime("%a, %d %b %Y, %H:%M:%S", localtime(oRepo.head.commit.committed_date))}'
 
 
 # -- General configuration ---------------------------------------------------
