@@ -50,7 +50,7 @@ Basic Fish
 
 .. figure:: images/basic-fish-cd1.png
    :name: fig-basic-fish-cd1
-   :scale: 100%
+   :scale: 110%
    :alt: Basic Fish Candidate Diagrams
    :align: center
    :figwidth: 100%
@@ -64,23 +64,27 @@ The left image in :numref:`fig-basic-fish-cd1` of an X-Wing is made up of two Ba
 two candidates, ``B0 = Xr3c37``, and ``B1 = Xr7c37``.  These two Base Sets are intersected by links
 in the two Cover Sets, ``C0=c3`` and ``C1=c7``, where X is found in each intersection.
 
-If ``Xr3c3`` is False, then ``Xr3c7`` must be True, ``Xr7c7`` must be False and ``Xr7c3`` True.
-Therefore, either the two blue X's are True or the two Orange X's are True.  As each Cover Set
-contains both a Blue X and an Orange X, no other X can be True in the Cover Sets resulting in their
-elimination.
+If ``Xr3c3`` is True, then ``Xr3c7``, and ``Xr7c3`` must be False.  If ``Xr7c3`` is False, then the
+only other X in ``r7`` must be True.  Therefore, either the two brown X's are True or the two yellow
+X's are True.  As each Cover Set contains both a brown X, and a yellow X, no other X can be True in
+the Cover Sets resulting in their elimination.
 
 Swordfish
 ---------
 
 The centre image in :numref:`fig-basic-fish-cd1` of a Swordfish is made up of three Base Sets, each
-with two or three candidates, ``B0 = Xr2c357``, ``B1 = Xr4c357``, and ``B2 = Xr8c357``.  These three
-Base Sets are intersected by links in the three Cover Sets, ``C0 = c3``, ``C1 = c5``, and
-``C2 = c7``, where X is found at least twice where each CoverSet crosses over the three Base Sets.
+containing two or three candidates, :raw-html:`<pre>B0 = <wuline>Xr2c357</wuline></pre>, <pre>B1 = Xr4c357``, and ``B2 = Xr8c357``.  These
+three Base Sets are intersected by links in the three Cover Sets, ``C0 = c3``, ``C1 = c5``, and
+``C2 = c7``, and X is found at least twice where each Cover Set crosses over the three Base Sets to
+form a valid Swordfish pattern.
 
-This pattern remains valid with any or all the lighter X's in the orange shaded cells absent.  If
+This pattern is valid with any or all the lighter X's in the orange shaded cells absent.  If
 they are all absent the pattern is a "minimal" Swordfish where each Base Set only has two
-candidates.  The validating criteria of this pattern is that there are three Cover Set houses
+candidates.  The validating criteria of this pattern is that three Cover Set houses.
 containing all the links between Base Sets.
+
+The intersecting Ccells lock the truth of this pattern, Therefore any other same value ccelss
+occurring in the Coversets (shaded light green) can be eliminated.
 contains some int
 
 

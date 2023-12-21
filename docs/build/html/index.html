@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/table_styling.css?v=a1a2a898" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="_static/overrides.css?v=7cd50d31" />
+    <link rel="stylesheet" type="text/css" href="_static/overrides.css?v=c0b90fc8" />
     
     
 
@@ -257,10 +257,12 @@
 <li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#sudoku-language-syntax">2.1.1. Sudoku Language Syntax</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#location-specifiers">2.1.1.1. Location Specifiers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#ccell-specifiers">2.1.1.2. Ccell Specifiers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#operators">2.1.1.3. Operators</a></li>
-<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#conditionals">2.1.1.4. Conditionals</a></li>
-<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#relational-specifiers">2.1.1.5. Relational Specifiers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#candidate-dressing">2.1.1.6. Candidate Dressing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#ccell-postfixes">2.1.1.3. Ccell Postfixes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#pattern-combiners">2.1.1.4. Pattern Combiners</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#operators">2.1.1.5. Operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#conditionals">2.1.1.6. Conditionals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#relational-specifiers">2.1.1.7. Relational Specifiers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#candidate-dressing">2.1.1.8. Candidate Dressing</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#pattern-syntax-examples">2.1.2. Pattern Syntax Examples</a><ul>
@@ -269,6 +271,7 @@
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#fish">2.1.2.3. Fish</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#bent-subsets">2.1.2.4. Bent Subsets</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#inference-chains-loops-and-nets">2.1.2.5. Inference Chains, Loops and Nets</a></li>
+<li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#super-human-patterns">2.1.2.6. Super Human Patterns</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#outcome-syntax-examples">2.1.3. Outcome Syntax Examples</a><ul>
@@ -279,11 +282,13 @@
 <li class="toctree-l3"><a class="reference internal" href="02-foundation/01-language.html#candidate-diagrams">2.1.4. Candidate Diagrams</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#candidate-representation">2.1.4.1. Candidate Representation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="02-foundation/01-language.html#some-examples">2.1.4.2. Some Examples</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-exposed-pair">2.1.4.2.1. A Locked Exposed Pair</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-y-wing">2.1.4.2.2. A Y-Wing</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-pointing-single">2.1.4.2.3. A Locked Pointing Single</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-xyz-wing">2.1.4.2.4. A XYZ-Wing</a></li>
-<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#a-locked-exposed-triple">2.1.4.2.5. A Locked Exposed Triple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#locked-exposed-pair">2.1.4.2.1. Locked Exposed Pair</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#y-wing">2.1.4.2.2. Y-Wing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#locked-pointing-single">2.1.4.2.3. Locked Pointing Single</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#xyz-wing">2.1.4.2.4. XYZ-Wing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#locked-exposed-triple">2.1.4.2.5. Locked Exposed Triple</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#swordfish">2.1.4.2.6. Swordfish</a></li>
+<li class="toctree-l5"><a class="reference internal" href="02-foundation/01-language.html#finned-swordfish">2.1.4.2.7. Finned Swordfish</a></li>
 </ul>
 </li>
 </ul>
@@ -651,7 +656,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 08d1615, Mon, 18 Dec 2023, 20:55:38
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 8b16b6b*, Mon, 18 Dec 2023, 20:57:47
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

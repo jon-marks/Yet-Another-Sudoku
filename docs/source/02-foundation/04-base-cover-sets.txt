@@ -52,15 +52,13 @@ Some Definitions
 
 An example for some clarity:
 
-*  In Row 1, :raw-html:`<mong>3r1c49</mong>` form a Base Set where 3 can only be True in one of
-   :raw-html:`<mong>r1c4</mong>` or :raw-html:`<mong>r1rc9</mong>`.
-*  In Row 7, another Base Set is formed by :raw-html:`<mong>3r7c49</mong>`, where 3 can only be True
-   in one of :raw-html:`<mong>r7c4</mong>` or :raw-html:`<mong>r7c9</mong>`.
-*  There is a Link in column 4 between :raw-html:`<mong>r7c4</mong>` and
-   :raw-html:`<mong>r7rc4</mong>`.  The Cover Set is in column 4 which contains the Cover Set
-   Elements :raw-html:`<mong>3r12678c4</mong>`.
-*  In column 9, another Link exists between :raw-html:`<mong>r7c9</mong>` and
-   :raw-html:`<mong>r7rc9</mong>`.  The cover Set is in column 9 which contains the Cover Set
+*  In Row 1, ``3r1c49`` form a Base Set where 3 can only be True in one of ``r1c4``or ``r1rc9``.
+*  In Row 7, another Base Set is formed by ``3r7c49``, where 3 can only be True in one of ``r7c4``
+   or ``r7c9``.
+*  There is a Link in column 4 between ``r7c4`` and ``r7rc4``.  The Cover Set is in column 4 which
+    contains the Cover Set Elements ``3r12678c4``.
+*  In column 9, another Link exists between ``r7c9`` and ``r7rc9``.  The cover Set is in column 9
+   which contains the Cover Set
    Elements :raw-html:`<mong>3r12467c4</mong>`.
 
 |

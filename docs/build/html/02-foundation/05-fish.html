@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/table_styling.css?v=a1a2a898" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="../_static/overrides.css?v=7cd50d31" />
+    <link rel="stylesheet" type="text/css" href="../_static/overrides.css?v=c0b90fc8" />
     
     
 
@@ -276,7 +276,7 @@ the fins with <a class="reference internal" href="../07-glossary.html#term-AIC">
 <section id="basic-fish">
 <h2><span class="section-number">2.5.1. </span>Basic Fish<a class="headerlink" href="#basic-fish" title="Link to this heading">#</a></h2>
 <figure class="align-center" id="fig-basic-fish-cd1" style="width: 100%">
-<a class="reference internal image-reference" href="../_images/basic-fish-cd1.png"><img alt="Basic Fish Candidate Diagrams" src="../_images/basic-fish-cd1.png" style="width: 643.0px; height: 220.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/basic-fish-cd1.png"><img alt="Basic Fish Candidate Diagrams" src="../_images/basic-fish-cd1.png" style="width: 726.0000000000001px; height: 248.60000000000002px;" /></a>
 <figcaption>
 <p><span class="caption-number">Figure 2.24:  </span><span class="caption-text">Basic Fish Candidate Diagrams</span><a class="headerlink" href="#fig-basic-fish-cd1" title="Link to this image">#</a></p>
 </figcaption>
@@ -286,21 +286,24 @@ the fins with <a class="reference internal" href="../07-glossary.html#term-AIC">
 <p>The left image in <a class="reference internal" href="#fig-basic-fish-cd1"><span class="std std-numref">Figure 2.24: </span></a> of an X-Wing is made up of two Base Sets, each with
 two candidates, <code class="docutils literal notranslate"><span class="pre">B0</span> <span class="pre">=</span> <span class="pre">Xr3c37</span></code>, and <code class="docutils literal notranslate"><span class="pre">B1</span> <span class="pre">=</span> <span class="pre">Xr7c37</span></code>.  These two Base Sets are intersected by links
 in the two Cover Sets, <code class="docutils literal notranslate"><span class="pre">C0=c3</span></code> and <code class="docutils literal notranslate"><span class="pre">C1=c7</span></code>, where X is found in each intersection.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">Xr3c3</span></code> is False, then <code class="docutils literal notranslate"><span class="pre">Xr3c7</span></code> must be True, <code class="docutils literal notranslate"><span class="pre">Xr7c7</span></code> must be False and <code class="docutils literal notranslate"><span class="pre">Xr7c3</span></code> True.
-Therefore, either the two blue X’s are True or the two Orange X’s are True.  As each Cover Set
-contains both a Blue X and an Orange X, no other X can be True in the Cover Sets resulting in their
-elimination.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">Xr3c3</span></code> is True, then <code class="docutils literal notranslate"><span class="pre">Xr3c7</span></code>, and <code class="docutils literal notranslate"><span class="pre">Xr7c3</span></code> must be False.  If <code class="docutils literal notranslate"><span class="pre">Xr7c3</span></code> is False, then the
+only other X in <code class="docutils literal notranslate"><span class="pre">r7</span></code> must be True.  Therefore, either the two brown X’s are True or the two yellow
+X’s are True.  As each Cover Set contains both a brown X, and a yellow X, no other X can be True in
+the Cover Sets resulting in their elimination.</p>
 </section>
 <section id="swordfish">
 <h3><span class="section-number">2.5.1.2. </span>Swordfish<a class="headerlink" href="#swordfish" title="Link to this heading">#</a></h3>
 <p>The centre image in <a class="reference internal" href="#fig-basic-fish-cd1"><span class="std std-numref">Figure 2.24: </span></a> of a Swordfish is made up of three Base Sets, each
-with two or three candidates, <code class="docutils literal notranslate"><span class="pre">B0</span> <span class="pre">=</span> <span class="pre">Xr2c357</span></code>, <code class="docutils literal notranslate"><span class="pre">B1</span> <span class="pre">=</span> <span class="pre">Xr4c357</span></code>, and <code class="docutils literal notranslate"><span class="pre">B2</span> <span class="pre">=</span> <span class="pre">Xr8c357</span></code>.  These three
-Base Sets are intersected by links in the three Cover Sets, <code class="docutils literal notranslate"><span class="pre">C0</span> <span class="pre">=</span> <span class="pre">c3</span></code>, <code class="docutils literal notranslate"><span class="pre">C1</span> <span class="pre">=</span> <span class="pre">c5</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">C2</span> <span class="pre">=</span> <span class="pre">c7</span></code>, where X is found at least twice where each CoverSet crosses over the three Base Sets.</p>
-<p>This pattern remains valid with any or all the lighter X’s in the orange shaded cells absent.  If
+containing two or three candidates, <span class="raw-html"><pre>B0 = <wuline>Xr2c357</wuline></pre>, <pre>B1 = Xr4c357`</span>, and <code class="docutils literal notranslate"><span class="pre">B2</span> <span class="pre">=</span> <span class="pre">Xr8c357</span></code>.  These
+three Base Sets are intersected by links in the three Cover Sets, <code class="docutils literal notranslate"><span class="pre">C0</span> <span class="pre">=</span> <span class="pre">c3</span></code>, <code class="docutils literal notranslate"><span class="pre">C1</span> <span class="pre">=</span> <span class="pre">c5</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">C2</span> <span class="pre">=</span> <span class="pre">c7</span></code>, and X is found at least twice where each Cover Set crosses over the three Base Sets to
+form a valid Swordfish pattern.</p>
+<p>This pattern is valid with any or all the lighter X’s in the orange shaded cells absent.  If
 they are all absent the pattern is a “minimal” Swordfish where each Base Set only has two
-candidates.  The validating criteria of this pattern is that there are three Cover Set houses
-containing all the links between Base Sets.
+candidates.  The validating criteria of this pattern is that three Cover Set houses.
+containing all the links between Base Sets.</p>
+<p>The intersecting Ccells lock the truth of this pattern, Therefore any other same value ccelss
+occurring in the Coversets (shaded light green) can be eliminated.
 contains some int</p>
 <p>Consider the Swordfish pattern with candidate X in the centre puzzle in the above figure.  The base
 sets (lines) have been identified as Rows 1, 3 and 7.  Each row can have between two and three
@@ -686,7 +689,7 @@ before column bases.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 08d1615, Mon, 18 Dec 2023, 20:55:38
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 8b16b6b*, Mon, 18 Dec 2023, 20:57:47
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
