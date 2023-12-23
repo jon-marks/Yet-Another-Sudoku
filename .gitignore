@@ -6,6 +6,7 @@ venv/*
 *.log
 .~*\#
 *.doctree
+*/.buildinfo
 test/test-data/archive/*
 test/test-data/*
 !test/test-data/pattern-reg-test-1.0.txt
