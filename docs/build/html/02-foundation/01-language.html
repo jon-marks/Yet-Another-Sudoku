@@ -245,8 +245,8 @@ unambiguous language for Sudoku.  The notation is loosely based on and develops 
 <a class="reference external" href="http://sudopedia.enjoysudoku.com/Eureka.html">Eureka</a></p>
 <section id="sudoku-language-syntax">
 <h2><span class="section-number">2.1.1. </span>Sudoku Language Syntax<a class="headerlink" href="#sudoku-language-syntax" title="Link to this heading">#</a></h2>
-<section id="location-specifiers">
-<h3><span class="section-number">2.1.1.1. </span>Location Specifiers<a class="headerlink" href="#location-specifiers" title="Link to this heading">#</a></h3>
+<section id="cell-location-specifiers">
+<h3><span class="section-number">2.1.1.1. </span>Cell (Location) Specifiers<a class="headerlink" href="#cell-location-specifiers" title="Link to this heading">#</a></h3>
 <div class="table-wrapper colwidths-given styled-table docutils container">
 <table class="styled-table docutils align-left" style="width: 97%">
 <colgroup>
@@ -262,29 +262,26 @@ unambiguous language for Sudoku.  The notation is loosely based on and develops 
 </tr>
 <tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>b4p6</mono></span></p></th>
 <td class="left-align single-left-divider no-right-divider"><p>The cell in box 4, position 5. Boxes and positions in boxes are
-counted left to right then top to bottom, translates to
+counted left to right then top to bottom, same location as
 <code class="docutils literal notranslate"><span class="pre">r5c2</span></code></p></td>
 </tr>
 <tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2</mono></span></p></th>
-<td class="left-align single-left-divider no-right-divider"><p>The cells in row 2</p></td>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in row 2</p></td>
 </tr>
 <tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>c4</mono></span></p></th>
-<td class="left-align single-left-divider no-right-divider"><p>The cells in column 4</p></td>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in column 4</p></td>
 </tr>
-<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>5r2c6</mono></span></p></th>
-<td class="left-align single-left-divider no-right-divider"><p>The candidate 5 in cell r2c6</p></td>
-</tr>
-<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r34c245</mono></span></p></th>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r34c245</mono></span></p></th>
 <td class="left-align single-left-divider no-right-divider"><p>The grid of 6 cells <code class="docutils literal notranslate"><span class="pre">r3c2,</span> <span class="pre">r3c4,</span> <span class="pre">r3c5,</span> <span class="pre">r4c2,</span> <span class="pre">r4c4,</span> <span class="pre">r4c5</span></code></p></td>
 </tr>
-<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2r5,r3c456,r56c56</mono></span></p></th>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2r5,r3c456,r56c56</mono></span></p></th>
 <td class="left-align single-left-divider no-right-divider"><p>A collection of cells in a comma separated list</p></td>
 </tr>
-<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2c!378</mono></span></p></th>
-<td class="left-align single-left-divider no-right-divider"><p>All the cells in row 2 excluding <code class="docutils literal notranslate"><span class="pre">r2c378</span></code></p></td>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2c!378</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in row 2 other than <code class="docutils literal notranslate"><span class="pre">r2c378</span></code></p></td>
 </tr>
-<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r!35c6</mono></span></p></th>
-<td class="left-align single-left-divider no-right-divider"><p>All the cells in column 6 excluding <code class="docutils literal notranslate"><span class="pre">r35c6</span></code></p></td>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r!35c6</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in column 6 other than <code class="docutils literal notranslate"><span class="pre">r35c6</span></code></p></td>
 </tr>
 </tbody>
 </table>
@@ -842,7 +839,7 @@ indirectly through the WE-AIC: <code class="docutils literal notranslate"><span 
 <h3><span class="section-number">2.1.3.1. </span>Placements<a class="headerlink" href="#placements" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><dl>
-<dt><span class="raw-html"><mong>r3c5:=7</mong></span></dt><dd><p>7 is placed in Cell r3c5.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c5:=7</span></code></dt><dd><p>Place 7 in cell <cite>r3c5</cite>.</p>
 <p>Only a single value can be placed in a Cell</p>
 </dd>
 </dl>
@@ -852,24 +849,19 @@ indirectly through the WE-AIC: <code class="docutils literal notranslate"><span 
 <h3><span class="section-number">2.1.3.2. </span>Eliminations<a class="headerlink" href="#eliminations" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><dl class="simple">
-<dt><span class="raw-html"><mong>r3c5-=7</mong></span></dt><dd><p>Candidate 7 can be removed from Cell r3c5 if present.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c5-=7</span></code></dt><dd><p>Remove candidate 7 from <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>, if present.</p>
 </dd>
-<dt><span class="raw-html"><mong>r3c5-=237</mong></span></dt><dd><p>Candidates 2, 3, and 7 can be removed from Cell r3c5 if present.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c5-=237</span></code></dt><dd><p>Remove candidates 2, 3, and 7 from cell <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>, if present.</p>
 </dd>
-<dt><span class="raw-html"><mong>r3c789-=237</mong></span></dt><dd><p>Candidates 2, 3, and 7 can be removed from Cells r3c7, r3c8 and r3c9 if present.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c789-=237</span></code></dt><dd><p>Remove candidates 2, 3, and 7 from cells <code class="docutils literal notranslate"><span class="pre">r3c7</span></code>, <code class="docutils literal notranslate"><span class="pre">r3c8</span></code> and <code class="docutils literal notranslate"><span class="pre">r3c9</span></code>, if present.</p>
 </dd>
-<dt><span class="raw-html"><mong>r3c!(789)-=237</mong></span></dt><dd><p>Candidates 2, 3, and 7 in row 3 outside Cells r3789 can be removed if present.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c!(789)-=237</span></code></dt><dd><p>Remove candidates 2, 3, and 7 from all cells in row 3 other than <code class="docutils literal notranslate"><span class="pre">r3c789</span></code>.</p>
 </dd>
-<dt><span class="raw-html"><mong>r8c456-=!(237)</mong></span></dt><dd><p>Any Candidate other than 2, 3, and 7 can be removed from Cell r3c5 if present.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r8c456-=!(237)</span></code></dt><dd><p>Remove all candidate other than 2, 3, and 7 from cell <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>.</p>
 </dd>
-<dt><span class="raw-html"><mong>r8c!(456)-=!(237)</mong></span></dt><dd><p>Any Candidate other than 2, 3, and 7 can be removed from Row 8 Cells       outside r8c456.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">r8c!(456)-=!(237)</span></code></dt><dd><p>Remove all candidate other than 2, 3, and 7 from row 8 other than <code class="docutils literal notranslate"><span class="pre">r8c456</span></code>.</p>
 </dd>
-<dt><span class="raw-html"><mong>b8p!(456)-=!(237)</mong></span></dt><dd><p>Often it is convenient to address a cell position with box / position coordinates instead of
-row / column coordinates.  Boxes are sequenced left to right, then top to bottom.
-Similarly, Positions in a box are sequenced left to right then top to bottom.  Any Candidate
-other than 2, 3, and 7 can be removed from Box 8, and positions in box outside of positions
-4, 5, and 6.  Note this is not the same as the above example.  This example is within the
-box, whereas the previous is along a row.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">b8p!(456)-=!(237)</span></code></dt><dd><p>Remove all candidates other than 2, 3, 7 from box 8 other than <code class="docutils literal notranslate"><span class="pre">b8p456</span></code></p>
 </dd>
 </dl>
 </div></blockquote>
@@ -1031,7 +1023,7 @@ larger cell containing the union of the Candidates in the intersecting cells.</p
 <p><span class="caption-number">Figure 2.1:  </span><span class="caption-text">Locked Exposed Pair Pattern</span><a class="headerlink" href="#fig-locked-exposed-pair-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The exposed pair XY is confined to the intersection of r1 and b1.  * indicates all the cells that
+<p><code class="docutils literal notranslate"><span class="pre">XYr1c13</span></code>. The exposed pair XY is confined to the intersection of r1 and b1.  * indicates all the cells that
 can see the cells of the exposed pair.  If X or Y exists in the cells with a *, they can be eliminated.</p>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -1045,7 +1037,7 @@ can see the cells of the exposed pair.  If X or Y exists in the cells with a *, 
 <p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Y-Wing Pattern</span><a class="headerlink" href="#fig-y-wing-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Z is true at either or both pincers (Zr3r6 and Xr8c2).  Therefore, any same value
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>XZr8c2,XYr3c2,YZr3c6Z is true at either or both pincers (Zr3r6 and Xr8c2).  Therefore, any same value
 candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated.</p>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -1064,9 +1056,9 @@ candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated
 <p><span class="caption-number">Figure 2.3:  </span><span class="caption-text">Locked Pointing Single Pattern</span><a class="headerlink" href="#fig-locked-pointing-single-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Because X is present in the intersection of row 3 and box 3, and not present in the
-rest of box 3, X must be True in the intersection.  Therefore, any X that is present
-along row 3 outside the intersection cannot be True and can be eliminated.</p>
+<p>X is present in the intersection of row 3 and box 3, and not present in the
+rest of box 3.  Therefore, X must be True in the intersection resulting in the elimination of X
+along row 3 outside of where they <a class="reference internal" href="../07-glossary.html#term-Cross-over"><span class="xref std std-term">Cross-over</span></a>.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 <div class="line"><br /></div>
@@ -1100,6 +1092,16 @@ Triple cannot be True and can be eliminated.</p>
 </section>
 <section id="swordfish">
 <h4><span class="section-number">2.1.4.2.6. </span>Swordfish<a class="headerlink" href="#swordfish" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-swordfish-cd1">
+<a class="reference internal image-reference" href="../_images/swordfish-cd1.png"><img alt="Swordfish" src="../_images/swordfish-cd1.png" style="width: 208.0px; height: 208.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.6:  </span><span class="caption-text">Swordfish</span><a class="headerlink" href="#fig-swordfish-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Base sets B0, B1, and B2 with at least 2 instances of X align such that the three cover sets each
+align with at least 2 base set Intersections.  (Candidate X is in the cell where base and cover
+cross).  Because of the base sets, X can only be true in the intersections of coversets, resulting
+the elimination of all other X ccells in the cover set.</p>
 </section>
 <section id="finned-swordfish">
 <h4><span class="section-number">2.1.4.2.7. </span>Finned Swordfish<a class="headerlink" href="#finned-swordfish" title="Link to this heading">#</a></h4>
@@ -1137,7 +1139,7 @@ Triple cannot be True and can be eliminated.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 5eda863, Thu, 21 Dec 2023, 22:56:15
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: b7dfdc4*, Thu, 21 Dec 2023, 22:56:54
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1165,7 +1167,7 @@ Triple cannot be True and can be eliminated.</p>
             <ul>
 <li><a class="reference internal" href="#">2.1. Language</a><ul>
 <li><a class="reference internal" href="#sudoku-language-syntax">2.1.1. Sudoku Language Syntax</a><ul>
-<li><a class="reference internal" href="#location-specifiers">2.1.1.1. Location Specifiers</a></li>
+<li><a class="reference internal" href="#cell-location-specifiers">2.1.1.1. Cell (Location) Specifiers</a></li>
 <li><a class="reference internal" href="#ccell-specifiers">2.1.1.2. Ccell Specifiers</a></li>
 <li><a class="reference internal" href="#ccell-postfixes">2.1.1.3. Ccell Postfixes</a></li>
 <li><a class="reference internal" href="#pattern-combiners">2.1.1.4. Pattern Combiners</a></li>

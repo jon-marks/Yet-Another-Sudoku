@@ -131,7 +131,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       In an AI-Chain of Nodes, the Interior Nodes lie between the :term:`End Node`\s.
 
    **Intersection**
-     The cells common to two Groups that intersect.
+     The cells common to the meeting of two or more :term:`group`s.
 
    **Line**
       Either a :term:`Row` or a :term:`Column`.

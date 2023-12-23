@@ -15,8 +15,8 @@ unambiguous language for Sudoku.  The notation is loosely based on and develops 
 Sudoku Language Syntax
 ======================
 
-Location Specifiers
--------------------
+Cell (Location) Specifiers
+--------------------------
 
 .. table::
    :width: 97%
@@ -31,15 +31,14 @@ Location Specifiers
    :raw-html:`<mono>r6c5</mono>`                The cell in location row 6, column 5 in the 9x9 cell grid
    :raw-html:`<mono>b4</mono>`                  The cells in box 4.
    :raw-html:`<mono>b4p6</mono>`                The cell in box 4, position 5. Boxes and positions in boxes are
-                                                counted left to right then top to bottom, translates to
+                                                counted left to right then top to bottom, same location as
                                                 ``r5c2``
-   :raw-html:`<mono>r2</mono>`                  The cells in row 2
-   :raw-html:`<mono>c4</mono>`                  The cells in column 4
-   :raw-html:`<mono>5r2c6</mono>`               The candidate 5 in cell r2c6
+   :raw-html:`<mono>r2</mono>`                  All cells in row 2
+   :raw-html:`<mono>c4</mono>`                  All cells in column 4
    :raw-html:`<mono>r34c245</mono>`             The grid of 6 cells ``r3c2, r3c4, r3c5, r4c2, r4c4, r4c5``
    :raw-html:`<mono>r2r5,r3c456,r56c56</mono>`  A collection of cells in a comma separated list
-   :raw-html:`<mono>r2c!378</mono>`             All the cells in row 2 excluding ``r2c378``
-   :raw-html:`<mono>r!35c6</mono>`              All the cells in column 6 excluding ``r35c6``
+   :raw-html:`<mono>r2c!378</mono>`             All cells in row 2 other than ``r2c378``
+   :raw-html:`<mono>r!35c6</mono>`              All cells in column 6 other than ``r35c6``
    ============================================ =================================================================
 
 Ccell Specifiers
@@ -545,39 +544,34 @@ Outcome Syntax Examples
 Placements
 ----------
 
-   :raw-html:`<mong>r3c5:=7</mong>`
-      7 is placed in Cell r3c5.
+   ``r3c5:=7``
+      Place 7 in cell `r3c5`.
 
       Only a single value can be placed in a Cell
 
 Eliminations
 ------------
 
-   :raw-html:`<mong>r3c5-=7</mong>`
-      Candidate 7 can be removed from Cell r3c5 if present.
+   ``r3c5-=7``
+      Remove candidate 7 from ``r3c5``, if present.
 
-   :raw-html:`<mong>r3c5-=237</mong>`
-      Candidates 2, 3, and 7 can be removed from Cell r3c5 if present.
+   ``r3c5-=237``
+      Remove candidates 2, 3, and 7 from cell ``r3c5``, if present.
 
-   :raw-html:`<mong>r3c789-=237</mong>`
-      Candidates 2, 3, and 7 can be removed from Cells r3c7, r3c8 and r3c9 if present.
+   ``r3c789-=237``
+      Remove candidates 2, 3, and 7 from cells ``r3c7``, ``r3c8`` and ``r3c9``, if present.
 
-   :raw-html:`<mong>r3c!(789)-=237</mong>`
-      Candidates 2, 3, and 7 in row 3 outside Cells r3789 can be removed if present.
+   ``r3c!(789)-=237``
+      Remove candidates 2, 3, and 7 from all cells in row 3 other than ``r3c789``.
 
-   :raw-html:`<mong>r8c456-=!(237)</mong>`
-      Any Candidate other than 2, 3, and 7 can be removed from Cell r3c5 if present.
+   ``r8c456-=!(237)``
+      Remove all candidate other than 2, 3, and 7 from cell ``r3c5``.
 
-   :raw-html:`<mong>r8c!(456)-=!(237)</mong>`
-      Any Candidate other than 2, 3, and 7 can be removed from Row 8 Cells       outside r8c456.
+   ``r8c!(456)-=!(237)``
+      Remove all candidate other than 2, 3, and 7 from row 8 other than ``r8c456``.
 
-   :raw-html:`<mong>b8p!(456)-=!(237)</mong>`
-      Often it is convenient to address a cell position with box / position coordinates instead of
-      row / column coordinates.  Boxes are sequenced left to right, then top to bottom.
-      Similarly, Positions in a box are sequenced left to right then top to bottom.  Any Candidate
-      other than 2, 3, and 7 can be removed from Box 8, and positions in box outside of positions
-      4, 5, and 6.  Note this is not the same as the above example.  This example is within the
-      box, whereas the previous is along a row.
+   ``b8p!(456)-=!(237)``
+      Remove all candidates other than 2, 3, 7 from box 8 other than ``b8p456``
 
 Candidate Diagrams
 ==================
@@ -686,7 +680,7 @@ Locked Exposed Pair
 
    Locked Exposed Pair Pattern
 
-The exposed pair XY is confined to the intersection of r1 and b1.  \* indicates all the cells that
+``XYr1c13``. The exposed pair XY is confined to the intersection of r1 and b1.  \* indicates all the cells that
 can see the cells of the exposed pair.  If X or Y exists in the cells with a \*, they can be eliminated.
 
 |
@@ -702,9 +696,8 @@ Y-Wing
    :figwidth: image
 
    Y-Wing Pattern
-
-Z is true at either or both pincers (Zr3r6 and Xr8c2).  Therefore, any same value
-candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated.
+``XYr3c2`` locks the truth ``Z(r8c2,r3c6)`` in both pincers, so any Ccell like ``Zr8c6`` that sees both pincers cannot
+be true and is eliminated.
 
 |
 |
@@ -725,9 +718,9 @@ Locked Pointing Single
 
    Locked Pointing Single Pattern
 
-Because X is present in the intersection of row 3 and box 3, and not present in the
-rest of box 3, X must be True in the intersection.  Therefore, any X that is present
-along row 3 outside the intersection cannot be True and can be eliminated.
+X is present in the intersection of row 3 and box 3, and not present in the
+rest of box 3.  Therefore, X must be True in the intersection resulting in the elimination of X
+along row 3 outside the intersection.
 
 |
 |
@@ -744,8 +737,8 @@ XYZ-Wing
 
    XYZ-Wing Pattern
 
-XYZr1c2, in the intersection of ensures that the Unrestricted Candidate, Y must be True
-in at least one of the cells forming the pattern.  Therefore, any other Candidate Y that
+``XYZr1c2`` in the intersection of ensures that the Unrestricted Candidate, Y, must be True
+in at least one of the cells forming the pattern.  Therefore, any other candidate Y that
 can see all occurrences of Y in the pattern can be eliminated.  The only locations that
 can see all the pincers and pivot lies in the intersection of row 1 and box 1.
 
@@ -768,6 +761,24 @@ Triple cannot be True and can be eliminated.
 
 Swordfish
 +++++++++
+
+.. figure:: images/swordfish-cd1.png
+   :name: fig-swordfish-cd1
+   :scale: 100%
+   :alt: Swordfish
+   :align: right
+   :figwidth: image
+
+   Swordfish
+
+Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets sees at least two
+ccells in their three intersectons. This locks ``The Truth`` to the intersecting cells.  Therefore any instance of X
+along the covers outside the intersections cannot be True and is eliminated.
+
+|
+|
+|
+|
 
 
 Finned Swordfish

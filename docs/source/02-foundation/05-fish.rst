@@ -42,8 +42,7 @@ can be degenerate too (Finned and or Sashimi).
 Kraken Fish, are degenerate fish where eliminatable candidates in the Cover Sets see all
 the fins with :term:`AIC` chains if it cannot see them directly.
 
-
-Franken, Mutant and Kraken Fish border on what is considered human solvable.
+Franken, Mutant, and Kraken Fish border on what is considered human solvable.
 
 Basic Fish
 ==========
@@ -71,6 +70,8 @@ the Cover Sets resulting in their elimination.
 
 Swordfish
 ---------
+
+.. :raw-html:`<code class="docutils literal notranslate"><wuline>7r1569c468</wuline>,r9c7,r5c9;7r7c
 
 The centre image in :numref:`fig-basic-fish-cd1` of a Swordfish is made up of three Base Sets, each
 containing two or three candidates, :raw-html:`<pre>B0 = <wuline>Xr2c357</wuline></pre>, <pre>B1 = Xr4c357``, and ``B2 = Xr8c357``.  These
