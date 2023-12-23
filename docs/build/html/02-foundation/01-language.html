@@ -1037,8 +1037,8 @@ can see the cells of the exposed pair.  If X or Y exists in the cells with a *, 
 <p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Y-Wing Pattern</span><a class="headerlink" href="#fig-y-wing-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>XZr8c2,XYr3c2,YZr3c6Z is true at either or both pincers (Zr3r6 and Xr8c2).  Therefore, any same value
-candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated.</p>
+<p><code class="docutils literal notranslate"><span class="pre">XYr3c2</span></code> locks <a class="reference internal" href="../07-glossary.html#term-A-Truth"><span class="xref std std-term">A Truth</span></a> <code class="docutils literal notranslate"><span class="pre">Z(r8c2,r3c6)</span></code> in both pincers, so any Ccell like <code class="docutils literal notranslate"><span class="pre">Zr8c6</span></code> that sees both pincers cannot
+be true and is eliminated.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 <div class="line"><br /></div>
@@ -1058,7 +1058,7 @@ candidate that sees both ends such as Zr8c6 cannot be true and can be eliminated
 </figure>
 <p>X is present in the intersection of row 3 and box 3, and not present in the
 rest of box 3.  Therefore, X must be True in the intersection resulting in the elimination of X
-along row 3 outside of where they <a class="reference internal" href="../07-glossary.html#term-Cross-over"><span class="xref std std-term">Cross-over</span></a>.</p>
+along row 3 outside the intersection.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 <div class="line"><br /></div>
@@ -1072,8 +1072,8 @@ along row 3 outside of where they <a class="reference internal" href="../07-glos
 <p><span class="caption-number">Figure 2.4:  </span><span class="caption-text">XYZ-Wing Pattern</span><a class="headerlink" href="#fig-xyz-wing-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>XYZr1c2, in the intersection of ensures that the Unrestricted Candidate, Y must be True
-in at least one of the cells forming the pattern.  Therefore, any other Candidate Y that
+<p><code class="docutils literal notranslate"><span class="pre">XYZr1c2</span></code> in the intersection of ensures that the Unrestricted Candidate, Y, must be True
+in at least one of the cells forming the pattern.  Therefore, any other candidate Y that
 can see all occurrences of Y in the pattern can be eliminated.  The only locations that
 can see all the pincers and pivot lies in the intersection of row 1 and box 1.</p>
 </section>
@@ -1098,10 +1098,15 @@ Triple cannot be True and can be eliminated.</p>
 <p><span class="caption-number">Figure 2.6:  </span><span class="caption-text">Swordfish</span><a class="headerlink" href="#fig-swordfish-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Base sets B0, B1, and B2 with at least 2 instances of X align such that the three cover sets each
-align with at least 2 base set Intersections.  (Candidate X is in the cell where base and cover
-cross).  Because of the base sets, X can only be true in the intersections of coversets, resulting
-the elimination of all other X ccells in the cover set.</p>
+<p>Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets sees at least two
+ccells in their three intersectons. This locks <code class="docutils literal notranslate"><span class="pre">The</span> <span class="pre">Truth</span></code> to the intersecting cells.  Therefore any instance of X
+along the covers outside the intersections cannot be True and is eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
 </section>
 <section id="finned-swordfish">
 <h4><span class="section-number">2.1.4.2.7. </span>Finned Swordfish<a class="headerlink" href="#finned-swordfish" title="Link to this heading">#</a></h4>
@@ -1139,7 +1144,7 @@ the elimination of all other X ccells in the cover set.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: b7dfdc4*, Thu, 21 Dec 2023, 22:56:54
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d437724*, Sat, 23 Dec 2023, 22:02:36
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

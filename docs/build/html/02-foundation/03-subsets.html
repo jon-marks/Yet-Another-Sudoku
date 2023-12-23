@@ -264,7 +264,7 @@ Cells in a single <a class="reference internal" href="../07-glossary.html#term-H
 <section id="straight-subsets">
 <span id="found-str-subs"></span><h2><span class="section-number">2.3.3. </span>Straight  Subsets<a class="headerlink" href="#straight-subsets" title="Link to this heading">#</a></h2>
 <p>In <a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html#hsp-subsets"><span class="std std-ref">Straight Exposed Subsets</span></a>, the ‘n’ candidates can each only be True in one of
-the ‘n’ cells in a Group they collectively only occupy.  That is the n Candidates are
+the ‘n’ cells in a <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a> they occupy.  That is the n Candidates are
 <a class="reference internal" href="../07-glossary.html#term-A-Truth"><span class="xref std std-term">A Truth</span></a> for those n cells. Therefore, they cannot be True outside those ‘n’ cells.  Any
 occurrence of those ‘n’ candidates outside the ‘n’ cells can be eliminated.</p>
 <p>In <a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html#hsp-subsets"><span class="std std-ref">Straight Hidden Subsets</span></a>, the ‘n’ candidates are confined to only ‘n’ cells in
@@ -279,11 +279,11 @@ Hidden - Pairs, Triples and Quad (Unbent) Subsets.</p>
 <span id="found-bent-exp-subs"></span><h2><span class="section-number">2.3.4. </span>Bent Exposed Subsets<a class="headerlink" href="#bent-exposed-subsets" title="Link to this heading">#</a></h2>
 <p>Bent Exposed Subsets are often called Wings, but Wings is rather overloaded term in Sudoku-Speak.</p>
 <p>These patterns comprise ‘n’ candidates in ‘n’ Cells with 2 to ‘n’ candidates in each cell spanning
-two intersecting Groups with at least one cell in the intersection.  Bent Exposed Subsets must only
+two intersecting <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>s with at least one cell in the intersection.  Bent Exposed Subsets must only
 have one <a class="reference internal" href="../07-glossary.html#term-Unrestricted-Candidate"><span class="xref std std-term">Unrestricted Candidate</span></a> to be viable, the remaining candidates being
 <a class="reference internal" href="../07-glossary.html#term-Restricted-Candidate"><span class="xref std std-term">Restricted Candidate</span></a>s.</p>
 <p>The smallest Bent Exposed Subset is the Bent Exposed Triple because at least three cells are
-needed to have one in One Group, one in the other Group and one lying in the Intersection.</p>
+needed to have bend spanning two houses.</p>
 <p>These patterns are a special case of <a class="reference internal" href="07-unlocked-sets.html#found-unlocked-sets"><span class="std std-ref">Unlocked Sets</span></a>, where two
 <a class="reference internal" href="../07-glossary.html#term-ULS"><span class="xref std std-term">ULS</span></a>s are linked in a chain with a single <a class="reference internal" href="../07-glossary.html#term-Unrestricted-Candidate"><span class="xref std std-term">Unrestricted Candidate</span></a>.  Bent Exposed
 Subsets have a relatively high probability of occurrence in puzzles and are relatively easier to
@@ -295,10 +295,10 @@ other.  An <a class="reference internal" href="../07-glossary.html#term-Unrestri
 each other.</p>
 <p>A Bent Exposed subset must have only one Unrestricted Candidate to be viable.  The other Candidates
 are all Restricted.  The Unrestricted Candidate must have an instances in <a class="reference internal" href="../07-glossary.html#term-Pattern-Cell"><span class="xref std std-term">Pattern Cell</span></a>s of
-both Groups outside the intersection and may have instances in Pattern Cells in the Intersection.
+both <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>s outside the intersection and may have instances in Pattern Cells in the Intersection.
 The Restricted Candidates are only present in pattern cells in that are fully in one <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>
 or the other.</p>
-<p>The Unrestricted Candidate can be True in at least one or both Groups, perhaps both, but can never
+<p>The Unrestricted Candidate can be True in at least one or both Houses, but can never
 be False in both.  Therefore, any Ccell outside the pattern that can see all Unrestricted Candidate
 instances in the Cell Pattern cannot be True, resulting in their elimination.</p>
 </section>
@@ -306,7 +306,7 @@ instances in the Cell Pattern cannot be True, resulting in their elimination.</p
 <span id="found-bet"></span><h3><span class="section-number">2.3.4.2. </span>Bent Exposed Triples<a class="headerlink" href="#bent-exposed-triples" title="Link to this heading">#</a></h3>
 <p>Bent Exposed triples are known by their other popular names, Y-Wings (or XY-Wing), and XYZ-Wings.
 These two patterns are the only variants of Bent Exposed Triples.  Bent Exposed Triples comprise
-3 Candidates in 3 Cells spanning two intersecting Groups with one Pattern Cell in the intersection.</p>
+3 Candidates in 3 Cells spanning two intersecting Houses with one Pattern Cell in the intersection.</p>
 <section id="y-wings">
 <span id="found-bet-y-wing"></span><h4><span class="section-number">2.3.4.2.1. </span>Y-Wings<a class="headerlink" href="#y-wings" title="Link to this heading">#</a></h4>
 <figure class="align-right" id="fig-y-wing-cd2">
@@ -347,7 +347,7 @@ Example 2: <code class="docutils literal notranslate"><span class="pre">(X=Y)r7c
 <p>An XYZ Wing pattern finds the Unrestricted Candidate value in all three cells of the Pattern, and
 the remaining two Restricted Candidates confined to either one or the other <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>.  The only Ccells
 outside the Pattern that <a class="reference internal" href="../07-glossary.html#term-See"><span class="xref std std-term">See</span></a> all Unrestricted Candidate instances must lie in the
-intersection of the two Groups.  Therefore, this pattern only found with Line / Box intersections.
+intersection of the two Houses.  Therefore, this pattern only found with Line / Box intersections.
 A line / Line intersection only has one Cell in the intersection, and it is part of the Pattern.</p>
 <p>The XYZ-Wing pattern in <a class="reference internal" href="#fig-xyz-wing-cd2"><span class="std std-numref">Figure 2.10: </span></a>, <code class="docutils literal notranslate"><span class="pre">XYr1c8,XYZr1c2,YZr3c3</span></code>
 lies in the intersection of Row 1 and Box 1.  Y is the Unrestricted Candidate present in all three
@@ -360,7 +360,7 @@ lie in the Intersection), cannot be True, resulting in their elimination.</p>
 <section id="bent-exposed-quads-quints-and-sexts">
 <span id="found-subs-beq"></span><h3><span class="section-number">2.3.4.3. </span>Bent Exposed Quads, Quints and Sexts<a class="headerlink" href="#bent-exposed-quads-quints-and-sexts" title="Link to this heading">#</a></h3>
 <p>Also known as WXYZ Wings, Bent Exposed Quad (BEQ) patterns comprise a set of 4 Candidates where 2 or
-more are present in 4 Cells spanning two Intersecting Groups, and at least one of the Cells lies in
+more are present in 4 Cells spanning two Intersecting :term:House`s, and at least one of the Cells lies in
 this intersection.  Like all Bent Exposed Subsets only one Candidate is an Unrestricted Candidate
 with the remaining Candidates, Restricted.  The Unrestricted Candidate is True in one or both
 <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>s, but cannot be False in both.  Therefore, any Ccell outside the Pattern that can
@@ -671,7 +671,7 @@ the column outside the box containing the intersection in 5 of the six cells.</p
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: b7dfdc4*, Thu, 21 Dec 2023, 22:56:54
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d437724*, Sat, 23 Dec 2023, 22:02:36
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

@@ -46,7 +46,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       Abbreviation of :term:`Bent Exposed Quad`
 
    **Bent Exposed Quad**
-      A pattern comprising four Candidates in four Cells spanning two Intersecting :term:`Group`\s,
+      A pattern comprising four Candidates in four Cells spanning two Intersecting :term:`House`\s,
       where only one :term:`Unrestricted Candidate` exists.
 
    **Bi-value Cell**
@@ -95,7 +95,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Conditional Logic**
       The process of asserting a Premise and following a sequence of inferences to a
-      possible logical outcome.  See :ref:`cc_premises_and_inferences`
+      possible logical outcome.  See :ref:`cc_premises_and_inferences`.
 
    **Conjugate Pair**
       The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
@@ -124,14 +124,13 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :term:`House`.
 
    **House**
-      A specific nine cell :term:`Row`, :term:`Column` or :term:`Box` in a Sudoku :term:`Grid`.
-      Also known as a Group, Sector, or Unit.
+      A specific 9 cell of a :term:`Row`, :term:Ccolumm` or :term:`Box`.  Also know as a Group, Sector or Unit.
 
    **Interior Node**
       In an AI-Chain of Nodes, the Interior Nodes lie between the :term:`End Node`\s.
 
    **Intersection**
-     The cells common to the meeting of two or more :term:`group`s.
+     The cells common to the meeting of two or more :term:`House`\s.
 
    **Line**
       Either a :term:`Row` or a :term:`Column`.
@@ -231,7 +230,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Set**
       A grouping of :term:`Ccell` :term:`Element`\s in a :term:`pattern` that form :term:`A Truth`.
-      That is one of the Elements in that Set is :term:`The Truth`.
+      That is, one of the Elements in that Set is :term:`The Truth`.
 
    **SLC**
       Strongly Link Chain.  A Chain where all the links between Nodes are strong. An SLC is a special
@@ -264,10 +263,10 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :term:`Set`.
 
    **ULS**
-      Ulocked Set, see :ref:`found_unlocked_sets`
+      Ulocked Set, see :ref:`found_unlocked_sets`.
 
    **Union**
-      All the Cells of two intersecting groups.
+      All the Cells of two intersecting :term:`House`\s.
 
    **Unit**
       See :term:`House`.

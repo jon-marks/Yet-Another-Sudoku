@@ -5,7 +5,7 @@ venv/*
 */__pycache__/*
 *.log
 .~*\#
-docs/build/doctrees/*
+*.doctree
 test/test-data/archive/*
 test/test-data/*
 !test/test-data/pattern-reg-test-1.0.txt

@@ -42,7 +42,7 @@ Straight  Subsets
 =================
 
 In :ref:`Straight Exposed Subsets <hsp_subsets>`, the 'n' candidates can each only be True in one of
-the 'n' cells in a Group they collectively only occupy.  That is the n Candidates are
+the 'n' cells in a :term:`House` they occupy.  That is the n Candidates are
 :term:`A Truth` for those n cells. Therefore, they cannot be True outside those 'n' cells.  Any
 occurrence of those 'n' candidates outside the 'n' cells can be eliminated.
 
@@ -64,12 +64,12 @@ Bent Exposed Subsets
 Bent Exposed Subsets are often called Wings, but Wings is rather overloaded term in Sudoku-Speak.
 
 These patterns comprise 'n' candidates in 'n' Cells with 2 to 'n' candidates in each cell spanning
-two intersecting Groups with at least one cell in the intersection.  Bent Exposed Subsets must only
+two intersecting :term:`House`\s with at least one cell in the intersection.  Bent Exposed Subsets must only
 have one :term:`Unrestricted Candidate` to be viable, the remaining candidates being
 :term:`Restricted Candidate`\s.
 
 The smallest Bent Exposed Subset is the Bent Exposed Triple because at least three cells are
-needed to have one in One Group, one in the other Group and one lying in the Intersection.
+needed to have bend spanning two houses.
 
 These patterns are a special case of :ref:`Unlocked Sets <found_unlocked_sets>`, where two
 :term:`ULS`\s are linked in a chain with a single :term:`Unrestricted Candidate`.  Bent Exposed
@@ -87,11 +87,11 @@ each other.
 
 A Bent Exposed subset must have only one Unrestricted Candidate to be viable.  The other Candidates
 are all Restricted.  The Unrestricted Candidate must have an instances in :term:`Pattern Cell`\s of
-both Groups outside the intersection and may have instances in Pattern Cells in the Intersection.
+both :term:`House`\s outside the intersection and may have instances in Pattern Cells in the Intersection.
 The Restricted Candidates are only present in pattern cells in that are fully in one :term:`House`
 or the other.
 
-The Unrestricted Candidate can be True in at least one or both Groups, perhaps both, but can never
+The Unrestricted Candidate can be True in at least one or both Houses, but can never
 be False in both.  Therefore, any Ccell outside the pattern that can see all Unrestricted Candidate
 instances in the Cell Pattern cannot be True, resulting in their elimination.
 
@@ -102,7 +102,7 @@ Bent Exposed Triples
 
 Bent Exposed triples are known by their other popular names, Y-Wings (or XY-Wing), and XYZ-Wings.
 These two patterns are the only variants of Bent Exposed Triples.  Bent Exposed Triples comprise
-3 Candidates in 3 Cells spanning two intersecting Groups with one Pattern Cell in the intersection.
+3 Candidates in 3 Cells spanning two intersecting Houses with one Pattern Cell in the intersection.
 
 .. _found_bet_y_wing:
 
@@ -158,7 +158,7 @@ XYZ-Wings
 An XYZ Wing pattern finds the Unrestricted Candidate value in all three cells of the Pattern, and
 the remaining two Restricted Candidates confined to either one or the other :term:`House`.  The only Ccells
 outside the Pattern that :term:`See` all Unrestricted Candidate instances must lie in the
-intersection of the two Groups.  Therefore, this pattern only found with Line / Box intersections.
+intersection of the two Houses.  Therefore, this pattern only found with Line / Box intersections.
 A line / Line intersection only has one Cell in the intersection, and it is part of the Pattern.
 
 The XYZ-Wing pattern in :numref:`fig-xyz-wing-cd2`, ``XYr1c8,XYZr1c2,YZr3c3``
@@ -175,7 +175,7 @@ Bent Exposed Quads, Quints and Sexts
 ------------------------------------
 
 Also known as WXYZ Wings, Bent Exposed Quad (BEQ) patterns comprise a set of 4 Candidates where 2 or
-more are present in 4 Cells spanning two Intersecting Groups, and at least one of the Cells lies in
+more are present in 4 Cells spanning two Intersecting :term:House`s, and at least one of the Cells lies in
 this intersection.  Like all Bent Exposed Subsets only one Candidate is an Unrestricted Candidate
 with the remaining Candidates, Restricted.  The Unrestricted Candidate is True in one or both
 :term:`House`\s, but cannot be False in both.  Therefore, any Ccell outside the Pattern that can

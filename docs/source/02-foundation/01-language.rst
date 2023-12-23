@@ -696,7 +696,8 @@ Y-Wing
    :figwidth: image
 
    Y-Wing Pattern
-``XYr3c2`` locks the truth ``Z(r8c2,r3c6)`` in both pincers, so any Ccell like ``Zr8c6`` that sees both pincers cannot
+
+``XYr3c2`` locks :term:`A Truth` ``Z(r8c2,r3c6)`` in both pincers, so any Ccell like ``Zr8c6`` that sees both pincers cannot
 be true and is eliminated.
 
 |
