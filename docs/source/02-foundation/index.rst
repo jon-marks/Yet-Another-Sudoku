@@ -28,10 +28,11 @@ over using less common algebraic symbols and esoteric formulae.
 
    01-language
    02-core-concepts
-   03-subsets
-   04-base-cover-sets
-   05-fish
-   06-chains-loops-nets
-   07-unlocked-sets
-   08-uniqueness
-   09-searching
+   03-base-cover-sets
+   04-singles
+   05-subsets
+   06-fish
+   07-chains-loops-nets
+   08-unlocked-sets
+   09-uniqueness
+   10-searching

@@ -38,14 +38,15 @@ Sudoku is a puzzle laid out on a 9x9 grid of cells, where each cell is either em
 number between 1 and 9.  The puzzle is solved by filling the empty cells with digits 1 to 9 such
 that each digit only occurs once in each row, column and 3x3 box.
 
-.. _sudoku-rules:
+.. _sudoku-rule:
 
-Sudoku Rules
-============
+Sudoku Rule
+===========
 
-   1. A completed Sudoku Puzzle is one where each cell on a 9x9 grid contains a digit between 1 and
-      9 such that each digit only occurs once in each row, column and 3x3 box, and
-   2. The puzzle has a unique solution.
+.. topic:: Sudoku Rule
+
+   A Sudoku Puzzle has a unique solution where each cell in the 9 x 9 grid contains a value between
+   1 and 9 that only occcurs once in each of the 9 rows, 9 columns, and 9 - 3 x 3 boxes.
 
 Sudoku Facts
 ============
@@ -58,9 +59,10 @@ Sudoku is a `finite constraint satisfaction problem (fCSP)
 <https://en.wikipedia.org/wiki/Constraint_satisfaction_problem>`_.  A Sudoku grid comprises 9 rows
 by 9 columns making 81 cells, and each cell can assume one of 9 values.  Therefore, the out of a
 Domain set of 729 (9 rows x 9 columns x 9 Values) elements, any Solution set comprises 81 elements
-(9 rows x 9 columns x 1 value) that are constrained by Sudoku Rules and further `constraint
+(9 rows x 9 columns x 1 value) that are constrained by the Sudoku Rule and its further `constraint
 propagation
-<https://en.wikipedia.org/wiki/Local_consistency#Constraint_propagation_for_arc_and_path_consistency>`_.
+<https://en.wikipedia.org/wiki/Local_consistency#Constraint_propagation_for_arc_and_path_consistency>`_
+(Rule application).
 
 `Fraser Jarvis, et al <http://www.afjarvis.staff.shef.ac.uk/sudoku/>`_ has determined
 6670903752021072936960 (6.6709e+21) solved puzzles exist, of which 5472730538 (5.4727e+9) are
@@ -72,15 +74,15 @@ the average amount of minimal puzzles that can be from any solved puzzle is 4.66
 approximately 6.6709e+21 x 4.6655e+15 = 3,1123e+37 possible minimal puzzles exist, of which
 2.5533e+25 are mathematically unique.
 
-If it is possible to solve a puzzle every second, only 31 557 600 (3,1557e+7) puzzles will be solved
-in a year.  Solving a puzzle every second since the beginning of time (estimated 14 billion years
-ago), only 4,4180e+15 puzzles will be solved.  If everyone on earth (approximately 8 billion people)
-is solving unique Sudoku puzzles at the rate of one a second since the beginning of time, only
-3.5345e+27 puzzles will be solved.  This number is an infinitesimally small one 8.8 billionth
-(8.8055e-9) of all possible puzzles.
+To appreciate how large these numbers are, if it is possible to solve a puzzle every second, only 
+31 557 600 (3,1557e+7) puzzles will be solved in a year.  Solving a puzzle every second since the
+beginning of time (estimated 14 billion years ago), only 4,4180e+15 puzzles will be solved.  
+If everyone on earth (approximately 8 billion people) is solving unique Sudoku puzzles at the rate 
+of one a second since the beginning of time, only 3.5345e+27 puzzles will be solved.  This number
+is an infinitesimally small one 8.8 billionth (8.8055e-9) of all possible puzzles.
 
-To date no unique puzzles have been found with less than 17 givens, and only 49158 puzzles have
-been found with 17 givens. A method to prove the theoretical minimum givens for any unique puzzle is
+To date no unique puzzles have been found with less than 17 givens, and only 49158 - 17 givens 
+puzzles have been found. A method to prove the theoretical minimum givens for any unique puzzle is
 yet to be found.
 
 `Wikipedia <https://en.wikipedia.org/wiki/Mathematics_of_Sudoku>`_ claims that the largest minimal

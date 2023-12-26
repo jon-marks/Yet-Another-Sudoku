@@ -8,73 +8,6 @@
 Core Concepts
 *************
 
-.. _found_cc_ccells:
-
-Ccells
-======
-
-A :term:`Ccell` refers to any candidate in any cell as specified by its candidate value, row and column.
-That is, a Ccell is the unique reference to a specific candidate in a cell.
-
-Ccells are three-dimensional tuples of value, row and column, each dimension ranging
-between 1 and 9.  In Sudoku, 729 unique (9 value x 9 row x 9 column) possible Ccells exist.  A
-solved Sudoku puzzle comprises 81 unique Ccells of the 729 unique possibilities.  That is each cell
-in the 9 row by 9 column has only one value, all values in all cells obeying
-:ref:`Sudoku Rules <sudoku-rules>`.
-
-The term Ccell is not to be confused with a:
-
-*  :term:`Node`:  A further qualification of a ccell in a :term:`pattern` such as a net or chain.
-   For example:  Ccells linked together in a chain form the Nodes between the links of the chain.
-*  :term:`Candidate`:  A lesser reference to only the possible values in cells that obey Sudoku
-   Rules.
-*  :term:`Potential Elimination`:  A Synonym for Candidate, in the context of applying
-   :term:`Conditional Logic` to reduce the set of Candidates in a Cell.
-
-.. _found_cc_truth:
-
-'A Truth' and 'The Truth'
-=========================
-
-'A Truth' and 'The Truth' describe the relationships of Ccells in a House or Cell.  For each
-unsolved value in a House or Cell, 'A Truth' is a set of possible values within that :term:`House`
-where at least one Ccell in that House will ultimately be True.
-
-A Truth is unconditionally True for a puzzle.  A Truth is that set of Ccells in which one (yet to
-be determined) element will be 'The Truth'.  'The Truth' is that last remaining Ccell in a Cell or
-that only remaining uniquely valued Ccell in a House – The Solved Value.
-
-'The Truth' is an individual element of 'A Truth'.
-
-In a House, 'A Truth' is any set of same value Ccells in that house.  In a Cell, 'A Truth' is the
-set of Ccells in that cell.  In a Suduko Grid, 324 Truths exist.  Nine Truths for each row,
-column, box and cell in the grid.
-
-.. figure:: images/truths-eg1.png
-   :name: fig-truths-eg1
-   :scale: 65%
-   :alt: 'A Truth' and 'The Truth' Example
-   :align: right
-   :figwidth: 359px
-
-   'A Truth' and 'The Truth' Example
-
-   :raw-html:`<mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong>`
-
-For example:
-
-*  In Row 4, an 'A Truths' is ``3r4c3468``. That is all the cells in row 4 containing candidate 3.
-   'The Truth'  will be a 3 in one of those yet to be determined 4 cells.
-*  In Column 4, an 'A Truths' is ``5r1679c4``.  That is all the cells in column 4 containing 5.  'The
-   Truth' will be a 5 in one of those yet to be determined 4 cells.
-*  In Box 9, an 'A Truth' is ``8r8c7,r9c79``.  That is all the cells in box 9 containing 8.  'The
-   Truth' will be the 8 in one of those yet to be determined 3 cells.
-*  In Cell ``r6c1``, ``1347r6c1`` is 'A Truth'.  'The Truth' will be one of those Ccells in that cell.
-
-|
-|
-|
-
 .. _found_cc_premises_and_inferences:
 
 Premises and Inferences
@@ -92,7 +25,7 @@ Ccell ``3r7c2`` True.
 
 An inference implies a relationship (link) between two Ccells, characterised by the other Ccell's
 response to the assertion of a premise on the first Ccell.  For example, If
-``3r7c2`` is True, then according to :ref:`Sudoku Rules <sudoku-rules>`,
+``3r7c2`` is True, then according to the :ref:`Sudoku Rule <sudoku-rule>`,
 ``3r7c5`` is False.
 
 The inference (link) between two Ccells is characterised by the outcome of asserting each Ccell
@@ -254,10 +187,48 @@ Weak Link to identify patterns.
 
 Weak links do not possess the link attributes of Strong or Robust Links.  That is if one end is
 False, it is impossible to determine the state of the other end. Therefore, it is not possible to
-substitue a Weak Link for a Strong or Robust Link.
+substitute a Weak Link for a Strong or Robust Link.
 
 When a Strong or Robust link is substituted for a weak link, it is masquerading as a Weak link.
 The ``~`` symbol is used to indicate a masqueraded weak link.
+
+.. _found_cc_truth:
+
+Truths
+======
+
+A Truth is a collection of :term:`Ccell`\s in a :term:`House` or :term:`Cell` where one of those 
+Ccells is the solved value for that cell.  Sudoku is played by applying :ref:`Preference / Inference 
+Logic <found_cc_premises_and_inferences>` to whittle  away the Ccell in Truths until each Cell's
+value has been deduced.
+
+.. figure:: images/truths-eg1.png
+   :name: fig-truths-eg1
+   :scale: 65%
+   :alt: 'A Truth' and 'The Truth' Example
+   :align: right
+   :figwidth: 359px
+
+   'A Truth' and 'The Truth' Example
+
+   :raw-html:`<mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong>`
+
+Truth Examples:
+
+*  In Row 4, ``3r4c3468`` is all cells containing candidate 3.
+*  In Column 4, ``5r1679c4`` is all the cells containing 5.
+*  In Box 9,  ``8b9p479`` is all the cells in box 9 containing 8.
+*  In Cell ``r6c1``, ``1347r6c1`` is all the possible values in that cell.
+
+|
+|
+|
+|
+|
+|
+|
+|
+
 
 .. _found_cc_spatial_reps:
 

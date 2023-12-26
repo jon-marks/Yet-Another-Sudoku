@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.9. Searching" href="09-searching.html" /><link rel="prev" title="2.7. Unlocked Sets" href="07-unlocked-sets.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.5. Subsets" href="05-subsets.html" /><link rel="prev" title="2.3. Base, Link and Cover Sets" href="03-base-cover-sets.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Yet Another Sudoku | Foundation | Uniqueness</title>
+        <title>Yet Another Sudoku | Foundation | Singles</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/table_styling.css?v=a1a2a898" />
@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -164,13 +164,14 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01-language.html">2.1. Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-core-concepts.html">2.2. Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-subsets.html">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="05-fish.html">2.5. Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="06-chains-loops-nets.html">2.6. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="07-unlocked-sets.html">2.7. Unlocked Sets</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.8. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-searching.html">2.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-base-cover-sets.html">2.3. Base, Link and Cover Sets</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.4. Singles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-subsets.html">2.5. Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-fish.html">2.6. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-chains-loops-nets.html">2.7. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-unlocked-sets.html">2.8. Unlocked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09-uniqueness.html">2.9. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10-searching.html">2.10. Searching</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 3. Human Solvable Patterns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -230,16 +231,29 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section id="uniqueness">
-<h1><span class="section-number">2.8. </span>Uniqueness<a class="headerlink" href="#uniqueness" title="Link to this heading">#</a></h1>
-<p>Uniqueness stub.</p>
-<p><a class="reference external" href="http://forum.enjoysudoku.com/unique-rectangles-the-essentials-t4204.html">http://forum.enjoysudoku.com/unique-rectangles-the-essentials-t4204.html</a></p>
+          <section id="singles">
+<span id="found-singles"></span><h1><span class="section-number">2.4. </span>Singles<a class="headerlink" href="#singles" title="Link to this heading">#</a></h1>
+<section id="exposed-singles">
+<span id="found-sing-exposed"></span><h2><span class="section-number">2.4.1. </span>Exposed Singles<a class="headerlink" href="#exposed-singles" title="Link to this heading">#</a></h2>
+</section>
+<section id="hidden-singles">
+<span id="found-sing-hidden"></span><h2><span class="section-number">2.4.2. </span>Hidden Singles<a class="headerlink" href="#hidden-singles" title="Link to this heading">#</a></h2>
+</section>
+<section id="locked-singles">
+<span id="found-sing-locked"></span><h2><span class="section-number">2.4.3. </span>Locked Singles<a class="headerlink" href="#locked-singles" title="Link to this heading">#</a></h2>
+<section id="pointing-locked-singles">
+<span id="found-sing-point-locked"></span><h3><span class="section-number">2.4.3.1. </span>Pointing Locked Singles<a class="headerlink" href="#pointing-locked-singles" title="Link to this heading">#</a></h3>
+</section>
+<section id="claiming-locked-singles">
+<span id="found-sign-claim-locked"></span><h3><span class="section-number">2.4.3.2. </span>Claiming Locked Singles<a class="headerlink" href="#claiming-locked-singles" title="Link to this heading">#</a></h3>
+</section>
+</section>
 </section>
 
         </article>
@@ -247,23 +261,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="09-searching.html">
+          <a class="next-page" href="05-subsets.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">2.9. </span>Searching</div>
+                <div class="title"><span class="section-number">2.5. </span>Subsets</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="07-unlocked-sets.html">
+          <a class="prev-page" href="03-base-cover-sets.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">2.7. </span>Unlocked Sets</div>
+                <div class="title"><span class="section-number">2.3. </span>Base, Link and Cover Sets</div>
                 
               </div>
             </a>
@@ -271,7 +285,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: f34eef4, Sat, 23 Dec 2023, 23:21:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: f74e35e*, Sun, 24 Dec 2023, 00:46:36
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -285,8 +299,33 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2.4. Singles</a><ul>
+<li><a class="reference internal" href="#exposed-singles">2.4.1. Exposed Singles</a></li>
+<li><a class="reference internal" href="#hidden-singles">2.4.2. Hidden Singles</a></li>
+<li><a class="reference internal" href="#locked-singles">2.4.3. Locked Singles</a><ul>
+<li><a class="reference internal" href="#pointing-locked-singles">2.4.3.1. Pointing Locked Singles</a></li>
+<li><a class="reference internal" href="#claiming-locked-singles">2.4.3.2. Claiming Locked Singles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

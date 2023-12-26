@@ -164,13 +164,14 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="02-foundation/index.html">2. Foundation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/01-language.html">2.1. Language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-foundation/02-core-concepts.html">2.2. Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/03-subsets.html">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/05-fish.html">2.5. Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/06-chains-loops-nets.html">2.6. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/07-unlocked-sets.html">2.7. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/08-uniqueness.html">2.8. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-foundation/09-searching.html">2.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/03-base-cover-sets.html">2.3. Base, Link and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/04-singles.html">2.4. Singles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/05-subsets.html">2.5. Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/06-fish.html">2.6. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/07-chains-loops-nets.html">2.7. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/08-unlocked-sets.html">2.8. Unlocked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/09-uniqueness.html">2.9. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-foundation/10-searching.html">2.10. Searching</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 3. Human Solvable Patterns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -272,15 +273,13 @@ publicity gained from this exposure in the Times secured the puzzle’s worldwid
 number between 1 and 9.  The puzzle is solved by filling the empty cells with digits 1 to 9 such
 that each digit only occurs once in each row, column and 3x3 box.</p>
 </section>
-<section id="sudoku-rules">
-<span id="id1"></span><h2><span class="section-number">1.3. </span>Sudoku Rules<a class="headerlink" href="#sudoku-rules" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>A completed Sudoku Puzzle is one where each cell on a 9x9 grid contains a digit between 1 and
-9 such that each digit only occurs once in each row, column and 3x3 box, and</p></li>
-<li><p>The puzzle has a unique solution.</p></li>
-</ol>
-</div></blockquote>
+<section id="sudoku-rule">
+<span id="id1"></span><h2><span class="section-number">1.3. </span>Sudoku Rule<a class="headerlink" href="#sudoku-rule" title="Link to this heading">#</a></h2>
+<aside class="topic">
+<p class="topic-title">Sudoku Rule</p>
+<p>A Sudoku Puzzle has a unique solution where each cell in the 9 x 9 grid contains a value between
+1 and 9 that only occcurs once in each of the 9 rows, 9 columns, and 9 - 3 x 3 boxes.</p>
+</aside>
 </section>
 <section id="sudoku-facts">
 <h2><span class="section-number">1.4. </span>Sudoku Facts<a class="headerlink" href="#sudoku-facts" title="Link to this heading">#</a></h2>
@@ -294,8 +293,9 @@ that each digit only occurs once in each row, column and 3x3 box.</p>
 <p>Sudoku is a <a class="reference external" href="https://en.wikipedia.org/wiki/Constraint_satisfaction_problem">finite constraint satisfaction problem (fCSP)</a>.  A Sudoku grid comprises 9 rows
 by 9 columns making 81 cells, and each cell can assume one of 9 values.  Therefore, the out of a
 Domain set of 729 (9 rows x 9 columns x 9 Values) elements, any Solution set comprises 81 elements
-(9 rows x 9 columns x 1 value) that are constrained by Sudoku Rules and further <a class="reference external" href="https://en.wikipedia.org/wiki/Local_consistency#Constraint_propagation_for_arc_and_path_consistency">constraint
-propagation</a>.</p>
+(9 rows x 9 columns x 1 value) that are constrained by the Sudoku Rule and its further <a class="reference external" href="https://en.wikipedia.org/wiki/Local_consistency#Constraint_propagation_for_arc_and_path_consistency">constraint
+propagation</a>
+(Rule application).</p>
 <p><a class="reference external" href="http://www.afjarvis.staff.shef.ac.uk/sudoku/">Fraser Jarvis, et al</a> has determined
 6670903752021072936960 (6.6709e+21) solved puzzles exist, of which 5472730538 (5.4727e+9) are
 mathematical unique.  Mathematically unique puzzles cannot be created by transforming another
@@ -304,14 +304,14 @@ puzzle.  Also termed non-isomorphic; they are not canonical forms of each other.
 the average amount of minimal puzzles that can be from any solved puzzle is 4.6655e+15.  Therefore,
 approximately 6.6709e+21 x 4.6655e+15 = 3,1123e+37 possible minimal puzzles exist, of which
 2.5533e+25 are mathematically unique.</p>
-<p>If it is possible to solve a puzzle every second, only 31 557 600 (3,1557e+7) puzzles will be solved
-in a year.  Solving a puzzle every second since the beginning of time (estimated 14 billion years
-ago), only 4,4180e+15 puzzles will be solved.  If everyone on earth (approximately 8 billion people)
-is solving unique Sudoku puzzles at the rate of one a second since the beginning of time, only
-3.5345e+27 puzzles will be solved.  This number is an infinitesimally small one 8.8 billionth
-(8.8055e-9) of all possible puzzles.</p>
-<p>To date no unique puzzles have been found with less than 17 givens, and only 49158 puzzles have
-been found with 17 givens. A method to prove the theoretical minimum givens for any unique puzzle is
+<p>To appreciate how large these numbers are, if it is possible to solve a puzzle every second, only
+31 557 600 (3,1557e+7) puzzles will be solved in a year.  Solving a puzzle every second since the
+beginning of time (estimated 14 billion years ago), only 4,4180e+15 puzzles will be solved.
+If everyone on earth (approximately 8 billion people) is solving unique Sudoku puzzles at the rate
+of one a second since the beginning of time, only 3.5345e+27 puzzles will be solved.  This number
+is an infinitesimally small one 8.8 billionth (8.8055e-9) of all possible puzzles.</p>
+<p>To date no unique puzzles have been found with less than 17 givens, and only 49158 - 17 givens
+puzzles have been found. A method to prove the theoretical minimum givens for any unique puzzle is
 yet to be found.</p>
 <p><a class="reference external" href="https://en.wikipedia.org/wiki/Mathematics_of_Sudoku">Wikipedia</a> claims that the largest minimal
 puzzle found so far has 40 clues.</p>
@@ -378,7 +378,7 @@ in advance.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: f34eef4, Sat, 23 Dec 2023, 23:21:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: f74e35e*, Sun, 24 Dec 2023, 00:46:36
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -407,7 +407,7 @@ in advance.</p>
 <li><a class="reference internal" href="#">1. Introduction</a><ul>
 <li><a class="reference internal" href="#history">1.1. History</a></li>
 <li><a class="reference internal" href="#what-is-sudoku">1.2. What is Sudoku</a></li>
-<li><a class="reference internal" href="#sudoku-rules">1.3. Sudoku Rules</a></li>
+<li><a class="reference internal" href="#sudoku-rule">1.3. Sudoku Rule</a></li>
 <li><a class="reference internal" href="#sudoku-facts">1.4. Sudoku Facts</a></li>
 <li><a class="reference internal" href="#what-s-ahead">1.5. What’s Ahead?</a></li>
 <li><a class="reference internal" href="#intended-audience">1.6. Intended Audience</a></li>

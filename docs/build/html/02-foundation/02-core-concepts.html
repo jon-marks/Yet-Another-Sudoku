@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.3. Subsets" href="03-subsets.html" /><link rel="prev" title="2.1. Language" href="01-language.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.3. Base, Link and Cover Sets" href="03-base-cover-sets.html" /><link rel="prev" title="2.1. Language" href="01-language.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>Yet Another Sudoku | Foundation | Concepts</title>
@@ -164,13 +164,14 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01-language.html">2.1. Language</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.2. Core Concepts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03-subsets.html">2.3. Subsets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-base-cover-sets.html">2.4. Base Sets and Cover Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="05-fish.html">2.5. Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="06-chains-loops-nets.html">2.6. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="07-unlocked-sets.html">2.7. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="08-uniqueness.html">2.8. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-searching.html">2.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-base-cover-sets.html">2.3. Base, Link and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-singles.html">2.4. Singles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-subsets.html">2.5. Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-fish.html">2.6. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-chains-loops-nets.html">2.7. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-unlocked-sets.html">2.8. Unlocked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09-uniqueness.html">2.9. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10-searching.html">2.10. Searching</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 3. Human Solvable Patterns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -238,64 +239,8 @@
         <article role="main">
           <section id="core-concepts">
 <span id="found-core-concepts"></span><h1><span class="section-number">2.2. </span>Core Concepts<a class="headerlink" href="#core-concepts" title="Link to this heading">#</a></h1>
-<section id="ccells">
-<span id="found-cc-ccells"></span><h2><span class="section-number">2.2.1. </span>Ccells<a class="headerlink" href="#ccells" title="Link to this heading">#</a></h2>
-<p>A <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> refers to any candidate in any cell as specified by its candidate value, row and column.
-That is, a Ccell is the unique reference to a specific candidate in a cell.</p>
-<p>Ccells are three-dimensional tuples of value, row and column, each dimension ranging
-between 1 and 9.  In Sudoku, 729 unique (9 value x 9 row x 9 column) possible Ccells exist.  A
-solved Sudoku puzzle comprises 81 unique Ccells of the 729 unique possibilities.  That is each cell
-in the 9 row by 9 column has only one value, all values in all cells obeying
-<a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>.</p>
-<p>The term Ccell is not to be confused with a:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../07-glossary.html#term-Node"><span class="xref std std-term">Node</span></a>:  A further qualification of a ccell in a <a class="reference internal" href="../07-glossary.html#term-Pattern"><span class="xref std std-term">pattern</span></a> such as a net or chain.
-For example:  Ccells linked together in a chain form the Nodes between the links of the chain.</p></li>
-<li><p><a class="reference internal" href="../07-glossary.html#term-Candidate"><span class="xref std std-term">Candidate</span></a>:  A lesser reference to only the possible values in cells that obey Sudoku
-Rules.</p></li>
-<li><p><a class="reference internal" href="../07-glossary.html#term-Potential-Elimination"><span class="xref std std-term">Potential Elimination</span></a>:  A Synonym for Candidate, in the context of applying
-<a class="reference internal" href="../07-glossary.html#term-Conditional-Logic"><span class="xref std std-term">Conditional Logic</span></a> to reduce the set of Candidates in a Cell.</p></li>
-</ul>
-</section>
-<section id="a-truth-and-the-truth">
-<span id="found-cc-truth"></span><h2><span class="section-number">2.2.2. </span>‘A Truth’ and ‘The Truth’<a class="headerlink" href="#a-truth-and-the-truth" title="Link to this heading">#</a></h2>
-<p>‘A Truth’ and ‘The Truth’ describe the relationships of Ccells in a House or Cell.  For each
-unsolved value in a House or Cell, ‘A Truth’ is a set of possible values within that <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>
-where at least one Ccell in that House will ultimately be True.</p>
-<p>A Truth is unconditionally True for a puzzle.  A Truth is that set of Ccells in which one (yet to
-be determined) element will be ‘The Truth’.  ‘The Truth’ is that last remaining Ccell in a Cell or
-that only remaining uniquely valued Ccell in a House – The Solved Value.</p>
-<p>‘The Truth’ is an individual element of ‘A Truth’.</p>
-<p>In a House, ‘A Truth’ is any set of same value Ccells in that house.  In a Cell, ‘A Truth’ is the
-set of Ccells in that cell.  In a Suduko Grid, 324 Truths exist.  Nine Truths for each row,
-column, box and cell in the grid.</p>
-<figure class="align-right" id="fig-truths-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="../_images/truths-eg1.png"><img alt="'A Truth' and 'The Truth' Example" src="../_images/truths-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
-<figcaption>
-<p><span class="caption-number">Figure 2.7:  </span><span class="caption-text">‘A Truth’ and ‘The Truth’ Example</span><a class="headerlink" href="#fig-truths-eg1" title="Link to this image">#</a></p>
-<div class="legend">
-<p><span class="raw-html"><mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong></span></p>
-</div>
-</figcaption>
-</figure>
-<p>For example:</p>
-<ul class="simple">
-<li><p>In Row 4, an ‘A Truths’ is <code class="docutils literal notranslate"><span class="pre">3r4c3468</span></code>. That is all the cells in row 4 containing candidate 3.
-‘The Truth’  will be a 3 in one of those yet to be determined 4 cells.</p></li>
-<li><p>In Column 4, an ‘A Truths’ is <code class="docutils literal notranslate"><span class="pre">5r1679c4</span></code>.  That is all the cells in column 4 containing 5.  ‘The
-Truth’ will be a 5 in one of those yet to be determined 4 cells.</p></li>
-<li><p>In Box 9, an ‘A Truth’ is <code class="docutils literal notranslate"><span class="pre">8r8c7,r9c79</span></code>.  That is all the cells in box 9 containing 8.  ‘The
-Truth’ will be the 8 in one of those yet to be determined 3 cells.</p></li>
-<li><p>In Cell <code class="docutils literal notranslate"><span class="pre">r6c1</span></code>, <code class="docutils literal notranslate"><span class="pre">1347r6c1</span></code> is ‘A Truth’.  ‘The Truth’ will be one of those Ccells in that cell.</p></li>
-</ul>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</section>
 <section id="premises-and-inferences">
-<span id="found-cc-premises-and-inferences"></span><h2><span class="section-number">2.2.3. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Link to this heading">#</a></h2>
+<span id="found-cc-premises-and-inferences"></span><h2><span class="section-number">2.2.1. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Link to this heading">#</a></h2>
 <p>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Inference.html">http://sudopedia.enjoysudoku.com/Inference.html</a></p>
 <p>Solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
 inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
@@ -305,7 +250,7 @@ cell value and testing it.</p>
 Ccell <code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> True.</p>
 <p>An inference implies a relationship (link) between two Ccells, characterised by the other Ccell’s
 response to the assertion of a premise on the first Ccell.  For example, If
-<code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> is True, then according to <a class="reference internal" href="../01-introduction.html#sudoku-rules"><span class="std std-ref">Sudoku Rules</span></a>,
+<code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> is True, then according to the <a class="reference internal" href="../01-introduction.html#sudoku-rule"><span class="std std-ref">Sudoku Rule</span></a>,
 <code class="docutils literal notranslate"><span class="pre">3r7c5</span></code> is False.</p>
 <p>The inference (link) between two Ccells is characterised by the outcome of asserting each Ccell
 True and False.  The important link (inference) relationships in Sudoku are:</p>
@@ -315,7 +260,7 @@ True and False.  The important link (inference) relationships in Sudoku are:</p>
 <li><p>Robust Links</p></li>
 </ul>
 <section id="weak-links">
-<span id="found-cc-weak-links"></span><h3><span class="section-number">2.2.3.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Link to this heading">#</a></h3>
+<span id="found-cc-weak-links"></span><h3><span class="section-number">2.2.1.1. </span>Weak Links<a class="headerlink" href="#weak-links" title="Link to this heading">#</a></h3>
 <p>A weak link is formed by two ccells A and B, where they are either:</p>
 <ul class="simple">
 <li><p>Two or more same valued candidates in that house, or</p></li>
@@ -374,7 +319,7 @@ any two Ccells see each other, and the one Ccell is asserted True, the other Cce
 False.</p>
 </section>
 <section id="strong-links">
-<span id="found-cc-strong-links"></span><h3><span class="section-number">2.2.3.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Link to this heading">#</a></h3>
+<span id="found-cc-strong-links"></span><h3><span class="section-number">2.2.1.2. </span>Strong Links<a class="headerlink" href="#strong-links" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>A strong link between two Ccells A and B, exists either:</dt><dd><ul class="simple">
 <li><p>In a conjugate pair (like <code class="docutils literal notranslate"><span class="pre">3r7c23</span></code> in <a class="reference internal" href="#fig-links-eg1"><span class="std std-numref">Figure 2.8: </span></a>), where
@@ -427,7 +372,7 @@ guarantees one of its ends to be True.</p></li>
 </ul>
 </section>
 <section id="robust-links">
-<span id="found-cc-robust-links"></span><h3><span class="section-number">2.2.3.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Link to this heading">#</a></h3>
+<span id="found-cc-robust-links"></span><h3><span class="section-number">2.2.1.3. </span>Robust Links<a class="headerlink" href="#robust-links" title="Link to this heading">#</a></h3>
 <p>Robust links are derived from other structures such as (but not limited to) Alternating Inference
 Chains.  Robust link inferences are opposite to Weak Links.  Robust links are indicated with a
 “|~|” where the outer bars indicate that this link is derived/indirect resulting from another
@@ -468,19 +413,52 @@ is impossible to determine the state of the other end with a Robust link.</p>
 True.</p>
 </section>
 <section id="strong-and-robust-links-masquerading-as-weak">
-<span id="found-cc-sl-and-rl-masq-as-wl"></span><h3><span class="section-number">2.2.3.4. </span>Strong and Robust Links Masquerading as Weak<a class="headerlink" href="#strong-and-robust-links-masquerading-as-weak" title="Link to this heading">#</a></h3>
+<span id="found-cc-sl-and-rl-masq-as-wl"></span><h3><span class="section-number">2.2.1.4. </span>Strong and Robust Links Masquerading as Weak<a class="headerlink" href="#strong-and-robust-links-masquerading-as-weak" title="Link to this heading">#</a></h3>
 <p>Strong and Robust links possesses all the link attributes of a Weak Link.  That is if one end is
 True, the other is False.  Therefore, it is possible to substitute a Strong or Robust Link for a
 Weak Link to identify patterns.</p>
 <p>Weak links do not possess the link attributes of Strong or Robust Links.  That is if one end is
 False, it is impossible to determine the state of the other end. Therefore, it is not possible to
-substitue a Weak Link for a Strong or Robust Link.</p>
+substitute a Weak Link for a Strong or Robust Link.</p>
 <p>When a Strong or Robust link is substituted for a weak link, it is masquerading as a Weak link.
 The <code class="docutils literal notranslate"><span class="pre">~</span></code> symbol is used to indicate a masqueraded weak link.</p>
 </section>
 </section>
+<section id="truths">
+<span id="found-cc-truth"></span><h2><span class="section-number">2.2.2. </span>Truths<a class="headerlink" href="#truths" title="Link to this heading">#</a></h2>
+<p>A Truth is a collection of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s in a <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a> or <a class="reference internal" href="../07-glossary.html#term-Cell"><span class="xref std std-term">Cell</span></a> where one of those
+Ccells is the solved value for that cell.  Sudoku is played by applying <a class="reference internal" href="#found-cc-premises-and-inferences"><span class="std std-ref">Preference / Inference
+Logic</span></a> to whittle  away the Ccell in Truths until each Cell’s
+value has been deduced.</p>
+<figure class="align-right" id="fig-truths-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/truths-eg1.png"><img alt="'A Truth' and 'The Truth' Example" src="../_images/truths-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.9:  </span><span class="caption-text">‘A Truth’ and ‘The Truth’ Example</span><a class="headerlink" href="#fig-truths-eg1" title="Link to this image">#</a></p>
+<div class="legend">
+<p><span class="raw-html"><mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong></span></p>
+</div>
+</figcaption>
+</figure>
+<p>Truth Examples:</p>
+<ul class="simple">
+<li><p>In Row 4, <code class="docutils literal notranslate"><span class="pre">3r4c3468</span></code> is all cells containing candidate 3.</p></li>
+<li><p>In Column 4, <code class="docutils literal notranslate"><span class="pre">5r1679c4</span></code> is all the cells containing 5.</p></li>
+<li><p>In Box 9,  <code class="docutils literal notranslate"><span class="pre">8b9p479</span></code> is all the cells in box 9 containing 8.</p></li>
+<li><p>In Cell <code class="docutils literal notranslate"><span class="pre">r6c1</span></code>, <code class="docutils literal notranslate"><span class="pre">1347r6c1</span></code> is all the possible values in that cell.</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
 <section id="spatial-representation">
-<span id="found-cc-spatial-reps"></span><h2><span class="section-number">2.2.4. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Link to this heading">#</a></h2>
+<span id="found-cc-spatial-reps"></span><h2><span class="section-number">2.2.3. </span>Spatial Representation<a class="headerlink" href="#spatial-representation" title="Link to this heading">#</a></h2>
 <p>See Denis Berthier’s Hidden Logic of Sudoku. <a class="reference external" href="https://github.com/denis-berthier">https://github.com/denis-berthier</a>.</p>
 <p>A Sudoku solution is a unique selection and ordering of 81 ccells (value,
 row, column tuples) out of an exhaustive set of 729 ccells – where values, rows and columns can
@@ -515,12 +493,12 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="03-subsets.html">
+          <a class="next-page" href="03-base-cover-sets.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">2.3. </span>Subsets</div>
+                <div class="title"><span class="section-number">2.3. </span>Base, Link and Cover Sets</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -539,7 +517,7 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: f34eef4, Sat, 23 Dec 2023, 23:21:28
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: f74e35e*, Sun, 24 Dec 2023, 00:46:36
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -566,16 +544,15 @@ easier to spot exposed patterns that are hidden in the former domain.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">2.2. Core Concepts</a><ul>
-<li><a class="reference internal" href="#ccells">2.2.1. Ccells</a></li>
-<li><a class="reference internal" href="#a-truth-and-the-truth">2.2.2. ‘A Truth’ and ‘The Truth’</a></li>
-<li><a class="reference internal" href="#premises-and-inferences">2.2.3. Premises and Inferences</a><ul>
-<li><a class="reference internal" href="#weak-links">2.2.3.1. Weak Links</a></li>
-<li><a class="reference internal" href="#strong-links">2.2.3.2. Strong Links</a></li>
-<li><a class="reference internal" href="#robust-links">2.2.3.3. Robust Links</a></li>
-<li><a class="reference internal" href="#strong-and-robust-links-masquerading-as-weak">2.2.3.4. Strong and Robust Links Masquerading as Weak</a></li>
+<li><a class="reference internal" href="#premises-and-inferences">2.2.1. Premises and Inferences</a><ul>
+<li><a class="reference internal" href="#weak-links">2.2.1.1. Weak Links</a></li>
+<li><a class="reference internal" href="#strong-links">2.2.1.2. Strong Links</a></li>
+<li><a class="reference internal" href="#robust-links">2.2.1.3. Robust Links</a></li>
+<li><a class="reference internal" href="#strong-and-robust-links-masquerading-as-weak">2.2.1.4. Strong and Robust Links Masquerading as Weak</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#spatial-representation">2.2.4. Spatial Representation</a></li>
+<li><a class="reference internal" href="#truths">2.2.2. Truths</a></li>
+<li><a class="reference internal" href="#spatial-representation">2.2.3. Spatial Representation</a></li>
 </ul>
 </li>
 </ul>

@@ -80,7 +80,7 @@ X can only be True once in Box 1, **therefore**:
 
 **Similarly**:
 
-*  If Xr3c13 is 'A Truth' then:
+*  If Xr3c13 is a truth then:
 
    *  X cannot be True anywhere else along row 3, and
    *  Xr1c2 cannot be True in the box either, X is True somewhere along column 2 outside box 1.

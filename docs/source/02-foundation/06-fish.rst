@@ -24,8 +24,8 @@ Consider a single candidate value X, where X is a number between 1 and 9. Fish p
     * where all instances of X in each Base Set :term:`Link`\s to another instance of X in another Base Set.
     * The houses containing these links form the Cover Sets.
     * From :ref:`Base Sets and Cover Sets <found_bsets_and_csets>` above, we have shown that any
-      instance of X in the Cover Sets that is not part of the intersection is not part of
-      :term:`The Truth`, and can be eliminated.
+      instance of X in the Cover Sets that is not part of the intersection is not part of the
+      :term:`Truth`, and can be eliminated.
 
 Basic Fish patterns have either row Base Sets and column Cover Sets or vise-versa.
 
@@ -547,5 +547,8 @@ Fraken Fish
 
 Mutant Fish Patterns
 ====================
+
+An Empty Rectangle is a Mutant X Wing with one Base Set in a Row and the other Base Set in a Column.
+A the Base Sets cross over in a Box, but do not share any common candidates in that Box.
 
 [TODO]

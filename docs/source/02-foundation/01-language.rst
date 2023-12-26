@@ -12,6 +12,39 @@ practices in the literature and put forward a precise, descriptive, comprehensiv
 unambiguous language for Sudoku.  The notation is loosely based on and develops from
 `Eureka <http://sudopedia.enjoysudoku.com/Eureka.html>`_
 
+
+.. _found_lang_ccells:
+
+Cells, Ccells, Houses and Chouses
+=================================
+
+A :term:`Cell` is a location on a Sudoku Grid.  A Cell belongs to three :term:`House`\s, a
+:term:`row`, :term:`Column`, and a :term:`Box`.
+
+A :term:`Ccell` refers to any candidate in any cell as defined by by its candidate value, row index
+and column index.  That is, a Ccell is the unique reference to a specific candidate in a cell.
+
+Ccells are three-dimensional tuples of value, row and column, each dimension ranging
+between 1 and 9.  In Sudoku, 729 unique (9 value x 9 row x 9 column) possible Ccells exist.  Ccells
+represent the remaining possible candidate values in a :term:`Cell`
+
+A solved Sudoku puzzle comprises 81 unique Ccells of the 729 unique possibilities.  That is each 
+cell in the 9 row by 9 column has only one value, all values in all cells obeying the
+:ref:`Sudoku Rule <sudoku-rule>`.
+
+The term Ccell is not to be confused with a:
+
+*  :term:`Node`:  A further qualification of a ccell in a :term:`pattern` such as a net or chain.
+   For example:  Ccells linked together in a chain form the Nodes between the links of the chain.
+*  :term:`Candidate`:  A lesser reference to only the possible values in cells that obey Sudoku
+   Rules.
+*  :term:`Potential Elimination`:  A Synonym for Candidate, in the context of applying
+   :term:`Conditional Logic`: to reduce the set of Candidates in a Cell.
+
+:term:`House` is the collective noun for :term:`Row`, :term:`Column`, and :term:`Box`, on a Sudoku grid.
+
+:term:`Chouse` is the collective noun for :term:`House` and :term:`Cell`.
+
 Sudoku Language Syntax
 ======================
 
@@ -195,20 +228,41 @@ Candidate Dressing
    :column-dividers: single single none
    :column-wrapping: ny
 
-   ============================= ====================================================================
+   ============================= ===================================================================
    :raw-html:`<mono>/</mono>`    Restricted Candidate, ``3/456r3Ub2``, 4 is the
                                  restricted candidate in the union of row 3 and box 2
    :raw-html:`<mono>\</mono>`    Unrestricted Candidate, ``34\56c7Ub4``, 5 is the
                                  unrestricted candidate in the union of column 7 and box 4
-   ============================= ====================================================================
+   ============================= ===================================================================
+
+Set Algebra
+------------------
+
+.. table::
+   :width: 97%
+   :widths: 20 80
+   :align: left
+   :header-columns: 1
+   :column-alignment: left left
+   :column-dividers: single single none
+   :column-wrapping: ny
+
+   ========================================================= =======================================
+   :raw-html:`<mono>A = {P, Q, R}</mono>`                    X, Y and Z are Ccell members of Set A
+   :raw-html:`<mono>|</mono>`                                (Bar) Set Union Operator
+   :raw-html:`<mono>&</mono>`                                Set Intersection Operator
+   :raw-html:`<mono>-</mono>`                                (Dash) Set difference Operator
+   :raw-html:`<mono>U(A, B, C)</mono>`                       Union of sets A, B, and C.
+   :raw-html:`<mono>I(A, B, C)</mono>`                       Intersection of sets A, B, and C.
+   ========================================================= =======================================
 
 Pattern Syntax Examples
 =======================
 
 Reading and interpreting this Sudoku language syntax is explained by examples.  An appreciation of
 the meaning (semantics) of this syntax evolves through the balance of this section and the next.
-Albeit a comprehensive list, it is not an exhaustive list of all patterns, but hopefully enough to
-get a good understanding of the syntax mechanics.
+Albeit a comprehensive list, it is not an exhaustive treatise of all patterns, but hopefully a 
+reference and enough to get a good understanding of the syntax mechanics.
 
 Note:
 
@@ -225,7 +279,7 @@ Singles
 
 **Exposed Singles**
    ``3==r7c1``
-      3 is the only candidate in r7c1 (and can be placed)
+      3 is the only candidate in r7c1 (and can be placed).  
 
 **Hidden Singles**
    ``3#1b7,b7p3``
@@ -541,17 +595,11 @@ Super Human Patterns
 Outcome Syntax Examples
 =======================
 
-Placements
-----------
-
+**Placements**
    ``r3c5:=7``
-      Place 7 in cell `r3c5`.
+      Place 7 in cell ``r3c5``.  Only a single value can be placed in a Cell
 
-      Only a single value can be placed in a Cell
-
-Eliminations
-------------
-
+**Eliminations**
    ``r3c5-=7``
       Remove candidate 7 from ``r3c5``, if present.
 
@@ -697,9 +745,11 @@ Y-Wing
 
    Y-Wing Pattern
 
-``XYr3c2`` locks :term:`A Truth` ``Z(r8c2,r3c6)`` in both pincers, so any Ccell like ``Zr8c6`` that sees both pincers cannot
-be true and is eliminated.
+``XYr3c2`` locks the :term:`Truth` ``Z(r8c2,r3c6)`` in both pincers, so any Ccell like ``Zr8c6`` that
+ees both pincers cannot be true and is eliminated.
 
+|
+|
 |
 |
 |
@@ -772,15 +822,34 @@ Swordfish
 
    Swordfish
 
-Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets sees at least two
-ccells in their three intersectons. This locks ``The Truth`` to the intersecting cells.  Therefore any instance of X
-along the covers outside the intersections cannot be True and is eliminated.
+Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets
+sees at least two ccells in their three intersectons. This locks the :term:`Truth` to the
+intersecting cells.  Therefore any instance of X along the covers outside the intersections cannot
+be True and is eliminated.
 
 |
 |
 |
 |
-
+|
+|
+|
+|
+|
 
 Finned Swordfish
 ++++++++++++++++
+
+.. figure:: images/finned-swordfish-cd1.png
+   :name: fig-finned-swordfish-cd1
+   :scale: 100%
+   :alt: Finned Swordfish
+   :align: right
+   :figwidth: image
+
+   Finned Swordfish
+
+Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets
+sees at least two ccells in their three intersections.  But B0 has two fins Xr2c89.  So either the
+Swordfish is the :term:`Truth` or one of the fins are True.  Therefore, any instance of X in the
+covers outside the intersection, that can see the fins cannot be true and is eliminated.

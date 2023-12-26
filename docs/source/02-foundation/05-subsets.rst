@@ -33,8 +33,8 @@ Subsets can be Straight or Bent:
 
 *  A Straight Subset, simply called a "Subset", refers to a collection of 'n' Candidates in 'n'
    Cells in a single :term:`House`.
-*  A "Bent Subset" is a collection of 'n' Candidates in n Cells spanning the union of two
-   :term:`House`\s with at least one cell in the intersection.
+*  A "Bent Subset" is a collection of 'n' Candidates in 'n' Cells spanning the union of two
+   :term:`House`\s with at least one candidate in the intersection.
 
 .. _found_str_subs:
 
@@ -42,13 +42,13 @@ Straight  Subsets
 =================
 
 In :ref:`Straight Exposed Subsets <hsp_subsets>`, the 'n' candidates can each only be True in one of
-the 'n' cells in a :term:`House` they occupy.  That is the n Candidates are
-:term:`A Truth` for those n cells. Therefore, they cannot be True outside those 'n' cells.  Any
-occurrence of those 'n' candidates outside the 'n' cells can be eliminated.
+the 'n' cells in a :term:`House` they occupy.  That is the n Candidates are a :term:`Truth` for 
+those n cells. Therefore, they cannot be True outside those 'n' cells.  Any occurrence of those 'n'
+candidates outside the 'n' cells can be eliminated.
 
-In :ref:`Straight Hidden Subsets <hsp_subsets>`, the 'n' candidates are confined to only 'n' cells in
-a Group, forming :term:`A Truth`.  Because of this 'Truth', any other candidates in those four cells
-can be eliminated.
+In :ref:`Straight Hidden Subsets <hsp_subsets>`, the 'n' candidates are confined to only 'n' cells 
+in a Group, forming a :term:`Truth`.  Because of this 'Truth', any other candidates in those four 
+cells can be eliminated.
 
 :ref:`Base Sets and Cover Sets <found_bsets_and_csets>` develops an algebra to verify the logic of
 these Subset patterns.

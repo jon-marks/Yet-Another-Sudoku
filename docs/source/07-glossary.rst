@@ -1,4 +1,4 @@
-﻿.. title:: Yet Another Sudoku | Glossary
+.. title:: Yet Another Sudoku | Glossary
 
 .. include:: globals.inc
 
@@ -9,10 +9,6 @@ Glossary and Abbreviations
 https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Terminology.html 
 
 .. glossary::
-
-   **A Truth**
-      A :term:`Set` of :term:`Ccell` :term:`Element`\s of which one element is the :term:`The Truth`.
-      That is one of the elements in the set is the actual solved value for that :term:`Cell`.
 
    **AI**
       Abbreviation for :term:`Alternating Inference`.
@@ -41,6 +37,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Band**
       See :term:`Chute`.
+
+   **Base Set**
+      A Base Set is a :term:`Set` of :term:`Ccell`\s in a :term:`Chouse` forming a :term:`Truth`.
 
    **BEQ**
       Abbreviation of :term:`Bent Exposed Quad`
@@ -75,15 +74,19 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       and column in a Sudoku Grid.
 
    **Cell**
-      A location in a Sudoku grid into which a Given is present or a Solved value can be placed.
+      A location in a Sudoku grid which either contains a :term"`Given` or into which a 
+      :term:`Solved Value` is placed.
 
    **Chain Patterns**
-      Chain patterns refer to the collection of Chain, Net and Loop patterns, typically referring
+      The collective noun for Chain, Net and Loop patterns, typically referring
       to :term:`Alternating Inference` Chains
 
    **Chain**
-      Chain is short for Inference Chain, a stream of inference links connecting Ccells to each
-      other.
+      A shortening of the term :term:`Inference Chain`, a stream of inference links connecting Ccells
+      to each other.
+   
+   **Chouse**
+      Collective noun for :term:`House` and :term:`Cell`.
 
    **Chute**
       A grouping of three :term:`Box`\es in a row or a column.
@@ -95,17 +98,18 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Conditional Logic**
       The process of asserting a Premise and following a sequence of inferences to a
-      possible logical outcome.  See :ref:`cc_premises_and_inferences`.
+      possible logical outcome.  See :ref:`found_cc_premises_and_inferences`.
 
    **Conjugate Pair**
       The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
       reference to the candidates not the links between them – a subtle distinction.
 
+   **Cover Set**
+      A Cover Set is a :term:`Set` of all the :term:`Ccells` that :term:`See` each other in the 
+      :term:`Chouse` of a :term:`Link Set`.
+      
    **Eliminations**
       Removing Ccells in puzzles that have been determined impossible to be True.
-
-   **Element**
-      A :term:`Ccell` that is a member of a :term:`Set`.
 
    **End Node**
       In an AI-Chain of Nodes, the End Nodes mark the start and end of Chain.
@@ -124,13 +128,18 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :term:`House`.
 
    **House**
-      A specific 9 cell of a :term:`Row`, :term:Ccolumm` or :term:`Box`.  Also know as a Group, Sector or Unit.
+      A specific 9 cell of a :term:`Row`, :term:`column` or :term:`Box`.  Also known as a Group, 
+      Sector or Unit.
 
+   **Inference Chain**
+      A stream of inference links connecting Ccells to each other.
+      
    **Interior Node**
       In an AI-Chain of Nodes, the Interior Nodes lie between the :term:`End Node`\s.
 
    **Intersection**
-     The cells common to the meeting of two or more :term:`House`\s.
+     The :term:`Ccell`\s common to two or more :term:`Set`\s where their :term:`Chouse`\s 
+     :term:`Overlap`.
 
    **Line**
       Either a :term:`Row` or a :term:`Column`.
@@ -138,7 +147,12 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Link**
       A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
       a :term:`Weak Link`, a :term:`Strong Link` or a :term:`Robust Link`.
-      See :ref:`cc_premises_and_inferences`
+      See :ref:`found_cc_premises_and_inferences`
+      
+   **Link Set**
+      A :term:`Set` of :term:`Ccell`\s in a non-:term:`Base Set` :term:`Chouse` that :term:`See`
+      each other in Base Sets.  A Link Set is made up of separate :term:`Intersection`\s with Base
+      Sets.
 
    **Loop**
       An (:term:`AI`) :term:`Chain` that loops back on itself closing the chain.
@@ -146,6 +160,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Node**
       A :term:`Ccell` that is linked by :term:`Conditional Logic` to other nodes in a pattern.
 
+   **Overlap**
+      The :term:`Cells` where two or more :term:`Chouses` overlap.
+      
    **Parity**
       The collective pronoun for the terms Odd and Even, which are the parity of the sequence
       numbers assigned to a :term:`SLN` or :term:`SLC`.
@@ -175,7 +192,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       Reference to a Cell containing Candidates belonging to a pattern
 
    **PE**
-      A Abbreviation of :term:`Potential Elimination`, synonymous with :term:`Ccell`.
+      A Abbreviation of :term:`Potential Elimination`, loosely synonymous with :term:`Ccell`.
 
    **Peer**
       A :term:`Ccell` that can :term:`See` other Ccells.  Peers are a set of Ccells that see
@@ -229,8 +246,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       :term:`Ccell`\s that have an :term:`Link` between them are said to see each other.
 
    **Set**
-      A grouping of :term:`Ccell` :term:`Element`\s in a :term:`pattern` that form :term:`A Truth`.
-      That is, one of the Elements in that Set is :term:`The Truth`.
+      A collection of :term:`Ccell`\s that :term:`See` each other in a :term:`Chouse`.
 
    **SLC**
       Strongly Link Chain.  A Chain where all the links between Nodes are strong. An SLC is a special
@@ -238,6 +254,9 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **SLN**
       Strongly Link Net.  A Net where all the links between Nodes are strong.
+
+   **Solved Value**
+      A :term:`Ccell` that is part of the solution.   
 
    **State**
       Collective pronoun for the terms True and False, which are the conditions of a :term: `Ccell`
@@ -252,15 +271,12 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <super-node>`, Net or
       Loop, that is strongly linked to the opposing Super-Nodes.
 
-   **The Truth**
-      That :term:`Element` of a :term:`Set` that is ultimately found to be the correct value for
-      that :term: `Cell`.
-
    **Tower**
       A Column oriented :term:`Chute`.
 
-   **Truth Set**
-      See :term:`Set`.
+   **Truth**
+      A collection of :term:`Ccell`\s that :term:`See` each other in a :term:`Chouse` where one of 
+      the Ccells is True, that is the :term:`Solved Value`.
 
    **ULS**
       Ulocked Set, see :ref:`found_unlocked_sets`.
