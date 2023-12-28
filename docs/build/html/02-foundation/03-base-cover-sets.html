@@ -238,7 +238,7 @@
         </div>
         <article role="main">
           <section id="base-link-and-cover-sets">
-<span id="found-bsets-and-csets"></span><h1><span class="section-number">2.3. </span>Base, Link and Cover Sets<a class="headerlink" href="#base-link-and-cover-sets" title="Link to this heading">#</a></h1>
+<span id="found-blc-sets"></span><h1><span class="section-number">2.3. </span>Base, Link and Cover Sets<a class="headerlink" href="#base-link-and-cover-sets" title="Link to this heading">#</a></h1>
 <dl>
 <dt>This section owes much credit to:</dt><dd><div class="line-block">
 <div class="line"><a class="reference external" href="https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm">https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm</a>, and</div>
@@ -247,7 +247,7 @@
 </dd>
 </dl>
 <section id="introduction">
-<h2><span class="section-number">2.3.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<span id="found-blc-intro"></span><h2><span class="section-number">2.3.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <section id="some-definitions">
 <h3><span class="section-number">2.3.1.1. </span>Some Definitions<a class="headerlink" href="#some-definitions" title="Link to this heading">#</a></h3>
 <dl class="simple">
@@ -269,13 +269,14 @@ Sector or Unit.</p>
 <dt><strong>Truth</strong></dt><dd><p>A collection of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s that <a class="reference internal" href="../07-glossary.html#term-See"><span class="xref std std-term">See</span></a> each other in a <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a> where one of
 the Ccells is True, that is the <a class="reference internal" href="../07-glossary.html#term-Solved-Value"><span class="xref std std-term">Solved Value</span></a>.</p>
 </dd>
-<dt><strong>Base Set</strong></dt><dd><p>A Base Set is a <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s in a <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a> forming a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.</p>
+<dt><strong>Base Set</strong></dt><dd><p>A Base Set is a <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s in a <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a> forming a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  Base
+Sets may <a class="reference internal" href="../07-glossary.html#term-Overlap"><span class="xref std std-term">Overlap</span></a> each other, but cannot <a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">Intersect</span></a>.</p>
 </dd>
 <dt><strong>Link Set</strong></dt><dd><p>A <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a> of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s in a non-<a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a> <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a> that <a class="reference internal" href="../07-glossary.html#term-See"><span class="xref std std-term">See</span></a>
 each other in Base Sets.  A Link Set is made up of separate <a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">Intersection</span></a>s with Base
 Sets.</p>
 </dd>
-<dt><strong>Cover Set</strong></dt><dd><p>A Cover Set is a <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a> of all the <span class="xref std std-term">Ccells</span> that <a class="reference internal" href="../07-glossary.html#term-See"><span class="xref std std-term">See</span></a> each other in the
+<dt><strong>Cover Set</strong></dt><dd><p>A Cover Set is a <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a> of all the <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s that <a class="reference internal" href="../07-glossary.html#term-See"><span class="xref std std-term">See</span></a> each other in the
 <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a> of a <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>.</p>
 </dd>
 </dl>
@@ -286,7 +287,7 @@ Set that is not part of its Truth (its Link Set), is eliminated.</p>
 <figure class="align-right" id="fig-base-cover-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/base-cover-eg1.png"><img alt="Sudoku X-Wing Example" src="../_images/base-cover-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.10:  </span><span class="caption-text">Base Set - Cover Set Example</span><a class="headerlink" href="#fig-base-cover-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.10:  </span><span class="caption-text">Base, Link and Cover Set Example</span><a class="headerlink" href="#fig-base-cover-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+17+6.2958.94...+6...+8+3.....6.4+816.....+7239.+4+8.+65+6+9..24..+2+9+7.6814.+6+1+4.+9...+835+8+24+1+6+97||X-Wing||3r17c49|r2c4-=3;r2c9-=3;r4c9-=3;r6c4-=3;r6c9-=3;r8c4-=3|+17+6+42958+394+5+8+3+6+7+1+2+8+3+2+1+7+5+96+44+816+5+3+2+7+9+7239+1+4+8+5+65+6+9+7+824+3+1+2+9+7+36814+5+6+1+4+5+9+7+3+2+835+8+24+1+6+97</mong></span></p>
 </div>
@@ -307,12 +308,12 @@ Cover Sets, <code class="docutils literal notranslate"><span class="pre">(r268c4
 </section>
 </section>
 <section id="single-order-patterns">
-<h2><span class="section-number">2.3.2. </span>Single Order Patterns<a class="headerlink" href="#single-order-patterns" title="Link to this heading">#</a></h2>
+<span id="found-blc-sop"></span><h2><span class="section-number">2.3.2. </span>Single Order Patterns<a class="headerlink" href="#single-order-patterns" title="Link to this heading">#</a></h2>
 <p>A single order patterns has a single <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>, with a single <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  Ccells in
 <a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">Intersecting</span></a> <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s outside the intersection are eliminated.</p>
 <p><a class="reference internal" href="04-singles.html#found-sing-exposed"><span class="std std-ref">Exposed Singles</span></a>, <a class="reference internal" href="04-singles.html#found-sing-hidden"><span class="std std-ref">Hidden Singles</span></a>, and
 <a class="reference internal" href="04-singles.html#found-sing-locked"><span class="std std-ref">Locked Singles</span></a> are examples of Single Order Patterns.</p>
-<p>Expressing the <span class="xref std std-term">Sudoku Rule</span> as a Formula for Single Order Patterns using Set Algebra:</p>
+<p>Expressing the <a class="reference internal" href="../07-glossary.html#term-Sudoku-Rule"><span class="xref std std-term">Sudoku Rule</span></a> as a Formula for Single Order Patterns using Set Algebra:</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>Base Set  <b>B</b>  = {P}    # P is the only Ccell Truth in the Base Set <b>B</b>
@@ -377,293 +378,249 @@ True</pre>
 <p>All same value Ccells in intersecting houses that can see 3r8c6 in the intersection are eliminated,
 leaving <code class="docutils literal notranslate"><span class="pre">3r8c6</span></code> as the only Ccell in the intersection, permitting its placement.</p>
 </section>
-<section id="multi-order-patterns">
-<h2><span class="section-number">2.3.3. </span>Multi Order Patterns<a class="headerlink" href="#multi-order-patterns" title="Link to this heading">#</a></h2>
-<p>An <span class="raw-html">'n<sup>th</sup>'</span> order pattern has ‘n’ unique non-<a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">intersecting</span></a>
-<a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s, and ‘n’ or more <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s intersecting the Base Sets.</p>
-<p>In many patterns, the number of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s making up the <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a> <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a> matches
-the order of the pattern.  This is coincident, and not a requirement of the pattern.</p>
-<p>Base Sets may be any combination of distinct <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a>s.  That is, they can intersect, but do
-not share <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s.</p>
-<p id="n-base-n-cover-sud-rule">Extending the <span class="xref std std-term">Sudoku Rule</span> formula to include Multi Order Pattern:</p>
-<p><span class="raw-html"></span></p>
+<section id="multi-order-patterns-base-set-total-cover-set-total">
+<span id="found-blc-mop-eq"></span><h2><span class="section-number">2.3.3. </span>Multi Order Patterns (Base Set Total == Cover Set Total)<a class="headerlink" href="#multi-order-patterns-base-set-total-cover-set-total" title="Link to this heading">#</a></h2>
+<p>Multi Order Patterns comprise more than one Base Sets and require at least the same or greater
+number of Link Sets to cover all Base Set Ccells.  This section only addresses patterns
+where Base Set and Link Set totals match.  The Next Section <a class="reference internal" href="#found-blc-mop-ge"><span class="std std-numref">Section 2.3.4: </span></a> extends to
+patterns with the same or more Link Sets to Base Sets.</p>
+<p>In patterns with matching Base Set and Link Set totals, each Link Set intersects all Base Sets.  It
+is this characteristic that makes eliminations possible by turning all the Link Sets into Truths.</p>
+<figure class="align-right" id="fig-exp-quad-cd1">
+<a class="reference internal image-reference" href="../_images/exp-quad-cd1.png"><img alt="Exposed Quad" src="../_images/exp-quad-cd1.png" style="width: 410.15000000000003px; height: 163.8px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.12:  </span><span class="caption-text">Exposed Quad Pattern</span><a class="headerlink" href="#fig-exp-quad-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>In the Exposed Quad <a class="reference internal" href="#fig-exp-quad-cd1"><span class="std std-numref">Figure 2.12: </span></a>, B1, B2, B3, B4 are Base Sets, each containing two or
+more instances of values W, X, Y, and Z; such that each of the 4 Link Sets see two or more instances of
+each value W, X, Y, Z. That is, L1 sees all the W’s present in B1, B2, B3, B4; L2 sees all the X’s, L3
+all the Y’s and L4 all the Z’s.  Therefore, by virtue of L1, L2, L3 and L4, each intersecting all the Base Sets,
+they hold the Truths for W, X, Y and Z respectively in that house.  W, X, Y, and Z cannot be True anywhere else in
+this House and are Eliminated.</p>
+<figure class="align-right" id="fig-not-exp-quad-cd1">
+<a class="reference internal image-reference" href="../_images/not-exp-quad-cd1.png"><img alt="Not A Exposed Quad" src="../_images/not-exp-quad-cd1.png" style="width: 409.5px; height: 163.8px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.13:  </span><span class="caption-text">Note Quite an Exposed Quad Pattern</span><a class="headerlink" href="#fig-not-exp-quad-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#fig-not-exp-quad-cd1"><span class="std std-numref">Figure 2.13: </span></a> has a V instead of a Z in B3.  Here candidate V  remains uncovered
+after the Link Sets have been applied.  Either the remaining Exposed Quad is True, or V is True.
+But which it is, is undetermined.  Therefore, it is not possible to draw any elimination conclusions.</p>
+<p>Base Sets may be any combination of distinct <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a>s.  That is, they can <a class="reference internal" href="../07-glossary.html#term-Overlap"><span class="xref std std-term">Overlap</span></a>,
+but do not <a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">Intersect</span></a>.  Base Sets do not share <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s.</p>
+<p>Extending the <a class="reference internal" href="../07-glossary.html#term-Sudoku-Rule"><span class="xref std std-term">Sudoku Rule</span></a> formula to include Multi Order Patterns:</p>
+<p id="n-base-n-cover-sud-rule"><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>Base Set  <b>B<sub>i</sub></b>  = {P, Q, R, ...}    # P, Q, R, ... are the Ccells making up the Truth in the Base Set <b>B<sub>i</sub></b>
-Base Set <b>B<sub>U</sub></b> = U(<b>B<sub>0</sub></b>, <b>B<sub>1</sub></b>, ...)    # B is the union of Base Sets B<sub>0</sub>, B<sub>1</sub>, ...
-Cover Set <b>C<sub>i</sub></b> = {S, T, V, ...}    # S, T, U, ... are Ccells in that cover Chouse that see Ccells in the Base Set Union
-Cover Set <b>C<sub>U</sub></b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ...)    # C is the union of Cover Sets C<sub>0</sub>, C<sub>1</sub>, ...
+Base Set <b>B<sub>U</sub></b> = U(<b>B<sub>0</sub></b>, <b>B<sub>1</sub></b>, ...)    # The union of Base Sets B<sub>0</sub>, B<sub>1</sub>, ...
+Link Set <b>L<sub>i</sub></b> = {K, M, N, ...}    # K, M, N, ... Links Ccells from the Base Set Union that see each other in a non-Base Set Chouse
+Link Set <b>L<sub>U</sub></b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ...)    # The union of Link Sets L<sub>0</sub>, L<sub>1</sub>, ...
+Cover Set <b>C<sub>i</sub></b> = {K, M, N, S, T, ...}    # Contains all the Ccells that See each other in the Link Set House L<sub>i</sub>
+Cover Set <b>C<sub>U</sub></b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ...)    # The union of Cover Sets C<sub>0</sub>, C<sub>1</sub>, ...
 &nbsp;
-IF (<b>B<sub>U</sub></b> & <b>C<sub>U</sub></b> == <b>B<sub>U</sub></b>):    # if <u>all</u> the Base Set Ccells are intersected by Base Set Ccells
-&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>B<sub>U</sub></b>    # Then Eliminate all Cover Ccells not in Base Sets
+IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # if <u>all</u> the Base Set Ccells are Linked
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>    # Then Eliminations are the unlinked Cover Ccells
 </pre></div></div>
 <p><span></span></p>
-<p>If the Intersection of the Union of Base Sets with the Union of Cover Sets is equal to the Union of
-Base Sets, then the Cover Ccells that are not in the Base Set Union are eliminated.</p>
+<p>The <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s are <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a>s, each containing a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s connect the <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s of the truths in
+other non-Base Set Chouses.  If all the Base Set Ccells are <a class="reference internal" href="../07-glossary.html#term-Link"><span class="xref std std-term">Linked</span></a> (union of Base Sets == Union of
+Link Sets), then the <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a> Ccells that are not in this union (union of Cover Sets - Union of Link
+Sets) cannot be True and are eliminated.</p>
 <section id="cell-base-sets-and-house-cover-sets-exposed-subsets">
 <span id="found-bscs-exp-ssets"></span><h3><span class="section-number">2.3.3.1. </span>Cell Base Sets and House Cover Sets – Exposed Subsets<a class="headerlink" href="#cell-base-sets-and-house-cover-sets-exposed-subsets" title="Link to this heading">#</a></h3>
-<p>The Base Sets are the Cells, each containing a Truth.  The Cover Sets are Houses, grouping the
-intersections.  Any non-intersecting CCell found in a Cover Set cannot be True and is eliminated.</p>
+<p>The <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s are the <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">CCell</span></a>s, each containing a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s are all confined to a <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a> in
+which all the Base Sets are contained.</p>
 <figure class="align-right" id="fig-locked-exp-trip-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/locked-exp-trip-eg1.png"><img alt="Sudoku Exposed Triple Example" src="../_images/locked-exp-trip-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.12:  </span><span class="caption-text">Locked Exposed Triple</span><a class="headerlink" href="#fig-locked-exp-trip-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.14:  </span><span class="caption-text">Locked Exposed Triple</span><a class="headerlink" href="#fig-locked-exp-trip-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>..+5.1+2+7+6+8..+2.6.+1+5916..5.4+23.1...6.9.2+538+9+1+6749.+6...8.....2.758.52................||Locked Exposed Triple||34==r7c5,348==r8c5,348==r9c5|r8c4-=34;r9c4-=34;r8c6-=348;r9c6-=348;r4c5-=34;r6c5-=34|+3+4+5+91+2+7+6+8+7+8+2+46+3+1+5916+9+75+84+23+81+4+3+76+29+52+538+9+1+6749+7+6+5+2+48+3+1+4+9+12+3758+652+8+6+4+9+3+1+7+6+3+7+1+8+5+9+4+2</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>A found Locked Exposed Triple in <a class="reference internal" href="#fig-locked-exp-trip-eg1"><span class="std std-numref">Figure 2.12: </span></a>, has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:</p>
-<p><span class="raw-html"></span></p>
+<p>The Locked Exposed Triple in <a class="reference internal" href="#fig-locked-exp-trip-eg1"><span class="std std-numref">Figure 2.14: </span></a> has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:
+<span class="raw-html"></span></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>r7c5</sub></b> = {3r7c5, 4r7c5}</span></code>,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>r8c5</sub></b> = {3r8c5, 4r8c5, 8r8c5}</span></code>, and</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>r9c5</sub></b> = {3r9c5, 4r9c5, 8r9c5}</span></code>.</p></li>
 </ul>
 <p><span></span></p>
+<p>The <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s are:
+<span class="raw-html"></span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">BSr2c1</span> <span class="pre">=</span> <span class="pre">{7r2c1,</span> <span class="pre">8r2c1}</span></code>,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">BSr2c2</span> <span class="pre">=</span> <span class="pre">{5r2c2,</span> <span class="pre">7r2c2,</span> <span class="pre">8r2c2}</span></code>, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">BSr2c4</span> <span class="pre">=</span> <span class="pre">{5r2c4,</span> <span class="pre">8r2c4}</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>3c5</sub></b> = {3r7c5, 3r8c5, 3r9c5}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>4c5</sub></b> = {4r7c5, 4r8c5, 4r9c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>8c5</sub></b> = {8r8c5, 8r9c5}</span></code>.</p></li>
 </ul>
-<p>The Intersecting house <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CS5r2</span> <span class="pre">=</span> <span class="pre">{5r2c2,</span> <span class="pre">5r2c4,</span> <span class="pre">5r2c5}</span></code>,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CS7r2</span> <span class="pre">=</span> <span class="pre">{7r2c1,</span> <span class="pre">7r2c2,</span> <span class="pre">7r2c8)</span></code>, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CS8r2</span> <span class="pre">=</span> <span class="pre">{8r1c1,</span> <span class="pre">8r2c2,</span> <span class="pre">8r2c5,</span> <span class="pre">8r2c8)</span></code>.</p></li>
-</ul>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<p>Applying the Sudoku Rule:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BSr2c1 | BSr2c2 | BSr2c4) &amp; (CS5r2 | CS7r2 | CS8r2) == (BSr2c1 | BSr2c2 | BSr2c4)
-   THEN Elims = (CS5r2 | CS7r2 | CS8r2) – (BSr2c1 | BSr2c2 | BSr2c4)
-</pre></div>
-</div>
-<p>Evaluating the IF condition:</p>
-<p><span class="raw-html"></span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>(BSr2c1 | BSr2c2 | BSr2c4) & (CS5r2 | CS7r2 | CS8r2) == (BSr2c1 | BSr2c2 | BSr2c4)
-({7r2c1, 8r2c1} | {5r2c2, 7r2c2, 8r2c2} | {5r2c4, 8r2c4}) & ({5r2c2, 5r2c4, 5r2c5} | {7r2c1, 7r2c2, 7r2c8} | {8r1c1, 8r2c2, 8r2c5, 8r2c8}) == ({7r2c1, 8r2c1} | {5r2c2, 7r2c2, 8r2c2} | {5r2c4, 8r2c4})
-({7r2c1, 8r2c1, 5r2c2, 7r2c2, 8r2c2, 5r2c4, 8r2c4}) & ({7r2c1, 8r1c1, 5r2c2, 7r2c2, 8r2c2, 5r2c4, <del>5r2c5</del>, <del>8r2c5</del>, <del>7r2c8</del>, <del>8r2c8</del>}) == ({7r2c1, 8r2c1, 5r2c2, 7r2c2, 8r2c2, 5r2c4, 8r2c4})
-True</pre>
-</div></div>
 <p><span></span></p>
-<p>containing the Candidate Ccells.  The Cover Sets are the Houses
-containing Ccells for each Candidate.  Any non-intersecting Ccell value in the Cover Set is not a part
-fo this Truthor this TruesAccording to Sudoku Rules as the intersecting Cells in the
-Cover Set are the Truth, any other Candidates in the Cover Sets that are not part of the
-intersection are also not part of “The Truth” and can be eliminated. This is the basis for Exposed
-Subsets.</p>
+<p>And the <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s in Column 4 are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>3c5</sub></b> = {3r4c5, 3r6c5, 3r7c5, 3r8c5, 3r9c5}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>4c5</sub></b> = {4r4c5, 4r6c5, 4r7c5, 4r8c5, 4r9c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>8c5</sub></b> = {8r4c5, 8r6c5, 8r8c5, 8r9c5}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>And notice that this pattern is also locked to Box 8
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>3b8</sub></b> = {3r7c5, 3r8c4, 3r8c5, 3r8c6, 3r9c4, 3r9c5, 3r9c6}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>4b8</sub></b> = {4r7c5, 4r8c4, 4r8c5, 4r8c6, 4r9c4, 4r9c5, 4r9c6}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>8b8</sub></b> = {8r9c5, 8r9c6}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>The set unions are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>u</sub></b> = {3r7c5, 4r7c5, 3r8c5, 4r8c5, 8r8c5, 3r9c5, 4r9c5, 8r9c5}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>u</sub></b> = {3r7c5, 3r8c5, 3r9c5, 4r7c5, 4r8c5, 4r9c5, 8r8c5, 8r9c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>U</sub></b> = {3r4c5, 3r6c5, 3r7c5, 3r8c4, 3r8c5, 3r8c6, 3r9c4, 3r9c5, 3r9c6, 4r4c5, 4r6c5, 4r7c5, 4r8c4, 4r8c5, 4r8c6, 4r9c4, 4r9c5 4r9c6, 8r4c5, 8r6c5, 8r8c5, 8r8c6, 8r9c5, 8r9c6}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>Applying the Sudoku Rule:
+<span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>  # Compute Eliminations
+&nbsp;            = {3r4c5, 3r6c5, <del>3r7c5</del>, 3r8c4, <del>3r8c5</del>, 3r8c6, 3r9c4, <del>3r9c5</del>, 3r9c6, 4r4c5, 4r6c5, <del>4r7c5</del>, 4r8c4, <del>4r8c5</del>, 4r8c6, 4r9c4, <del>4r9c5</del>, 4r9c6, 8r4c5, 8r6c5, <del>8r8c5</del>, 8r8c6, <del>8r9c5</del>, 8r9c6} - {3r7c5, 3r8c5, 3r9c5, 4r7c5, 4r8c5, 4r9c5, 8r8c5, 8r9c5}
+&nbsp;            = {3r4c5, 3r6c5, 3r8c4, 3r8c6, 3r9c4, 3r9c6, 4r4c5, 4r6c5, 4r8c4, 4r8c6, 4r9c4, 4r9c6, 8r8c6, 8r9c6}
+</pre></div></div>
+<p><span></span></p>
+<p>An unusually productive 14 Ccell Elimination.</p>
 </section>
 <section id="house-base-sets-and-cell-cover-sets-hidden-subsets">
 <span id="found-bscs-hid-ssets1"></span><h3><span class="section-number">2.3.3.2. </span>House Base Sets and Cell Cover Sets – Hidden Subsets<a class="headerlink" href="#house-base-sets-and-cell-cover-sets-hidden-subsets" title="Link to this heading">#</a></h3>
-<p>Consider between 2 and ‘n’ different valued Ccells occurring between 2 and ‘n’ times in a House
-(Line or Box).  The Houses are the Base Sets.  If 2 or more of these Ccells are in the same cell,
-they are Linked, with the Cell forming the Cover Set.  If ‘n’ such Cover Set Cells can be found for
-each ‘n’ Candidates in the ‘n’ Base Sets, then only those ‘n’ Candidates in the Cells are ‘A Truth’.</p>
-<p>Base Sets are the Ccells in the Houses, Cover Sets are the Candidates in the Cells.  According to
-Sudoku Rules, the other CCells in the Cover Set Cells that are not part of the intersection (Truth)
-cannot be True and can be eliminated.  This is the basis for Hidden Subsets.</p>
-<figure class="align-right" id="fig-hidden-pair-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="02-foundation/images/hidden-pair-eg1.png"><img alt="Sudoku Hidden PairExample" src="02-foundation/images/hidden-pair-eg1.png" /></a>
+<p><a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s are <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a>s of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s, each a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>, all in the same
+<a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>.  <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s connect Base Set Ccells in <a class="reference internal" href="../07-glossary.html#term-Cell"><span class="xref std std-term">Cell</span></a>s.</p>
+<figure class="align-right" id="fig-hid-pair-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/hid-pair-eg1.png"><img alt="Sudoku Hidden Pair Example" src="../_images/hid-pair-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.13:  </span><span class="caption-text">Hidden Pair</span><a class="headerlink" href="#fig-hidden-pair-eg1" title="Link to this image">#</a></p>
-<div class="legend">
-<p><span class="raw-html"><mong>Correct this+1.9..7.52..3..21.+64.2..1..35.4.+1..6........+1..1....3.53+4+59..7+21..14+2+56+3+862+81+7+35..|r1c5-=6;r1c5-=8;r2c5-=8;r3c5-=6;r3c5-=8;r4c2-=7;r4c4-=8;r5c1-=7;r5c2-=6;r5c2-=7;r5c4-=6;r5c4-=8;r5c5-=4;r5c5-=6;r5c5-=8;r5c5-=9;r6c1-=7;r6c4-=6;r6c4-=8;r6c5-=4;r6c5-=9;r6c8-=7|Exposed Triple||78==r2c1,578==r2c2,58==r2c4|r2c5-=5;r2c8-=78|+1+69+8+37+452+8+73+5+421+9+64+52+6+91+8+735+84+3+1+9+26+7+2+3+6+7+5+8+9+1+4+91+7+2+6+43+853+4+59+8+67+21+7+914+2+56+3+862+81+7+35+4+9</mong></span></p>
-</div>
-</figcaption>
-</figure>
-<p>This puzzle is the same as the <span class="xref std std-ref">fig-base-cover-eg2</span> example above, this time focusing on a hidden pair.
-Consider the two house Base Sets in row 1:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">BS2r1</span> <span class="pre">=</span> <span class="pre">{2r1c1,</span> <span class="pre">2r1c5}</span></code>, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">BS9r1</span> <span class="pre">=</span> <span class="pre">{9r1c1,</span> <span class="pre">9r1c5}</span></code>.</p></li>
-</ul>
-<p>The intersecting Cell Cover sets are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CSr1c1</span> <span class="pre">=</span> <span class="pre">{2r1c1,</span> <span class="pre">3r1c1,</span> <span class="pre">7r1c1,</span> <span class="pre">9r1c1}&lt;/mong&gt;</span></code>,  and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CSr1c5</span> <span class="pre">=</span> <span class="pre">{2r1c5,</span> <span class="pre">5r1c5,</span> <span class="pre">7r1c5,</span> <span class="pre">8r1c5,</span> <span class="pre">9r1c5}</span></code>.</p></li>
-</ul>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<p>Applying the Sudoku Rule:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS2r1 | BS9r1) &amp; (CSr1c1 | CSr1c5) == (BSr1 | BS9r1)
-   THEN Elims = (CSr1c1, CSr1c5) – (BS2r1 | BS9r1)
-</pre></div>
-</div>
-<p>Evaluating the IF condition:</p>
-<p><span class="raw-html"></span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>(BS2r1 | BS9r1) & (CSr1c1, CSr1c5) == (BSr1 | BS9r1)
-({2r1c1, 2r1c5} | {9r1c1, 9r1c5}) & ({2r1c1, 3r1c1, 7r1c1, 9r1c1} | {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}) == ({2r1c1, 2r1c5} | {9r1c1, 9r1c5})
-({2r1c1, 2r1c5, 9r1c1, 9r1c5}) & ({2r1c1, <del>3r1c1</del>, <del>7r1c1</del>, 9r1c1, 2r1c5, <del>5r1c5</del>, <del>7r1c5</del>, <del>8r1c5</del>, 9r1c5}) == ({2r1c1, 2r1c5, 9r1c1, 9r1c5})
-True</pre>
-</div></div>
-<p><span></span></p>
-<p>Because the IF condition is True, the Elims are computed:</p>
-<p><span class="raw-html"></span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>Elims = ({2r1c1, 3r1c1, 7r1c1, 9r1c1} | {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}) – ({2r1c1, 2r1c5} | {9r1c1, 9r1c5})
-Elims = ({<del>2r1c1</del>, 3r1c1, 7r1c1, <del>9r1c1</del>, <del>2r1c5</del>, <del>5r1c5</del>, 7r1c5, 8r1c5, <del>9r1c5</del>}) – ({<del>2r1c1</del>, <del>2r1c5</del>, <del>9r1c1</del>, <del>9r1c5</del>})
-Elims = {3r1c1, 7r1c1, 5r1c5, 7r1c5, 8r1c5}</pre>
-</div></div>
-<p><span></span></p>
-<p>This logic can be intuitively double-checked by noticing that candidates 2 and 9 only both occur in
-cell r1c1 and r1c5.  If 2r1c1 is True then 9 can’t be True in r1c1 and can only be True in its only
-other possible place 9r1c5.  Similarly, if 9r1c1 is True.  This proves that either 2 or 9 is True in
-r1c1.  If they are the only possible Truths, then all other candidates can be eliminated from r1c1.</p>
-</section>
-<section id="house-base-sets-and-house-cover-sets-fish">
-<span id="found-bscs-fish"></span><h3><span class="section-number">2.3.3.3. </span>House Base Sets and House Cover Sets – Fish<a class="headerlink" href="#house-base-sets-and-house-cover-sets-fish" title="Link to this heading">#</a></h3>
-<p>Consider between 2 to ‘n’ same valued Ccells that can see each other in a House (Line or Box) and
-‘n’ such non-intersecting Houses exist.  If a Ccell in a Base Set can see two or more of its peers
-in other Base Sets, then those Ccells are Linked  If these Links are bounded in a House, this is a
-Cover Set.  If ‘n’ such Cover Sets can be found for each ‘n’ Base Sets, then only those Ccells in
-the Base Sets / Cover Sets intersection are the Truth.</p>
-<p>The Base Sets are the non-intersecting Houses containing only between 2 and ‘n’ instances of the
-candidate.  The Cover Sets are also houses that see two or more candidates across all the Base Sets,
-such that each occurrence of the Candidate in the Base Sets are covered.  According to Sudoku Rules,
-the Ccells in the intersections are the Truth.  Therefore, any other Candidates in the Cover Sets
-that are not part of the intersection (Truth) can be eliminated.
-This is the basis for all <a class="reference internal" href="06-fish.html#found-fish"><span class="std std-ref">“Fish”</span></a> and Fish Like patterns.</p>
-</section>
-</section>
-<section id="some-examples">
-<h2><span class="section-number">2.3.4. </span>Some Examples<a class="headerlink" href="#some-examples" title="Link to this heading">#</a></h2>
-<p>The above is a bit of a mind-bend to unpack on first blush.  However, with a few examples, practice
-and time, it begins to all make sense.</p>
-<figure class="align-right" id="id1" style="width: 359px">
-<a class="reference internal image-reference" href="../_images/base-cover-eg2.png"><img alt="Sudoku Hidden Pair Example" src="../_images/base-cover-eg2.png" style="width: 358.8px; height: 406.25px;" /></a>
-<figcaption>
-<p><span class="caption-number">Figure 2.14:  </span><span class="caption-text">Hidden Pair</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.15:  </span><span class="caption-text">Hidden Pair</span><a class="headerlink" href="#fig-hid-pair-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>.6...1..4.48....9+1....+4...+2+4..2.87+5+658+2967+143..65.4+9+2+8+6.....+4+1.+85+4+1.+326.1..4.+6+38.|r1c3-=9;r1c5-=3;r2c5-=3;r3c2-=9;r3c3-=9|Hidden Pair||29#2r1c15|r1c1-=37;r1c5-=578|+96+3+8+21+5+74+248+3+7+5+69+1+7+1+5+6+4+9+8+3+2+4+9+12+387+5+658+2967+143+3+765+14+9+2+8+6+3+9+7+8+2+4+1+5+85+4+1+9+326+71+2+74+5+6+38+9</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>This puzzle is the same as the <span class="xref std std-ref">fig-base-cover-eg2</span> example above, this time focusing on a hidden pair.
-Consider the two house Base Sets in row 1:</p>
+<p>The Hidden Pair in <a class="reference internal" href="#fig-hid-pair-eg1"><span class="std std-numref">Figure 2.15: </span></a> has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:
+<span class="raw-html"></span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">BS2r1</span> <span class="pre">=</span> <span class="pre">{2r1c1,</span> <span class="pre">2r1c5}</span></code>, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">BS9r1</span> <span class="pre">=</span> <span class="pre">{9r1c1,</span> <span class="pre">9r1c5}</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>2r1</sub></b> = {2r1c1, 2r1c5}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>9r1</sub></b> = {9r1c1, 9r1c5}</span></code>, and</p></li>
 </ul>
-<p>The intersecting Cell Cover sets are:</p>
+<p><span></span></p>
+<p>The <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s are:
+<span class="raw-html"></span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CSr1c1</span> <span class="pre">=</span> <span class="pre">{2r1c1,</span> <span class="pre">3r1c1,</span> <span class="pre">7r1c1,</span> <span class="pre">9r1c1}&lt;/mong&gt;</span></code>,  and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CSr1c5</span> <span class="pre">=</span> <span class="pre">{2r1c5,</span> <span class="pre">5r1c5,</span> <span class="pre">7r1c5,</span> <span class="pre">8r1c5,</span> <span class="pre">9r1c5}</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>r1c1</sub></b> = {2r1c1, 9r1c1}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>r1c5</sub></b> = {2r1c5, 9r1c5}</span></code>, and</p></li>
 </ul>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<p>Applying the Sudoku Rule:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS2r1 | BS9r1) &amp; (CSr1c1 | CSr1c5) == (BSr1 | BS9r1)
-   THEN Elims = (CSr1c1, CSr1c5) – (BS2r1 | BS9r1)
-</pre></div>
-</div>
-<p>Evaluating the IF condition:</p>
-<p><span class="raw-html"></span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>(BS2r1 | BS9r1) & (CSr1c1, CSr1c5) == (BSr1 | BS9r1)
-({2r1c1, 2r1c5} | {9r1c1, 9r1c5}) & ({2r1c1, 3r1c1, 7r1c1, 9r1c1} | {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}) == ({2r1c1, 2r1c5} | {9r1c1, 9r1c5})
-({2r1c1, 2r1c5, 9r1c1, 9r1c5}) & ({2r1c1, <del>3r1c1</del>, <del>7r1c1</del>, 9r1c1, 2r1c5, <del>5r1c5</del>, <del>7r1c5</del>, <del>8r1c5</del>, 9r1c5}) == ({2r1c1, 2r1c5, 9r1c1, 9r1c5})
-({2r1c1, 2r1c5, 9r1c1, 9r1c5}) == ({2r1c1, 2r1c5, 9r1c1, 9r1c5})
-True</pre>
-</div></div>
 <p><span></span></p>
-<p>Because the IF condition is True, the Elims are computed:</p>
-<p><span class="raw-html"></span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>Elims = ({2r1c1, 3r1c1, 7r1c1, 9r1c1} | {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}) – ({2r1c1, 2r1c5} | {9r1c1, 9r1c5})
-Elims = ({<del>2r1c1</del>, 3r1c1, 7r1c1, <del>9r1c1</del>, <del>2r1c5</del>, <del>5r1c5</del>, 7r1c5, 8r1c5, <del>9r1c5</del>}) – ({<del>2r1c1</del>, <del>2r1c5</del>, <del>9r1c1</del>, <del>9r1c5</del>})
-Elims = {3r1c1, 7r1c1, 5r1c5, 7r1c5, 8r1c5}</pre>
-</div></div>
+<p>And the <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s in Column 4 are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>r1c1</sub></b> = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>r1c5</sub></b> = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</span></code>, and</p></li>
+</ul>
 <p><span></span></p>
-<p>This logic can be intuitively double-checked by noticing that candidates 2 and 9 only both occur in
-cell r1c1 and r1c5.  If 2r1c1 is True then 9 can’t be True in r1c1 and can only be True in its only
-other possible place 9r1c5.  Similarly, if 9r1c1 is True.  This proves that either 2 or 9 is True in
-r1c1.  If they are the only possible Truths, then all other candidates can be eliminated from r1c1.</p>
-<figure class="align-right" id="fig-x-wing-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="../_images/x-wing-eg1.png"><img alt="Sudoku X-Wing Example" src="../_images/x-wing-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
+<p>The set unions are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>u</sub></b> = {2r1c1, 2r1c5, 9r1c1, 9r1c5}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>u</sub></b> = {2r1c1, 9r1c1, 2r1c5, 9r1c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>U</sub></b> = {2r1c1, 3r1c1, 7r1c1, 9r1c1, 2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>Applying the Sudoku Rule:
+<span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>  # Compute Eliminations
+&nbsp;            = {<del>2r1c1</del>, 3r1c1, 7r1c1, <del>9r1c1</del>, <del>2r1c5</del>, 5r1c5, 7r1c5, 8r1c5, <del>9r1c5</del>} - {2r1c1, 9r1c1, 2r1c5, 9r1c5}
+&nbsp;            = {3r1c1, 7r1c1, 5r1c5, 7r1c5, 8r1c5}
+</pre></div></div>
+<p><span></span></p>
+</section>
+<section id="house-base-sets-and-house-cover-sets-fish">
+<span id="found-bscs-fish"></span><h3><span class="section-number">2.3.3.3. </span>House Base Sets and House Cover Sets – Fish<a class="headerlink" href="#house-base-sets-and-house-cover-sets-fish" title="Link to this heading">#</a></h3>
+<p>Fish are single Candidate value patterns.  Base Sets are Sets of same value Ccell Truthss
+each in their own House.  Link Sets connect Ccells from the Base Sets in non-Base Set Houses.</p>
+<figure class="align-right" id="fig-swordfish-eg1" style="width: 359px">
+<a class="reference internal image-reference" href="../_images/swordfish-eg1.png"><img alt="Sudoku Swordfish Example" src="../_images/swordfish-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.15:  </span><span class="caption-text">X-Wing</span><a class="headerlink" href="#fig-x-wing-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.16:  </span><span class="caption-text">Swordfish</span><a class="headerlink" href="#fig-swordfish-eg1" title="Link to this image">#</a></p>
 <div class="legend">
-<p><span class="raw-html"><mong>+59..+83746.4......18...6.9.....5......548.........391......2.3...8...7....65....7.||X-Wing||5c57r28|r2c6-=5;r2c8-=5;r8c8-=5;r8c9-=5|+59+2+1+83746+74+6+9+5+2+8+318+3+1+76+49+2+5+3+2+95+4+1+6+8+7+1548+7+6+2+9+3+6+7+8+2391+5+4+9+1+7+42+53+6+8+48+3+6+97+5+1+2+265+3+1+8+47+9</mong></span></p>
+<p><span class="raw-html"><mong>+2..197.+4..4.+2.+3+17+9+1+79.+4.3+2.8+9.+43+1+7.27.+19.2.+343+2+4+76.+9.1..2.+1+94.+7+41..+7.+29.+9.+7524.+1.|r1c2-=6;r1c3-=6;r3c9-=6|Swordfish||6r159c279|r7c2-=6;r8c9-=6|+2+3+8197+5+4+6+54+6+2+8+3+17+9+1+79+6+4+53+2+88+9+5+43+1+7+627+6+19+52+8+343+2+4+76+8+9+51+6+52+3+1+94+8+7+41+3+8+7+6+29+5+9+8+7524+6+1+3</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>The Puzzle on the left illustrates an X-Wing example.  The two Base Sets for Candidate 5 are found in Column 5 and 8:</p>
+<p>The Candidate 6 Swordfish in <a class="reference internal" href="#fig-swordfish-eg1"><span class="std std-numref">Figure 2.16: </span></a>, Base Set Houses are highlighted beigé, Link Set Houses highlighted cyan, and intersections
+highlighted light purple.  The Base Sets are:
+<span class="raw-html"></span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">BS5c5</span> <span class="pre">=</span> <span class="pre">{5r2c5,</span> <span class="pre">5r8c5}&lt;/mong&gt;</span></code>, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">BS5c8</span> <span class="pre">=</span> <span class="pre">{5r2c7,</span> <span class="pre">5r8c7}</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>6r1</sub></b> = {6r1c7, 6r1c9}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>6r5</sub></b> = {6r5c2, 6r5c7}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>6r9</sub></b> = {6r9c2, 6r9c7, 6r9c9}</span></code>.</p></li>
 </ul>
-<p>The intersecting Cell Cover sets are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CS5r2</span> <span class="pre">=</span> <span class="pre">{5r2c5,</span> <span class="pre">5r2c6,</span> <span class="pre">5r2c7,</span> <span class="pre">5r2c8}</span></code>,  and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CS5r8</span> <span class="pre">=</span> <span class="pre">{5r8c5,</span> <span class="pre">5r8c7,</span> <span class="pre">5r8c8,</span> <span class="pre">5r8c9}</span></code>.</p></li>
-</ul>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<p>Applying the Sudoku Rule:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS5c5 | BS5c8) &amp; (CS5r2 | CS5r8) == (BS5c5 | BS5c8)
-   THEN E = (CS5r2, CS5r8) – (BS5c5 | BS5c8)
-</pre></div>
-</div>
-<p>The IF condition evaluates True using the same approach as the <span class="xref std std-ref">above</span>
-example.  Therefore, the eliminations evaluate to:</p>
-<p><span class="raw-html"></span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>Elims = (CS5r2, CS5r8) – (BS5c5 | BS5c8)
-Elims = {5r2c5, 5r2c6, 5r2c7, 5r2c8, 5r8c5, 5r8c7, 5r8c8, 5r8c9} – {5r2c5, 5r8c5, 5r2c7, 5r8c7}
-Elims = {5r2c6, 5r2c8, 5r8c8, 5r8c9}</pre>
-</div></div>
 <p><span></span></p>
-<p>The Sudoku Rule is equally applicable for subsets and fish of order ‘n’ &gt; 2.  Practically, it is
-unnecessary to look beyond order of ‘n’ == 4 because for every pattern where ‘n’ &gt; 4, a similar
-reciprocal pattern can be found of order for order 9 – ‘n’.</p>
+<p>The <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>6c2</sub></b> = {6r5c2, 6r9c2}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>6c7</sub></b> = {6r1c7, 6r5c7, 6r9c7}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>6c9</sub></b> = {6r1c9, 6r9c9}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>And the <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s in Column 4 are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>3c5</sub></b> = {6r5c2, 6r7c2, 6r9c2}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>4c5</sub></b> = {6r1c7, 6r5c7, 6r9c7}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>8c5</sub></b> = {6r1c9, 6r8c9, 6r9c9}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>The set unions are:
+<span class="raw-html"></span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>u</sub></b> = {6r1c7, 6r1c9, 6r5c2, 6r5c7, 6r9c2, 6r9c7, 6r9c9}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>u</sub></b> = {6r5c2, 6r9c2, 6r1c7, 6r5c7, 6r9c7, 6r1c9, 6r9c9}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>U</sub></b> = {6r5c2, 6r7c2, 6r9c2, 6r1c7, 6r5c7, 6r9c7, 6r1c9, 6r8c9, 6r9c9}</span></code>.</p></li>
+</ul>
+<p><span></span></p>
+<p>Applying the Sudoku Rule:
+<span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>  # Compute Eliminations
+&nbsp;            = {<del>6r5c2</del>, 6r7c2, <del>6r9c2</del>, <del>6r1c7</del>, <del>6r5c7</del>, <del>6r9c7</del>, <del>6r1c9</del>, 6r8c9, <del>6r9c9</del>} - {6r5c2, 6r9c2, 6r2c7, 6r5c7, 6r9c7, 6r2c9, 6r9c9}
+&nbsp;            = {6r7c2, 6r8c9}
+</pre></div></div>
+<p><span></span></p>
 </section>
-<section id="the-concept-of-rank">
-<h2><span class="section-number">2.3.5. </span>The concept of Rank<a class="headerlink" href="#the-concept-of-rank" title="Link to this heading">#</a></h2>
+</section>
+<section id="found-blc-mop-ge">
+<span id="id1"></span><h2><span class="section-number">2.3.4. </span>Multi Order Patterns (Base Set Total &lt;= Cover Set Total)<a class="headerlink" href="#found-blc-mop-ge" title="Link to this heading">#</a></h2>
+<aside class="topic">
+<p class="topic-title">Definition</p>
+<p>Pattern Rank = Link Set Total – Base Set Total</p>
+</aside>
 <section id="rank-0-patterns">
-<h3><span class="section-number">2.3.5.1. </span>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Link to this heading">#</a></h3>
-<p>So far, only Rank 0 patterns have been examined where ‘n’ Cover Sets can cover all the Base Set
-Element in ‘n’ Base Sets.  Recapping:  A Truth can only occur once in each Base Set and once in each
-Cover Set, and the Truth lies in the intersection of the Base Sets with Cover Sets.  Because one of
-the (yet to be determined) Base Set Elements is ‘The Truth’ in each Base Set, ‘The n Truths’ will be
-found in one of the intersections of each Cover Set with all the Base Sets.  Therefore, any same
-valued Cover Set Element that is not in an intersection, cannot be True and can be eliminated.</p>
-<p>Rank 0 patterns include Singles, Straight Subsets, Fish Patterns. Even Loops.</p>
+<h3><span class="section-number">2.3.4.1. </span>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Link to this heading">#</a></h3>
+<p>Rank 0 Patterns have the same Link Sets total as Base Sets to cover all the Base Ccells.</p>
+<p>Rank 0 patterns include Singles, Subsets, Fish and Even Loops.</p>
 <aside class="topic">
 <p class="topic-title">Rank 0 Rule</p>
 <p>Any Cover Set Element that is not part of a Base Set can be eliminated.</p>
 </aside>
 <p>The algebraic expression of the Sudoku Rule developed for ‘n’ Base Set, ‘n’ Cover Set patterns
-as developed <a class="reference internal" href="#n-base-n-cover-sud-rule"><span class="std std-ref">above</span></a> can be applied.  Repeated here for convenience:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>IF (BS1 | ... | BSn) &amp; (CS1 | ... | CSn) == (BS1 | ... | BSn)
-   THEN Elims = (CS1 | ... | CSn) – (BS1 | ... | BSn)
-</pre></div>
-</div>
+as developed <a class="reference internal" href="#n-base-n-cover-sud-rule"><span class="std std-ref">above</span></a> can be applied.</p>
 </section>
 <section id="rank-1-patterns">
-<h3><span class="section-number">2.3.5.2. </span>Rank 1 Patterns<a class="headerlink" href="#rank-1-patterns" title="Link to this heading">#</a></h3>
-<p>Rank 1 patterns require ‘n + 1’ Cover Set Links to cover/intersect all Base Set Elements in ‘n’ Base
+<h3><span class="section-number">2.3.4.2. </span>Rank 1 Patterns<a class="headerlink" href="#rank-1-patterns" title="Link to this heading">#</a></h3>
+<p>Rank 1 patterns require one more Link Set than the Base Set Total to cover all Base Ccells.
+in Base SetCover Set Links to cover/intersect all Base Set Elements in ‘n’ Base
 Sets to complete a potentially productive pattern.</p>
 <p>If more than ‘n’ Cover Sets are required to cover all Base Set Elements in ‘n’ Base Sets, then at
 least one Cover Sets does not intersect all Base Sets exist.  Therefore, it is impossible to lock
@@ -687,7 +644,7 @@ Sets can be eliminated.</p>
 <p><span></span></p>
 </section>
 <section id="rank-r-patterns">
-<h3><span class="section-number">2.3.5.3. </span>Rank R Patterns<a class="headerlink" href="#rank-r-patterns" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">2.3.4.3. </span>Rank R Patterns<a class="headerlink" href="#rank-r-patterns" title="Link to this heading">#</a></h3>
 <p>The concept of Rank can be extended beyond 1.</p>
 <p>A Rank 2 pattern requires ‘n + 2’ Cover Set Links to connect all Base Set Elements in ‘n’ Base
 Sets to complete a potentially productive pattern.</p>
@@ -735,11 +692,11 @@ appreciating the overall concept of Rank R patterns.</p>
 </section>
 </section>
 <section id="some-more-examples">
-<h2><span class="section-number">2.3.6. </span>Some More Examples<a class="headerlink" href="#some-more-examples" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">2.3.5. </span>Some More Examples<a class="headerlink" href="#some-more-examples" title="Link to this heading">#</a></h2>
 <figure class="align-right" id="fig-finned-x-wing-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/finned-x-wing-eg1.png"><img alt="Sudoku Finned-X-Wing Example" src="../_images/finned-x-wing-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.16:  </span><span class="caption-text">Finned X-Wing</span><a class="headerlink" href="#fig-finned-x-wing-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.17:  </span><span class="caption-text">Finned X-Wing</span><a class="headerlink" href="#fig-finned-x-wing-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+156+87+49+3+2.4+762.+18+528....+4+7+6....8.+5+9.73....618+8.5...+32.........+3.7.5...49....487.1||Finned X-Wing||3c35r38,r9c3;3r8c1-3r9c3|r8c1-=3|+156+87+49+3+2+34+762+9+18+528+9+1+5+3+4+7+6+4+6+1+38+2+5+9+773+2+4+9+5618+8+95+7+1+6+32+4+9+1+4+2+6+7+8+5+3+67+85+3+1+249+5+2+3+9487+61</mong></span></p>
 </div>
@@ -795,7 +752,7 @@ intersections that can also see the Fin cannot be True and can be eliminated.</p
 <figure class="align-right" id="fig-two-string-kite-eg1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/two-string-kite-eg1.png"><img alt="Sudoku Two String Kite Example" src="../_images/two-string-kite-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.17:  </span><span class="caption-text">Two String Kite</span><a class="headerlink" href="#fig-two-string-kite-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.18:  </span><span class="caption-text">Two String Kite</span><a class="headerlink" href="#fig-two-string-kite-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+3617..+2+95842+395+6+7+1.5.+26+14+8+3+1.+8+5+2+6.3+4+625....+1+8.+341..+526+4..+6+1.+8+5+2+58...+2+1672+1+6+8+5+7349||Two String Kite||9r6c6=9r6c1~9r4c2=9r7c2,9r6c6-9r7c6-9r7c2|r7c6-=9|+3617+8+4+2+95842+395+6+7+1+75+9+26+14+8+3+1+7+8+5+2+6+93+4+625+4+3+9+7+1+8+9+341+7+8+526+4+9+7+6+1+3+8+5+2+58+3+9+4+2+1672+1+6+8+5+7349</mong></span></p>
 </div>
@@ -853,7 +810,7 @@ be eliminated.</p>
 <figure class="align-right" id="fig-uls-chain-cd1" style="width: 359px">
 <a class="reference internal image-reference" href="../_images/uls-chain-cd1.png"><img alt="Sudoku Unlocked Set Chain Candidate Diagram Example" src="../_images/uls-chain-cd1.png" style="width: 395.85px; height: 281.45px;" /></a>
 <figcaption>
-<p><span class="caption-number">Figure 2.18:  </span><span class="caption-text">Unlocked Set Chain Candidate Diagram</span><a class="headerlink" href="#fig-uls-chain-cd1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 2.19:  </span><span class="caption-text">Unlocked Set Chain Candidate Diagram</span><a class="headerlink" href="#fig-uls-chain-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The Rank 1 Puzzle pattern on the right, is both an XY-Chain:
@@ -900,9 +857,13 @@ into “A Truth”.  Therefore, any same valued (Z) Ccell that can see all the e
 logic can be used to verify the pattern resolution.</p>
 </section>
 <section id="parting-comment">
-<h2><span class="section-number">2.3.7. </span>Parting Comment<a class="headerlink" href="#parting-comment" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">2.3.6. </span>Parting Comment<a class="headerlink" href="#parting-comment" title="Link to this heading">#</a></h2>
 <p>The skill in Sudoku still remains finding Patterns.  Having found probable patterns, the
 Sudoku Formula developed here can be used to verify patterns and calculate eliminations.</p>
+<p>But, what if… what if a whole Sudoku puzzle is a pattern?  If there are ‘n’ unknowns in the
+puzzle, is it possible to find ‘n’ Base Sets (truths) then to find ‘n’ or more Link Sets that cover
+all Base Set?  Will subtracting all the Base Set Ccells from all the Cover Set Ccells yield the all
+the CCells to eliminate, leaving a solved puzzle… .</p>
 </section>
 </section>
 
@@ -935,7 +896,7 @@ Sudoku Formula developed here can be used to verify patterns and calculate elimi
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 2d106c2*, Tue, 26 Dec 2023, 22:18:29
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 2d9d647*, Tue, 26 Dec 2023, 22:19:11
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -967,21 +928,20 @@ Sudoku Formula developed here can be used to verify patterns and calculate elimi
 </ul>
 </li>
 <li><a class="reference internal" href="#single-order-patterns">2.3.2. Single Order Patterns</a></li>
-<li><a class="reference internal" href="#multi-order-patterns">2.3.3. Multi Order Patterns</a><ul>
+<li><a class="reference internal" href="#multi-order-patterns-base-set-total-cover-set-total">2.3.3. Multi Order Patterns (Base Set Total == Cover Set Total)</a><ul>
 <li><a class="reference internal" href="#cell-base-sets-and-house-cover-sets-exposed-subsets">2.3.3.1. Cell Base Sets and House Cover Sets – Exposed Subsets</a></li>
 <li><a class="reference internal" href="#house-base-sets-and-cell-cover-sets-hidden-subsets">2.3.3.2. House Base Sets and Cell Cover Sets – Hidden Subsets</a></li>
 <li><a class="reference internal" href="#house-base-sets-and-house-cover-sets-fish">2.3.3.3. House Base Sets and House Cover Sets – Fish</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#some-examples">2.3.4. Some Examples</a></li>
-<li><a class="reference internal" href="#the-concept-of-rank">2.3.5. The concept of Rank</a><ul>
-<li><a class="reference internal" href="#rank-0-patterns">2.3.5.1. Rank 0 Patterns</a></li>
-<li><a class="reference internal" href="#rank-1-patterns">2.3.5.2. Rank 1 Patterns</a></li>
-<li><a class="reference internal" href="#rank-r-patterns">2.3.5.3. Rank R Patterns</a></li>
+<li><a class="reference internal" href="#found-blc-mop-ge">2.3.4. Multi Order Patterns (Base Set Total &lt;= Cover Set Total)</a><ul>
+<li><a class="reference internal" href="#rank-0-patterns">2.3.4.1. Rank 0 Patterns</a></li>
+<li><a class="reference internal" href="#rank-1-patterns">2.3.4.2. Rank 1 Patterns</a></li>
+<li><a class="reference internal" href="#rank-r-patterns">2.3.4.3. Rank R Patterns</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#some-more-examples">2.3.6. Some More Examples</a></li>
-<li><a class="reference internal" href="#parting-comment">2.3.7. Parting Comment</a></li>
+<li><a class="reference internal" href="#some-more-examples">2.3.5. Some More Examples</a></li>
+<li><a class="reference internal" href="#parting-comment">2.3.6. Parting Comment</a></li>
 </ul>
 </li>
 </ul>

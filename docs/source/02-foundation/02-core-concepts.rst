@@ -205,11 +205,11 @@ value has been deduced.
 .. figure:: images/truths-eg1.png
    :name: fig-truths-eg1
    :scale: 65%
-   :alt: 'A Truth' and 'The Truth' Example
+   :alt: 'Truths
    :align: right
    :figwidth: 359px
 
-   'A Truth' and 'The Truth' Example
+   Truths
 
    :raw-html:`<mong>....8+614.65+4.2.7+8+98..4..3+6.5+6..+4.....+926784..........6+2+87..9+6+14..5.6..93+936.1+4...|r3c6-=1|Pointing Locked Single||3r1c13,!-b2|r1c4-=3|+7+2+3+98+614+565+4+32+17+8+98+1+94+5+73+6+25+6+1+2+4+3+9+7+8+3+926784+5+1+4+7+8+1+9+5+2+36+2+87+5+39+6+14+1+45+76+2+893+936+81+4+5+2+7</mong>`
 

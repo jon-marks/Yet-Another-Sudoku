@@ -46,7 +46,7 @@ Sudoku Rule
 .. topic:: Sudoku Rule
 
    A Sudoku Puzzle has a unique solution where each cell in the 9 x 9 grid contains a value between
-   1 and 9 that only occcurs once in each of the 9 rows, 9 columns, and 9 - 3 x 3 boxes.
+   1 and 9 that only occurs once in each of the 9 rows, 9 columns, and 9 - 3 x 3 boxes.
 
 Sudoku Facts
 ============

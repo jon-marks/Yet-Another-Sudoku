@@ -105,7 +105,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       reference to the candidates not the links between them – a subtle distinction.
 
    **Cover Set**
-      A Cover Set is a :term:`Set` of all the :term:`Ccells` that :term:`See` each other in the 
+      A Cover Set is a :term:`Set` of all the :term:`Ccell`\s that :term:`See` each other in the 
       :term:`Chouse` of a :term:`Link Set`.
       
    **Eliminations**
@@ -161,7 +161,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       A :term:`Ccell` that is linked by :term:`Conditional Logic` to other nodes in a pattern.
 
    **Overlap**
-      The :term:`Cells` where two or more :term:`Chouses` overlap.
+      The :term:`Cell`\s where two or more :term:`Chouse`\s overlap.
       
    **Parity**
       The collective pronoun for the terms Odd and Even, which are the parity of the sequence
@@ -266,6 +266,11 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Strong Link**
       An inference between two Ccells where neither can be simultaneously False, nor simultaneously
       True.  If one Ccell is True, the other is False and vice-versa.
+
+   **Sudoku Rule**
+         A Sudoku Puzzle has a unique solution where each :term:`Cell` in the 9 x 9 :term:`Grid`
+         contains a number between 1 and 9 that only occurs once in each of the 9 :term:`Row`\s, 
+         9 :term:`Column`\s, and 9 - 3 x 3 :term:`Box`\es.
 
    **Super-Node**
       The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <super-node>`, Net or

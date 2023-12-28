@@ -50,7 +50,7 @@ In :ref:`Straight Hidden Subsets <hsp_subsets>`, the 'n' candidates are confined
 in a Group, forming a :term:`Truth`.  Because of this 'Truth', any other candidates in those four 
 cells can be eliminated.
 
-:ref:`Base Sets and Cover Sets <found_bsets_and_csets>` develops an algebra to verify the logic of
+:ref:`Base Sets and Cover Sets <found_blc_sets>` develops an algebra to verify the logic of
 these Subset patterns.
 
 See :ref:`Human Solvable Patterns / Subsets <hsp_subsets>` for worked examples of Exposed and

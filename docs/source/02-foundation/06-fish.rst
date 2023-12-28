@@ -8,7 +8,7 @@
 Fish
 ****
 
-Fish are single Candidate :ref:`Base Set / Cover Set <found_bsets_and_csets>` patterns where both
+Fish are single Candidate :ref:`Base Set / Cover Set <found_blc_sets>` patterns where both
 Base Sets and Cover Sets are :term:`House`\s.
 
 Fish are named according to their Base Set count:
@@ -23,7 +23,7 @@ Consider a single candidate value X, where X is a number between 1 and 9. Fish p
     * 'n' non-intersecting Houses containing between 2 and 'n' instances of X as the Bases,
     * where all instances of X in each Base Set :term:`Link`\s to another instance of X in another Base Set.
     * The houses containing these links form the Cover Sets.
-    * From :ref:`Base Sets and Cover Sets <found_bsets_and_csets>` above, we have shown that any
+    * From :ref:`Base Sets and Cover Sets <found_blc_sets>` above, we have shown that any
       instance of X in the Cover Sets that is not part of the intersection is not part of the
       :term:`Truth`, and can be eliminated.
 
