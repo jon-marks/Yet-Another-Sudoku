@@ -46,22 +46,21 @@ Some Definitions
    the Ccells is True, that is the :term:`Solved Value`.
 
 **Base Set**
-   A Base Set is a :term:`Set` of :term:`Ccell`\s in a :term:`Chouse` forming a :term:`Truth`.  Base
-   Sets may :term:`Overlap` each other, but cannot :term:`Intersect <Intersection>`.
+   A Base Set is a :term:`Set` of one or more :term:`Ccell`\s in a :term:`Chouse` forming a 
+   :term:`Truth`.  Base Sets may :term:`Overlap` each other, but cannot :term:`Intersect <Intersection>`.
 
 **Link Set**
-   A :term:`Set` of :term:`Ccell`\s in a non-:term:`Base Set` :term:`Chouse` that :term:`See`
-   each other in Base Sets.  A Link Set is made up of separate :term:`Intersection`\s with Base
-   Sets.
+   A :term:`Set` of one or more :term:`Ccell`\s in a non-:term:`Base Set` :term:`Chouse` that are 
+   in any Base Set.
 
 **Cover Set**
    A Cover Set is a :term:`Set` of all the :term:`Ccell`\s that :term:`See` each other in the 
    :term:`Chouse` of a :term:`Link Set`.
    
 A Viable Pattern is one where all the Base Set Ccells in the union of Base Sets are also present
-in the union of Cover Set Ccells.  That is All Base Set Ccells are covered by (or a subset of) Cover
-Set Ccells. Thus locking the intersecting Ccells as Truths in the Cover Sets.  Any Ccell in a Cover
-Set that is not part of its Truth (its Link Set), is eliminated. 
+in the union of Link Set Ccells.  That is All Link Set Ccells Intersect Base Set Ccells, thus locking
+all the Link Sets as Truths.  Any Cover Set Ccell that is not part of a Link Set cannot be True and
+is eliminated. 
 
 .. figure:: images/base-cover-eg1.png
    :name: fig-base-cover-eg1
@@ -102,7 +101,7 @@ Expressing the :term:`Sudoku Rule` as a Formula for Single Order Patterns using 
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>Base Set  <b>B</b>  = {P}    # P is the only Ccell Truth in the Base Set <b>B</b>
-Cover Set <b>C<sub>j</sub></b> = {S, T, V, ...}    # S, T, U, ... are the Ccells that P sees in Cover Set<sub>j</sub>.
+Cover Set <b>C<sub>j</sub></b> = {S, T, V, ...}    # S, T, U, ... are the Ccells that see P in Cover Set<sub>j</sub>.
 Cover Set <b>C</b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ...)    # C is the union of Cover Sets C<sub>0</sub>, C<sub>1</sub>, ...
 &nbsp;
 IF (<b>B</b> & <b>C</b> == <b>B</b>):    # if <u>all</u> the Cover Set Ccells intersect Base Set Ccells
@@ -134,6 +133,7 @@ House is the solved value. ``r8c6:= 3``, which automagically eliminates all ccel
 candidate 3 that can see this placed value.  However, this Logic is easier understood with a simple
 example before progressing to more complex patterns.
 
+|
 |
 
 :raw-html:`</span></p>
@@ -171,18 +171,42 @@ Because the IF condition is True, the Eliminations are evaluated as:
 All same value Ccells in intersecting houses that can see 3r8c6 in the intersection are eliminated,
 leaving ``3r8c6`` as the only Ccell in the intersection, permitting its placement.
 
-.. _found_blc_mop_eq:
+.. _found_blc_mop:
 
-Multi Order Patterns (Base Set Total == Cover Set Total)
-========================================================
+Multi Order Patterns
+====================
 
-Multi Order Patterns comprise more than one Base Sets and require at least the same or greater
-number of Link Sets to cover all Base Set Ccells.  This section only addresses patterns 
-where Base Set and Link Set totals match.  The Next Section :numref:`found_blc_mop_ge` extends to 
-patterns with the same or more Link Sets to Base Sets.
+:term:`Multi Order Pattern`\s, abr: :term:`MOP`, have multiple :term:`Base Set`\s  :term:`intersected <Intersection>` by
+multiple :term:`Link Set`\s.  Depending on how the Link Sets intersect the Base Sets, additional
+Truths may be found, which in turn, may lead to eliminations.
 
-In patterns with matching Base Set and Link Set totals, each Link Set intersects all Base Sets.  It 
-is this characteristic that makes eliminations possible by turning all the Link Sets into Truths.
+MOPs can be one of:
+
+*  **Lesser Multi Order Patterns** with fewer Link Sets present than Base 
+   Sets.  It is impossible for fewer Link Sets to intersect all the Base Set CCells.  Therefore, 
+   without additional crieria, it is impossible to lock further Truths.  Look to 
+   `Allan Barker's General Logic of Sudoku <https://sudoku.allanbarker.com/sweb/general.htm>`_'s
+   section on Illegal Logic for more information.
+*  **Equal Multi Order Patterns**, (abr: EMOP) All :term:`Ccell`\s in 'n' :term:`Base Set`\s are 
+   :term:`Intersected <Intersection>` by at least 'n' :term:`Link Set`\s.  Any :term:`Cover Set` 
+   :term:`Ccell` that is not in a Base Set cannot be True and is eliminated.
+*  **Greater Multi Order Patterns**, (abr: GMOP) need 'n + r' :term:`Link Set`\s to 
+   :term:`Intersect <Intersection>` all the Base Set Ccells. Any non Base Set Ccell in 'r + 1' 
+   Cover Sets cannot be True and is eliminated.  EMOPs are a special case of GMOPs where 'r' = 0.  
+
+.. _found_blc_emop:
+
+Equal Multi Order Patterns
+--------------------------
+
+A 'n<sup>th</sup>' order :term:`EMOP` has 'n' Link Sets intersecting all the Ccells of 'n' Base Sets, 
+exposing the Link Set's as Truths.  Any Ccell that can see a Link Set Truth cannot be True and is
+eliminated.  A EMOP pattern is one where the union of Base Sets is equal to the union of Link Sets.
+
+:term:`Cover Set`\s assist in the visibility of locating :term:`Ccell`\s to eliminate.  A Cover Set 
+is a :term:`Set` of all the Ccells that See each other in the :term:`Chouse` of a :term:`Link Set`.
+Any Cover Set Ccell that is not part of a Base Set is Eliminated.  Subtracting the union of Base Sets
+from the union of Cover Set's yields the Eliminations.
 
 .. figure:: images/exp-quad-cd1.png
    :name: fig-exp-quad-cd1
@@ -209,40 +233,41 @@ this House and are Eliminated.
 
    Not Quite an Exposed Quad Pattern
    
-:numref:`fig-not-exp-quad-cd1` has a V instead of a Z in B3.  Here candidate V  remains uncovered
+:numref:`fig-not-exp-quad-cd1` has a V instead of a Z in B3.  Here candidate V remains uncovered
 after the Link Sets have been applied.  Either the remaining Exposed Quad is True, or V is True.  
-But which it is, is undetermined.  Therefore, it is not possible to draw any elimination conclusions.
+But which it is, is undetermined.  Therefore, without additional criteria, it is impossible to draw 
+any elimination conclusions.
 
 Base Sets may be any combination of distinct :term:`Chouse`\s.  That is, they can :term:`Overlap`,
 but do not :term:`Intersect <intersection>`.  Base Sets do not share :term:`Ccell`\s.  
 
-Extending the :term:`Sudoku Rule` formula to include Multi Order Patterns:
+Extending the :term:`Sudoku Rule` formula to include Equal Multi Order Patterns:
 
-.. _n-base-n-cover-sud-rule:
+.. _n-base-n-link-sud-rule:
 
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>Base Set  <b>B<sub>i</sub></b>  = {P, Q, R, ...}    # P, Q, R, ... are the Ccells making up the Truth in the Base Set <b>B<sub>i</sub></b>
-Base Set <b>B<sub>U</sub></b> = U(<b>B<sub>0</sub></b>, <b>B<sub>1</sub></b>, ...)    # The union of Base Sets B<sub>0</sub>, B<sub>1</sub>, ...
+Base Set <b>B<sub>U</sub></b> = U(<b>B<sub>0</sub></b>, <b>B<sub>1</sub></b>, ...,<b>B<sub>n</sub></b>)    # The union of Base Sets <b>B<sub>1</sub></b>, <b>B<sub>2</sub></b>, ..., <b>B<sub>n</sub></b>
 Link Set <b>L<sub>i</sub></b> = {K, M, N, ...}    # K, M, N, ... Links Ccells from the Base Set Union that see each other in a non-Base Set Chouse
-Link Set <b>L<sub>U</sub></b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ...)    # The union of Link Sets L<sub>0</sub>, L<sub>1</sub>, ...
-Cover Set <b>C<sub>i</sub></b> = {K, M, N, S, T, ...}    # Contains all the Ccells that See each other in the Link Set House L<sub>i</sub>
-Cover Set <b>C<sub>U</sub></b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ...)    # The union of Cover Sets C<sub>0</sub>, C<sub>1</sub>, ...
+Link Set <b>L<sub>U</sub></b> = U(<b>L<sub>0</sub></b>, <b>L<sub>1</sub></b>, ..., <b>L<sub>n</sub></b>)    # The union of Link Sets <b>L<sub>1</sub></b>, <b>L<sub>2</sub></b>, ..., <b>L<sub>n</sub></b>
+Cover Set <b>C<sub>i</sub></b> = {K, M, N, S, T, ...}    # Contains all the Ccells that See each other in the Link Set House <b>L<sub>i</sub></b>
+Cover Set <b>C<sub>U</sub></b> = U(<b>C<sub>0</sub></b>, <b>C<sub>1</sub></b>, ..., <b>C<sub>n</sub></b>)    # The union of Cover Sets <b>C<sub>1</sub></b>, <b>C<sub>2</sub></b>, ..., <b>C<sub>n</sub></b>
 &nbsp;
 IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # if <u>all</u> the Base Set Ccells are Linked
-&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>    # Then Eliminations are the unlinked Cover Ccells
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>B<sub>U</sub></b>    # Then Any Cover Sets Ccells that is not in a Base Set is eliminated.
 </pre></div></div>
 <p><span>`
 
-The :term:`Base Set`\s are :term:`Chouse`\s, each containing a :term:`Truth`.  :term:`Link Set`\s connect the :term:`Ccell`\s of the truths in 
+The :term:`Base Set`\s are non-intersecting :term:`Chouse`\s, each containing a :term:`Truth`.  :term:`Link Set`\s connect the :term:`Ccell`\s of the truths in 
 other non-Base Set Chouses.  If all the Base Set Ccells are :term:`Linked <Link>` (union of Base Sets == Union of 
-Link Sets), then the :term:`Cover Set` Ccells that are not in this union (union of Cover Sets - Union of Link 
+Link Sets), then the :term:`Cover Set` Ccells that are not in this union (union of Cover Sets - Union of Base 
 Sets) cannot be True and are eliminated. 
 
-.. _found_bscs_exp_ssets:
+.. _found_emop_exp_ssets:
 
-Cell Base Sets and House Cover Sets – Exposed Subsets
------------------------------------------------------
+Cell Base Sets and House Link Sets – Exposed Subsets
++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The :term:`Base Set`\s are the :term:`CCell`\s, each containing a :term:`Truth`.  :term:`Link Set`\s are all confined to a :term:`House` in
 which all the Base Sets are contained. 
@@ -307,7 +332,7 @@ Applying the Sudoku Rule:
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
-&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>  # Compute Eliminations
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>B<sub>U</sub></b>  # Compute Eliminations
 &nbsp;            = {3r4c5, 3r6c5, <del>3r7c5</del>, 3r8c4, <del>3r8c5</del>, 3r8c6, 3r9c4, <del>3r9c5</del>, 3r9c6, 4r4c5, 4r6c5, <del>4r7c5</del>, 4r8c4, <del>4r8c5</del>, 4r8c6, 4r9c4, <del>4r9c5</del>, 4r9c6, 8r4c5, 8r6c5, <del>8r8c5</del>, 8r8c6, <del>8r9c5</del>, 8r9c6} - {3r7c5, 3r8c5, 3r9c5, 4r7c5, 4r8c5, 4r9c5, 8r8c5, 8r9c5}
 &nbsp;            = {3r4c5, 3r6c5, 3r8c4, 3r8c6, 3r9c4, 3r9c6, 4r4c5, 4r6c5, 4r8c4, 4r8c6, 4r9c4, 4r9c6, 8r8c6, 8r9c6}
 </pre></div></div>
@@ -315,10 +340,10 @@ Applying the Sudoku Rule:
 
 An unusually productive 14 Ccell Elimination.
 
-.. _found_bscs_hid_ssets1:
+.. _found_emop_hid_ssets1:
 
-House Base Sets and Cell Cover Sets – Hidden Subsets
-----------------------------------------------------
+House Base Sets and Cell Link Sets – Hidden Subsets
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 :term:`Base Set`\s are :term:`Set`\s of :term:`Ccell`\s, each a :term:`Truth`, all in the same 
 :term:`House`.  :term:`Link Set`\s connect Base Set Ccells in :term:`Cell`\s.
@@ -337,24 +362,24 @@ House Base Sets and Cell Cover Sets – Hidden Subsets
 The Hidden Pair in :numref:`fig-hid-pair-eg1` has the following :term:`Base Set`\s:
 :raw-html:`</span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>2r1</sub></b> = {2r1c1, 2r1c5}</span></code>,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>9r1</sub></b> = {9r1c1, 9r1c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>2r1</sub></b> = {2r1c1, 2r1c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>9r1</sub></b> = {9r1c1, 9r1c5}</span></code>.</p></li>
 </ul>
 <p><span>`
 
 The :term:`Link Set`\s are:
 :raw-html:`</span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>r1c1</sub></b> = {2r1c1, 9r1c1}</span></code>,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>r1c5</sub></b> = {2r1c5, 9r1c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>r1c1</sub></b> = {2r1c1, 9r1c1}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>r1c5</sub></b> = {2r1c5, 9r1c5}</span></code>.</p></li>
 </ul>
 <p><span>`
 
 And the :term:`Cover Set`\s in Column 4 are:
 :raw-html:`</span></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>r1c1</sub></b> = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</span></code>,</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>r1c5</sub></b> = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>r1c1</sub></b> = {2r1c1, 3r1c1, 7r1c1, 9r1c1}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>r1c5</sub></b> = {2r1c5, 5r1c5, 7r1c5, 8r1c5, 9r1c5}</span></code>.</p></li>
 </ul>
 <p><span>`
 
@@ -371,18 +396,18 @@ Applying the Sudoku Rule:
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
-&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>  # Compute Eliminations
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>B<sub>U</sub></b>  # Compute Eliminations
 &nbsp;            = {<del>2r1c1</del>, 3r1c1, 7r1c1, <del>9r1c1</del>, <del>2r1c5</del>, 5r1c5, 7r1c5, 8r1c5, <del>9r1c5</del>} - {2r1c1, 9r1c1, 2r1c5, 9r1c5}
 &nbsp;            = {3r1c1, 7r1c1, 5r1c5, 7r1c5, 8r1c5}
 </pre></div></div>
 <p><span>`
 
-.. _found_bscs_fish:
+.. _found_emop_fish:
 
-House Base Sets and House Cover Sets – Fish
--------------------------------------------
+House Base Sets and House Link Sets – Fish
++++++++++++++++++++++++++++++++++++++++++++
 
-Fish are single Candidate value patterns.  Base Sets are Sets of same value Ccell Truthss
+Fish are single Candidate value patterns.  Base Sets are Sets of same value Ccell Truths
 each in their own House.  Link Sets connect Ccells from the Base Sets in non-Base Set Houses.
 
 .. figure:: images/swordfish-eg1.png
@@ -437,123 +462,105 @@ Applying the Sudoku Rule:
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
 <pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
-&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>L<sub>U</sub></b>  # Compute Eliminations
+&nbsp;  THEN <b>Elims</b> = <b>C<sub>U</sub></b> - <b>B<sub>U</sub></b>  # Compute Eliminations
 &nbsp;            = {<del>6r5c2</del>, 6r7c2, <del>6r9c2</del>, <del>6r1c7</del>, <del>6r5c7</del>, <del>6r9c7</del>, <del>6r1c9</del>, 6r8c9, <del>6r9c9</del>} - {6r5c2, 6r9c2, 6r2c7, 6r5c7, 6r9c7, 6r2c9, 6r9c9}
 &nbsp;            = {6r7c2, 6r8c9}
 </pre></div></div>
 <p><span>`
 
-.. _found_blc_mop_ge:
+.. _found_blc_gmop:
 
-Multi Order Patterns (Base Set Total <= Cover Set Total)
-========================================================
+Greater Multi Order Patterns
+============================
 
 .. topic:: Definition
 
-   Pattern Rank = Link Set Total – Base Set Total
+   Pattern Rank = number of Cover Sets – Number of Base Sets
+   
+The number of additional Cover Sets needed to intersect all Base Sets determines the order of Rank. 
 
 Rank 0 Patterns
 ---------------
 
-Rank 0 Patterns have the same Link Sets total as Base Sets to cover all the Base Ccells.
-
-Rank 0 patterns include Singles, Subsets, Fish and Even Loops.
+Rank 0 Patterns have 'n' :term:`Link Set`\s :term:`intersecting <Intersection>` all the 
+:term:`Ccell`\s of 'n' :term:`Base Set`\s.  That is,Rank 0 pattern has the same number of Base and 
+Cover Sets.  
 
 .. topic:: Rank 0 Rule
 
-   Any Cover Set Element that is not part of a Base Set can be eliminated.
+   Any non-Base Set Ccell in any Cover Set cannot be True and is eliminated.
 
-The algebraic expression of the Sudoku Rule developed for 'n' Base Set, 'n' Cover Set patterns
-as developed :ref:`above <n-base-n-cover-sud-rule>` can be applied.
+The algebra for Rank Zero patterns is documented :ref:`above <found_blc_emop>`.
+
+Rank 0 patterns include Singles, Subsets, Fish and Even Loops.
 
 Rank 1 Patterns
 ---------------
 
-Rank 1 patterns require one more Link Set than the Base Set Total to cover all Base Ccells.
-in Base SetCover Set Links to cover/intersect all Base Set Elements in 'n' Base
-Sets to complete a potentially productive pattern.
-
-If more than 'n' Cover Sets are required to cover all Base Set Elements in 'n' Base Sets, then at
-least one Cover Sets does not intersect all Base Sets exist.  Therefore, it is impossible to lock
-'A Truth' to any Cover Set.
-
-However, all is not lost, because any two Cover Sets combined will cover all Base Sets, ie form
-'A Truth'.  Therefore, any Cover Set Element that is not part of a Base Set in the intersection of
-two Cover Sets will see 'A Truth', and hence itself cannot be True and can be eliminated.
+Rank 1 :term:`GMOP` Patterns need an extra Link Set to Intersect all Base Sets.  This ensures that 
+the union of any two Link Sets see a complete Base Set Truth.  Therefore,  where ever two Link Sets overlap, any 
+non-Base Set Ccells in their intersecting Cover Sets cannot be True and are eliminated.
 
 Many “Human Solvable” patterns are Rank 1 patterns.  These include Bent Subsets,  Finned Fish in all
-their forms, AI Chains in all their forms, and Unlocked Sets.
+their forms, AI Chains in many of their forms, and Unlocked Sets.
 
 .. topic:: Rank 1 Rule
 
-   Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 2 Cover
-   Sets can be eliminated.
-
-Rank 1 Rule is expressed algebraically as:
+   Any non-Base Set Ccell in the intersection of any two Cover Sets cannot be True and is eliminated.
+   
+The Sudoku Rule as a Formula for Rank 1 :term:`GMOP`\s:
 
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
-<pre>IF (BS1 | ... | BSn) & (CS1 | ... | CSn | CSn+1) == (BS1 | ... | BSn)
-&nbsp;  THEN Elims = (Union of (Intersections of all combinations of 2 Cover Sets)) - (BS1 | ... | BSn)</pre>
-</div></div>
+<pre>Base Set  <b>B<sub>i</sub></b>  = {P, Q, R, ...}    # P, Q, R, ... are the Ccells making up the Truth in the Base Set <b>B<sub>i</sub></b>
+Base Set <b>B<sub>U</sub></b> = U(<b>B<sub>1</sub></b>, <b>B<sub>1</sub></b>, ...,<b>B<sub>n</sub></b>)    # The union of Base Sets <b>B<sub>1</sub></b>, <b>B<sub>2</sub></b>, ..., <b>B<sub>n</sub></b>
+Link Set <b>L<sub>i</sub></b> = {K, M, N, ...}    # K, M, N, ... Links Ccells from the Base Set Union that see each other in a non-Base Set Chouse
+Link Set <b>L<sub>U</sub></b> = U(<b>L<sub>1</sub></b>, <b>L<sub>1</sub></b>, ..., <b>L<sub>n+1</sub></b>)    # The union of Link Sets <b>L<sub>1</sub></b>, <b>L<sub>2</sub></b>, ..., <b>L<sub>n+1</sub></b>
+Cover Set <b>C<sub>i</sub></b> = {K, M, N, S, T, ...}    # Contains all the Ccells that See each other in the Link Set House <b>L<sub>i</sub></b>
+Cover Set <b>C<sub>U</sub></b> = U(<b>C<sub>1</sub></b>, <b>C<sub>1</sub></b>, ..., <b>C<sub>n+1</sub></b>)    # The union of Cover Sets <b>C<sub>1</sub></b>, <b>C<sub>2</sub></b>, ..., <b>C<sub>n+1</sub></b>
+&nbsp;
+IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # if <u>all</u> the Base Set Ccells are Linked
+&nbsp;  THEN <b>Elims</b> = (Union of (Intersections of all Combinations of 2 Cover Sets)) - <b>B<sub>U</sub></b>   
+</pre></div></div>
 <p><span>`
+
+Any Ccell in the occupied Intersected Cover Pair that is not of the Union of Link Sets cannot 
+be True and is eliminated.
 
 Rank R Patterns
 ---------------
 
-The concept of Rank can be extended beyond 1.
+Rank 'r' :term:`GMOP` patterns need 'n + r' :term:`Link Set`\s to :term:`intersect <Intersection>` 
+all the :term:`Ccell`\s of 'n' :term:`Base Set`\s.  This ensures the union of any r + 1 Link Sets 
+will always see a complete Base Set truth.  Therefore, where ever r + 1 Link Sets overlap, any 
+non-Base Set Ccels in their intersecting Cover Sets cannot be True and are eliminated.
 
-A Rank 2 pattern requires 'n + 2' Cover Set Links to connect all Base Set Elements in 'n' Base
-Sets to complete a potentially productive pattern.
+Many of the most difficult puzzles have patterns that can be found and resolved as Rank 2 and higher
+freeform Base / Cover Set patterns.  A deeper understanding of Sudoku logic comes from appreciating 
+rank 'r' logic.
 
-If 'n + 2' Links are required to cover all Base Set Elements in ‘n’ Base Sets, then there will be at
-least one combination  3 Cover Sets required to cover all 'n' Base Sets.  That is, not all single
-Cover Sets, or pairs of Cover Sets will cover all Base Sets, however all combinations of 3 Cover
-Sets will always cover all Base Sets in Rank 2 patterns.  Therefore, any Cover Set Element that is
-not part of a Base Set that lies in the intersection of 3 Cover Sets, sees a Truth and itself cannot
-be True and can be eliminated.
+.. topic:: Rank 'r' Rule
 
-.. topic:: Rank 2 Rule
+   Any non-Base Set Ccell in the intersection of any 'r + 1'two Cover Sets cannot be True and is eliminated.
 
-   Any Cover Set Element that is not part of a Base Set that lies in the intersection of any 3 Cover
-   Sets can be eliminated.
-
-Rank 2 Rule is expressed algebraically as:
+The Sudoku Rule as a Formula for Rank r :term:`GMOP`\s:
 
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
-<pre>IF (BS1 | ... | BSn) & (CS1 | ... | CSn | CSn+1, CSn+2) == (BS1 | ... | BSn)
-&nbsp;  THEN Elims = (Union of (Intersections of all combinations of 3 Cover Sets)) - (BS1 | ... | Bsn)</pre>
-</div></div>
+<pre>Base Set  <b>B<sub>i</sub></b>  = {P, Q, R, ...}    # P, Q, R, ... are the Ccells making up the Truth in the Base Set <b>B<sub>i</sub></b>
+Base Set <b>B<sub>U</sub></b> = U(<b>B<sub>1</sub></b>, <b>B<sub>1</sub></b>, ...,<b>B<sub>n</sub></b>)    # The union of Base Sets <b>B<sub>1</sub></b>, <b>B<sub>2</sub></b>, ..., <b>B<sub>n</sub></b>
+Link Set <b>L<sub>i</sub></b> = {K, M, N, ...}    # K, M, N, ... Links Ccells from the Base Set Union that see each other in a non-Base Set Chouse
+Link Set <b>L<sub>U</sub></b> = U(<b>L<sub>1</sub></b>, <b>L<sub>1</sub></b>, ..., <b>L<sub>n+r</sub></b>)    # The union of Link Sets <b>L<sub>1</sub></b>, <b>L<sub>2</sub></b>, ..., <b>L<sub>n+1</sub></b>
+Cover Set <b>C<sub>i</sub></b> = {K, M, N, S, T, ...}    # Contains all the Ccells that See each other in the Link Set House <b>L<sub>i</sub></b>
+Cover Set <b>C<sub>U</sub></b> = U(<b>C<sub>1</sub></b>, <b>C<sub>1</sub></b>, ..., <b>C<sub>n+r</sub></b>)    # The union of Cover Sets <b>C<sub>1</sub></b>, <b>C<sub>2</sub></b>, ..., <b>C<sub>n+1</sub></b>
+&nbsp;
+IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # if <u>all</u> the Base Set Ccells are Linked
+&nbsp;  THEN <b>Elims</b> = (Union of (Intersections of all Combinations of 'r + 1' Cover Sets)) - <b>B<sub>U</sub></b>   
+</pre></div></div>
 <p><span>`
 
-A Rank R pattern requires 'n + R' Cover Set Links to connect all Base Set Elements in 'n' Base Sets
-to complete a potentially productive pattern.
-
-If 'n + R' Links are required to cover all Base Set Elements in 'n' Base Sets, then there will be at
-least one combination R + 1 Cover Sets required to cover all 'n' Base Sets.  Not all single
-Cover Sets, or combinations of R or less Cover Sets will cover all Base Sets.  However, all
-combinations of  R + 1 Cover Sets will always cover all Base Sets in Rank R patterns.  Therefore,
-any Cover Set Element that is not part of a Base Set that lies in the intersection of  R + 1 Cover
-Sets, sees a Truth and itself cannot be True and can be eliminated.
-
-.. topic:: Rank R Rule
-
-   Any Cover Set Element that is not part of a Base Set that lies in the intersection of any R + 1
-   Cover Sets can be eliminated.
-
-Rank R Rule is expressed algebraically as:
-
-:raw-html:`</span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>IF (BS1 | ... | BSn) & (CS1 | ... | CSn+R) == (BS1 | ... | BSn)
-&nbsp;  THEN Elims = (Union of (Intersections of all combinations of R+1 Cover Sets)) - (BS1 | ... | Bsn)</pre>
-</div></div>
-<p><span>`
-
-Rank 2 and higher patterns are in the realm of the scarce and rarely encountered.  Although most of
-the focus is on Rank 0 and Rank 1 patterns, a deeper understanding of Sudoku logic comes from
-appreciating the overall concept of Rank R patterns.
+If the 'n + r' :term:`Link Set`\s intersect the all the Ccells of all 'n' non-intersecting :term:`Base Set`\s then any Ccell
+found in the intersection of any 'r + 1' Cover Sets cannot be True and is Eliminated.
 
 Some More Examples
 ==================
@@ -570,48 +577,45 @@ Some More Examples
    :raw-html:`<mong>+156+87+49+3+2.4+762.+18+528....+4+7+6....8.+5+9.73....618+8.5...+32.........+3.7.5...49....487.1||Finned X-Wing||3c35r38,r9c3;3r8c1-3r9c3|r8c1-=3|+156+87+49+3+2+34+762+9+18+528+9+1+5+3+4+7+6+4+6+1+38+2+5+9+773+2+4+9+5618+8+95+7+1+6+32+4+9+1+4+2+6+7+8+5+3+67+85+3+1+249+5+2+3+9487+61</mong>`
 
 The Rank 1 puzzle pattern on the right is a Finned X-Wing ``3c35r38,r9c3``.
-Two base sets for Candidate 3 are
-
-*  ``<mong>BS3c3 = {3r3c3, 3r8c3, 3r9c3}</mong>``, and
-*  ``<mong>BS3c5 = {3r3c5, 3r8c5}</mong>``.
-
-The intersecting Cover Sets are:
-
-*  ``CS3r3 = {3r3c3, 3r3c4, 3r3c5, 3r3c6}``,
-*  ``CS3r8 = {3r8c1, 3r8c3, 3r8c5, 3r8c6}``, and
-*  ``CS3b7 = {3r8c1, 3r8c3, 3r9c3}</mong>``.
-
-|
-|
-|
-|
-
-Applying the Sudoku Rule for Rank 1 Patterns::
-
-   IF (BS3c3 | BS3c5) & (CS3r3 | CS3c8 | CS3b7) == (BS3c3 | BS3c5)
-      THEN Elims = ((CS3r3 & CS3r8) | (CS3r3 & CS3b7) | (CS3r8 & 3b7)) – (BS3c3 | BS3c5)
-
-Evaluating the IF condition:
-
+The Base Sets are:
 :raw-html:`</span></p>
-<div class="highlight-none notranslate"><div class="highlight">
-<pre>(BS3c3 | BS3c5) & (CS3r3 | CS3c8 | CS3b7) == (BS3c3 | BS3c5)
-{3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5} & {3r3c3, <del>3r3c4</del>, 3r3c5, <del>3r3c6</del>, <del>3r8c1</del>, 3r8c3, 3r8c5, <del>3r8c6</del>, 3r9c3} == {3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5}
-{3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5} == {3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5}
-True</pre>
-</div></div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>3c3</sub></b> = {3r3c3, 3r8c3, 3r9c3}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>3c5</sub></b> = {3r3c5, 3r8c5}</span></code>.</p></li>
+</ul>
 <p><span>`
 
-Because the IF condition evaluates True, the Elims are computed:
+The Link Sets are:
+:raw-html:`</span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>3r3</sub></b> = {3r3c3, 3r3c5}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>3r8</sub></b> = {3r8c3, 3r8c5}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>L<sub>3b7</sub></b> = {3r8r3, 3r9c3}</span></code>.</p></li>
+</ul>
+<p><span>`
 
+And the Cover Sets are:
+:raw-html:`</span></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>3r3</sub></b> = {3r3c3, 3r3c4, 3r3c5, 3r3c6}</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>3r8</sub></b> = {3r8c1, 3r8c3, 3r8c5, 3r8c6}</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre"><b>C<sub>3b7</sub></b> = {3r8c1, 3r8r3, 3r9c1, 3r9c3}</span></code>.</p></li>
+</ul>
+<p><span>`
+
+Applying the Sudoku Rule: 
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
-<pre>Elims = ((CS3r3 & CS3r8) | (CS3r3 & CS3b7) | (CS3r8 & CS3b7)) – (BS3c3 | BS3c5)
-Elims = (({3r3c3, 3r3c4, 3r3c5, 3r3c6} & {3r8c1, 3r8c3, 3r8c5, 3r8c6}) | ({3r3c3, 3r3c4, 3r3c5, 3r3c6} & {3r8c1, 3r8c3, 3r9c3}) | ({3r8c1, 3r8c3, 3r8c5, 3r8c6} & {3r8c1, 3r8c3, 3r9c3})) – ({3r3c3, 3r8c3, 3r9c3} | {3r3c5, 3r8c5})
-Elims = (({}) | ({}) | ({3r8c1, 3r8c3}) – ({3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5})
-Elims = {3r8c1}</pre>
-</div></div>
+<pre>IF (<b>B<sub>U</sub></b> == <b>L<sub>U</sub></b>):    # Evaluates True
+&nbsp;  THEN <b>Elims</b> = (<b>C<sub>3r8</sub></b> & <b>C<sub>3b7</sub></b>) - <b>B<sub>U</sub></b>  # Compute Eliminations
+&nbsp;            = {3r8c1, 3r8r3} - {3r3c3, 3r8c3, 3r9c3, 3r3c5, 3r8c5}
+&nbsp;            = {3r8c1}
+</pre></div></div>
 <p><span>`
+
+
+The intersection of :raw-html:`<code class="docutils literal notranslate"><span class="pre"><b>C<sub>3r8</sub></b> & <b>C<sub>3b7</sub></b></span></code>`
+is the only intersection of pairs of Link Sets that yields a not empty result.
 
 Double-checking this result intuitively, either the Fish pattern will be True or the Fin will be
 True.  Therefore, any Ccell that is any Cover Set Ccell outside the
@@ -745,8 +749,3 @@ Parting Comment
 
 The skill in Sudoku still remains finding Patterns.  Having found probable patterns, the 
 Sudoku Formula developed here can be used to verify patterns and calculate eliminations.
-
-But, what if. . . what if a whole Sudoku puzzle is a pattern?  If there are 'n' unknowns in the
-puzzle, is it possible to find 'n' Base Sets (truths) then to find 'n' or more Link Sets that cover 
-all Base Set?  Will subtracting all the Base Set Ccells from all the Cover Set Ccells yield the all
-the CCells to eliminate, leaving a solved puzzle. . . .

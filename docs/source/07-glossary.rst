@@ -39,7 +39,8 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :term:`Chute`.
 
    **Base Set**
-      A Base Set is a :term:`Set` of :term:`Ccell`\s in a :term:`Chouse` forming a :term:`Truth`.
+      A Base Set is a :term:`Set` of one or more :term:`Ccell`\s in a :term:`Chouse` forming a 
+      :term:`Truth`.  Base Sets may :term:`Overlap` each other, but cannot :term:`Intersect <Intersection>`.
 
    **BEQ**
       Abbreviation of :term:`Bent Exposed Quad`
@@ -111,14 +112,32 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Eliminations**
       Removing Ccells in puzzles that have been determined impossible to be True.
 
+   **EMOP**
+      Abbreviation of :term:`Equal Multi Order Pattern`.
+      
    **End Node**
       In an AI-Chain of Nodes, the End Nodes mark the start and end of Chain.
-
+      
+   **Equal Multi Order Pattern**
+      (abr: :term:`EMOP`\) A Pattern with 'n' :term:`Base Set`\s and 'n' or more :term:`Link Set`\s
+      where one or more groupings of 'n' Link Sets intersects as all Base Set :term:`Ccell`\s.
+      
+   **Fin**
+      Extra :term:`Ccell`\s in :term:`Base Set`\s of Fish patterns.
+      
    **Floor**
       A row oriented :term:`Chute`.
+      
+   **GMOP**
+      Abbreviation of :term:`Greater Multi Order Pattern`.
+      
+   **Greater Multi Order Pattern**
+      (abr: :term:`GMOP`\) A pattern with 'n' :term:`Base Set`\s and needing 'n + r' :term:`Link Set`\s
+      to :term:`Intersect <Intersection>` all the Base Set :term:`Ccell`\s. :term:`EMOP`\s are a 
+      special case of GMOPs where 'r' = 0.  
 
    **Given**
-      An initially placed value on a Sudoku.  It is the Given placements that make the puzzle.
+      An initially placed value on a Sudoku Puzzle.  It is the Given placements that make the puzzle.
 
    **Grid**
       9x9 grid, subdivided into 9  – 3x3 :Term:`Box`\es  (Blocks) on to which Sudoku puzzles are
@@ -138,8 +157,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       In an AI-Chain of Nodes, the Interior Nodes lie between the :term:`End Node`\s.
 
    **Intersection**
-     The :term:`Ccell`\s common to two or more :term:`Set`\s where their :term:`Chouse`\s 
-     :term:`Overlap`.
+     The :term:`Ccell`\s common to two or more :term:`Set`\s where they :term:`Overlap`.
 
    **Line**
       Either a :term:`Row` or a :term:`Column`.
@@ -150,10 +168,18 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       See :ref:`found_cc_premises_and_inferences`
       
    **Link Set**
-      A :term:`Set` of :term:`Ccell`\s in a non-:term:`Base Set` :term:`Chouse` that :term:`See`
-      each other in Base Sets.  A Link Set is made up of separate :term:`Intersection`\s with Base
-      Sets.
-
+      A :term:`Set` of one or more :term:`Ccell`\s in a non-:term:`Base Set` :term:`Chouse` that are
+      in any Base Set.
+      
+   **MOP**
+      Abreviation of :term:`Multi Order Pattern`.
+      
+   **Multi Order Pattern**
+      Abr: :term:`MOP`.  A Pattern with multiple :term:`Base Set`\s :term:`Intersected <Intersection>`
+      by multiple :term:`Link Set`\s.  There are Lesser, 
+      :term:`Equal <Equal Multi Order Pattern>` and :term:`Greater <Greater Multi Order Pattern>`
+      MOPS depending on the nature of Link Set intersections. See :ref:`Multi Order Patterns <found_blc_mop>`. 
+      
    **Loop**
       An (:term:`AI`) :term:`Chain` that loops back on itself closing the chain.
 
