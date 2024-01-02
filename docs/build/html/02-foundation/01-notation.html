@@ -1,0 +1,1412 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.2. Premises and Inferences" href="02-premise-inference.html" /><link rel="prev" title="2. Foundation" href="index.html" />
+
+    <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+        <title>Yet another Sudoku | Foundation | Notation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/table_styling.css?v=a1a2a898" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/overrides.css?v=c0b90fc8" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Yet Another Sudoku</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/AIM.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Yet Another Sudoku</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.1. Sudoku Notation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-premise-inference.html">2.2. Premises and Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-spatial-reps.html">2.3. Spatial Representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html">2.4. Links and Chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-uniqueness.html">2.6. Uniqueness</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../03-human-solvable-patterns/index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 3. Human Solvable Patterns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/01-singles.html">3.1. Singles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/02-subsets.html">3.2. Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-super-human.html">3.9. Super Human Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-grading.html">5. Grading Puzzles</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../06-software/index.html">6. Software</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 6. Software</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../06-software/01-programs/index.html">6.1. Programs</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 6.1. Programs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/01-yas.html">6.1.1. Yet Another Sudoku</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/02-yas-prt.html">6.1.2. Pattern Regression Tester</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/03-yas-gen.html">6.1.3. Batch Puzzle Generator and Grader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../06-software/01-programs/04-yas-sol.html">6.1.4. Batch Puzzle Solver</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/02-file-formats.html">6.2. File Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../06-software/03-algorithms.html">6.3. Algorithms</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../07-glossary.html">7. Glossary and Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-references.html">8. References</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="sudoku-notation">
+<h1><span class="section-number">2.1. </span>Sudoku Notation<a class="headerlink" href="#sudoku-notation" title="Link to this heading">#</a></h1>
+<p>Agreement on a notation to communicate Sudoku concepts avoids a
+<a class="reference external" href="https://en.wikipedia.org/wiki/Tower_of_Babel#Confusion_of_tongues">Confusion of Tongues</a>.  This
+is my attempt to draw from what I consider best
+practices in the literature and put forward a precise, descriptive, comprehensive, consistent and
+unambiguous language for Sudoku.  The notation is loosely based on and adapted from <a class="reference external" href="http://sudopedia.enjoysudoku.com/Diagrams_and_Notations.html">Sudopedia’s
+Diagrams and Notations</a>.</p>
+<section id="cells-ccells-houses-and-chouses">
+<span id="found-lang-ccells"></span><h2><span class="section-number">2.1.1. </span>Cells, Ccells, Houses and Chouses<a class="headerlink" href="#cells-ccells-houses-and-chouses" title="Link to this heading">#</a></h2>
+<p>A <a class="reference internal" href="../07-glossary.html#term-Cell"><span class="xref std std-term">Cell</span></a> is a location on a Sudoku Grid.  A Cell is present in the three <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>s:,
+<a class="reference internal" href="../07-glossary.html#term-Row"><span class="xref std std-term">row</span></a>, <a class="reference internal" href="../07-glossary.html#term-Column"><span class="xref std std-term">Column</span></a>, and a <a class="reference internal" href="../07-glossary.html#term-Box"><span class="xref std std-term">Box</span></a>.</p>
+<p>A <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> refers to any candidate in any cell as defined by its candidate value, row index
+and column index.  That is, a Ccell is the unique reference to a specific candidate in a cell.</p>
+<p>Ccells are three-dimensional tuples of value, row and column, each dimension ranging
+between 1 and 9.  In Sudoku, 729 unique (9 value x 9 row x 9 column) possible Ccells exist.  Ccells
+represent the remaining possible candidate values in a <a class="reference internal" href="../07-glossary.html#term-Cell"><span class="xref std std-term">Cell</span></a></p>
+<p>A solved Sudoku puzzle comprises 81 unique Ccells of the 729 unique possibilities.  That is each
+cell in the 9 row by 9 column has only one value, all values in all cells obeying the
+<a class="reference internal" href="../01-introduction.html#sudoku-rule"><span class="std std-ref">Sudoku Rule</span></a>.</p>
+<p>The term Ccell is not to be confused with a:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../07-glossary.html#term-Node"><span class="xref std std-term">Node</span></a>:  A further qualification of a ccell in a <a class="reference internal" href="../07-glossary.html#term-Pattern"><span class="xref std std-term">pattern</span></a> such as a net or chain.
+For example:  Ccells linked together in a chain form the Nodes between the links of the chain.</p></li>
+<li><p><a class="reference internal" href="../07-glossary.html#term-Candidate"><span class="xref std std-term">Candidate</span></a>:  A lesser reference to only the possible values in cells that obey Sudoku
+Rules.</p></li>
+<li><p><a class="reference internal" href="../07-glossary.html#term-Potential-Elimination"><span class="xref std std-term">Potential Elimination</span></a>:  A Synonym for Candidate, in the context of applying
+<a class="reference internal" href="../07-glossary.html#term-Conditional-Logic"><span class="xref std std-term">Conditional Logic</span></a>: to reduce the set of Candidates in a Cell.</p></li>
+</ul>
+<p><a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a> is the collective noun for <a class="reference internal" href="../07-glossary.html#term-Row"><span class="xref std std-term">Row</span></a>, <a class="reference internal" href="../07-glossary.html#term-Column"><span class="xref std std-term">Column</span></a>, and <a class="reference internal" href="../07-glossary.html#term-Box"><span class="xref std std-term">Box</span></a>, on a Sudoku grid.</p>
+<p><a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a> is the collective noun for <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a> and <a class="reference internal" href="../07-glossary.html#term-Cell"><span class="xref std std-term">Cell</span></a>.</p>
+</section>
+<section id="syntax">
+<h2><span class="section-number">2.1.2. </span>Syntax<a class="headerlink" href="#syntax" title="Link to this heading">#</a></h2>
+<section id="cell-location-specifiers">
+<h3><span class="section-number">2.1.2.1. </span>Cell (Location) Specifiers<a class="headerlink" href="#cell-location-specifiers" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r6c5</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The cell in location row 6, column 5 in the 9x9 cell grid</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>b4</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The cells in box 4.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>b4p6</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The cell in box 4, position 5. Boxes and positions in boxes are
+counted left to right then top to bottom, same location as
+<code class="docutils literal notranslate"><span class="pre">r5c2</span></code></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in row 2</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>c4</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in column 4</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r34c245</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The grid of 6 cells <code class="docutils literal notranslate"><span class="pre">r3c2,</span> <span class="pre">r3c4,</span> <span class="pre">r3c5,</span> <span class="pre">r4c2,</span> <span class="pre">r4c4,</span> <span class="pre">r4c5</span></code></p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2r5,r3c456,r56c56</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>A collection of cells in a comma separated list</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r2c!378</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in row 2 other than <code class="docutils literal notranslate"><span class="pre">r2c378</span></code></p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>r!35c6</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All cells in column 6 other than <code class="docutils literal notranslate"><span class="pre">r35c6</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="ccell-specifiers">
+<h3><span class="section-number">2.1.2.2. </span>Ccell Specifiers<a class="headerlink" href="#ccell-specifiers" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>3r6c5</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The Ccell of value 3 in row 6, column 5</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>3r6</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>All Ccells with value 3 in row 6</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>347b6p2</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>A condensing of 3b6p2,4b6p2,7b6p2.  Also, same as: <code class="docutils literal notranslate"><span class="pre">3437r4c8</span></code></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono><wuline>3r258c5</wuline></mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Two or more ccells of value 3 found in any of <code class="docutils literal notranslate"><span class="pre">r258c5</span></code></p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono><duline>7r3c1368</duline></mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>One or more ccells of value 7 found in any of <code class="docutils literal notranslate"><span class="pre">r3c1368</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="ccell-postfixes">
+<h3><span class="section-number">2.1.2.3. </span>Ccell Postfixes<a class="headerlink" href="#ccell-postfixes" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>o</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The Ccell is a member of the odd parity <a class="reference internal" href="../03-human-solvable-patterns/07-chains-loops-nets.html#super-node"><span class="std std-ref">Super Node</span></a>
+in a <a class="reference internal" href="../03-human-solvable-patterns/07-chains-loops-nets.html#strong-linked-patterns"><span class="std std-ref">SL Pattern</span></a></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>e</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>The Ccell is a member of the even parity <a class="reference internal" href="../03-human-solvable-patterns/07-chains-loops-nets.html#super-node"><span class="std std-ref">Super Node</span></a>
+in a <a class="reference internal" href="../03-human-solvable-patterns/07-chains-loops-nets.html#strong-linked-patterns"><span class="std std-ref">SL Pattern</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="pattern-combiners">
+<h3><span class="section-number">2.1.2.4. </span>Pattern Combiners<a class="headerlink" href="#pattern-combiners" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>,</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>list ccell specifiers forming a pattern.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>;</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>list of related ccell patterns creating a larger pattern leading to
+an elimination or placement.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="operators">
+<h3><span class="section-number">2.1.2.5. </span>Operators<a class="headerlink" href="#operators" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>:=</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Placement of a value in a cell, eg. <code class="docutils literal notranslate"><span class="pre">&gt;r4c5:=5</span></code></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>-=</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Elimination of a ccell or ccells - candidate(s) from a cell eg.
+<code class="docutils literal notranslate"><span class="pre">r7c2-=24</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="conditionals">
+<h3><span class="section-number">2.1.2.6. </span>Conditionals<a class="headerlink" href="#conditionals" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>==</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Presence of only value or candidates in cells,  e.g. <code class="docutils literal notranslate"><span class="pre">23==r2c57</span></code></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>~=</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Presence of only 2 or more of specified candidates in each
+specified cell in a cell grouping, such that union of candidates
+in specified cells match specified candidates. e.g.
+<code class="docutils literal notranslate"><span class="pre">347~=r2c259</span></code>, an exposed subset.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>--</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Presence of at least the specified candidate(s) in cells e.g.
+<code class="docutils literal notranslate"><span class="pre">34--r2c8</span></code>.  This condition is also specified by <code class="docutils literal notranslate"><span class="pre">34r2c8</span></code>, a
+shorthand where the “–” is implied.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>~-</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Presence of at least one instance of each specified candidate,
+amongst other candidates in a cell grouping. e.g. <code class="docutils literal notranslate"><span class="pre">34~-r3Ib3</span></code>,
+candidates 3 and 4 with other candidates, are present in the
+intersection of row 3 with box 3</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>!-</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Absence of candidate(s) in cells, eg. <code class="docutils literal notranslate"><span class="pre">34!-r2c235</span></code>, candidates 3
+and 4 are absent in cells <code class="docutils literal notranslate"><span class="pre">r2c2,</span> <span class="pre">r2c3,</span> <span class="pre">r2c5</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="relational-specifiers">
+<h3><span class="section-number">2.1.2.7. </span>Relational Specifiers<a class="headerlink" href="#relational-specifiers" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>#</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Count, e.g. <code class="docutils literal notranslate"><span class="pre">17#2r3</span></code>, candidates 1 and 7 occur twice in row 3.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>=></mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Inference, e.g. <code class="docutils literal notranslate"><span class="pre">1r2c2</span> <span class="pre">=&gt;</span> <span class="pre">1!=r7c2</span> <span class="pre">=&gt;</span> <span class="pre">3r7c2</span></code>, asserting 1 in
+cell r2c2 infers an absence of 1 in cell r7c2, which in turn
+infers the presence of 3 in r7c2, and so on.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>U</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>House union, e.g. <code class="docutils literal notranslate"><span class="pre">r5Ub6</span></code>, the 15 cells in union of row 5 and
+box 6</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>I</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>House intersections, e.g. <code class="docutils literal notranslate"><span class="pre">r5Ib6</span></code>, the 3 cell in the
+intersection of row 5 and box 6</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>=</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Direct Strong Link between two Ccells. If X is True then Y is
+False and if X is False then Y is True</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>-</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Direct Weak Link between two Ccells. If X is True then Y is False
+and if X is False then Y is Unknown</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>~</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Strong Link masquerading as a Weak Link in a pattern</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>|=|</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Indirect Strong Link between two Ccells, resulting from
+a pattern</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>|-|</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Indirect Weak Link between two Ccells, resulting from
+a pattern</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>|~|</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Indirect) Robust link between two Ccells. Opposite to a Weak
+Link, If X is True, then Y is unknown, and if X is False, Y is
+True</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>(...)</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Parenthesis - Distributive Property
+<code class="docutils literal notranslate"><span class="pre">5r3c2=3r3c2</span></code> &amp;equiv; <code class="docutils literal notranslate"><span class="pre">(5=3)r3c2</span></code></p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>{...,...}</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Braces – Groupings of sub-patterns in Nets, etc.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>[...]</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Square Brackets - To group sub-patterns of larger patterns</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono><...></mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Pointy Brackets - contain relationships between grouped
+sub-patterns</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="candidate-dressing">
+<h3><span class="section-number">2.1.2.8. </span>Candidate Dressing<a class="headerlink" href="#candidate-dressing" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>/</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Restricted Candidate, <code class="docutils literal notranslate"><span class="pre">3/456r3Ub2</span></code>, 4 is the
+restricted candidate in the union of row 3 and box 2</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>\</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Unrestricted Candidate, <code class="docutils literal notranslate"><span class="pre">34\56c7Ub4</span></code>, 5 is the
+unrestricted candidate in the union of column 7 and box 4</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="set-algebra">
+<h3><span class="section-number">2.1.2.9. </span>Set Algebra<a class="headerlink" href="#set-algebra" title="Link to this heading">#</a></h3>
+<div class="table-wrapper colwidths-given styled-table docutils container">
+<table class="styled-table docutils align-left" style="width: 97%">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>A = {P, Q, R}</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X, Y and Z are Ccell members of Set A</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>|</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Bar) Set Union Operator</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>&</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Set Intersection Operator</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>-</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Dash) Set difference Operator</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>U(A, B, C)</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Union of sets A, B, and C.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mono>I(A, B, C)</mono></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Intersection of sets A, B, and C.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="symantics">
+<h2><span class="section-number">2.1.3. </span>Symantics<a class="headerlink" href="#symantics" title="Link to this heading">#</a></h2>
+<p>Reading and interpreting this Sudoku language syntax is explained by examples.  An appreciation of
+the meaning (semantics) of this syntax evolves through the balance of this section and the next.
+Albeit a comprehensive list, it is not an exhaustive treatise of all patterns, but hopefully a
+reference and enough to get a good understanding of the syntax mechanics.</p>
+<p>Note:</p>
+<ol class="arabic simple">
+<li><p>Values always precede operators and/or cell specifiers when describing or specifying a pattern.</p></li>
+<li><p>Values always follow an operator when cell(s) are being modified (either assigning a value or
+eliminating a Ccell).</p></li>
+<li><p>A Ccell that is part of a structure such as a Chain or Net is always called a Node to distinguish
+it from other Ccells that are not part of the structure.</p></li>
+<li><p>A Ccell that is part of a Set is called either a Member or Element of the Set to distinguish it
+from other Ccells that are not part of the Set.</p></li>
+</ol>
+<section id="singles">
+<h3><span class="section-number">2.1.3.1. </span>Singles<a class="headerlink" href="#singles" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt><strong>Exposed Singles</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">3==r7c1</span></code></dt><dd><p>3 is the only candidate in r7c1 (and can be placed).</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Hidden Singles</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">3#1b7,b7p3</span></code></dt><dd><p>3 occurs only once in box 7, and that is in position 3</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Pointing Locked Singles</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">7r9c12,!-b7</span></code></dt><dd><p>7 occurs in r9, cells r9c1, and r9c2, and nowhere else in box 7, locking it to row 9</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Claiming Locked Singles</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">4r45c2,!-c2</span></code></dt><dd><p>4 occurs in column 2, cells r4c2 and r5c2, and nowhere else in column 2, locking it to box 4.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Empty Rectangles</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">7#4b4,r4,c3;7r4c4=7r7c4</span></code></dt><dd><p>7 occurs 4 times in box 4 describing lines r4 and c3 and 7r4c4 is strongly linked to 7r7c4.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="straight-subsets">
+<h3><span class="section-number">2.1.3.2. </span>(Straight) Subsets<a class="headerlink" href="#straight-subsets" title="Link to this heading">#</a></h3>
+<dl>
+<dt><strong>Exposed Pairs</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">56==r4c59</span></code></dt><dd><p>Only Candidates 5 and 6 are only present in both r4c5 and r4c9 in row 4.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Exposed Triples</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">14==r3c1,15==r3c5,145==r3c6</span></code></dt><dd><p>Only candidates 1 and 4 are present in r3c1, 1 and 5 in r3c5, and 145 in r3c6, all in row 3</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Exposed Quads</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">5789==r4c4,579==r4c5,78==r4c6,5789==r4c8</span></code></dt><dd><p>Only candidates 5, 7, 8 and 9 are present in r4c4, 5, 7, and 9 in r4c5, 7 and
+8 present in r4c6, and 5, 7, 8, and 9 present in r4c8, all in row 4</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Exposed Locked Pairs</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">68==r89c1</span></code></dt><dd><p>Only candidates 6 and 8 are present in r89c1 which lies in the intersection of column1 and
+box 7</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Exposed Locked Triples</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">345==r2c4,45==r2c5,35==r2c6</span></code></dt><dd><p>Only candidates 3, 4, 5 are present r2c4, 4 and 5 in r2c5, and 3 and 5 in r2c6, all in
+row 2 and box 5,</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Hidden Pairs</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">45#2r3c38</span></code></dt><dd><p>Candidates 4 and 5 only occur twice in r3, in cells r3c3 and r3c8.  These candidates can be
+hidden by other candidates in those cells</p>
+</dd>
+</dl>
+<p>OR</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">45!-r3c!38</span></code></dt><dd><p>Candidates 4 and 5 are not present in row 3 outside of cells r3c3 and r3c8</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Hidden Triples</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">259!-r1c!135</span></code></dt><dd><p>Candidates 2, 5 and 9 are not present in row 1 outside r1c1, r1c3 and r1c5</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Hidden Quads</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2689!-r1c!1378</span></code></dt><dd><p>Candidates 2, 6, 8 and 9 are not present in row 1 outside r1c1, r1c3, r1c7 and r1c8</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="fish">
+<h3><span class="section-number">2.1.3.3. </span>Fish<a class="headerlink" href="#fish" title="Link to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Fish ccell pattern specifications, the base set row or column always precede the cover set column or
+row. For example 3c47r26 finds the base sets in columns 4 and 7, and the cover sets in rows 2
+and 6.</p>
+</div>
+<dl class="simple">
+<dt><strong>X-Wings</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">5r26c69</span></code></dt><dd><p>Candidate 5 is found twice in the base rows 2 and 6, which are covered by columns 6 and 9</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Swordfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><code class="docutils literal notranslate"><wuline>8c157r234</wuline></code></span></dt><dd><p>Candidate 8 is found two to three times in each base column 1, 5 and 7, which are covered by
+rows 2, 3, and 4</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Jellyfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><code class="docutils literal notranslate"><wuline>2r1469c1589</wuline></code></span></dt><dd><p>Candidate 2 is found two to four times in each base row 1, 4, 6, and 9 which are covered by
+columns 1, 5, 8 and 9</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Finned X-Wings</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2c57r28,r79c5;2r8c6-2r7c5;2r8c6-2r9c5</span></code></dt><dd><p>Candidate 2 is found twice in base columns 5 and 7, which are covered by rows 2 and 8.
+Base column 5 also has two fins in <code class="docutils literal notranslate"><span class="pre">r7c5</span></code> and row <code class="docutils literal notranslate"><span class="pre">r9c5</span></code>. Cover Ccell <code class="docutils literal notranslate"><span class="pre">2r8c6</span></code> sees both fins.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Finned Swordfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><code class="docutils literal notranslate"><wuline>2r267c345</wuline>,r7c6;2r8c5-2r7c6;2r9c5-2r7c6</code></span></dt><dd><p>Candidate 2 is found two to three times in base rows 2, 6 and 7, that are covered by columns 3, 4
+and 5.  Base row 7 also has a fin <code class="docutils literal notranslate"><span class="pre">2r7c6</span></code>.  Cover Ccell <code class="docutils literal notranslate"><span class="pre">2r8c5</span></code> sees the fin.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Finned Jellyfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><code class="docutils literal notranslate"><wuline>8r1358c4689</wuline>,r8c7;8r7c9-8r8c7</code></span></dt><dd><p>Candidate 8 is found two to four times in base rows 1, 3, 5, and 8, that are covered by columns
+4, 6, 8 and 9.  Fin <code class="docutils literal notranslate"><span class="pre">8r8c7</span></code> exists in row 8. Cover Ccell <code class="docutils literal notranslate"><span class="pre">8r7c9</span></code> sees this fin.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Sashimi X-Wings</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2r69c2,r6c4,r9c5,r9c6;2r7c4-2r6c4;2r7c4-2r9c5;2r7c4-2r9c6</span></code></dt><dd><p>Candidate 2 is found twice in base rows 6 and 9, that is only covered by column 4. Three fins
+exist, <code class="docutils literal notranslate"><span class="pre">r9c5</span></code> and <code class="docutils literal notranslate"><span class="pre">r9c6</span></code> in base row 9 and <code class="docutils literal notranslate"><span class="pre">r6c4</span></code> in base row 6. Ccell <code class="docutils literal notranslate"><span class="pre">2r7c4</span></code> sees all
+fins.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Sashimi Swordfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><code class="docutils literal notranslate" style="overflow-x: scroll;"><wuline>6r258c69</wuline>,r5c1,r8c2,r8c3;6r7c1-6r5c1;6r7c1-6r8c2;6r7c1-6r8c3;6r9c1-6r5c1;6r9c1-6r8c2; 6r9c1-6r8c3</code></span></dt><dd><p>Candidate 6 is found two to three times in base rows 2, 5 and 8, that is only covered by columns
+6 and 9.  Three fins exist, r8c2 and r8c3 in base row 8 and r5c1 in base row 5. Ccells 6r7c1
+and 6r9c1 see all three fins.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Sashimi Jellyfish</strong></dt><dd><dl class="simple">
+<dt><span class="raw-html"><code class="docutils literal notranslate"><wuline>7r1569c468</wuline>,r9c7,r5c9;7r7c9-7r9c7;7r7c9~7r5c9</code></span></dt><dd><p>Candidate 7 is found two to four times in base rows 1, 5, 6 and 9, that are covered by only
+three columns 4, 6, and 8.  Two fins exist r9c7 and r5c7.  Ccell 7r7c9 sees both Fins.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="bent-subsets">
+<h3><span class="section-number">2.1.3.4. </span>Bent Subsets<a class="headerlink" href="#bent-subsets" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt><strong>Y-Wings</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">23==r1c6,26==r1c7,36==r2c8;(3r1c8,3r2c6)-\3(r1c6,r2c8)</span></code></dt><dd><p>Y-Wing spanning row 1 and box 3, with <a class="reference internal" href="../07-glossary.html#term-Unrestricted-Candidate"><span class="xref std std-term">Unrestricted Candidate</span></a> 3 in the pincers cells
+<code class="docutils literal notranslate"><span class="pre">r1c6</span></code> and <code class="docutils literal notranslate"><span class="pre">r2c8</span></code>.  Both <code class="docutils literal notranslate"><span class="pre">3r1c8</span></code> and <code class="docutils literal notranslate"><span class="pre">3r2c6</span></code> from outside the pattern see
+Unrestricted Candidate 3 in the pincers <code class="docutils literal notranslate"><span class="pre">3r1c6</span></code> and <code class="docutils literal notranslate"><span class="pre">3r2c8</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>XYZ-Wings</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">359==r6c7,35==r6c8,39==r7c7;3r5c7-\3(r6c7,r6c8,r7c7)</span></code></dt><dd><p>XYZ Wing spanning column 7 and box 7 with Unrestricted Candidate 3 in all three cells. 3r5c7
+from outside the pattern see all Unrestricted Candidate instances - 3r6c7, 3r6c8 and
+3r7c7.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Bent Exposed Quads</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">459==r7c1,14==r7c5,45==r7c7,19==r8c4;(9r8c1,9r8c3)-\9(r7c1,r8c4)</span></code></dt><dd><p>Bent exposed quad spanning row 7 and box 7, with Unrestricted Candidate 9.  9r8c1 and 9r8c3
+from outside the pattern see all Unrestricted Candidate instances - 9r7c1 and 9r8c4.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Grouped Bent Pair, Exposed Line, Hidden Box</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">U89r8c456,89==r8c1,89--r7c4</span></code></dt><dd><p>Grouped Bent Pair with the union of candidates 8 and 9 in the intersection of row 8 and box 8
+with exposed pair in row 8 and hidden pair in box 8.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Grouped Bent Pair, Hidden Line, Exposed Box</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">U49r789c3,49==r8c2,49--r6c3</span></code></dt><dd><p>Grouped Bent Pair with the union of candidates 4 and 9 in the intersection of column 3 and box
+3.  The exposed pair is box 3 and hidden pair in column 3.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Bent Hidden Triples</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">18r7c3-189r7c7-89r4c7</span></code></dt><dd><p>Bent Hidden Triple in made up candidates 1, 8, 9 in row 7 and column 7.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="inference-chains-loops-and-nets">
+<h3><span class="section-number">2.1.3.5. </span>Inference Chains, Loops and Nets<a class="headerlink" href="#inference-chains-loops-and-nets" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt><strong>Skyscrapers</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2r5c9=2r7c9~2r7c4=2r6c4,2r5c9~2r6c8-2r6c4</span></code></dt><dd><p>A four node SE-AIC, where both ends 2r5c9 and 2r6c4 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>. 2r6c8 sees
+both ends resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Two String Kites</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">3r2c1=3r2c6-3r3c5=3r8c5,3r2c1-3r8c1-3r8c5</span></code></dt><dd><p>A four node SE-AIC, where both ends 3r2c1 and 3r8c5 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>. 3r8c1 sees
+both ends resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Turbot Fish</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">7r2c8=7r2c6-7r9c6=7r7c5,7r2c8-7r7c8-7r7c5</span></code></dt><dd><p>A four node SE-AIC, where both ends 7r2c8 and 7r7c5 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a>. 7r7c8 sees
+both ends resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Longer X-Chains</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">7r1c2=7r1c9-7r2c8=7r7c8-7r7c3=7r4c3,7r1c2-7r4c2-7r4c3</span></code></dt><dd><p>A six node SE-AIC, where both ends 7r1c9 and 7r4c3 see 7r1c2, resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Even X-Loops</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">3r2c4=3r2c8~3r3c7=3r5c7-3r4c9=3r4c4~,3r4c9-3r5c9-3r5c7</span></code></dt><dd><p>A six (even numbered) node Even X loop where 3r5c9 can see two of the nodes, resulting in its
+elimination. Note the trailing - or ~ specifier back to the start indicating the chain loops
+back on itself with a weak link or masquerading as weak link respectively.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Strong X-Loops</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">6r1c6=6r4c6-6r4c2=6r2c2-6r2c4=,6r4c6=6r1c6=6r1c6</span></code></dt><dd><p>A five (odd numbered) node Strong X-Loop where 6r1c6 pivots on two strong links, resulting in
+its placement.  Note the trailing = specifier indicating a strong link looping back to the
+start.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>XY-Chains</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">(8=3)r1c6~(3=4)r1c7~(4=5)r5c7-(5=8)r5c4,8r5c4-8r4c6~8r5c4</span></code></dt><dd><p>An eight node XY Chain.  Each cell only contains two nodes, a bi-value cell.  Hence, the
+strong links of the AIC exist in the cells, and the weak links between the cells.  8r4c6 can
+see both ends of the chain, resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>XY-Loops</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">(4=7)r1c7~(7=9)r8c7~(9=8)r9c9~(8=4)r7c7~,9r9c9-9r8c9-9r8c7</span></code></dt><dd><p>An eight node XY Loop.  Each cell only contains two nodes, a bi-value cell.  The loop causes
+all the links between cells to become strong.  9r8c9 can see both an odd numbered link
+9r9c9 and an even numbered link 9r8c7, resulting in its elimination. Note the trailing - or ~
+specifier back to the start indicating the chain loops back on itself with a weak link or
+masquerading as weak link respectively.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Remote Pairs</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">(2=3)(r4c5~r4c9~r9c9~r7c7~r6c7),3r4c5-3r7c5-3r7c7</span></code></dt><dd><p>A 5 Cell, 10 Node Net made up of same valued bi-value cells. 3r7c5 Can see both an odd
+and even parity Ccell in the net and can be eliminated.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>W-Wings</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">(8=9)r4c3~9r4c4=9r5c4~(9=8)r5c7,8r4c3-8r4c8-8r5c7</span></code></dt><dd><p>A <a class="reference internal" href="../07-glossary.html#term-Conjugate-Pair"><span class="xref std std-term">Conjugate Pair</span></a> at the ends of a chain with the same <a class="reference internal" href="../07-glossary.html#term-End-Node"><span class="xref std std-term">End Node</span></a> candidate value
+and the inner conjugate pair nodes see each other through an interior <a class="reference internal" href="../07-glossary.html#term-Strong-Link"><span class="xref std std-term">Strong Link</span></a>.
+This pattern forms a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a> between the End Nodes. 8r4c8 can see both ends
+resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>AI-Chains</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2r4c8=2r4c9-7r4c9=7r8c9-7r9c7=7r9c5-2r9c5=2r8c5,2r4c8-2r8c8-2r8c5</span></code></dt><dd><dl class="simple">
+<dt>An 8 node AI-Chain forming a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust Link</span></a> between its ends, 2r4c8 and 2r8c5.  2r8c8 can</dt><dd><p>see both ends, resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><strong>Even AI-Loops</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">1r4c5=1r6c5-1r6c8=3r6c8-3r4c7=3r4c5-,1r4c5-5r4c5-3r4c5,1r4c5-8r4c5-3r4c5,3r4c7-3r5c7-3r6c8,3r4c7-3r5c8-3r6c8,1r6c8-1r6c3-1r6c5</span></code></dt><dd><p>A 6 node AI-Loop, strengthening the existing weak links.  All Nodes that can see both an odd
+and even parity link can be eliminated, such as 58r4c5, 3r5c78, and 1r6c3.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Strong AI-Loops</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">r8c9=1r1c9-6r1c9=6r1c8-3r1c8=3r7c8-3r8c9=,1r1c9=1r8c9=1r8c9</span></code></dt><dd><p>A seven (odd numbered) node Strong AI-Loop where 3r8c9 pivots on two strong links, resulting in
+its placement.  Note the trailing = specifier indicating a strong link looping back to the
+start.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Group Linked Chains and Loops</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">8r3c23=8r2c3-8r8c3=8r8c9,8r3c23-8r3c9-8r8c9</span></code></dt><dd><p>An group linked Turbot fish where the <a class="reference internal" href="../07-glossary.html#term-End-Node"><span class="xref std std-term">End Node</span></a>s 8r3c23 and 8r8c9 form a <a class="reference internal" href="../07-glossary.html#term-Robust-Link"><span class="xref std std-term">Robust
+Link</span></a>.  8r3c9 can see both ends resulting in its elimination.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Strong Linked Net</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">5r5c4e=5r6c4o=6r6c4e={6r6c8o,6r2c4o=6r1c6e=6r4c6o=9r4c6e=9r4c7o=9r5c9e=9r5c4o},9r1c9-9r5c9e,6r1c9-6r1c6e</span></code></dt><dd><p>Note the braces grouping multiple subnet links to a parent.  Also note the net level parity appended to each
+Ccell.  All the candidates in a cell outside the net see even nodes (9r1c9-9r5c9e, 6r1c9-6r1c6e).  If Even nodes
+are True, then none of the candidates in that outside cell can be True.  This is a contradiction, the Truth set
+for that cell must contain at least one candidate.  Therefore, all the Even Parity Nodes are False and can be
+eliminated.  And, by implication, all the Odd Parity Nodes are True and can be placed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="super-human-patterns">
+<h3><span class="section-number">2.1.3.6. </span>Super Human Patterns<a class="headerlink" href="#super-human-patterns" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt><strong>Kraken Finned Fish</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2r69c12,r9c6;2r9c6-2r9c1=3r9c1-3r9c2=3r6c2-2r6c2=2r6c1-2r7c1</span></code></dt><dd><p>In this Kraken Finned X-Wing, Candidate 2 is found twice in base row 6 and 9, which are
+covered by columns 1 and 2. A fin is present in <code class="docutils literal notranslate"><span class="pre">r9c6</span></code>, seen by Ccell <code class="docutils literal notranslate"><span class="pre">2r7c1</span></code> through the
+WE-AIC: <code class="docutils literal notranslate"><span class="pre">2r9c6-2r9c1=3r9c1-3r9c2=3r6c2-2r6c2=2r6c1-2r7c1</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Kraken Sashimi Fish</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">2r13c5,r1c8,r3c9;2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9;2r3c9~2r9c9</span></code></dt><dd><p>In this Kraken Sashimi X-Wing, Candidate 2 is found twice in base rows 1 and 3, and is only
+covered by column 5.  Two fins exist <code class="docutils literal notranslate"><span class="pre">r1c8</span></code> and <code class="docutils literal notranslate"><span class="pre">r3c9</span></code>.  Ccell <code class="docutils literal notranslate"><span class="pre">2r9c9</span></code> sees <code class="docutils literal notranslate"><span class="pre">2r3c9</span></code> directly and <code class="docutils literal notranslate"><span class="pre">2r1c8</span></code>
+indirectly through the WE-AIC: <code class="docutils literal notranslate"><span class="pre">2r1c8~2r1c5=7r1c5-7r1c7=6r1c7~6r9c7=6r9c9~2r9c9</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</section>
+<section id="outcomes">
+<h2><span class="section-number">2.1.4. </span>Outcomes<a class="headerlink" href="#outcomes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt><strong>Placements</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">r3c5:=7</span></code></dt><dd><p>Place 7 in cell <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>.  Only a single value can be placed in a Cell</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Eliminations</strong></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">r3c5-=7</span></code></dt><dd><p>Remove candidate 7 from <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>, if present.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c5-=237</span></code></dt><dd><p>Remove candidates 2, 3, and 7 from cell <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>, if present.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c789-=237</span></code></dt><dd><p>Remove candidates 2, 3, and 7 from cells <code class="docutils literal notranslate"><span class="pre">r3c7</span></code>, <code class="docutils literal notranslate"><span class="pre">r3c8</span></code> and <code class="docutils literal notranslate"><span class="pre">r3c9</span></code>, if present.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">r3c!(789)-=237</span></code></dt><dd><p>Remove candidates 2, 3, and 7 from all cells in row 3 other than <code class="docutils literal notranslate"><span class="pre">r3c789</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">r8c456-=!(237)</span></code></dt><dd><p>Remove all candidate other than 2, 3, and 7 from cell <code class="docutils literal notranslate"><span class="pre">r3c5</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">r8c!(456)-=!(237)</span></code></dt><dd><p>Remove all candidate other than 2, 3, and 7 from row 8 other than <code class="docutils literal notranslate"><span class="pre">r8c456</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">b8p!(456)-=!(237)</span></code></dt><dd><p>Remove all candidates other than 2, 3, 7 from box 8 other than <code class="docutils literal notranslate"><span class="pre">b8p456</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="candidate-diagrams">
+<h2><span class="section-number">2.1.5. </span>Candidate Diagrams<a class="headerlink" href="#candidate-diagrams" title="Link to this heading">#</a></h2>
+<section id="candidate-representation">
+<h3><span class="section-number">2.1.5.1. </span>Candidate Representation<a class="headerlink" href="#candidate-representation" title="Link to this heading">#</a></h3>
+<p>Candidate Diagrams here vary from those described in
+<a class="reference external" href="http://sudopedia.enjoysudoku.com/Diagrams_and_Notations.html">Sudopedia</a> and the
+<a class="reference external" href="https://forum.enjoysudoku.com/">Sudoku Forum</a>.</p>
+<p>The contents of a Candidate Diagram Cell is made up of the following components</p>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-cand-diag-symbs">
+<table class="styled-table docutils align-default" id="tbl-cand-diag-symbs" style="width: 97%">
+<caption><span class="caption-number">Table 2.1:  </span><span class="caption-text">Candidate Diagram Symbols</span><a class="headerlink" href="#tbl-cand-diag-symbs" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub left-align nowrap single-left-divider single-right-divider"><p>Symbol</p></th>
+<th class="head left-align single-left-divider no-right-divider"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>X</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>A unique but unspecified candidate value that may be
+present in that cell.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>X</uline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Underline). A unique but unspecified candidate value that
+that must be present in that cell.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><duline>X</duline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Dashed underline).  A unique but unspecified candidate
+value that may be present in that cell, and at least
+one of X must be present in their house.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><wuline>X</wuline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Wavy underline).  A unique but unspecified candidate value
+that may be present in that cell, but at least two of X
+must be present in their house.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>+</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>An appended “+” indicates the presence of other candidates.
+A “+” on its own indicates any candidates including those
+in the pattern may or may not be present in that cell.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><oline>X</oline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Overline).  Not X.  X must be absent from that cell.</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><mline>X</mline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Strikethrough). If candidate is present in that cell it
+can be eliminated.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>X*</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>(Wildcard) Any candidate but X can be eliminated from that
+cell.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-wrapper colwidths-given styled-table docutils container" id="tbl-cand-diag-expr">
+<table class="styled-table docutils align-default" id="tbl-cand-diag-expr" style="width: 97%">
+<caption><span class="caption-number">Table 2.2:  </span><span class="caption-text">Candidate Diagram Expressions</span><a class="headerlink" href="#tbl-cand-diag-expr" title="Link to this table">#</a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 80.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head stub left-align nowrap single-left-divider single-right-divider"><p>Expression</p></th>
+<th class="head left-align single-left-divider no-right-divider"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>+</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Any candidate including those in the pattern being considered,
+may or may not be present.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>X+</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X may be present, optionally other candidates too</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XY</uline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X and Y are the only two candidates in that cell</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XY</uline>+</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X and Y must be in that cell, optionally other candidates too</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>XY</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X and Y are the only two candidates in that cell (synonym of <span class="raw-html"><uline>XY</uline></span>)</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>XY+</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X and Y must be present, optionally others (synonym of <span class="raw-html"><uline>XY</uline>+</span>)</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>XYZ</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>At least two of X, Y and Z are the only candidates present in
+that cell</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>XYZ+</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>At least two of X, Y, and Z are present, optionally other
+candidates too</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XY</uline>Z</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X and Y must be present, optionally Z only</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XYZ</uline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X, Y and Z are the only candidates present in that cell</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XYZ</uline>+</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X, Y and Z are present, optionally other candidates too</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>WXYZ</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>At least two of W, X, Y, and Z are the only candidates present
+in that cell</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>WXYZ+</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>At least two of W, X, Y and Z are present, optionally other
+candidates too.</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>WX</uline>YZ</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>W and X must be present, optionally Y and Z only</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>WXY</uline>+</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>W, X and Y must be present, optionally other candidates too</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>WXYZ</uline></span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>W, X, Y and Z must be the only candidates present</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>WXYZ</uline>+</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>W, X, Y and Z must be present in that cell, optionally other
+candidates too</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>X*</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>Any candidate other than X can be eliminated</p></td>
+</tr>
+<tr class="row-even"><th class="stub left-align nowrap single-left-divider single-right-divider"><p>XYZ*</p></th>
+<td class="left-align single-left-divider no-right-divider"><p>At least one of X, Y, and Z is present and any other candidate
+can be eliminated</p></td>
+</tr>
+<tr class="row-odd"><th class="stub left-align nowrap single-left-divider single-right-divider"><p><span class="raw-html"><uline>XY</uline>Z*</span></p></th>
+<td class="left-align single-left-divider no-right-divider"><p>X and Y must be present, optionally Z, and any other candidate
+can be eliminated</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Many patterns rely on the presence of Candidate values anywhere in the intersection of a line and
+a box.  For these patterns, Candidate Diagrams merge the three cells in the intersection into one
+larger cell containing the union of the Candidates in the intersecting cells.</p>
+</section>
+<section id="some-examples">
+<h3><span class="section-number">2.1.5.2. </span>Some Examples<a class="headerlink" href="#some-examples" title="Link to this heading">#</a></h3>
+<section id="locked-exposed-pair">
+<h4><span class="section-number">2.1.5.2.1. </span>Locked Exposed Pair<a class="headerlink" href="#locked-exposed-pair" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-locked-exposed-pair-cd1">
+<a class="reference internal image-reference" href="../_images/locked-exposed-pair-cd1.png"><img alt="Locked Exposed Pair" src="../_images/locked-exposed-pair-cd1.png" style="width: 378.0px; height: 115.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.1:  </span><span class="caption-text">Locked Exposed Pair Pattern</span><a class="headerlink" href="#fig-locked-exposed-pair-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">XYr1c13</span></code>. The exposed pair XY is confined to the intersection of r1 and b1.  * indicates all the cells that
+can see the cells of the exposed pair.  If X or Y exists in the cells with a *, they can be eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="y-wing">
+<h4><span class="section-number">2.1.5.2.2. </span>Y-Wing<a class="headerlink" href="#y-wing" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-y-wing-cd1">
+<a class="reference internal image-reference" href="../_images/y-wing-cd1.png"><img alt="Y-Wing" src="../_images/y-wing-cd1.png" style="width: 378.0px; height: 230.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.2:  </span><span class="caption-text">Y-Wing Pattern</span><a class="headerlink" href="#fig-y-wing-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">XYr3c2</span></code> locks the <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a> <code class="docutils literal notranslate"><span class="pre">Z(r8c2,r3c6)</span></code> in both pincers, so any Ccell like <code class="docutils literal notranslate"><span class="pre">Zr8c6</span></code> that
+ees both pincers cannot be true and is eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="locked-pointing-single">
+<h4><span class="section-number">2.1.5.2.3. </span>Locked Pointing Single<a class="headerlink" href="#locked-pointing-single" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-locked-pointing-single-cd1">
+<a class="reference internal image-reference" href="../_images/locked-pointing-single-cd1.png"><img alt="Locked Pointing Single" src="../_images/locked-pointing-single-cd1.png" style="width: 378.0px; height: 130.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.3:  </span><span class="caption-text">Locked Pointing Single Pattern</span><a class="headerlink" href="#fig-locked-pointing-single-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>X is present in the intersection of row 3 and box 3, and not present in the
+rest of box 3.  Therefore, X must be True in the intersection resulting in the elimination of X
+along row 3 outside the intersection.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="xyz-wing">
+<h4><span class="section-number">2.1.5.2.4. </span>XYZ-Wing<a class="headerlink" href="#xyz-wing" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-xyz-wing-cd1">
+<a class="reference internal image-reference" href="../_images/xyz-wing-cd1.png"><img alt="XYZ-Wing" src="../_images/xyz-wing-cd1.png" style="width: 378.0px; height: 115.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.4:  </span><span class="caption-text">XYZ-Wing Pattern</span><a class="headerlink" href="#fig-xyz-wing-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">XYZr1c2</span></code> in the intersection of ensures that the Unrestricted Candidate, Y, must be True
+in at least one of the cells forming the pattern.  Therefore, any other candidate Y that
+can see all occurrences of Y in the pattern can be eliminated.  The only locations that
+can see all the pincers and pivot lies in the intersection of row 1 and box 1.</p>
+</section>
+<section id="locked-exposed-triple">
+<h4><span class="section-number">2.1.5.2.5. </span>Locked Exposed Triple<a class="headerlink" href="#locked-exposed-triple" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-locked-exposed-triple-cd1">
+<a class="reference internal image-reference" href="../_images/locked-exposed-triple-cd1.png"><img alt="Locked Exposed Triple" src="../_images/locked-exposed-triple-cd1.png" style="width: 378.0px; height: 130.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.5:  </span><span class="caption-text">Locked Exposed Triple Pattern</span><a class="headerlink" href="#fig-locked-exposed-triple-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>X, Y, Z are the only candidates confined (locked) to the intersection of row 3 and box 3,
+with no other candidates, they identify an Exposed Triple.  X, Y, Z are True in the cells of the
+Exposed Triple, therefore any Ccells that can see all the same value Ccells in the Exposed
+Triple cannot be True and can be eliminated.</p>
+</section>
+<section id="swordfish">
+<h4><span class="section-number">2.1.5.2.6. </span>Swordfish<a class="headerlink" href="#swordfish" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-swordfish-cd1">
+<a class="reference internal image-reference" href="../_images/swordfish-cd1.png"><img alt="Swordfish" src="../_images/swordfish-cd1.png" style="width: 378.0px; height: 378.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.6:  </span><span class="caption-text">Swordfish</span><a class="headerlink" href="#fig-swordfish-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets
+sees at least two ccells in their three intersectons. This locks the <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a> to the
+intersecting cells.  Therefore any instance of X along the covers outside the intersections cannot
+be True and is eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="finned-swordfish">
+<h4><span class="section-number">2.1.5.2.7. </span>Finned Swordfish<a class="headerlink" href="#finned-swordfish" title="Link to this heading">#</a></h4>
+<figure class="align-right" id="fig-finned-swordfish-cd1">
+<a class="reference internal image-reference" href="../_images/finned-swordfish-cd1.png"><img alt="Finned Swordfish" src="../_images/finned-swordfish-cd1.png" style="width: 378.0px; height: 378.0px;" /></a>
+<figcaption>
+<p><span class="caption-number">Figure 2.7:  </span><span class="caption-text">Finned Swordfish</span><a class="headerlink" href="#fig-finned-swordfish-cd1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Base sets B0, B1, and B2 with at least 2 instances of X align such that each of the three cover sets
+sees at least two ccells in their three intersections.  But B0 has two fins Xr2c89.  So either the
+Swordfish is the <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a> or one of the fins are True.  Therefore, any instance of X in the
+covers outside the intersection, that can see the fins cannot be true and is eliminated.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+</section>
+<section id="other-notations">
+<h2><span class="section-number">2.1.6. </span>Other Notations<a class="headerlink" href="#other-notations" title="Link to this heading">#</a></h2>
+<section id="candidate-grids">
+<h3><span class="section-number">2.1.6.1. </span>Candidate Grids<a class="headerlink" href="#candidate-grids" title="Link to this heading">#</a></h3>
+<p>Also known as Pencilmark Grids or PM Grids.</p>
+<p><span class="raw-html"><pre>skdlfjls adsfklfj sdf</pre></span></p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>
+.---------------------.---------------------.---------------------.
+| 2      56789  578   | 34569  345789 456789| 1     *467    679   |
+| 1      4      57    | 569    2      5679  | 679    8      3     |
+| 679    6789   3     | 469    1      46789 | 5     *2467   2679  |
+:--------------------- --------------------- ---------------------:
+| 3457   12357  2457  | 34569  34589  45689 | 46789 -12467  126789|
+| 34     123    6     | 7      3489   489   | 489    5      1289  |
+| 8      57     9     | 2      45     1     | 3     -467    67    |
+:--------------------- --------------------- ---------------------:
+| 45679  56789  4578  | 459    4579   3     | 2      167    15678 |
+| 45679  5679   1     | 8      4579   2     | 67     3      567   |
+| 357    23578  2578  | 1      6      57    | 78     9      4     |
+'---------------------'---------------------'---------------------'
+</pre></div></div>
+<p><span></span></p>
+<p>A ‘*’ is prefixed to the candidate’s string in the pattern that cause the elimination or placement.
+A ‘-’ is prefixed to the candidate to be eliminated’s string.</p>
+<p>There are many variations in pencil mark grids.  Sometimes the symbol may be appended instead of
+prefixed,  sometimes symbols are placed in the middle of a
+of candidate strings to indicate the candidates are relevant or those to be eliminated or placed
+like below.</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>
+.---------------.---------------.---------------.
+| 6    9    3   | 7    4    8   | 25   25   1   |
+| 1    4    5   | 69   2    3   | 69   7    8   |
+| 7    2    8   | 1    5    69  | 3    69   4   |
+:--------------- --------------- ---------------:
+| 35   1357 6   | 389  178  2   | 589  4    579 |
+| 4    13-7 9   | 368  1678 5   | 268  268  27  |
+| 8    57   2   | 469  679  469 | 1    569  3   |
+:--------------- --------------- ---------------:
+| 2    58   1   | 459  89   49  | 7    3    6   |
+|*59   568  4   | 568  3    7   | 2589 1   *59+2|
+|3*59  3568 7   | 2    68   1   | 4    589 *59  |
+'---------------'---------------'---------------'
+</pre></div></div>
+<p><span></span></p>
+<p>For more complex techniques where the ‘*’ symbol is not sufficient to indicate the cause of the
+eliminations, or when illustrating multiple techniques causing multiple eliminations in a single
+diagram, other symbols such as ‘#’ and ‘&#64;’ can be used.</p>
+<p>If the logic behind the eliminations involves only a single digit, say the digit 4 in this case
+Some people choose to communicate the same message by showing only the cells with 4 as a
+candidate, like the one shown below. This kind of grid tend to be much easier to read than the grid
+showing the entire pencilmarks.</p>
+<p><span class="raw-html"></span></p>
+<div class="highlight-none notranslate"><div class="highlight">
+<pre>
+.---------.----------.----------.
+| .  .  . |  4  4  4 |  . *4  . |
+| .  .  . |  .  .  . |  .  .  . |
+| .  .  . |  4  .  4 |  . *4  . |
+:--------- ---------- ----------:
+| 4  .  4 |  4  4  4 |  4 -4  . |
+| 4  .  . |  .  4  4 |  4  .  . |
+| .  .  . |  .  4  . |  . -4  . |
+:--------- ---------- ----------:
+| 4  .  4 |  4  4  . |  .  .  . |
+| 4  .  . |  .  4  . |  .  .  . |
+| .  .  . |  .  .  . |  .  .  . |
+'---------'----------'----------'
+</pre></div></div>
+<p><span></span></p>
+</section>
+<section id="sets">
+<h3><span class="section-number">2.1.6.2. </span>Sets<a class="headerlink" href="#sets" title="Link to this heading">#</a></h3>
+<p>FIXUP</p>
+<p>From Allan Barker’s site.</p>
+<p>Eliminations are written in standard notation except for sets, which are written in a form that
+makes them easy to recognize. The notation follows the definition of Sudoku sets in 3D, and adds an
+extra number so that row 4 contains row sets r41 to r49. The extra number is the digit except for
+cell sets, which are noted by row and column. The four types of sets are then:</p>
+<p><code class="docutils literal notranslate"><span class="pre">row</span> <span class="pre">=</span> <span class="pre">R(row,</span> <span class="pre">digit),</span>&#160; <span class="pre">column</span> <span class="pre">=</span> <span class="pre">C(column,</span> <span class="pre">digit),</span> <span class="pre">cell</span> <span class="pre">=</span> <span class="pre">N(row,</span> <span class="pre">column),</span> <span class="pre">box</span> <span class="pre">=</span> <span class="pre">B(box,</span> <span class="pre">digit)</span></code></p>
+<p>Subgroups like c51, c53, and c59 are written as c5(139). The short notation is meant for use with diagrams that provide exact candidate details. However, set theory says that all eliminations can be understood based on sets alone without candidate details, in principle.</p>
+<p>An example elimination expression is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Rank</span> <span class="pre">1:</span> <span class="pre">[r46</span> <span class="pre">c5(139)</span> <span class="pre">c76</span> <span class="pre">n23</span> <span class="pre">n3(12)](ST)</span> <span class="pre">r26*c56</span> <span class="pre">=&gt;</span> <span class="pre">r2c5</span> <span class="pre">&lt;&gt;</span> <span class="pre">6</span></code></p>
+<p>which is of the form:</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;rank&gt;:</span> <span class="pre">[list</span> <span class="pre">of</span> <span class="pre">covering</span> <span class="pre">sets](triplet</span> <span class="pre">info)&lt;overlap</span> <span class="pre">linksets&gt;</span> <span class="pre">=&gt;</span> <span class="pre">&lt;assignments&gt;,&lt;eliminations&gt;</span></code></p>
+<p>In some cases &lt;overlap linksets&gt; is replaced with [list of covering linksets], particularly for rank 0 logic (like fish) where all linksets can cause eliminations. The triplet information denotes the presence of triplets, where T means a linkset Triplet and S means a Set triplet.</p>
+<p><code class="docutils literal notranslate"><span class="pre">S4=[r(28)6</span> <span class="pre">c26</span> <span class="pre">b56],</span> <span class="pre">L6=[r(56)6</span> <span class="pre">c(459)6</span> <span class="pre">b76]</span> <span class="pre">=&gt;</span>&#160; <span class="pre">r6c9&lt;&gt;6</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">S23=[r(27)2</span> <span class="pre">r(148)4</span> <span class="pre">r35</span> <span class="pre">r19</span> <span class="pre">c8(39)</span> <span class="pre">n(379)2</span> <span class="pre">n83</span> <span class="pre">n(27)5</span> <span class="pre">n96</span> <span class="pre">b15</span> <span class="pre">b2(28)</span> <span class="pre">b3(16)</span> <span class="pre">b74</span> <span class="pre">b97],</span> <span class="pre">L28=[r2(16)</span> <span class="pre">r38</span> <span class="pre">r7(34)</span> <span class="pre">r9(67)</span> <span class="pre">c14</span> <span class="pre">c28</span> <span class="pre">c3(45)</span> <span class="pre">c58</span> <span class="pre">c6(258)</span> <span class="pre">c74</span> <span class="pre">n31</span> <span class="pre">n34</span> <span class="pre">n15</span> <span class="pre">n17</span> <span class="pre">n(1379)8</span> <span class="pre">n89</span> <span class="pre">b1(24)</span> <span class="pre">b71]</span> <span class="pre">=&gt;</span>&#160; <span class="pre">r3c1&lt;&gt;4</span></code></p>
+</section>
+<section id="chains">
+<h3><span class="section-number">2.1.6.3. </span>Chains<a class="headerlink" href="#chains" title="Link to this heading">#</a></h3>
+<p>FIXUP</p>
+<p>Links with strong inference are represented by =X=, where X is the digit. Links with weak inference
+are represented by -X-. To make a distinction between continuous and discontinuous loops, a single
+dash or equal sign is placed at the start and end of the loop to indicate how it continues.</p>
+<p><code class="docutils literal notranslate"><span class="pre">=[r1c1]-1-[r4c1]=1=[r4c5]-1-[r1c5]=1=[r1c1]-</span></code></p>
+<p>These continuation markers are not present in discontinuous loops.</p>
+<p><code class="docutils literal notranslate"><span class="pre">[r1c1]-1-[r4c1]=1=[r4c5]-1-[r5c6]=1=[r1c6]-1-[r1c1]</span></code></p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="02-premise-inference.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">2.2. </span>Premises and Inferences</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">2. </span>Foundation</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d7bf77f*, Fri, 29 Dec 2023, 00:32:27
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2.1. Sudoku Notation</a><ul>
+<li><a class="reference internal" href="#cells-ccells-houses-and-chouses">2.1.1. Cells, Ccells, Houses and Chouses</a></li>
+<li><a class="reference internal" href="#syntax">2.1.2. Syntax</a><ul>
+<li><a class="reference internal" href="#cell-location-specifiers">2.1.2.1. Cell (Location) Specifiers</a></li>
+<li><a class="reference internal" href="#ccell-specifiers">2.1.2.2. Ccell Specifiers</a></li>
+<li><a class="reference internal" href="#ccell-postfixes">2.1.2.3. Ccell Postfixes</a></li>
+<li><a class="reference internal" href="#pattern-combiners">2.1.2.4. Pattern Combiners</a></li>
+<li><a class="reference internal" href="#operators">2.1.2.5. Operators</a></li>
+<li><a class="reference internal" href="#conditionals">2.1.2.6. Conditionals</a></li>
+<li><a class="reference internal" href="#relational-specifiers">2.1.2.7. Relational Specifiers</a></li>
+<li><a class="reference internal" href="#candidate-dressing">2.1.2.8. Candidate Dressing</a></li>
+<li><a class="reference internal" href="#set-algebra">2.1.2.9. Set Algebra</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#symantics">2.1.3. Symantics</a><ul>
+<li><a class="reference internal" href="#singles">2.1.3.1. Singles</a></li>
+<li><a class="reference internal" href="#straight-subsets">2.1.3.2. (Straight) Subsets</a></li>
+<li><a class="reference internal" href="#fish">2.1.3.3. Fish</a></li>
+<li><a class="reference internal" href="#bent-subsets">2.1.3.4. Bent Subsets</a></li>
+<li><a class="reference internal" href="#inference-chains-loops-and-nets">2.1.3.5. Inference Chains, Loops and Nets</a></li>
+<li><a class="reference internal" href="#super-human-patterns">2.1.3.6. Super Human Patterns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#outcomes">2.1.4. Outcomes</a></li>
+<li><a class="reference internal" href="#candidate-diagrams">2.1.5. Candidate Diagrams</a><ul>
+<li><a class="reference internal" href="#candidate-representation">2.1.5.1. Candidate Representation</a></li>
+<li><a class="reference internal" href="#some-examples">2.1.5.2. Some Examples</a><ul>
+<li><a class="reference internal" href="#locked-exposed-pair">2.1.5.2.1. Locked Exposed Pair</a></li>
+<li><a class="reference internal" href="#y-wing">2.1.5.2.2. Y-Wing</a></li>
+<li><a class="reference internal" href="#locked-pointing-single">2.1.5.2.3. Locked Pointing Single</a></li>
+<li><a class="reference internal" href="#xyz-wing">2.1.5.2.4. XYZ-Wing</a></li>
+<li><a class="reference internal" href="#locked-exposed-triple">2.1.5.2.5. Locked Exposed Triple</a></li>
+<li><a class="reference internal" href="#swordfish">2.1.5.2.6. Swordfish</a></li>
+<li><a class="reference internal" href="#finned-swordfish">2.1.5.2.7. Finned Swordfish</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-notations">2.1.6. Other Notations</a><ul>
+<li><a class="reference internal" href="#candidate-grids">2.1.6.1. Candidate Grids</a></li>
+<li><a class="reference internal" href="#sets">2.1.6.2. Sets</a></li>
+<li><a class="reference internal" href="#chains">2.1.6.3. Chains</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=607a09ed"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    </body>
+</html>

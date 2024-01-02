@@ -54,7 +54,7 @@ http://forum.enjoysudoku.com/benchmark-sudoku-list-t3834.html
 http://forum.enjoysudoku.com/the-bug-bivalue-universal-grave-principle-t2352.html
 sources: https://www.sudokuwiki.org/Aligned_Pair_Exclusion,
 
-
+http://sudopedia.enjoysudoku.com/
 
 Grading
 

@@ -26,13 +26,9 @@ over using less common algebraic symbols and esoteric formulae.
 .. toctree::
    :maxdepth: 5
 
-   01-language
-   02-core-concepts
-   03-base-cover-sets
-   04-singles
-   05-subsets
-   06-fish
-   07-chains-loops-nets
-   08-unlocked-sets
-   09-uniqueness
-   10-searching
+   01-notation
+   02-premise-inference
+   03-spatial-reps
+   04-links-chains
+   05-truth-sets-fish
+   06-uniqueness

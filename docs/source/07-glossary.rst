@@ -40,7 +40,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Base Set**
       A Base Set is a :term:`Set` of one or more :term:`Ccell`\s in a :term:`Chouse` forming a 
-      :term:`Truth`.  Base Sets may :term:`Overlap` each other, but cannot :term:`Intersect <Intersection>`.
+      :term:`Truth`.
 
    **BEQ**
       Abbreviation of :term:`Bent Exposed Quad`
@@ -247,11 +247,11 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Restricted Candidate**
       In a Bent Exposed Subset, a Restricted Candidate is a Candidate that :term:`See`\s all
       instances of its value in the Bent Subset grouping.  This is a special case of a
-      :term:`Restricted Candidate Set` (:ref:`found_unlocked_sets`) with a single
+      :term:`Restricted Candidate Set` (:ref:`found_nls`) with a single
       member.
 
    **Restricted Candidate Set**
-      In :ref:`found_unlocked_sets`, a Restricted Candidate Set is that set of Candidates that
+      In :ref:`found_nls`, a Restricted Candidate Set is that set of Candidates that
       can :term:`See` all instances of its value in the Unlocked Sets pattern.
 
    **Robust Link**
@@ -306,11 +306,11 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       A Column oriented :term:`Chute`.
 
    **Truth**
-      A collection of :term:`Ccell`\s that :term:`See` each other in a :term:`Chouse` where one of 
+      A Set of :term:`Ccell`\s that :term:`See` each other in a :term:`Chouse` where one of 
       the Ccells is True, that is the :term:`Solved Value`.
 
    **ULS**
-      Ulocked Set, see :ref:`found_unlocked_sets`.
+      Ulocked Set, see :ref:`found_nls`.
 
    **Union**
       All the Cells of two intersecting :term:`House`\s.
@@ -321,11 +321,11 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Unrestricted Candidate**
       In a Bent Exposed Subset, an Unrestricted Candidate is a Candidate that that cannot
       :term:`See` all instances of its value in the Bent Subset grouping.  This is a special
-      case of an :term:`Unrestricted Candidate Set` (:ref:`found_unlocked_sets`) with a single
+      case of an :term:`Unrestricted Candidate Set` (:ref:`found_nls`) with a single
       member.
 
    **Unrestricted Candidate Set**
-      In :ref:`found_unlocked_sets`, an Unrestricted Candidate Set is that set of Candidates that
+      In :ref:`found_nls`, an Unrestricted Candidate Set is that set of Candidates that
       cannot :term:`See` all instances of its value in the Unlocked Sets pattern.
 
    **WE-AIC**

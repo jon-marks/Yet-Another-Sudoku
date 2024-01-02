@@ -1,6 +1,26 @@
 .. title:: Yet Another Sudoku
 
-
+..
+   New proposed document tree.
+    Intro
+    Foundation
+      Lanuguage
+      Basic Concepts
+         Solving Singles
+         Premises and Inferences
+         Link Basics
+         Set Basics
+            Truths
+            Subsets
+            Fishing
+      Advanced Concepts
+         Chains Loops and Nets
+         Base Link and Cover Sets
+         Nearly Locked Sets
+            # different name to ALS bcs ALS are NLS with single ccells in the (un?)restricted candidate set
+         Uniqueness
+    Human Solvable Patterns
+        # as is.
 
 ##################
 Yet Another Sudoku
@@ -40,17 +60,6 @@ List of Figures
 |  :numref:`fig-finned-swordfish-cd1` :ref:`fig-finned-swordfish-cd1`
 |  :numref:`fig-links-eg1` :ref:`fig-links-eg1`
 |  :numref:`fig-truths-eg1` :ref:`fig-truths-eg1`
-|  :numref:`fig-base-cover-eg1` :ref:`fig-base-cover-eg1`
-|  :numref:`fig-hid-sing-eg1` :ref:`fig-hid-sing-eg1`
-|  :numref:`fig-exp-quad-cd1` :ref:`fig-exp-quad-cd1`
-|  :numref:`fig-not-exp-quad-cd1` :ref:`fig-not-exp-quad-cd1`
-|  :numref:`fig-locked-exp-trip-eg1` :ref:`fig-locked-exp-trip-eg1`
-|  :numref:`fig-hid-pair-eg1` :ref:`fig-hid-pair-eg1`
-|  :numref:`fig-swordfish-eg1` :ref:`fig-swordfish-eg1`
-|  :numref:`fig-finned-x-wing-eg1` :ref:`fig-finned-x-wing-eg1`
-|  :numref:`fig-two-string-kite-eg1` :ref:`fig-two-string-kite-eg1`
-|  :numref:`fig-uls-chain-cd1` :ref:`fig-uls-chain-cd1`
-
 |  :numref:`fig-y-wing-cd2` :ref:`fig-y-wing-cd2`
 |  :numref:`fig-xyz-wing-cd2` :ref:`fig-xyz-wing-cd2`
 |  :numref:`fig-gbp-el-hb-cd1` :ref:`fig-gbp-el-hb-cd1`
@@ -60,8 +69,21 @@ List of Figures
 |  :numref:`fig-gbq-el-hb-cd1` :ref:`fig-gbq-el-hb-cd1`
 |  :numref:`fig-gbq-hl-eb-cd1` :ref:`fig-gbq-hl-eb-cd1`
 |  :numref:`fig-bht-cd1` :ref:`fig-bht-cd1`
-|  :numref:`fig-x-wing-eg1` :ref:`fig-x-wing-eg1`
 |  :numref:`fig-basic-fish-cd1` :ref:`fig-basic-fish-cd1`
+|  :numref:`fig-base-cover-eg1` :ref:`fig-base-cover-eg1`
+|  :numref:`fig-hid-sing-eg1` :ref:`fig-hid-sing-eg1`
+|  :numref:`fig-exp-quad-cd1` :ref:`fig-exp-quad-cd1`
+|  :numref:`fig-not-exp-quad-cd1` :ref:`fig-not-exp-quad-cd1`
+|  :numref:`fig-locked-exp-trip-eg1` :ref:`fig-locked-exp-trip-eg1`
+|  :numref:`fig-hid-pair-eg1` :ref:`fig-hid-pair-eg1`
+|  :numref:`fig-swordfish-eg1` :ref:`fig-swordfish-eg1`
+|  :numref:`fig-ai-even-loop-t3-eg1` :ref:`fig-ai-even-loop-t3-eg1`
+|  :numref:`fig-finned-x-wing-eg1` :ref:`fig-finned-x-wing-eg1`
+|  :numref:`fig-two-string-kite-eg1` :ref:`fig-two-string-kite-eg1`
+|  :numref:`fig-uls-chain-cd1` :ref:`fig-uls-chain-cd1`
+
+
+
 |  :numref:`fig-two-string-kite-eg2` :ref:`fig-two-string-kite-eg2`
 |  :numref:`fig-skyscraper-eg1` :ref:`fig-skyscraper-eg1`
 |  :numref:`fig-chained-sln-t2-eg1` :ref:`fig-chained-sln-t2-eg1`

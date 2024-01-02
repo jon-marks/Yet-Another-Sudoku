@@ -21,7 +21,7 @@ These patterns are formed by 'n' Candidate values in 'n' Cells across the :term:
 Groups where each Cell contains between 2 and 'n' Candidates values and at least one cell lies in
 the :term:`Intersection` of the two :term:`House`\s.
 
-Bent Exposed Subsets belong to the larger family of :ref:`Unlocked Set <found_unlocked_sets>`
+Bent Exposed Subsets belong to the larger family of :ref:`Nearly Locked Sets <found_nls>`
 patterns.  However, it is simpler to treat these patterns as Bent Exposed Sets rather than Unlocked
 Sets.
 
