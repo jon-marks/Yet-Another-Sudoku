@@ -8,6 +8,8 @@
 Bent Subsets
 ************
 
+ FIXME    change all <mong> to `` in text, not figure blocks.
+
 Bent Subsets are a family of subsets where the grouping 'n' candidates in 'n' cells spans the union
 of two :term:`House`\s with at least one candidate in the intersection.  The two Houses can either be a
 :term:`Line` and a :term:`Box`, or two lines.
@@ -21,12 +23,16 @@ These patterns are formed by 'n' Candidate values in 'n' Cells across the :term:
 Groups where each Cell contains between 2 and 'n' Candidates values and at least one cell lies in
 the :term:`Intersection` of the two :term:`House`\s.
 
-Bent Exposed Subsets belong to the larger family of :ref:`Nearly Locked Sets <found_nls>`
+Bent Exposed Subsets belong to the larger family of :ref:`Nearly Locked Sets <found_tsf_nls>`
 patterns.  However, it is simpler to treat these patterns as Bent Exposed Sets rather than Unlocked
 Sets.
 
 Bent Exposed_Triples
 --------------------
+
+Bent Exposed triples are known by their other popular names, Y-Wings (or XY-Wing), and XYZ-Wings.
+These two patterns are the only variants of Bent Exposed Triples.  Bent Exposed Triples comprise
+3 Candidates in 3 Cells spanning two intersecting Houses with one Pattern Cell in the intersection.
 
 .. _hsp_y_wings:
 
@@ -295,13 +301,74 @@ and 4r7c9 see all instances of this Unrestricted Candidate.
 Grouped Bent Subsets
 ====================
 
+Sources:
+   |  http://forum.enjoysudoku.com/help-almost-locked-candidates-move-t37339.html
+   |  http://forum.enjoysudoku.com/almost-locked-pair-and-almost-locked-triple-t39348.html
+   |  http://forum.enjoysudoku.com/almost-locked-candidates-t4477.html
+
+
+:ref:`Grouped Bent Subsets <hsp_grouped_bent_subsets>` are also known as Almost Locked Candidates.
+
+If a set of 'n' candidates are found in a line box intersection such that they can form an Exposed
+Subset in the one Group and a Hidden Subset in the other Group, same value candidates can be
+eliminated from other cells in the Exposed Group and from those cells forming the Hidden Subset in
+the Hidden Group.
+
+.. _found_gbs_criteria:
+
+Viable patterns have:
+   *  A minimum of 2 to 'n' of the 'n' candidates as the only candidates present in
+      :raw-html:`'n'&nbsp;-&nbsp;1` cells in the Exposed House outside the intersection.
+   *  All 'n' candidates present at least once in the intersection.
+   *  A minimum of 1 to 'n' of the 'n' candidates present in :raw-html:`'n'&nbsp;-&nbsp;1` cells with
+      or without other candidates such that all 'n' Candidates are covered in those Cells outside
+      the intersection.
+
+Only one of the 'n' candidates can be True in the Intersection, forming a 'n' - 1 Exposed set in
+the one house, and a 'n' - 1 Hidden Set in the other house.  This characteristic is used to find
+the eliminations in this pattern without knowing this :term:`Unrestricted Candidate` value.
+
+These patterns are another special case of :ref:`Nearly Locked Sets <found_tsf_nls>`.  A Hidden
+(incomplete) 'n' subset always has a reciprocal Exposed (incomplete) 9 - 'n' subset, and the ULS
+Nodes include all the candidates in the intersection.  These patterns especially Grouped Bent Pairs
+occur relatively often and are typically much easier to spot and solve this way than as an Unlocked
+Set.
+
 Grouped Bent Pairs
 ------------------
 
 .. _hsp_gbp_el_hb:
 
-Exposed Row, Hidden Box Grouped Bent Pairs
+Exposed Line, Hidden Box Grouped Bent Pairs
 +++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbp-el-hb-cd1.png
+   :name: fig-gbp-el-hb-cd1
+   :scale: 100%
+   :alt: Grouped Bent Pair: Exposed Line, Hidden Box Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Grouped Bent Pair: Exposed Line, Hidden Box Candidate Diagram
+
+   :raw-html:`<mong>U(XY+)r3c789,(XY)#1r3c!(789),!(XY)#5b3p!(789)</mong>`
+
+Candidates X and Y are found in the intersection of Row 3 and Box 3 with possibly other candidates
+too.  In the Exposed Row 3, the pattern requires only one Bi-Value Cell of X and Y outside the
+Intersection.  In Hidden box 3, X and Y do not exist in 5 of the 6 Cells outside the Intersection.
+That is, only one instance of X and Y are present in the same Cell outside the Intersection, with or
+without other Candidates.
+
+Asserting Xr3c2 True in the Exposed Row 3, infers X cannot be True in the Intersection.  This
+further infers that X must be True in the only Cell in Hidden Box 3 outside the Intersection.
+Therefore, Y is True in the Intersection.  Interchanging X and Y does not alter outcome.
+
+Therefore, in the Exposed Row 3, any Candidate X or Y that is not part of the pattern, cannot
+be True, resulting in its elimination.  That is: ``r3c12346-=XY``.  And in Hidden Box 3 any Candidates
+other than X or Y in the Pattern Cells cannot be True, resulting in their Elimination.  That is
+``b3p3-=!(XY)``.
+
+An exposed row example:
 
 .. figure:: images/gbp-er-hb-eg1.png
    :name: fig-gbp-er-hb-eg1
@@ -330,8 +397,7 @@ Pattern cannot be True, resulting in its elimination.  Namely: r8c3-=89 and r8c7
 outside the intersection, any candidate other than 8 or 9 in Pattern Cells outside the Intersection
 cannot be True resulting in its elimination.  Namely: r7c4-=3.
 
-Exposed Column, Hidden Box Grouped Bent Pairs
-+++++++++++++++++++++++++++++++++++++++++++++
+An exposed column Example:
 
 .. figure:: images/gbp-ec-hb-eg1.png
    :name: fig-gbp-ec-hb-eg1
@@ -362,8 +428,36 @@ Intersection cannot be True resulting in its elimination.  Namely: r6c2-=5.
 
 .. _hsp_gbp_hl_eb:
 
-Hidden Row, Exposed Box Grouped Bent Pairs
-++++++++++++++++++++++++++++++++++++++++++
+Hidden Line, Exposed Box Grouped Bent Pairs
++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbp-hl-eb-cd1.png
+   :name: fig-gbp-hl-eb-cd1
+   :scale: 100%
+   :alt: Grouped Bent Pair: Hidden Line, Exposed Box Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Grouped Bent Pair: Hidden Line, Exposed Box Candidate Diagram
+
+   :raw-html:`<mong>U(XY+)r3c789,(XY)#1b3p!(789),!(XY)#5r3c!(789)</mong>`
+
+Candidates X and Y are found in the intersection of Row 3 and Box 3 with possibly other candidates
+too.  In the Exposed Box 3, the pattern requires only one Bi-Value Cell of X and Y outside the
+Intersection.  In Hidden Row 3, X and Y do not exist in 5 of the 6 Cells outside the Intersection.
+That is, only one instance of X and Y are present in the same Cell outside the Intersection, with or
+without other Candidates.
+
+Asserting ``Xr1c8`` True in the Exposed Box 3, infers X cannot be True in the Intersection.  This
+further infers that X must be True in the only Cell in Hidden Row 3 outside the Intersection.
+Therefore, Y is True in the Intersection.  Interchanging X and Y does not alter outcome.
+
+Therefore, in the Exposed Box 3, any Candidate X or Y that is not part of the pattern, cannot
+be True, resulting in its elimination.  That is: b3p13456-=XY.  And in Hidden Box 3 any Candidates
+other than X or Y in the Pattern Cells cannot be True, resulting in their Elimination.  That is
+``r3c5-=!(XY)``.
+
+A Hidden Row example:
 
 .. figure:: images/gbp-hr-eb-eg1.png
    :name: fig-gbp-hr-eb-eg1
@@ -392,8 +486,7 @@ the Pattern cannot be True, resulting in its elimination.  Namely: r4c7-=5, and 
 Row 6 outside the intersection, any candidate other than 3 or 5 in Pattern Cells outside the
 Intersection cannot be True resulting in its elimination.  Namely: r6c2-=76.
 
-Hidden Column, Exposed Box Grouped Bent Pairs
-+++++++++++++++++++++++++++++++++++++++++++++
+A Hidden Column example:
 
 .. figure:: images/gbp-hc-eb-eg1.png
    :name: fig-gbp-hc-eb-eg1
@@ -427,8 +520,39 @@ Grouped Bent Triples
 
 .. _hsp_gbt_el_hb:
 
-Exposed Row, Hidden Box Grouped Bent Triples
-++++++++++++++++++++++++++++++++++++++++++++
+Exposed Line, Hidden Box Grouped Bent Triples
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbt-el-hb-cd1.png
+   :name: fig-gbt-el-hb-cd1
+   :scale: 100%
+   :alt: Grouped Bent Triple: Exposed Line, Hidden Box Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Grouped Bent Triple: Exposed Line, Hidden Box Candidate Diagram
+
+   :raw-html:`<mong>U(XYZ+)r3c789,(XYZ)#3r3c!(789),!(XYZ)#3b3p!(789)</mong>`
+
+Candidates X, Y, and Z are found in the intersection of Row 3 and Box 3 with possibly other
+candidates too.  In Exposed Row 3, the pattern requires a combination of X, Y, and Z in only
+two cells outside the Intersection.  In the Hidden Box 3, Candidates X, Y, and Z do not exist
+in four cells outside the Pattern and Intersection.  This implies that Candidates X, Y, and Z
+are present in some combination in the other two cells outside the Intersection, with possibly other
+candidates too.
+
+Asserting Xr3c2 and Yr3c5 True in the Exposed Row 3 (outside the intersection) infers they are not
+True in the Intersection.  This further infers X and Y must be True in Hidden Box 3, outside the
+Intersection.  As only two locations for X, Y, and Z exist in Box 3 outside the Intersection, Z can
+only be True in the Intersection. Interchanging X, Y, and Z does not alter outcome.
+
+Therefore, in the Exposed Row 3, any Candidate X, Y, or Z that is not part of the pattern, cannot
+be True, resulting in its elimination.  That is: ``r3c1346-=XYZ``.  And in Hidden Box 3 any Candidates
+other than X, Y, or Z in the Pattern Cells outside the Intersection cannot be True, resulting in
+their Elimination.  That is ``b3p24-=!(XYZ)``, removing all candidates from ``b3p24``, except for X, Y, or
+Z.
+
+An exposed row example:
 
 .. figure:: images/gbt-er-hb-eg1.png
    :name: fig-gbt-er-hb-eg1
@@ -457,8 +581,7 @@ the pattern cannot be True, resulting in its elimination.  Namely: r8c1-=9.  In 
 Candidates in Pattern Cells outside the intersection other than 1, 3, and 9 connot be True resulting
 in their elimination.
 
-Exposed Column, Hidden Box Grouped Bent Triples
-+++++++++++++++++++++++++++++++++++++++++++++++
+An exposed column example:
 
 .. figure:: images/gbt-ec-hb-eg1.png
    :name: fig-gbt-ec-hb-eg1
@@ -489,8 +612,37 @@ be eliminated.  Namely: r6c8-=1
 
 .. _hsp_gbt_hl_eb:
 
-Hidden Row, Exposed Box Grouped Bent Triples
-++++++++++++++++++++++++++++++++++++++++++++
+Hidden Line, Exposed Box Grouped Bent Triples
++++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbt-hl-eb-cd1.png
+   :name: fig-gbt-hl-eb-cd1
+   :scale: 100%
+   :alt: Grouped Bent Triple: Hidden Line, Exposed Box Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Grouped Bent Triple: Hidden Line, Exposed Box Candidate Diagram
+
+   :raw-html:`<mong>U(XYZ+)r3c789,!(XYZ)4#r3c!(789),(XYZ)#3b3p!(789)</mong>`
+
+Candidates X, Y, and Z are found in the intersection of Row 3 and Box 3 with possibly other
+candidates too.  In Exposed Box 3, the pattern requires a combination of X, Y, and Z in only two
+Cells outside the Intersection.  In Hidden Row 3, Candidates X, Y, and Z do not exist in four Cells
+outside the Pattern and Intersection.  This implies that Candidates X, Y, and Z are present in some
+combination in the other two Cells outside the Intersection, with possibly other candidates too.
+
+Asserting Xr1c8 and Yr2c7 True in the Exposed Box 3 (outside the intersection), infers they are not
+True in the Intersection.  This further infers X and Y to be True in Hidden Row 3 outside the
+Intersection.  As only two locations for X, Y, and Z exist in Hidden Row 3 outside the intersection,
+Z can only be True in the Intersection.  Interchanging X, Y, and Z does not alter outcome.
+
+Therefore, in the Exposed Box 3, outside the Intersection, any Candidate X, Y, or Z that is not
+part of the pattern, cannot be True, resulting in its elimination.  That is: ``b3p1356-=WXYZ``.  And in
+Hidden Row 3 any other candidates in the pattern cells cannot be True resulting in their
+elimination: That is: ``R3c25-=!(XYZ)``.
+
+A hidden row example:
 
 .. figure:: images/gbt-hr-eb-eg1.png
    :name: fig-gbt-hr-eb-eg1
@@ -519,8 +671,7 @@ Pattern cannot be True, resulting in its elimination.  Namely: r4c9-=569 and r6c
 Row 5, any other Candidates in pattern cells outside the intersection cannot be True, resulting in
 their elimination.  Namely: r5c1-=478 and r5c2-=78.
 
-Hidden Column, Exposed Box Grouped Bent Triples
-+++++++++++++++++++++++++++++++++++++++++++++++
+A hidden column example:
 
 .. figure:: images/gbt-hc-eb-eg1.png
    :name: fig-gbt-hc-eb-eg1
@@ -554,8 +705,39 @@ Grouped Bent Quads
 
 .. _hsp_gbq_el_hb:
 
-Exposed Row, Hidden Box Grouped Bent Quads
-++++++++++++++++++++++++++++++++++++++++++
+Exposed Line, Hidden Box Grouped Bent Quads
++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbq-el-hb-cd1.png
+   :name: fig-gbq-el-hb-cd1
+   :scale: 100%
+   :alt: Grouped Bent Quad: Exposed Line, Hidden Box Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Grouped Bent Quad: Exposed Line, Hidden Box Candidate Diagram
+
+   :raw-html:`<mong>U(WXYZ+)r3c789,(WXYZ)#3r3c!(789),!(WXYZ)#3b3p!(789)</mong>`
+
+Candidates W, X, Y, Z are found in the intersection of Row 3 and Box 3 with possibly other
+candidates too.  In the Exposed Row 3, the pattern requires a combination of W, X, Y, and Z in only
+three cells outside the Intersection.  In the Hidden Box 3, Candidates W, X, Y, and Z do not exist
+in the three cells outside the Pattern.  This implies that Candidates W, X, Y, and Z are present in
+some combination in the other three cells outside the Intersection, with possibly other candidates
+too.
+
+Asserting Wr3c2, Xr3c4 and Yr3c6 True in the Exposed Row 3 (outside the Intersection)  infers that
+they are not True in the Intersection.  This further infers W, X and Y True in Hidden Box 3 outside
+the Intersection.  As only three locations exist for W, X, Y and Z in Hidden Box 3 Outside the
+Intersection, they will be taken by W, X, and Y, leaving Z to be True in the Intersection.
+Interchanging W, X, Y, and Z does not alter outcome.
+
+Therefore, in the Exposed Row 3, any Candidate W, X, Y, or Z that is not part of the pattern, cannot
+be True, resulting in its elimination.  That is: ``r3c135-=WXYZ``.  And in Hidden Box 3 any other
+Candidates in the pattern cells cannot be True resulting in their elimination.  That is:
+``b3p135``-=!(WXYZ), removing all candidates from b3p135 that are not W, X, Y, and Z.
+
+An exposed row example:
 
 .. figure:: images/gbq-er-hb-eg1.png
    :name: fig-gbq-er-hb-eg1
@@ -583,8 +765,7 @@ Therefore, any of these candidates that are not part of the Pattern in Row 1, ou
 intersection can be eliminated, that is: r1c5-=8.  Any Candidates inside the Pattern
 Cells in the Hidden Box 1, outside the Intersection can be eliminated, that is r2c2-=8, r3c2-=48.
 
-Exposed Column, Hidden Box Grouped Bent Quads
-+++++++++++++++++++++++++++++++++++++++++++++
+An exposed column example:
 
 .. figure:: images/gbq-ec-hb-eg1.png
    :name: fig-gbq-ec-hb-eg1
@@ -616,8 +797,39 @@ none exist.
 
 .. _hsp_gbq_hl_eb:
 
-Hidden Row, Exposed Box Grouped Bent Quads
-++++++++++++++++++++++++++++++++++++++++++
+Hidden Line, Exposed Box Grouped Bent Quads
++++++++++++++++++++++++++++++++++++++++++++
+
+.. figure:: images/gbq-hl-eb-cd1.png
+   :name: fig-gbq-hl-eb-cd1
+   :scale: 100%
+   :alt: Grouped Bent Quad: Hidden Line, Exposed Box Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Grouped Bent Quad: Hidden Line, Exposed Box Candidate Diagram
+
+   :raw-html:`<mong>U(WXYZ+)r3c789,!(WXYZ)3#r3c!(789),(WXYZ)#3b3p!(789)</mong>`
+
+Candidates W, X, Y, Z are found in the intersection of Row 3 and Box 3 with possibly other
+candidates too.  In the Hidden Row 3, Candidates W, X, Y, and Z do not exist in three Cells
+outside the Intersection.  This implies that Candidates W, X, Y, Z are present in some combination
+in the other three Cells outside the Intersection, with possibly other candidates too. In the
+Exposed Box 3, the pattern requires a combination of W, X, Y, Z in only three Cells outside the
+Intersection.
+
+Asserting Wr2c7, Xr1c8 and Yr2c9 True in the Exposed Box 3, (outside the Intersection) infers they
+cannot be True in the Intersection.  This further infers that W, X, and Y must be True in Hidden Row
+3 Outside the Intersection.  As only three locations exist for W, X, Y, and Z in Hidden Row 3
+outside the Intersection, Z can only be True in the Intersection.  Interchanging W, X, Y, and Z does
+not alter outcome.
+
+Therefore, in the Exposed Box 3, outside the Intersection, any Candidate W, X, Y, or Z that is not
+part of the pattern, cannot be True, resulting in its elimination.  That is: ``b3p135-=WXYZ``.  And in
+Hidden Row 3 any other candidates in the pattern cells cannot be True resulting in their
+elimination: That is: ``r3c235-=!(WXYZ)``, remove all candidates from r3c235 that are not W, X, Y, or Z.
+
+A hidden row example:
 
 .. figure:: images/gbq-hr-eb-eg1.png
    :name: fig-gbq-hr-eb-eg1
@@ -646,8 +858,7 @@ intersection can be eliminated, that is: r8c1-=179.  Any Candidates inside the
 Pattern Cells in the Hidden Row 7, outside the Intersection can be eliminated.  Namely: r7c5-=8
 r7c8-=28.
 
-Hidden Column, Exposed Box Grouped Bent Quads
-+++++++++++++++++++++++++++++++++++++++++++++
+A hidden column example:
 
 .. figure:: images/gbq-hc-eb-eg1.png
    :name: fig-gbq-hc-eb-eg1
@@ -679,6 +890,59 @@ Cells in the Hidden Column outside the Intersection can be eliminated, that is r
 
 Bent Hidden Triples
 ===================
+
+Also known as Fireworks, this description is derived from the following sources:
+   |  http://forum.enjoysudoku.com/fireworks-t39513.html
+   |  https://www.sudokuwiki.org/Fireworks
+
+The only viable pattern from this family is the Bent Hidden Triple.  Bent Hidden Singles and Pairs
+do not produce any eliminations, but may be useful as building blocks for the more comprehensive
+:ref:`Nearly Locked Sets <found_tsf_nls>`.  See the above sources for that discussion, our interest
+is the productive Bent Hidden Triple pattern.
+
+.. figure:: images/bht-cd1.png
+   :name: fig-bht-cd1
+   :scale: 100%
+   :alt: Bent Hidden Triple Candidate Diagram
+   :align: right
+   :figwidth: 400px
+
+   Bent Hidden Triple Candidate Diagram
+
+   :raw-html:`<mong>(<uline>XYZ</uline>)+r1c1,U(XYZ)(r1c9,r9c1)</mong>`
+
+Bent Hidden Triples are a three Candidate, three Cell patterns in an Intersecting Row and Column
+that involve the Box of the intersection.  For example, as shown in :numref:`fig-bht-cd1`.  The
+intersecting Cell is a :term:`pivot`, and the other two cells along each :term:`Line` outside the
+box are :term:`pincer`\s.
+
+X, Y, or Z can either be True in one cell outside the box bounding the Intersecting Row and Column
+or once inside the Box.
+
+*  If \*r1c1 is True, then it is impossible to place all of X, Y, Z in both Row 1 and Column 1.
+   This means that one of X, Y, Z must be True in r1c1.
+*  If Xr1c1 is True and ``\*r9c1`` is True, then the Exposed Pair ``YZr23c1`` is True, blocking Y and Z
+   from being True in the box.  The only other place for Y and Z along Row 1 is ``r1c9`` which has
+   place for only one value, making it not possible to for ``\*r9c1`` to be True.
+*  If Xr1c1 is asserted then r9c1 can only assume the value Y or Z.  Which ever value it assumes,
+   the other value will be True within the intersecting box along the Column, which means it
+   cannot be True within the intersecting box along the Row, making it the True value outside
+   the Box along the Row.
+
+Therefore, any other candidates in those Three cells can be eliminated, as well as any occurrence of
+X, Y, and Z along the Row or Column in the intersecting Box.
+
+Viable Bent Hidden Triples contain all three Candidates in the intersecting cell, and one or more
+Candidate(s) in each Pincer such that all three Candidates are covered by both Pincers. That
+is: :raw-html:`<mong>(<uline>XYZ</uline>)+r1c1,U(XYZ)(r1c9,r9c1)</mong>`.  X, Y, and Z are found in
+the intersecting Row / Column cell with possibly other candidates.  Any combination of X, Y, Z is
+found only in the Pincers, the other cells in the Row and Column outside the box housing the
+intersection cannot contain X, Y, and Z.  Candidates other than X, Y, and Z can be eliminated from
+the Pivot and Pincers.
+
+A tip to find these patterns is to identify 3 candidates in a Cell, use that Cell as the Row /
+Column intersection, and none of the three candidates should be present along both the row and
+the column outside the box containing the intersection in 5 of the six cells.
 
 .. figure:: images/bht-eg1.png
    :name: fig-bht-eg1

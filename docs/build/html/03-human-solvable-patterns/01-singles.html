@@ -163,7 +163,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../02-foundation/index.html">2. Foundation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/01-notation.html">2.1. Sudoku Notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-premise-inference.html">2.2. Premises and Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-premise-inference-search.html">2.2. Premises, Inferences and Searching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/03-spatial-reps.html">2.3. Spatial Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/04-links-chains.html">2.4. Links and Chains</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a></li>
@@ -176,11 +176,12 @@
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-fish.html">3.4. Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">3.7. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html">3.9. Super Human Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="10-last-resort.html">3.10. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-nearly-locked-sets.html">3.6. Nearly Locked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-exotic.html">3.7. Exotic Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-base-cover-sets.html">3.8. Base, Link, and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09-searching.html">3.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10-uniqueness.html">3.10. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11-last-resort.html">3.11. Last Resort</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
@@ -238,7 +239,7 @@
 <section id="basic-solving-without-pencil-marks">
 <h2><span class="section-number">3.1.1. </span>Basic Solving Without Pencil Marks<a class="headerlink" href="#basic-solving-without-pencil-marks" title="Link to this heading">#</a></h2>
 <dl>
-<dt>Many good sites that describe these techniques instead of me rehashing the information here:</dt><dd><div class="line-block">
+<dt>Many good sites that describe these techniques better than me rehashing the information here:</dt><dd><div class="line-block">
 <div class="line"><a class="reference external" href="https://paulspages.co.uk/sudokuxp/howtosolve/#Starting">Paul’s Pages</a></div>
 <div class="line"><a class="reference external" href="https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php">Kristanix</a></div>
 <div class="line"><a class="reference external" href="https://www.sudocue.net/guide.php#squeezing">Sudocue</a></div>
@@ -249,17 +250,17 @@
 </dl>
 </section>
 <section id="exposed-singles">
-<h2><span class="section-number">3.1.2. </span>Exposed Singles<a class="headerlink" href="#exposed-singles" title="Link to this heading">#</a></h2>
+<span id="hsp-sing-exp"></span><h2><span class="section-number">3.1.2. </span>Exposed Singles<a class="headerlink" href="#exposed-singles" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="http://hodoku.sourceforge.net/en/tech_singles.php#n1">Hodoku</a> provides a good explanation of
 Exposed Singles.</p>
 </section>
 <section id="hidden-singles">
-<h2><span class="section-number">3.1.3. </span>Hidden Singles<a class="headerlink" href="#hidden-singles" title="Link to this heading">#</a></h2>
+<span id="hsp-sing-hid"></span><h2><span class="section-number">3.1.3. </span>Hidden Singles<a class="headerlink" href="#hidden-singles" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="http://hodoku.sourceforge.net/en/tech_singles.php#h1">Hodoku</a>, provides a good explanation of
 Hidden Singles</p>
 </section>
 <section id="locked-singles">
-<h2><span class="section-number">3.1.4. </span>Locked Singles<a class="headerlink" href="#locked-singles" title="Link to this heading">#</a></h2>
+<span id="hsp-sing-locked"></span><h2><span class="section-number">3.1.4. </span>Locked Singles<a class="headerlink" href="#locked-singles" title="Link to this heading">#</a></h2>
 <section id="pointing-locked-candidates">
 <h3><span class="section-number">3.1.4.1. </span>Pointing Locked Candidates<a class="headerlink" href="#pointing-locked-candidates" title="Link to this heading">#</a></h3>
 <p><a class="reference external" href="http://hodoku.sourceforge.net/en/tech_intersections.php#lc1">Hodoku</a> provides a good explanation
@@ -273,7 +274,8 @@ of Claiming Locked Candidates.</p>
 </section>
 <section id="empty-rectangles">
 <h2><span class="section-number">3.1.5. </span>Empty Rectangles<a class="headerlink" href="#empty-rectangles" title="Link to this heading">#</a></h2>
-<p>Empty Rectangles are found by noticing 3 to 5 same value candidates in a box that describe both a row
+<p>Empty Rectangles are a special case of <a class="reference internal" href="04-fish.html#hsp-fish-mut-fish"><span class="std std-ref">Mutant X-Wings</span></a>  They can also be
+found by noticing 3 to 5 same value candidates in a box that describe both a row
 and a column.</p>
 <figure class="align-right" id="id1">
 <span id="fig-empty-rect-cd1"></span><a class="reference internal image-reference" href="../_images/empty-rect-cd1.png"><img alt="Empty Rectangle Pattern" src="../_images/empty-rect-cd1.png" style="width: 378.0px; height: 378.0px;" /></a>
@@ -355,7 +357,7 @@ with Turbot Fish and Grouped X Chains.  Of these three patterns, a Turbot Fish i
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d7bf77f*, Fri, 29 Dec 2023, 00:32:27
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 9793c64*, Tue, 02 Jan 2024, 03:21:37
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

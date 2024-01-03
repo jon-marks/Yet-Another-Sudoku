@@ -1,12 +1,12 @@
-.. title:: Yet Another Sudoku | Foundation | Base Link, and Cover Sets
+.. title:: Yet Another Sudoku | Foundation | Base, Link, and Cover Sets
 
 .. include:: ..\globals.inc
 
 ..  _found_blc_sets:
 
-*************************
-Base, Link and Cover Sets
-*************************
+**************************
+Base, Link, and Cover Sets
+**************************
 
 This section owes much credit to:
    |  https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm, and
@@ -93,8 +93,8 @@ A single :term:`Base Set`, with a single :term:`Ccell` :term:`Truth`.  Ccells in
 Because the Base Set is a Single Ccell, the whole Truth of the Base Set can be seen from any other
 :term:`Chouse`.
 
-:ref:`Exposed Singles <found_sing_exposed>`, :ref:`Hidden Singles <found_sing_hidden>`, and 
-:ref:`Locked Singles <found_sing_locked>` are examples of Single Order Patterns.
+:ref:`Exposed Singles <hsp_sing_exp>`, :ref:`Hidden Singles <hsp_sing_hid>`, and 
+:ref:`Locked Singles <hsp_sing_locked>` are examples of Single Order Patterns.
 
 Expressing the :term:`Sudoku Rule` as a Formula for Single Order Patterns using Set Algebra:
 
@@ -221,7 +221,7 @@ cannot be True and is eliminated.
 
 Rank 0 patterns include :ref:`Singles <found_str_subs>` in all there forms, 
 :ref:`Straight Subsets <found_str_subs>`,
-:ref:`Fish <found_fish>`, and :ref:`Even Loops <found_even_loops>`.
+:ref:`Fish <found_fish>`, and :ref:`Even Loops <hsp_even_ai_loops>`.
 
 Singles are :ref:`Single Base Set Patterns <found_blc_sbs>`, a special case of Rank 0 patterns with
 a single Ccell Truth.  A Single CCell Truth can never need more than one Link Set to intersect it 
@@ -513,7 +513,7 @@ Rank 0 Even Loop Example
    :raw-html:`<mong>64..37+2....75.9...1+5..26...9...+52.+18.6...15..+5.13.+84..7.....8.6..5...97..96...12.|r7c4-=4;r7c5-=4;r8c1-=34;r8c2-=3;r8c4-=48;r8c5-=48;r9c1-=8;r9c4-=4;r9c5-=4|Even AI-Loop T3||2r5c3=2r7c3-2r8c1=8r8c1-8r5c1=8r5c3-,8r5c1-8r2c1-8r8c1,2r5c3-3r5c3-8r5c3,2r5c3-4r5c3-8r5c3,2r8c1-2r7c2-2r7c3,2r8c1-2r8c2-2r7c3|r2c1-=8;r5c3-=34;r7c2-=2;r8c2-=2|64+9+137+2+8+5+2+875+49+6+3+11+5+3+826+7+4+99+7+4+6+52+3+18+36+8+4+715+9+2+5+213+9+84+6+77+3+2+9+1+48+56+8+15+2+6+397+4+496+7+8+512+3</mong>`
    
 Strong Sets are indicated by green to blue Ccells, Link Sets by blue to green Ccells. Characteristic
-of all :ref:`AI Chains <found_chains>`  Both All Base Sets and Link Sets only contain 2 Ccells each.
+of all :ref:`AI Chains <hsp_cln>`  Both All Base Sets and Link Sets only contain 2 Ccells each.
 
 The :term:`Base Set`\s are:
 :raw-html:`</span></p>
@@ -579,7 +579,7 @@ is eliminated.
    
 Many “Human Solvable” patterns are Rank 1 patterns.  These include :ref:`Bent Subsets <found_bent_subs>`, 
 :ref:`Finned Fish <found_finned_fish>`, :ref:`Sashimi Fish <found_sashimi_fish>`, 
-:ref:`AI Chains <found_chains>` in many of their forms, and :ref:`Nearly Locked Sets <found_NLS>`.
+:ref:`AI Chains <hsp_cln>` in many of their forms, and :ref:`Nearly Locked Sets <hsp_nls>`.
 
 The Sudoku Rule as a formula for Rank 1 patterns:
 
@@ -730,7 +730,7 @@ is the only intersection of pairs of Link Sets that yields an occupied set.
 
 Resolving as a Two String Kite, if ``9r6c6`` is False, ``9r6c2`` is True, ``9r4c2`` is False, and ``9r2c7``
 is True.  Similarly walking the links in the opposite direction, if ``9r2c7`` is False, then
-``9r6c6`` is True.  Thus, there is a :ref:`Robust link <found_cc_robust_links>` ``9r6c6|~|9r7c2``.
+``9r6c6`` is True.  Thus, there is a :ref:`Robust link <found_lc_robust_link_patterns>` ``9r6c6|~|9r7c2``.
 At least one end of a Robust Link must be True, therefore any Ccell such as ``9r7c6`` that sees both
 ends cannot be True and is eliminated.
 

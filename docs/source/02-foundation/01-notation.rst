@@ -51,7 +51,8 @@ Syntax
 Cell (Location) Specifiers
 --------------------------
 
-.. table::
+.. table:: Cell Specifiers
+   :name: tbl-cell-specifiers
    :width: 97%
    :widths: 20 80
    :align: left
@@ -77,7 +78,8 @@ Cell (Location) Specifiers
 Ccell Specifiers
 ----------------
 
-.. table::
+.. table:: Ccell Specifiers
+   :name: tbl-ccell-specifiers
    :width: 97%
    :widths: 20 80
    :align: left
@@ -97,7 +99,8 @@ Ccell Specifiers
 Ccell Postfixes
 ---------------
 
-.. table::
+.. table:: Ccell Postfixes
+   :name: tbl-ccell-postfixes
    :width: 97%
    :widths: 20 80
    :align: left
@@ -106,17 +109,18 @@ Ccell Postfixes
    :column-dividers: single single none
    :column-wrapping: ny
 
-   ================================= ======================================================================
-   :raw-html:`<mono>o</mono>`        The Ccell is a member of the odd parity :ref:`Super Node<super-node>`
-                                     in a :ref:`SL Pattern <strong-linked-patterns>`
-   :raw-html:`<mono>e</mono>`        The Ccell is a member of the even parity :ref:`Super Node<super-node>`
-                                     in a :ref:`SL Pattern <strong-linked-patterns>`
-   ================================= ======================================================================
+   ================================= ==============================================================================
+   :raw-html:`<mono>o</mono>`        The Ccell is a member of the odd parity :ref:`Super Node<hsp_cln_super-node>`
+                                     in a :ref:`SL Pattern <found_lc_strong_link_patterns>`
+   :raw-html:`<mono>e</mono>`        The Ccell is a member of the even parity :ref:`Super Node<hsp_cln_super-node>`
+                                     in a :ref:`SL Pattern <found_lc_strong_link_patterns>`
+   ================================= ==============================================================================
 
 Pattern Combiners
 -----------------
 
-.. table::
+.. table:: Pattern Combiners
+   :name: tbl-pattern-combiners
    :width: 97%
    :widths: 20 80
    :align: left
@@ -134,7 +138,8 @@ Pattern Combiners
 Operators
 ---------
 
-.. table::
+.. table:: Operators
+   :name: tbl-operators
    :width: 97%
    :widths: 20 80
    :align: left
@@ -152,7 +157,8 @@ Operators
 Conditionals
 ------------
 
-.. table::
+.. table:: Conditionals
+   :name: tbl-conditionals
    :width: 97%
    :widths: 20 80
    :align: left
@@ -181,7 +187,8 @@ Conditionals
 Relational Specifiers
 ---------------------
 
-.. table::
+.. table:: Relational Specifiers
+   :name: tbl-reln-specifiers
    :width: 97%
    :widths: 20 80
    :align: left
@@ -222,7 +229,8 @@ Relational Specifiers
 Candidate Dressing
 ------------------
 
-.. table::
+.. table:: Candidate Dressing
+   :name: tbl-cand-dressing
    :width: 97%
    :widths: 20 80
    :align: left
@@ -241,7 +249,8 @@ Candidate Dressing
 Set Algebra
 ------------------
 
-.. table::
+.. table:: Set Algebra
+   :name: tbl-set-algebra
    :width: 97%
    :widths: 20 80
    :align: left

@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.3. Spatial Representation" href="03-spatial-reps.html" /><link rel="prev" title="2.1. Sudoku Notation" href="01-notation.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Yet Another Sudoku | Foundation | Premises and Inferences</title>
+        <title>Yet Another Sudoku | Foundation | Premises, Inferences and Searching</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/table_styling.css?v=a1a2a898" />
@@ -163,7 +163,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01-notation.html">2.1. Sudoku Notation</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.2. Premises and Inferences</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.2. Premises, Inferences and Searching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-spatial-reps.html">2.3. Spatial Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-links-chains.html">2.4. Links and Chains</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a></li>
@@ -176,11 +176,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-super-human.html">3.9. Super Human Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-nearly-locked-sets.html">3.6. Nearly Locked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-exotic.html">3.7. Exotic Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-base-cover-sets.html">3.8. Base, Link, and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-searching.html">3.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-uniqueness.html">3.10. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/11-last-resort.html">3.11. Last Resort</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
@@ -233,13 +234,13 @@
           </label>
         </div>
         <article role="main">
-          <section id="premises-and-inferences">
-<span id="found-premises-and-inferences"></span><h1><span class="section-number">2.2. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Link to this heading">#</a></h1>
+          <section id="premises-inferences-and-searching">
+<span id="found-premises-and-inferences"></span><h1><span class="section-number">2.2. </span>Premises, Inferences and Searching<a class="headerlink" href="#premises-inferences-and-searching" title="Link to this heading">#</a></h1>
+<section id="premises-and-inferences">
+<span id="found-prem-inf"></span><h2><span class="section-number">2.2.1. </span>Premises and Inferences<a class="headerlink" href="#premises-and-inferences" title="Link to this heading">#</a></h2>
 <p>Source: <a class="reference external" href="http://sudopedia.enjoysudoku.com/Inference.html">http://sudopedia.enjoysudoku.com/Inference.html</a></p>
 <p>Solving Sudoku puzzles involves asserting a premise, and deducing what conclusions can be
-inferred.  Applying a premise is different to guessing.  A premise is used to infer logical
-conclusions, whereas guessing is taking a chance on arbitrarily selecting what might be the correct
-cell value and testing it.</p>
+inferred.</p>
 <p>The most basic assertion of a premise is on the state of a Ccell. For example:</p>
 <div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">3r7c2</span></code> - Asserts 3 in r7c2 to be True, similarly.</div>
@@ -256,8 +257,19 @@ the placement or elimination of a candidate.</p>
 </div>
 <p>Asserting 5r2c7 False infers 5r2c2 is True, 5r6c2 is False, leading to the elimination of candidate
 5 from Cells r3c7 and r4c7.</p>
+</section>
 <section id="searching">
-<h2><span class="section-number">2.2.1. </span>Searching<a class="headerlink" href="#searching" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">2.2.2. </span>Searching<a class="headerlink" href="#searching" title="Link to this heading">#</a></h2>
+<p>Searching is the process of cascading inferences to find a solution.  Often referred to as Forcing
+Chains in the Sudoku literature, it is a type of Trial and Error technique, not a guessing.  It is
+the application of logic to test a premise.</p>
+<p>However, exhaustive searching becomes a mechanical process, replacing skill with brute force to find
+a solution.  Searching finds it own place in conjunction with other criteria, logic and/or pattern
+solving techniques that have isolated a few conditions to search.</p>
+<p>A Verity is where two search different paths from the same condition, find another candidate to be
+True in both cases.  A Contradiction where two different search paths from the same condition find
+another candidate to be False in both cases.  A verity / contradiction could also be the testing for
+a <a class="reference internal" href="04-links-chains.html#found-lc-strong-links"><span class="std std-ref">strong</span></a> or <a class="reference internal" href="04-links-chains.html#found-lc-robust-link-patterns"><span class="std std-ref">robust link</span></a>.</p>
 </section>
 </section>
 
@@ -290,7 +302,7 @@ the placement or elimination of a candidate.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d7bf77f*, Fri, 29 Dec 2023, 00:32:27
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 9793c64*, Tue, 02 Jan 2024, 03:21:37
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -316,8 +328,9 @@ the placement or elimination of a candidate.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">2.2. Premises and Inferences</a><ul>
-<li><a class="reference internal" href="#searching">2.2.1. Searching</a></li>
+<li><a class="reference internal" href="#">2.2. Premises, Inferences and Searching</a><ul>
+<li><a class="reference internal" href="#premises-and-inferences">2.2.1. Premises and Inferences</a></li>
+<li><a class="reference internal" href="#searching">2.2.2. Searching</a></li>
 </ul>
 </li>
 </ul>

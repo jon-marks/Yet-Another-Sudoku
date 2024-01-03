@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="3.9. Searching" href="09-searching.html" /><link rel="prev" title="3.7. Exotic Patterns" href="07-exotic.html" />
 
     <link rel="shortcut icon" href="../_static/AIM.ico"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Yet Another Sudoku | Foundation | Base Link, and Cover Sets</title>
+        <title>Yet Another Sudoku | Foundation | Base, Link, and Cover Sets</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/table_styling.css?v=a1a2a898" />
@@ -159,28 +159,29 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../02-foundation/index.html">2. Foundation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/01-notation.html">2.1. Sudoku Notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-premise-inference.html">2.2. Premises and Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-premise-inference-search.html">2.2. Premises, Inferences and Searching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/03-spatial-reps.html">2.3. Spatial Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/04-links-chains.html">2.4. Links and Chains</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/06-uniqueness.html">2.6. Uniqueness</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="index.html">3. Human Solvable Patterns</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 3. Human Solvable Patterns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">3. Human Solvable Patterns</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 3. Human Solvable Patterns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="01-singles.html">3.1. Singles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="02-subsets.html">3.2. Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-fish.html">3.4. Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">3.7. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html">3.9. Super Human Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="10-last-resort.html">3.10. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-nearly-locked-sets.html">3.6. Nearly Locked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-exotic.html">3.7. Exotic Patterns</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.8. Base, Link, and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09-searching.html">3.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10-uniqueness.html">3.10. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11-last-resort.html">3.11. Last Resort</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
@@ -234,7 +235,7 @@
         </div>
         <article role="main">
           <section id="base-link-and-cover-sets">
-<span id="found-blc-sets"></span><h1>Base, Link and Cover Sets<a class="headerlink" href="#base-link-and-cover-sets" title="Link to this heading">#</a></h1>
+<span id="found-blc-sets"></span><h1><span class="section-number">3.8. </span>Base, Link, and Cover Sets<a class="headerlink" href="#base-link-and-cover-sets" title="Link to this heading">#</a></h1>
 <dl>
 <dt>This section owes much credit to:</dt><dd><div class="line-block">
 <div class="line"><a class="reference external" href="https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm">https://www.stolaf.edu/people/hansonr/sudoku/12rules.htm</a>, and</div>
@@ -243,9 +244,9 @@
 </dd>
 </dl>
 <section id="introduction">
-<span id="found-blc-intro"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<span id="found-blc-intro"></span><h2><span class="section-number">3.8.1. </span>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <section id="some-definitions">
-<h3>Some Definitions<a class="headerlink" href="#some-definitions" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">3.8.1.1. </span>Some Definitions<a class="headerlink" href="#some-definitions" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt><strong>Cell</strong></dt><dd><p>A location in a Sudoku grid which either contains a <a class="reference internal" href="../07-glossary.html#term-Given"><span class="xref std std-term">Given</span></a> or into which a
 <a class="reference internal" href="../07-glossary.html#term-Solved-Value"><span class="xref std std-term">Solved Value</span></a> is placed.</p>
@@ -277,17 +278,17 @@ in any Base Set.</p>
 </dl>
 </section>
 <section id="base-set-cover-set-x-wing-example">
-<h3>Base Set Cover Set - X Wing Example<a class="headerlink" href="#base-set-cover-set-x-wing-example" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">3.8.1.2. </span>Base Set Cover Set - X Wing Example<a class="headerlink" href="#base-set-cover-set-x-wing-example" title="Link to this heading">#</a></h3>
 <figure class="align-right" id="fig-base-cover-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/base-cover-eg1.png"><img alt="Sudoku X-Wing Example" src="03-human-solvable-patterns/images/base-cover-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/base-cover-eg1.png"><img alt="Sudoku X-Wing Example" src="../_images/base-cover-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Base, Link and Cover Set Example</span><a class="headerlink" href="#fig-base-cover-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.47:  </span><span class="caption-text">Base, Link and Cover Set Example</span><a class="headerlink" href="#fig-base-cover-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+17+6.2958.94...+6...+8+3.....6.4+816.....+7239.+4+8.+65+6+9..24..+2+9+7.6814.+6+1+4.+9...+835+8+24+1+6+97||X-Wing||3r17c49|r2c4-=3;r2c9-=3;r4c9-=3;r6c4-=3;r6c9-=3;r8c4-=3|+17+6+42958+394+5+8+3+6+7+1+2+8+3+2+1+7+5+96+44+816+5+3+2+7+9+7239+1+4+8+5+65+6+9+7+824+3+1+2+9+7+36814+5+6+1+4+5+9+7+3+2+835+8+24+1+6+97</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>In Fig <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-base-cover-eg1</span></code></p>
+<p>In Fig <a class="reference internal" href="#fig-base-cover-eg1"><span class="std std-numref">Figure 3.47: </span></a></p>
 <ul class="simple">
 <li><p>Row 1 is a <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a> containing the <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a> <code class="docutils literal notranslate"><span class="pre">3r1c49</span></code>.</p></li>
 <li><p>Row 7 is also a <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a> containing the  <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a> <code class="docutils literal notranslate"><span class="pre">3r7c49</span></code>.</p></li>
@@ -302,13 +303,13 @@ Cover Sets, <code class="docutils literal notranslate"><span class="pre">(r268c4
 </section>
 </section>
 <section id="single-base-set-patterns">
-<span id="found-blc-sbs"></span><h2>Single Base Set Patterns<a class="headerlink" href="#single-base-set-patterns" title="Link to this heading">#</a></h2>
+<span id="found-blc-sbs"></span><h2><span class="section-number">3.8.2. </span>Single Base Set Patterns<a class="headerlink" href="#single-base-set-patterns" title="Link to this heading">#</a></h2>
 <p>A single <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>, with a single <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a> <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  Ccells in
 <a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">Intersecting</span></a> <a class="reference internal" href="../07-glossary.html#term-Cover-Set"><span class="xref std std-term">Cover Set</span></a>s outside the intersection are eliminated.
 Because the Base Set is a Single Ccell, the whole Truth of the Base Set can be seen from any other
 <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a>.</p>
-<p><a class="reference internal" href="03-singles.html#found-sing-exposed"><span class="std std-ref">Exposed Singles</span></a>, <a class="reference internal" href="03-singles.html#found-sing-hidden"><span class="std std-ref">Hidden Singles</span></a>, and
-<a class="reference internal" href="03-singles.html#found-sing-locked"><span class="std std-ref">Locked Singles</span></a> are examples of Single Order Patterns.</p>
+<p><a class="reference internal" href="01-singles.html#hsp-sing-exp"><span class="std std-ref">Exposed Singles</span></a>, <a class="reference internal" href="01-singles.html#hsp-sing-hid"><span class="std std-ref">Hidden Singles</span></a>, and
+<a class="reference internal" href="01-singles.html#hsp-sing-locked"><span class="std std-ref">Locked Singles</span></a> are examples of Single Order Patterns.</p>
 <p>Expressing the <a class="reference internal" href="../07-glossary.html#term-Sudoku-Rule"><span class="xref std std-term">Sudoku Rule</span></a> as a Formula for Single Order Patterns using Set Algebra:</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
@@ -321,17 +322,17 @@ IF (<b>B</b> & <b>C<sub>U</sub></b> == <b>B</b>):    # if <u>all</u> the Cover S
 </pre></div></div>
 <p><span></span></p>
 <section id="hidden-single-example">
-<h3>Hidden Single Example<a class="headerlink" href="#hidden-single-example" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">3.8.2.1. </span>Hidden Single Example<a class="headerlink" href="#hidden-single-example" title="Link to this heading">#</a></h3>
 <figure class="align-right" id="fig-hid-sing-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/hid-sing-eg1.png"><img alt="Sudoku Single Base Set Hidden Single Example" src="03-human-solvable-patterns/images/hid-sing-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/hid-sing-eg1.png"><img alt="Sudoku Single Base Set Hidden Single Example" src="../_images/hid-sing-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Single Base Set - Hidden Single Example</span><a class="headerlink" href="#fig-hid-sing-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.48:  </span><span class="caption-text">Single Base Set - Hidden Single Example</span><a class="headerlink" href="#fig-hid-sing-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>.6...1..4.48....9+1....+4...+2+4..2.87+5+658+2967+143..65.4+9+2+8+6.....+4+1.+85+4+1..26.1..4.+6+38.|r1c3-=9;r1c5-=3;r2c5-=3;r3c2-=9;r3c3-=9;r7c5-=3;r8c5-=3|Hidden Pair||29#2r1c15|r1c1-=37;r1c5-=578|+96+3+8+21+5+74+248+3+7+5+69+1+7+1+5+6+4+9+8+3+2+4+9+12+387+5+658+2967+143+3+765+14+9+2+8+6+3+9+7+8+2+4+1+5+85+4+1+9+326+71+2+74+5+6+38+9</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>In <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-hid-sing-eg1</span></code> Candidate 3 occurs once in Row 8 in location <code class="docutils literal notranslate"><span class="pre">r8c6</span></code>. From Theorem 1, as <code class="docutils literal notranslate"><span class="pre">3r8c6</span></code> is the only
+<p>In <a class="reference internal" href="#fig-hid-sing-eg1"><span class="std std-numref">Figure 3.48: </span></a> Candidate 3 occurs once in Row 8 in location <code class="docutils literal notranslate"><span class="pre">r8c6</span></code>. From Theorem 1, as <code class="docutils literal notranslate"><span class="pre">3r8c6</span></code> is the only
 occurrence of 3 in row 8, it is also the only occurrence in:</p>
 <ul class="simple">
 <li><p>Column 6 resulting in the eliminations <code class="docutils literal notranslate"><span class="pre">r236c6-=3</span></code>.</p></li>
@@ -379,7 +380,7 @@ leaving <code class="docutils literal notranslate"><span class="pre">3r8c6</span
 </section>
 </section>
 <section id="multi-base-set-patterns-and-rank">
-<span id="found-blc-mop"></span><h2>Multi Base Set Patterns and Rank<a class="headerlink" href="#multi-base-set-patterns-and-rank" title="Link to this heading">#</a></h2>
+<span id="found-blc-mop"></span><h2><span class="section-number">3.8.3. </span>Multi Base Set Patterns and Rank<a class="headerlink" href="#multi-base-set-patterns-and-rank" title="Link to this heading">#</a></h2>
 <p>Multi Base Set Patterns have more than one <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>, each in a <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>,
 that is confirmed as a collective Truth.  If all the <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s in these Truths can be linked
 orthogonally (<a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">intersected</span></a> by Ccells in non-Base Set <a class="reference internal" href="../07-glossary.html#term-Chouse"><span class="xref std std-term">Chouse</span></a>s) in
@@ -405,7 +406,7 @@ section on Illegal Logic for more information.</p></li>
 Base Set Ccells. Any non Base Set Ccell in ‘r + 1’ Cover Sets cannot be True and is eliminated.</p></li>
 </ul>
 <section id="rank-0-patterns">
-<h3>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">3.8.3.1. </span>Rank 0 Patterns<a class="headerlink" href="#rank-0-patterns" title="Link to this heading">#</a></h3>
 <p>Rank 0 patterns have ‘n’ non-<a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">intersecting</span></a> Base Sets where all their
 <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s are intersected by a minimum of ‘n’ <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s, thereby Locking the pattern
 as a collective <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>s.  Any Ccell in a Cover Set that is not part of the Intersection
@@ -414,9 +415,9 @@ cannot be True and is eliminated.</p>
 <p class="topic-title">Rank 0 Rule</p>
 <p>Any non-Base Set Ccell in any Cover Set cannot be True and is eliminated.</p>
 </aside>
-<p>Rank 0 patterns include <a class="reference internal" href="04-subsets.html#found-str-subs"><span class="std std-ref">Singles</span></a> in all there forms,
-<a class="reference internal" href="04-subsets.html#found-str-subs"><span class="std std-ref">Straight Subsets</span></a>,
-<a class="reference internal" href="05-fish.html#found-fish"><span class="std std-ref">Fish</span></a>, and <a class="reference internal" href="07-chains-loops-nets.html#found-even-loops"><span class="std std-ref">Even Loops</span></a>.</p>
+<p>Rank 0 patterns include <a class="reference internal" href="../02-foundation/05-truth-sets-fish.html#found-str-subs"><span class="std std-ref">Singles</span></a> in all there forms,
+<a class="reference internal" href="../02-foundation/05-truth-sets-fish.html#found-str-subs"><span class="std std-ref">Straight Subsets</span></a>,
+<a class="reference internal" href="04-fish.html#found-fish"><span class="std std-ref">Fish</span></a>, and <a class="reference internal" href="05-chains-loops-nets.html#hsp-even-ai-loops"><span class="std std-ref">Even Loops</span></a>.</p>
 <p>Singles are <a class="reference internal" href="#found-blc-sbs"><span class="std std-ref">Single Base Set Patterns</span></a>, a special case of Rank 0 patterns with
 a single Ccell Truth.  A Single CCell Truth can never need more than one Link Set to intersect it
 completely as there is only on Ccell to overlap.  Therefore, Singles are always Rank 0.</p>
@@ -428,26 +429,26 @@ the same of House Link Sets.</p>
 Links from Base Sets, connected by the Weak Link Cover Sets. Because the Loop is Closed, a collective
 Truth is locked into the pattern.</p>
 <section id="rank-0-exposed-quad-example">
-<h4>Rank 0 Exposed Quad Example<a class="headerlink" href="#rank-0-exposed-quad-example" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.1.1. </span>Rank 0 Exposed Quad Example<a class="headerlink" href="#rank-0-exposed-quad-example" title="Link to this heading">#</a></h4>
 <figure class="align-right" id="fig-exp-quad-cd1">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/exp-quad-cd1.png"><img alt="Exposed Quad" src="03-human-solvable-patterns/images/exp-quad-cd1.png" /></a>
+<a class="reference internal image-reference" href="../_images/exp-quad-cd1.png"><img alt="Exposed Quad" src="../_images/exp-quad-cd1.png" style="width: 410.15000000000003px; height: 163.8px;" /></a>
 <figcaption>
-<p><span class="caption-text">Exposed Quad Pattern</span><a class="headerlink" href="#fig-exp-quad-cd1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.49:  </span><span class="caption-text">Exposed Quad Pattern</span><a class="headerlink" href="#fig-exp-quad-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>In the Exposed Quad <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-exp-quad-cd1</span></code>, B1, B2, B3, B4 are Base Sets, each containing two or
+<p>In the Exposed Quad <a class="reference internal" href="#fig-exp-quad-cd1"><span class="std std-numref">Figure 3.49: </span></a>, B1, B2, B3, B4 are Base Sets, each containing two or
 more instances of values W, X, Y, and Z; such that each of the 4 Link Sets see two or more instances of
 each value W, X, Y, Z. That is, L1 sees all the W’s present in B1, B2, B3, B4; L2 sees all the X’s, L3
 all the Y’s and L4 all the Z’s.  Therefore, by virtue of L1, L2, L3 and L4, each intersecting all the Base Sets,
 they hold the Truths for W, X, Y and Z respectively in that house.  W, X, Y, and Z cannot be True anywhere else in
 this House and are Eliminated.</p>
 <figure class="align-right" id="fig-not-exp-quad-cd1">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/not-exp-quad-cd1.png"><img alt="Not A Exposed Quad" src="03-human-solvable-patterns/images/not-exp-quad-cd1.png" /></a>
+<a class="reference internal image-reference" href="../_images/not-exp-quad-cd1.png"><img alt="Not A Exposed Quad" src="../_images/not-exp-quad-cd1.png" style="width: 409.5px; height: 163.8px;" /></a>
 <figcaption>
-<p><span class="caption-text">Not Quite an Exposed Quad Pattern</span><a class="headerlink" href="#fig-not-exp-quad-cd1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.50:  </span><span class="caption-text">Not Quite an Exposed Quad Pattern</span><a class="headerlink" href="#fig-not-exp-quad-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-not-exp-quad-cd1</span></code> has a V instead of a Z in B3.  Here candidate V remains uncovered
+<p><a class="reference internal" href="#fig-not-exp-quad-cd1"><span class="std std-numref">Figure 3.50: </span></a> has a V instead of a Z in B3.  Here candidate V remains uncovered
 after the Link Sets have been applied.  Either the remaining Exposed Quad is True, or V is True.
 But which it is, is undetermined.  Therefore, without additional criteria, it is impossible to draw
 any elimination conclusions.</p>
@@ -473,19 +474,19 @@ Link Sets), then the <a class="reference internal" href="../07-glossary.html#ter
 Sets) cannot be True and are eliminated.</p>
 </section>
 <section id="rank-0-locked-exposed-triple-subset-example">
-<h4>Rank 0 Locked Exposed Triple - Subset Example<a class="headerlink" href="#rank-0-locked-exposed-triple-subset-example" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.1.2. </span>Rank 0 Locked Exposed Triple - Subset Example<a class="headerlink" href="#rank-0-locked-exposed-triple-subset-example" title="Link to this heading">#</a></h4>
 <p>The <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s are the <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">CCell</span></a>s, each containing a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s are all confined to a <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a> in
 which all the Base Sets are contained.</p>
 <figure class="align-right" id="fig-locked-exp-trip-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/locked-exp-trip-eg1.png"><img alt="Sudoku Exposed Triple Example" src="03-human-solvable-patterns/images/locked-exp-trip-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/locked-exp-trip-eg1.png"><img alt="Sudoku Exposed Triple Example" src="../_images/locked-exp-trip-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Locked Exposed Triple</span><a class="headerlink" href="#fig-locked-exp-trip-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.51:  </span><span class="caption-text">Locked Exposed Triple</span><a class="headerlink" href="#fig-locked-exp-trip-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>..+5.1+2+7+6+8..+2.6.+1+5916..5.4+23.1...6.9.2+538+9+1+6749.+6...8.....2.758.52................||Locked Exposed Triple||34==r7c5,348==r8c5,348==r9c5|r8c4-=34;r9c4-=34;r8c6-=348;r9c6-=348;r4c5-=34;r6c5-=34|+3+4+5+91+2+7+6+8+7+8+2+46+3+1+5916+9+75+84+23+81+4+3+76+29+52+538+9+1+6749+7+6+5+2+48+3+1+4+9+12+3758+652+8+6+4+9+3+1+7+6+3+7+1+8+5+9+4+2</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>The Locked Exposed Triple in <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-locked-exp-trip-eg1</span></code> has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:
+<p>The Locked Exposed Triple in <a class="reference internal" href="#fig-locked-exp-trip-eg1"><span class="std std-numref">Figure 3.51: </span></a> has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:
 <span class="raw-html"></span></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>r7c5</sub></b> = {3r7c5, 4r7c5}</span></code>,</p></li>
@@ -537,19 +538,19 @@ which all the Base Sets are contained.</p>
 <p>An unusually productive 14 Ccell Elimination.</p>
 </section>
 <section id="rank-0-hidden-pair-subset-example">
-<span id="found-emop-hid-ssets1"></span><h4>Rank 0 Hidden Pair Subset Example<a class="headerlink" href="#rank-0-hidden-pair-subset-example" title="Link to this heading">#</a></h4>
+<span id="found-emop-hid-ssets1"></span><h4><span class="section-number">3.8.3.1.3. </span>Rank 0 Hidden Pair Subset Example<a class="headerlink" href="#rank-0-hidden-pair-subset-example" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s are <a class="reference internal" href="../07-glossary.html#term-Set"><span class="xref std std-term">Set</span></a>s of <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s, each a <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>, all in the same
 <a class="reference internal" href="../07-glossary.html#term-House"><span class="xref std std-term">House</span></a>.  <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s connect Base Set Ccells in <a class="reference internal" href="../07-glossary.html#term-Cell"><span class="xref std std-term">Cell</span></a>s.</p>
 <figure class="align-right" id="fig-hid-pair-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/hid-pair-eg1.png"><img alt="Sudoku Hidden Pair Example" src="03-human-solvable-patterns/images/hid-pair-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/hid-pair-eg1.png"><img alt="Sudoku Hidden Pair Example" src="../_images/hid-pair-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Hidden Pair</span><a class="headerlink" href="#fig-hid-pair-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.52:  </span><span class="caption-text">Hidden Pair</span><a class="headerlink" href="#fig-hid-pair-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>.6...1..4.48....9+1....+4...+2+4..2.87+5+658+2967+143..65.4+9+2+8+6.....+4+1.+85+4+1.+326.1..4.+6+38.|r1c3-=9;r1c5-=3;r2c5-=3;r3c2-=9;r3c3-=9|Hidden Pair||29#2r1c15|r1c1-=37;r1c5-=578|+96+3+8+21+5+74+248+3+7+5+69+1+7+1+5+6+4+9+8+3+2+4+9+12+387+5+658+2967+143+3+765+14+9+2+8+6+3+9+7+8+2+4+1+5+85+4+1+9+326+71+2+74+5+6+38+9</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>The Hidden Pair in <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-hid-pair-eg1</span></code> has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:
+<p>The Hidden Pair in <a class="reference internal" href="#fig-hid-pair-eg1"><span class="std std-numref">Figure 3.52: </span></a> has the following <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s:
 <span class="raw-html"></span></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre"><b>B<sub>2r1</sub></b> = {2r1c1, 2r1c5}</span></code>, and</p></li>
@@ -589,19 +590,19 @@ which all the Base Sets are contained.</p>
 <p><span></span></p>
 </section>
 <section id="rank-0-swordfish-example">
-<span id="found-emop-fish"></span><h4>Rank 0 Swordfish Example<a class="headerlink" href="#rank-0-swordfish-example" title="Link to this heading">#</a></h4>
+<span id="found-emop-fish"></span><h4><span class="section-number">3.8.3.1.4. </span>Rank 0 Swordfish Example<a class="headerlink" href="#rank-0-swordfish-example" title="Link to this heading">#</a></h4>
 <p>Fish are single Candidate value patterns.  Base Sets are Sets of same value Ccell Truths
 each in their own House.  Link Sets connect Ccells from the Base Sets in non-Base Set Houses.</p>
 <figure class="align-right" id="fig-swordfish-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/swordfish-eg1.png"><img alt="Sudoku Swordfish Example" src="03-human-solvable-patterns/images/swordfish-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/swordfish-eg1.png"><img alt="Sudoku Swordfish Example" src="../_images/swordfish-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Swordfish</span><a class="headerlink" href="#fig-swordfish-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.53:  </span><span class="caption-text">Swordfish</span><a class="headerlink" href="#fig-swordfish-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+2..197.+4..4.+2.+3+17+9+1+79.+4.3+2.8+9.+43+1+7.27.+19.2.+343+2+4+76.+9.1..2.+1+94.+7+41..+7.+29.+9.+7524.+1.|r1c2-=6;r1c3-=6;r3c9-=6|Swordfish||6r159c279|r7c2-=6;r8c9-=6|+2+3+8197+5+4+6+54+6+2+8+3+17+9+1+79+6+4+53+2+88+9+5+43+1+7+627+6+19+52+8+343+2+4+76+8+9+51+6+52+3+1+94+8+7+41+3+8+7+6+29+5+9+8+7524+6+1+3</mong></span></p>
 </div>
 </figcaption>
 </figure>
-<p>The Candidate 6 Swordfish in <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig-swordfish-eg1</span></code>, Base Set Houses are highlighted beigé, Link Set Houses highlighted cyan, and intersections
+<p>The Candidate 6 Swordfish in <a class="reference internal" href="#fig-swordfish-eg1"><span class="std std-numref">Figure 3.53: </span></a>, Base Set Houses are highlighted beigé, Link Set Houses highlighted cyan, and intersections
 highlighted light purple.  The Base Sets are:
 <span class="raw-html"></span></p>
 <ul class="simple">
@@ -645,18 +646,18 @@ highlighted light purple.  The Base Sets are:
 <p><span></span></p>
 </section>
 <section id="rank-0-even-loop-example">
-<h4>Rank 0 Even Loop Example<a class="headerlink" href="#rank-0-even-loop-example" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.1.5. </span>Rank 0 Even Loop Example<a class="headerlink" href="#rank-0-even-loop-example" title="Link to this heading">#</a></h4>
 <figure class="align-right" id="fig-ai-even-loop-t3-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/ai-even-loop-t3-eg1.png"><img alt="Sudoku Even Loop Example" src="03-human-solvable-patterns/images/ai-even-loop-t3-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/ai-even-loop-t3-eg1.png"><img alt="Sudoku Even Loop Example" src="../_images/ai-even-loop-t3-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Even Loop</span><a class="headerlink" href="#fig-ai-even-loop-t3-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.54:  </span><span class="caption-text">Even Loop</span><a class="headerlink" href="#fig-ai-even-loop-t3-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>64..37+2....75.9...1+5..26...9...+52.+18.6...15..+5.13.+84..7.....8.6..5...97..96...12.|r7c4-=4;r7c5-=4;r8c1-=34;r8c2-=3;r8c4-=48;r8c5-=48;r9c1-=8;r9c4-=4;r9c5-=4|Even AI-Loop T3||2r5c3=2r7c3-2r8c1=8r8c1-8r5c1=8r5c3-,8r5c1-8r2c1-8r8c1,2r5c3-3r5c3-8r5c3,2r5c3-4r5c3-8r5c3,2r8c1-2r7c2-2r7c3,2r8c1-2r8c2-2r7c3|r2c1-=8;r5c3-=34;r7c2-=2;r8c2-=2|64+9+137+2+8+5+2+875+49+6+3+11+5+3+826+7+4+99+7+4+6+52+3+18+36+8+4+715+9+2+5+213+9+84+6+77+3+2+9+1+48+56+8+15+2+6+397+4+496+7+8+512+3</mong></span></p>
 </div>
 </figcaption>
 </figure>
 <p>Strong Sets are indicated by green to blue Ccells, Link Sets by blue to green Ccells. Characteristic
-of all <a class="reference internal" href="07-chains-loops-nets.html#found-chains"><span class="std std-ref">AI Chains</span></a>  Both All Base Sets and Link Sets only contain 2 Ccells each.</p>
+of all <a class="reference internal" href="05-chains-loops-nets.html#hsp-cln"><span class="std std-ref">AI Chains</span></a>  Both All Base Sets and Link Sets only contain 2 Ccells each.</p>
 <p>The <a class="reference internal" href="../07-glossary.html#term-Base-Set"><span class="xref std std-term">Base Set</span></a>s are:
 <span class="raw-html"></span></p>
 <ul class="simple">
@@ -701,7 +702,7 @@ of all <a class="reference internal" href="07-chains-loops-nets.html#found-chain
 </section>
 </section>
 <section id="rank-1-patterns">
-<h3>Rank 1 Patterns<a class="headerlink" href="#rank-1-patterns" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">3.8.3.2. </span>Rank 1 Patterns<a class="headerlink" href="#rank-1-patterns" title="Link to this heading">#</a></h3>
 <p>Rank 1 patterns need a minimum of ‘n + 1’ Link Sets to intersect all the Base Set Ccells</p>
 <p>Rank 1 patterns have ‘n’ non-<a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">intersecting</span></a> Base Sets with all their
 <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s are intersected by a minimum of ‘n + 1’ <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s.  Therefore, the union of
@@ -712,9 +713,9 @@ is eliminated.</p>
 <p class="topic-title">Rank 1 Rule</p>
 <p>Any non-Base Set Ccell in the intersection of any two Cover Sets cannot be True and is eliminated.</p>
 </aside>
-<p>Many “Human Solvable” patterns are Rank 1 patterns.  These include <a class="reference internal" href="04-subsets.html#found-bent-subs"><span class="std std-ref">Bent Subsets</span></a>,
-<a class="reference internal" href="05-fish.html#found-finned-fish"><span class="std std-ref">Finned Fish</span></a>, <a class="reference internal" href="05-fish.html#found-sashimi-fish"><span class="std std-ref">Sashimi Fish</span></a>,
-<a class="reference internal" href="07-chains-loops-nets.html#found-chains"><span class="std std-ref">AI Chains</span></a> in many of their forms, and <span class="xref std std-ref">Nearly Locked Sets</span>.</p>
+<p>Many “Human Solvable” patterns are Rank 1 patterns.  These include <a class="reference internal" href="../02-foundation/05-truth-sets-fish.html#found-bent-subs"><span class="std std-ref">Bent Subsets</span></a>,
+<a class="reference internal" href="04-fish.html#found-finned-fish"><span class="std std-ref">Finned Fish</span></a>, <a class="reference internal" href="04-fish.html#found-sashimi-fish"><span class="std std-ref">Sashimi Fish</span></a>,
+<a class="reference internal" href="05-chains-loops-nets.html#hsp-cln"><span class="std std-ref">AI Chains</span></a> in many of their forms, and <a class="reference internal" href="06-nearly-locked-sets.html#hsp-nls"><span class="std std-ref">Nearly Locked Sets</span></a>.</p>
 <p>The Sudoku Rule as a formula for Rank 1 patterns:</p>
 <p><span class="raw-html"></span></p>
 <div class="highlight-none notranslate"><div class="highlight">
@@ -735,11 +736,11 @@ be True and is eliminated.</p>
 Ccells that occur more than once, no Ccell should appear more than twice in the list.  Then remove
 those that are in the Base Set Union.  What’s left is the eliminations.</p>
 <section id="rank-1-finned-x-wing-example">
-<h4>Rank 1 Finned X Wing Example<a class="headerlink" href="#rank-1-finned-x-wing-example" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.2.1. </span>Rank 1 Finned X Wing Example<a class="headerlink" href="#rank-1-finned-x-wing-example" title="Link to this heading">#</a></h4>
 <figure class="align-right" id="fig-finned-x-wing-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/finned-x-wing-eg1.png"><img alt="Sudoku Finned-X-Wing Example" src="03-human-solvable-patterns/images/finned-x-wing-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/finned-x-wing-eg1.png"><img alt="Sudoku Finned-X-Wing Example" src="../_images/finned-x-wing-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Finned X-Wing</span><a class="headerlink" href="#fig-finned-x-wing-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.55:  </span><span class="caption-text">Finned X-Wing</span><a class="headerlink" href="#fig-finned-x-wing-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+156+87+49+3+2.4+762.+18+528....+4+7+6....8.+5+9.73....618+8.5...+32.........+3.7.5...49....487.1||Finned X-Wing||3c35r38,r9c3;3r8c1-3r9c3|r8c1-=3|+156+87+49+3+2+34+762+9+18+528+9+1+5+3+4+7+6+4+6+1+38+2+5+9+773+2+4+9+5618+8+95+7+1+6+32+4+9+1+4+2+6+7+8+5+3+67+85+3+1+249+5+2+3+9487+61</mong></span></p>
 </div>
@@ -789,11 +790,11 @@ intersections that can also see the Fin cannot be True and can be eliminated.</p
 </div>
 </section>
 <section id="rank-1-two-string-kite-example">
-<h4>Rank 1 Two String Kite Example<a class="headerlink" href="#rank-1-two-string-kite-example" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.2.2. </span>Rank 1 Two String Kite Example<a class="headerlink" href="#rank-1-two-string-kite-example" title="Link to this heading">#</a></h4>
 <figure class="align-right" id="fig-two-string-kite-eg1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/two-string-kite-eg1.png"><img alt="Sudoku Two String Kite Example" src="03-human-solvable-patterns/images/two-string-kite-eg1.png" /></a>
+<a class="reference internal image-reference" href="../_images/two-string-kite-eg1.png"><img alt="Sudoku Two String Kite Example" src="../_images/two-string-kite-eg1.png" style="width: 358.8px; height: 406.25px;" /></a>
 <figcaption>
-<p><span class="caption-text">Two String Kite</span><a class="headerlink" href="#fig-two-string-kite-eg1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.56:  </span><span class="caption-text">Two String Kite</span><a class="headerlink" href="#fig-two-string-kite-eg1" title="Link to this image">#</a></p>
 <div class="legend">
 <p><span class="raw-html"><mong>+3617..+2+95842+395+6+7+1.5.+26+14+8+3+1.+8+5+2+6.3+4+625....+1+8.+341..+526+4..+6+1.+8+5+2+58...+2+1672+1+6+8+5+7349||Two String Kite||9r6c6=9r6c1~9r4c2=9r7c2,9r6c6-9r7c6-9r7c2|r7c6-=9|+3617+8+4+2+95842+395+6+7+1+75+9+26+14+8+3+1+7+8+5+2+6+93+4+625+4+3+9+7+1+8+9+341+7+8+526+4+9+7+6+1+3+8+5+2+58+3+9+4+2+1672+1+6+8+5+7349</mong></span></p>
 </div>
@@ -842,7 +843,7 @@ non-Base Set Chouses, as indicated in the subscript.</p>
 is the only intersection of pairs of Link Sets that yields an occupied set.</p>
 <p>Resolving as a Two String Kite, if <code class="docutils literal notranslate"><span class="pre">9r6c6</span></code> is False, <code class="docutils literal notranslate"><span class="pre">9r6c2</span></code> is True, <code class="docutils literal notranslate"><span class="pre">9r4c2</span></code> is False, and <code class="docutils literal notranslate"><span class="pre">9r2c7</span></code>
 is True.  Similarly walking the links in the opposite direction, if <code class="docutils literal notranslate"><span class="pre">9r2c7</span></code> is False, then
-<code class="docutils literal notranslate"><span class="pre">9r6c6</span></code> is True.  Thus, there is a <a class="reference internal" href="../02-foundation/04-links-chains.html#found-cc-robust-links"><span class="std std-ref">Robust link</span></a> <code class="docutils literal notranslate"><span class="pre">9r6c6|~|9r7c2</span></code>.
+<code class="docutils literal notranslate"><span class="pre">9r6c6</span></code> is True.  Thus, there is a <a class="reference internal" href="../02-foundation/04-links-chains.html#found-lc-robust-link-patterns"><span class="std std-ref">Robust link</span></a> <code class="docutils literal notranslate"><span class="pre">9r6c6|~|9r7c2</span></code>.
 At least one end of a Robust Link must be True, therefore any Ccell such as <code class="docutils literal notranslate"><span class="pre">9r7c6</span></code> that sees both
 ends cannot be True and is eliminated.</p>
 <div class="line-block">
@@ -850,11 +851,11 @@ ends cannot be True and is eliminated.</p>
 </div>
 </section>
 <section id="rank-1-nearly-locked-set-or-xy-chain-example">
-<h4>Rank 1 Nearly Locked Set or XY Chain Example<a class="headerlink" href="#rank-1-nearly-locked-set-or-xy-chain-example" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.2.3. </span>Rank 1 Nearly Locked Set or XY Chain Example<a class="headerlink" href="#rank-1-nearly-locked-set-or-xy-chain-example" title="Link to this heading">#</a></h4>
 <figure class="align-right" id="fig-uls-chain-cd1" style="width: 359px">
-<a class="reference internal image-reference" href="03-human-solvable-patterns/images/uls-chain-cd1.png"><img alt="Sudoku Unlocked Set Chain Candidate Diagram Example" src="03-human-solvable-patterns/images/uls-chain-cd1.png" /></a>
+<a class="reference internal image-reference" href="../_images/uls-chain-cd1.png"><img alt="Sudoku Unlocked Set Chain Candidate Diagram Example" src="../_images/uls-chain-cd1.png" style="width: 395.85px; height: 281.45px;" /></a>
 <figcaption>
-<p><span class="caption-text">Unlocked Set Chain Candidate Diagram</span><a class="headerlink" href="#fig-uls-chain-cd1" title="Link to this image">#</a></p>
+<p><span class="caption-number">Figure 3.57:  </span><span class="caption-text">Unlocked Set Chain Candidate Diagram</span><a class="headerlink" href="#fig-uls-chain-cd1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The Rank 1 Puzzle pattern on the right is also both an XY-Chain:
@@ -915,7 +916,7 @@ into “A Truth”.  Therefore, any same valued (Z) Ccell that can see all the e
 </section>
 </section>
 <section id="rank-r-patterns">
-<h3>Rank ‘r’ Patterns<a class="headerlink" href="#rank-r-patterns" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">3.8.3.3. </span>Rank ‘r’ Patterns<a class="headerlink" href="#rank-r-patterns" title="Link to this heading">#</a></h3>
 <p>Rank r patterns have ‘n’ non-<a class="reference internal" href="../07-glossary.html#term-Intersection"><span class="xref std std-term">intersecting</span></a> Base Sets with all their
 <a class="reference internal" href="../07-glossary.html#term-Ccell"><span class="xref std std-term">Ccell</span></a>s are intersected by a minimum of ‘n + r’ <a class="reference internal" href="../07-glossary.html#term-Link-Set"><span class="xref std std-term">Link Set</span></a>s.  Therefore, the union of
 any ‘r + 1’ Link Sets will always see a complete Base Set <a class="reference internal" href="../07-glossary.html#term-Truth"><span class="xref std std-term">Truth</span></a>.  Consequently, where ever
@@ -961,25 +962,25 @@ Ccell is key to reducing the rank by one of a Base Set that intersects that Trip
 </ul>
 <p>FIXUP</p>
 <section id="triplets-and-rank">
-<h4>Triplets and Rank<a class="headerlink" href="#triplets-and-rank" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.3.1. </span>Triplets and Rank<a class="headerlink" href="#triplets-and-rank" title="Link to this heading">#</a></h4>
 <section id="base-triplets">
-<h5>Base Triplets<a class="headerlink" href="#base-triplets" title="Link to this heading">#</a></h5>
+<h5><span class="section-number">3.8.3.3.1.1. </span>Base Triplets<a class="headerlink" href="#base-triplets" title="Link to this heading">#</a></h5>
 </section>
 <section id="link-triplets">
-<h5>Link Triplets<a class="headerlink" href="#link-triplets" title="Link to this heading">#</a></h5>
+<h5><span class="section-number">3.8.3.3.1.2. </span>Link Triplets<a class="headerlink" href="#link-triplets" title="Link to this heading">#</a></h5>
 </section>
 <section id="rank-regions">
-<h5>Rank Regions<a class="headerlink" href="#rank-regions" title="Link to this heading">#</a></h5>
+<h5><span class="section-number">3.8.3.3.1.3. </span>Rank Regions<a class="headerlink" href="#rank-regions" title="Link to this heading">#</a></h5>
 </section>
 <section id="additive-properties-of-triplets">
-<h5>Additive Properties of Triplets<a class="headerlink" href="#additive-properties-of-triplets" title="Link to this heading">#</a></h5>
+<h5><span class="section-number">3.8.3.3.1.4. </span>Additive Properties of Triplets<a class="headerlink" href="#additive-properties-of-triplets" title="Link to this heading">#</a></h5>
 </section>
 </section>
 <section id="the-art-of-identifying-rank-r-patterns">
-<h4>The art of Identifying Rank ‘r’ Patterns<a class="headerlink" href="#the-art-of-identifying-rank-r-patterns" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.3.2. </span>The art of Identifying Rank ‘r’ Patterns<a class="headerlink" href="#the-art-of-identifying-rank-r-patterns" title="Link to this heading">#</a></h4>
 </section>
 <section id="rank-r-examples">
-<h4>Rank ‘r’ Examples<a class="headerlink" href="#rank-r-examples" title="Link to this heading">#</a></h4>
+<h4><span class="section-number">3.8.3.3.3. </span>Rank ‘r’ Examples<a class="headerlink" href="#rank-r-examples" title="Link to this heading">#</a></h4>
 <p>So if you have the fortitude and inclination, get yourself a cuppa, a pencil and a ream of paper.
 rest of this section walks through Allan Barker’s solution of the Easter Monster, and Golden Nugget,
 each acknowledged as one of the <a class="reference external" href="http://forum.enjoysudoku.com/the-hardest-sudokus-new-thread-t6539.html">Hardest Sudoku Puzzles.</a>.</p>
@@ -995,13 +996,31 @@ each acknowledged as one of the <a class="reference external" href="http://forum
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="09-searching.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">3.9. </span>Searching</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="07-exotic.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">3.7. </span>Exotic Patterns</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d7bf77f*, Fri, 29 Dec 2023, 00:32:27
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 9793c64*, Tue, 02 Jan 2024, 03:21:37
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1027,41 +1046,41 @@ each acknowledged as one of the <a class="reference external" href="http://forum
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Base, Link and Cover Sets</a><ul>
-<li><a class="reference internal" href="#introduction">Introduction</a><ul>
-<li><a class="reference internal" href="#some-definitions">Some Definitions</a></li>
-<li><a class="reference internal" href="#base-set-cover-set-x-wing-example">Base Set Cover Set - X Wing Example</a></li>
+<li><a class="reference internal" href="#">3.8. Base, Link, and Cover Sets</a><ul>
+<li><a class="reference internal" href="#introduction">3.8.1. Introduction</a><ul>
+<li><a class="reference internal" href="#some-definitions">3.8.1.1. Some Definitions</a></li>
+<li><a class="reference internal" href="#base-set-cover-set-x-wing-example">3.8.1.2. Base Set Cover Set - X Wing Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#single-base-set-patterns">Single Base Set Patterns</a><ul>
-<li><a class="reference internal" href="#hidden-single-example">Hidden Single Example</a></li>
+<li><a class="reference internal" href="#single-base-set-patterns">3.8.2. Single Base Set Patterns</a><ul>
+<li><a class="reference internal" href="#hidden-single-example">3.8.2.1. Hidden Single Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#multi-base-set-patterns-and-rank">Multi Base Set Patterns and Rank</a><ul>
-<li><a class="reference internal" href="#rank-0-patterns">Rank 0 Patterns</a><ul>
-<li><a class="reference internal" href="#rank-0-exposed-quad-example">Rank 0 Exposed Quad Example</a></li>
-<li><a class="reference internal" href="#rank-0-locked-exposed-triple-subset-example">Rank 0 Locked Exposed Triple - Subset Example</a></li>
-<li><a class="reference internal" href="#rank-0-hidden-pair-subset-example">Rank 0 Hidden Pair Subset Example</a></li>
-<li><a class="reference internal" href="#rank-0-swordfish-example">Rank 0 Swordfish Example</a></li>
-<li><a class="reference internal" href="#rank-0-even-loop-example">Rank 0 Even Loop Example</a></li>
+<li><a class="reference internal" href="#multi-base-set-patterns-and-rank">3.8.3. Multi Base Set Patterns and Rank</a><ul>
+<li><a class="reference internal" href="#rank-0-patterns">3.8.3.1. Rank 0 Patterns</a><ul>
+<li><a class="reference internal" href="#rank-0-exposed-quad-example">3.8.3.1.1. Rank 0 Exposed Quad Example</a></li>
+<li><a class="reference internal" href="#rank-0-locked-exposed-triple-subset-example">3.8.3.1.2. Rank 0 Locked Exposed Triple - Subset Example</a></li>
+<li><a class="reference internal" href="#rank-0-hidden-pair-subset-example">3.8.3.1.3. Rank 0 Hidden Pair Subset Example</a></li>
+<li><a class="reference internal" href="#rank-0-swordfish-example">3.8.3.1.4. Rank 0 Swordfish Example</a></li>
+<li><a class="reference internal" href="#rank-0-even-loop-example">3.8.3.1.5. Rank 0 Even Loop Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#rank-1-patterns">Rank 1 Patterns</a><ul>
-<li><a class="reference internal" href="#rank-1-finned-x-wing-example">Rank 1 Finned X Wing Example</a></li>
-<li><a class="reference internal" href="#rank-1-two-string-kite-example">Rank 1 Two String Kite Example</a></li>
-<li><a class="reference internal" href="#rank-1-nearly-locked-set-or-xy-chain-example">Rank 1 Nearly Locked Set or XY Chain Example</a></li>
+<li><a class="reference internal" href="#rank-1-patterns">3.8.3.2. Rank 1 Patterns</a><ul>
+<li><a class="reference internal" href="#rank-1-finned-x-wing-example">3.8.3.2.1. Rank 1 Finned X Wing Example</a></li>
+<li><a class="reference internal" href="#rank-1-two-string-kite-example">3.8.3.2.2. Rank 1 Two String Kite Example</a></li>
+<li><a class="reference internal" href="#rank-1-nearly-locked-set-or-xy-chain-example">3.8.3.2.3. Rank 1 Nearly Locked Set or XY Chain Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#rank-r-patterns">Rank ‘r’ Patterns</a><ul>
-<li><a class="reference internal" href="#triplets-and-rank">Triplets and Rank</a><ul>
-<li><a class="reference internal" href="#base-triplets">Base Triplets</a></li>
-<li><a class="reference internal" href="#link-triplets">Link Triplets</a></li>
-<li><a class="reference internal" href="#rank-regions">Rank Regions</a></li>
-<li><a class="reference internal" href="#additive-properties-of-triplets">Additive Properties of Triplets</a></li>
+<li><a class="reference internal" href="#rank-r-patterns">3.8.3.3. Rank ‘r’ Patterns</a><ul>
+<li><a class="reference internal" href="#triplets-and-rank">3.8.3.3.1. Triplets and Rank</a><ul>
+<li><a class="reference internal" href="#base-triplets">3.8.3.3.1.1. Base Triplets</a></li>
+<li><a class="reference internal" href="#link-triplets">3.8.3.3.1.2. Link Triplets</a></li>
+<li><a class="reference internal" href="#rank-regions">3.8.3.3.1.3. Rank Regions</a></li>
+<li><a class="reference internal" href="#additive-properties-of-triplets">3.8.3.3.1.4. Additive Properties of Triplets</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-art-of-identifying-rank-r-patterns">The art of Identifying Rank ‘r’ Patterns</a></li>
-<li><a class="reference internal" href="#rank-r-examples">Rank ‘r’ Examples</a></li>
+<li><a class="reference internal" href="#the-art-of-identifying-rank-r-patterns">3.8.3.3.2. The art of Identifying Rank ‘r’ Patterns</a></li>
+<li><a class="reference internal" href="#rank-r-examples">3.8.3.3.3. Rank ‘r’ Examples</a></li>
 </ul>
 </li>
 </ul>

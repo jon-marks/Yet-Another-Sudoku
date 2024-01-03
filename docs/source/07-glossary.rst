@@ -99,7 +99,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
 
    **Conditional Logic**
       The process of asserting a Premise and following a sequence of inferences to a
-      possible logical outcome.  See :ref:`found_cc_premises_and_inferences`.
+      possible logical outcome.  See :ref:`found_prem_inf`.
 
    **Conjugate Pair**
       The only two same value candidates in a house forming a :term:`Strong Link`.  This is a
@@ -165,7 +165,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Link**
       A logical relationship between two Nodes (Ccells).  The logical relationship can be one of
       a :term:`Weak Link`, a :term:`Strong Link` or a :term:`Robust Link`.
-      See :ref:`found_cc_premises_and_inferences`
+      See :ref:`found_prem_inf`
       
    **Link Set**
       A :term:`Set` of one or more :term:`Ccell`\s in a non-:term:`Base Set` :term:`Chouse` that are
@@ -247,11 +247,11 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Restricted Candidate**
       In a Bent Exposed Subset, a Restricted Candidate is a Candidate that :term:`See`\s all
       instances of its value in the Bent Subset grouping.  This is a special case of a
-      :term:`Restricted Candidate Set` (:ref:`found_nls`) with a single
+      :term:`Restricted Candidate Set` (:ref:`found_tsf_nls`) with a single
       member.
 
    **Restricted Candidate Set**
-      In :ref:`found_nls`, a Restricted Candidate Set is that set of Candidates that
+      In :ref:`found_tsf_nls`, a Restricted Candidate Set is that set of Candidates that
       can :term:`See` all instances of its value in the Unlocked Sets pattern.
 
    **Robust Link**
@@ -299,7 +299,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
          9 :term:`Column`\s, and 9 - 3 x 3 :term:`Box`\es.
 
    **Super-Node**
-      The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <super-node>`, Net or
+      The set of :ref:`'same parity/state nodes' in a Strong Linked Chain <hsp_cln_super-node>`, Net or
       Loop, that is strongly linked to the opposing Super-Nodes.
 
    **Tower**
@@ -310,7 +310,7 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
       the Ccells is True, that is the :term:`Solved Value`.
 
    **ULS**
-      Ulocked Set, see :ref:`found_nls`.
+      Ulocked Set, see :ref:`found_tsf_nls`.
 
    **Union**
       All the Cells of two intersecting :term:`House`\s.
@@ -321,11 +321,11 @@ https://www.sudocue.net/glossary.php and http://sudopedia.enjoysudoku.com/Termin
    **Unrestricted Candidate**
       In a Bent Exposed Subset, an Unrestricted Candidate is a Candidate that that cannot
       :term:`See` all instances of its value in the Bent Subset grouping.  This is a special
-      case of an :term:`Unrestricted Candidate Set` (:ref:`found_nls`) with a single
+      case of an :term:`Unrestricted Candidate Set` (:ref:`found_tsf_nls`) with a single
       member.
 
    **Unrestricted Candidate Set**
-      In :ref:`found_nls`, an Unrestricted Candidate Set is that set of Candidates that
+      In :ref:`found_tsf_nls`, an Unrestricted Candidate Set is that set of Candidates that
       cannot :term:`See` all instances of its value in the Unlocked Sets pattern.
 
    **WE-AIC**

@@ -9,12 +9,14 @@ Singles
 Basic Solving Without Pencil Marks
 ----------------------------------
 
-Many good sites that describe these techniques instead of me rehashing the information here:
+Many good sites that describe these techniques better than me rehashing the information here:
    |  `Paul's Pages <https://paulspages.co.uk/sudokuxp/howtosolve/#Starting>`_
    |  `Kristanix <https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php>`_
    |  `Sudocue <https://www.sudocue.net/guide.php#squeezing>`_
    |  `Google Search: Solving without Pencil Marks <https://www.google.com/search?q=sudoku+solving+without+pencil+marks>`_
    |  `Google Search: Sudoku Cross Hatch <https://www.google.com/search?q=sudoku+cross+hatch>`_
+
+.. _hsp_sing_exp:
 
 Exposed Singles
 ---------------
@@ -22,11 +24,15 @@ Exposed Singles
 `Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#n1>`__ provides a good explanation of
 Exposed Singles.
 
+.. _hsp_sing_hid:
+
 Hidden Singles
 --------------
 
 `Hodoku <http://hodoku.sourceforge.net/en/tech_singles.php#h1>`__, provides a good explanation of
 Hidden Singles
+
+.. _hsp_sing_locked:
 
 Locked Singles
 --------------
@@ -46,7 +52,8 @@ of Claiming Locked Candidates.
 Empty Rectangles
 ----------------
 
-Empty Rectangles are found by noticing 3 to 5 same value candidates in a box that describe both a row
+Empty Rectangles are a special case of :ref:`Mutant X-Wings <hsp_fish_mut_fish>`  They can also be
+found by noticing 3 to 5 same value candidates in a box that describe both a row
 and a column.
 
 .. _fig-empty-rect-cd1:

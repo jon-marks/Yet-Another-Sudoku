@@ -163,7 +163,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">2. Foundation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="01-notation.html">2.1. Sudoku Notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02-premise-inference.html">2.2. Premises and Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-premise-inference-search.html">2.2. Premises, Inferences and Searching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="03-spatial-reps.html">2.3. Spatial Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-links-chains.html">2.4. Links and Chains</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a></li>
@@ -176,11 +176,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/04-fish.html">3.4. Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-uniqueness.html">3.7. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-super-human.html">3.9. Super Human Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-last-resort.html">3.10. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/06-nearly-locked-sets.html">3.6. Nearly Locked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/07-exotic.html">3.7. Exotic Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/08-base-cover-sets.html">3.8. Base, Link, and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/09-searching.html">3.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/10-uniqueness.html">3.10. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-human-solvable-patterns/11-last-resort.html">3.11. Last Resort</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
@@ -299,16 +300,29 @@ over using less common algebraic symbols and esoteric formulae.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="02-premise-inference.html">2.2. Premises and Inferences</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="02-premise-inference.html#searching">2.2.1. Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-premise-inference-search.html">2.2. Premises, Inferences and Searching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="02-premise-inference-search.html#premises-and-inferences">2.2.1. Premises and Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-premise-inference-search.html#searching">2.2.2. Searching</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="03-spatial-reps.html">2.3. Spatial Representation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04-links-chains.html">2.4. Links and Chains</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#weak-links">2.4.1. Weak Links</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#strong-links">2.4.2. Strong Links</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#robust-links">2.4.3. Robust Links</a></li>
-<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#strong-and-robust-links-masquerading-as-weak">2.4.4. Strong and Robust Links Masquerading as Weak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#chains-loops-and-nets">2.4.3. Chains, Loops, and Nets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04-links-chains.html#chains">2.4.3.1. Chains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-links-chains.html#loops">2.4.3.2. Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-links-chains.html#nets">2.4.3.3. Nets</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#indirect-links">2.4.4. Indirect Links</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04-links-chains.html#weak-link-patterns">2.4.4.1. Weak Link Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-links-chains.html#robust-link-patterns">2.4.4.2. Robust Link_patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-links-chains.html#found-lc-strong-link-patterns">2.4.4.3. Strong Links</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#strong-links-masquerading-as-weak">2.4.5. Strong Links Masquerading as Weak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-links-chains.html#cannibalistic-eliminations">2.4.6. Cannibalistic Eliminations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a><ul>
@@ -326,36 +340,6 @@ over using less common algebraic symbols and esoteric formulae.</p>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#nearly-locked-sets">2.5.4. Nearly Locked Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#fish">2.5.5. Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#basic-fish">2.5.6. Basic Fish</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#x-wing">2.5.6.1. X-Wing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#swordfish">2.5.6.2. Swordfish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#id1">2.5.6.3. Swordfish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#jellyfish">2.5.6.4. Jellyfish</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#finned-fish">2.5.7. Finned Fish</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#finned-x-wing">2.5.7.1. Finned X-Wing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#finned-swordfish">2.5.7.2. Finned Swordfish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#finned-jellyfish">2.5.7.3. Finned Jellyfish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#algorithmic-rules-for-finned-fish">2.5.7.4. Algorithmic rules for Finned Fish</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#sashimi-fish">2.5.8. Sashimi Fish</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#sashimi-x-wing">2.5.8.1. Sashimi X-Wing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#sashimi-swordfish">2.5.8.2. Sashimi Swordfish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#sashimi-jellyfish">2.5.8.3. Sashimi Jellyfish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#algorithmic-rules-for-sashimi-fish">2.5.8.4. Algorithmic rules for Sashimi Fish</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#kraken-fish">2.5.9. Kraken Fish</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#algorithmic-rules-for-kraken-finned-fish">2.5.9.1. Algorithmic rules for Kraken Finned Fish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#algorithmic-rules-for-kraken-sashimi-fish">2.5.9.2. Algorithmic rules for Kraken Sashimi Fish</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#kraken-fish-practical-issues">2.5.9.3. Kraken Fish Practical issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="05-truth-sets-fish.html#kraken-fish-examples">2.5.9.4. Kraken Fish Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#fraken-fish">2.5.10. Fraken Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="05-truth-sets-fish.html#mutant-fish-patterns">2.5.11. Mutant Fish Patterns</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="06-uniqueness.html">2.6. Uniqueness</a></li>
@@ -392,7 +376,7 @@ over using less common algebraic symbols and esoteric formulae.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d7bf77f*, Fri, 29 Dec 2023, 00:32:27
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 9793c64*, Tue, 02 Jan 2024, 03:21:37
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

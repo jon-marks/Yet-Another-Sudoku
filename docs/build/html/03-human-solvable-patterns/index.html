@@ -163,7 +163,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../01-introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../02-foundation/index.html">2. Foundation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 2. Foundation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/01-notation.html">2.1. Sudoku Notation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-premise-inference.html">2.2. Premises and Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-foundation/02-premise-inference-search.html">2.2. Premises, Inferences and Searching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/03-spatial-reps.html">2.3. Spatial Representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/04-links-chains.html">2.4. Links and Chains</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../02-foundation/05-truth-sets-fish.html">2.5. Truth, Sets and Fish</a></li>
@@ -176,11 +176,12 @@
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html">3.3. Bent Subsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="04-fish.html">3.4. Fish</a></li>
 <li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="07-uniqueness.html">3.7. Uniqueness</a></li>
-<li class="toctree-l2"><a class="reference internal" href="08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html">3.9. Super Human Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="10-last-resort.html">3.10. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-nearly-locked-sets.html">3.6. Nearly Locked Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-exotic.html">3.7. Exotic Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-base-cover-sets.html">3.8. Base, Link, and Cover Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="09-searching.html">3.9. Searching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="10-uniqueness.html">3.10. Uniqueness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11-last-resort.html">3.11. Last Resort</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../04-generating.html">4. Generating Puzzles</a></li>
@@ -236,7 +237,8 @@
           <section id="human-solvable-patterns">
 <span id="id1"></span><h1><span class="section-number">3. </span>Human Solvable Patterns<a class="headerlink" href="#human-solvable-patterns" title="Link to this heading">#</a></h1>
 <p>Human solvable patterns rely on logic that is not too complicated and involved to resolve.  As
-expertise in solving puzzles improves, one can resolve more complicated patterns</p>
+expertise in solving puzzles improves, one can resolve more complicated patterns, so it is a matter
+of personal judgement where to draw the “too complicated” line.</p>
 <dl class="simple">
 <dt>Practically, a point of diminishing returns exists between:</dt><dd><ul class="simple">
 <li><p>the complexity of the pattern,</p></li>
@@ -245,14 +247,19 @@ expertise in solving puzzles improves, one can resolve more complicated patterns
 </ul>
 </dd>
 </dl>
-<p>This text is not an exhaustive coverage of all possible conditional logic techniques.
-The decision of what or not to include is subjective especially when it comes to those esoteric and
-convoluted techniques involving a mix of other complex techniques.</p>
-<p>Many patterns can be identified and resolved by more than one logic technique.  Where multiple
-techniques can resolve a pattern, the technique with the broadest reach is favoured, unless it is
-much more complex than another technique.</p>
-<p>Many resources on the internet exist describing the identification and resolution of patterns
-effectively. Rather than rehashing their information in this text, I, with gratitude, link to their
+<p>This text does not claim to be an exhaustive coverage of all possible conditional logic techniques.
+There is often patterns that can be solved with two or more techniques.  An objective of this
+treatise is to present a set of techniques that can be used to solve any puzzles.</p>
+<p>However, as logic techniques get more complex and involve many variables they in turn become too
+complex and take too long for even the expert mere mortals among us without some high speed
+computational assistance.  Some such techniques are presented, and it is left to the reader to
+decide for themselves where computer aided logic solving starts, At least the most simplest patterns
+of these complex techniques can be solved unaided.</p>
+<p>Where multiple techniques can resolve a pattern, I favour the most generalised technique or the one
+with broadest reach, unless it is much more complex than another technique.</p>
+<p>Many resources on the internet document the identification and resolution of patterns
+effectively. I reference all sources, and often, rather than rehashing their information, I, with
+gratitude, defer to them.
 descriptions.</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -293,24 +300,18 @@ descriptions.</p>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html#grouped-bent-subsets">3.3.2. Grouped Bent Subsets</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="03-bent-subsets.html#grouped-bent-pairs">3.3.2.1. Grouped Bent Pairs</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-row-hidden-box-grouped-bent-pairs">3.3.2.1.1. Exposed Row, Hidden Box Grouped Bent Pairs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-column-hidden-box-grouped-bent-pairs">3.3.2.1.2. Exposed Column, Hidden Box Grouped Bent Pairs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-row-exposed-box-grouped-bent-pairs">3.3.2.1.3. Hidden Row, Exposed Box Grouped Bent Pairs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-column-exposed-box-grouped-bent-pairs">3.3.2.1.4. Hidden Column, Exposed Box Grouped Bent Pairs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-line-hidden-box-grouped-bent-pairs">3.3.2.1.1. Exposed Line, Hidden Box Grouped Bent Pairs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-line-exposed-box-grouped-bent-pairs">3.3.2.1.2. Hidden Line, Exposed Box Grouped Bent Pairs</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="03-bent-subsets.html#grouped-bent-triples">3.3.2.2. Grouped Bent Triples</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-row-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Row, Hidden Box Grouped Bent Triples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-column-hidden-box-grouped-bent-triples">3.3.2.2.2. Exposed Column, Hidden Box Grouped Bent Triples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-row-exposed-box-grouped-bent-triples">3.3.2.2.3. Hidden Row, Exposed Box Grouped Bent Triples</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-column-exposed-box-grouped-bent-triples">3.3.2.2.4. Hidden Column, Exposed Box Grouped Bent Triples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-line-hidden-box-grouped-bent-triples">3.3.2.2.1. Exposed Line, Hidden Box Grouped Bent Triples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-line-exposed-box-grouped-bent-triples">3.3.2.2.2. Hidden Line, Exposed Box Grouped Bent Triples</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="03-bent-subsets.html#grouped-bent-quads">3.3.2.3. Grouped Bent Quads</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-row-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Row, Hidden Box Grouped Bent Quads</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-column-hidden-box-grouped-bent-quads">3.3.2.3.2. Exposed Column, Hidden Box Grouped Bent Quads</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-row-exposed-box-grouped-bent-quads">3.3.2.3.3. Hidden Row, Exposed Box Grouped Bent Quads</a></li>
-<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-column-exposed-box-grouped-bent-quads">3.3.2.3.4. Hidden Column, Exposed Box Grouped Bent Quads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#exposed-line-hidden-box-grouped-bent-quads">3.3.2.3.1. Exposed Line, Hidden Box Grouped Bent Quads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="03-bent-subsets.html#hidden-line-exposed-box-grouped-bent-quads">3.3.2.3.2. Hidden Line, Exposed Box Grouped Bent Quads</a></li>
 </ul>
 </li>
 </ul>
@@ -318,21 +319,133 @@ descriptions.</p>
 <li class="toctree-l2"><a class="reference internal" href="03-bent-subsets.html#bent-hidden-triples">3.3.3. Bent Hidden Triples</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="04-fish.html">3.4. Fish</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-unlocked-sets.html">3.6. Unlocked Sets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-uniqueness.html">3.7. Uniqueness</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-searching.html">3.8. Searching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-super-human.html">3.9. Super Human Patterns</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html#hybrid-chains">3.9.1. Hybrid Chains</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html#fraken-fish">3.9.2. Fraken Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html#mutant-fish">3.9.3. Mutant Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html#multi-fish">3.9.4. Multi Fish</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html#exocets">3.9.5. Exocets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="09-super-human.html#multi-sector-locked-sets-msls">3.9.6. Multi-Sector Locked Sets (MSLS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-fish.html">3.4. Fish</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html#basic-fish">3.4.1. Basic Fish</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#x-wing">3.4.1.1. X-Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#swordfish">3.4.1.2. Swordfish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#id1">3.4.1.3. Swordfish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#jellyfish">3.4.1.4. Jellyfish</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="10-last-resort.html">3.10. Last Resort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html#finned-fish">3.4.2. Finned Fish</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#finned-x-wing">3.4.2.1. Finned X-Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#finned-swordfish">3.4.2.2. Finned Swordfish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#finned-jellyfish">3.4.2.3. Finned Jellyfish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#algorithmic-rules-for-finned-fish">3.4.2.4. Algorithmic rules for Finned Fish</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html#sashimi-fish">3.4.3. Sashimi Fish</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#sashimi-x-wing">3.4.3.1. Sashimi X-Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#sashimi-swordfish">3.4.3.2. Sashimi Swordfish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#sashimi-jellyfish">3.4.3.3. Sashimi Jellyfish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#algorithmic-rules-for-sashimi-fish">3.4.3.4. Algorithmic rules for Sashimi Fish</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html#kraken-fish">3.4.4. Kraken Fish</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#algorithmic-rules-for-kraken-finned-fish">3.4.4.1. Algorithmic rules for Kraken Finned Fish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#algorithmic-rules-for-kraken-sashimi-fish">3.4.4.2. Algorithmic rules for Kraken Sashimi Fish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#kraken-fish-practical-issues">3.4.4.3. Kraken Fish Practical issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="04-fish.html#kraken-fish-examples">3.4.4.4. Kraken Fish Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html#fraken-fish">3.4.5. Fraken Fish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-fish.html#mutant-fish-patterns">3.4.6. Mutant Fish Patterns</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="05-chains-loops-nets.html">3.5. Chains, Loops and Nets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#abcd">3.5.1. abcd</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#lskdfjs-df">3.5.1.1. lskdfjs;df</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#broken-wings">3.5.1.1.1. Broken Wings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#super-nodes">3.5.1.1.2. Super Nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#chained-strong-linked-patterns">3.5.1.2. Chained Strong Linked Patterns</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#some-chain-examples">3.5.2. Some Chain Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#a-two-string-kite">3.5.2.1. A Two String Kite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#a-skyscraper">3.5.2.2. A Skyscraper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#a-strong-linked-net-sln-chain">3.5.2.3. A Strong Linked Net (SLN) Chain</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#chain-eliminations-and-placements">3.5.3. Chain Eliminations and Placements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#weak-link-ended-chains-we-aic">3.5.3.1. Weak Link Ended Chains (WE-AIC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-link-ended-chains-se-aic">3.5.3.2. Strong Link Ended Chains (SE-AIC)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-1-same-end-values">3.5.3.2.1. Type 1:  Same end Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-2-different-end-values">3.5.3.2.2. Type 2:  Different End Values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-3-opposing-exposed-pair-ends">3.5.3.2.3. Type 3:  Opposing Exposed Pair Ends</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-linked-patterns">3.5.3.3. Strong Linked Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-1-same-state-nodes-see-each-other">3.5.3.3.1. Type 1: Same State Nodes See Each Other</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-2-all-candidates-in-a-cell-see-same-state-nodes">3.5.3.3.2. Type 2: All Candidates in a Cell See Same State Nodes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="05-chains-loops-nets.html#type-3-ccells-see-opposing-state-nodes">3.5.3.3.3. Type 3: Ccells See Opposing State Nodes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#sub-chains">3.5.4. Sub Chains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#ai-loops">3.5.5. AI Loops</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#even-ai-loops">3.5.5.1. Even AI Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#strong-ai-loops">3.5.5.2. Strong AI Loops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#weak-ai-loops">3.5.5.3. Weak AI Loops</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="05-chains-loops-nets.html#group-links">3.5.6. Group Links</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#characterising-group-links">3.5.6.1. Characterising Group Links</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#line-group-link-examples">3.5.6.2. Line Group Link Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#box-group-link-examples">3.5.6.3. Box Group Link Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="05-chains-loops-nets.html#group-links-in-even-loops">3.5.6.4. Group Links in Even Loops</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="06-nearly-locked-sets.html">3.6. Nearly Locked Sets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-exotic.html">3.7. Exotic Patterns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-base-cover-sets.html">3.8. Base, Link, and Cover Sets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="08-base-cover-sets.html#introduction">3.8.1. Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="08-base-cover-sets.html#some-definitions">3.8.1.1. Some Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="08-base-cover-sets.html#base-set-cover-set-x-wing-example">3.8.1.2. Base Set Cover Set - X Wing Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="08-base-cover-sets.html#single-base-set-patterns">3.8.2. Single Base Set Patterns</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="08-base-cover-sets.html#hidden-single-example">3.8.2.1. Hidden Single Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="08-base-cover-sets.html#multi-base-set-patterns-and-rank">3.8.3. Multi Base Set Patterns and Rank</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="08-base-cover-sets.html#rank-0-patterns">3.8.3.1. Rank 0 Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-0-exposed-quad-example">3.8.3.1.1. Rank 0 Exposed Quad Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-0-locked-exposed-triple-subset-example">3.8.3.1.2. Rank 0 Locked Exposed Triple - Subset Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-0-hidden-pair-subset-example">3.8.3.1.3. Rank 0 Hidden Pair Subset Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-0-swordfish-example">3.8.3.1.4. Rank 0 Swordfish Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-0-even-loop-example">3.8.3.1.5. Rank 0 Even Loop Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="08-base-cover-sets.html#rank-1-patterns">3.8.3.2. Rank 1 Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-1-finned-x-wing-example">3.8.3.2.1. Rank 1 Finned X Wing Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-1-two-string-kite-example">3.8.3.2.2. Rank 1 Two String Kite Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-1-nearly-locked-set-or-xy-chain-example">3.8.3.2.3. Rank 1 Nearly Locked Set or XY Chain Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="08-base-cover-sets.html#rank-r-patterns">3.8.3.3. Rank ‘r’ Patterns</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#triplets-and-rank">3.8.3.3.1. Triplets and Rank</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="08-base-cover-sets.html#base-triplets">3.8.3.3.1.1. Base Triplets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="08-base-cover-sets.html#link-triplets">3.8.3.3.1.2. Link Triplets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="08-base-cover-sets.html#rank-regions">3.8.3.3.1.3. Rank Regions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="08-base-cover-sets.html#additive-properties-of-triplets">3.8.3.3.1.4. Additive Properties of Triplets</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#the-art-of-identifying-rank-r-patterns">3.8.3.3.2. The art of Identifying Rank ‘r’ Patterns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="08-base-cover-sets.html#rank-r-examples">3.8.3.3.3. Rank ‘r’ Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="09-searching.html">3.9. Searching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-uniqueness.html">3.10. Uniqueness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-last-resort.html">3.11. Last Resort</a></li>
 </ul>
 </div>
 </section>
@@ -366,7 +479,7 @@ descriptions.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Jonathan Marks, Commit Tag: d7bf77f*, Fri, 29 Dec 2023, 00:32:27
+                Copyright &#169; 2023, Jonathan Marks, Commit Tag: 9793c64*, Tue, 02 Jan 2024, 03:21:37
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

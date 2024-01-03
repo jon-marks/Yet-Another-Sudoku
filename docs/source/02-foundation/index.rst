@@ -27,7 +27,7 @@ over using less common algebraic symbols and esoteric formulae.
    :maxdepth: 5
 
    01-notation
-   02-premise-inference
+   02-premise-inference-search
    03-spatial-reps
    04-links-chains
    05-truth-sets-fish
