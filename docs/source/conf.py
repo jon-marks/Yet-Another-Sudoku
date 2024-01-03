@@ -5,6 +5,8 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import os
+import sys
 
 project = 'Yet Another Sudoku'
 author = 'Jonathan Marks'
@@ -41,11 +43,16 @@ source_suffix = {
 
 html_static_path = ['_static']
 html_title = ''
-html_css_files = ['overrides.css']
+html_css_files = ['overrides.css', 'table.css']
 html_logo = 'images/AIM.png'
 html_favicon = 'images/AIM.ico'
 html_use_index = True
-extensions.append('cloud_sptheme.ext.table_styling')
+
+# Add my custom extension for tables stolen from from:cloud_sptheme (not maintained since 2020)
+sys.path.append(os.path.abspath('./_ext'))
+extensions.append('table')
+html_css_files.append('table.css')
+
 
 html_theme = 'furo'
 

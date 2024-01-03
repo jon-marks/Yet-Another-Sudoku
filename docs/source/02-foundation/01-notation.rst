@@ -880,7 +880,6 @@ Candidate Grids
 
 Also known as Pencilmark Grids or PM Grids.
 
-:raw-html:`<pre>skdlfjls adsfklfj sdf</pre>`
 
 :raw-html:`</span></p>
 <div class="highlight-none notranslate"><div class="highlight">
